@@ -39,7 +39,7 @@ FCOSPostProcess &FCOSPostProcess::operator=(const FCOSPostProcess &other) {
 }
 
 APP_ERROR FCOSPostProcess::Init(
-    const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+    const std::map<std::string, std::string> &postConfig) {
   LogInfo << "Start to Init FCOSDetectionPostProcess";
   APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
   if (ret != APP_ERR_OK) {

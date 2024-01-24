@@ -31,7 +31,7 @@ namespace {
 }
 using namespace MxBase;
 using namespace cv;
-APP_ERROR CrowdCountPostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+APP_ERROR CrowdCountPostProcess::Init(const std::map<std::string, std::string> &postConfig) {
     LogDebug << "Start to Init CrowdCountPostProcess.";
     APP_ERROR ret = PostProcessBase::Init(postConfig);
     if (ret != APP_ERR_OK) {

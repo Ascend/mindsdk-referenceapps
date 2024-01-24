@@ -143,7 +143,7 @@ void HoldResourceCallback(void *args) {
 std::vector<E2eInferParams *> E2eInferParamsVec;
 
 void SDKYoloV3PostProcess(std::string &yoloV3ConfigPath, std::string &yoloV3LabelPath, vector <Tensor> &yoloV3Outputs,
-                          std::vector <Rect> &cropConfigVec, std::vector <ImagePreProcessInfo> &imagePreProcessInfos) {
+                          std::vector <Rect> &cropConfigVec, std::vector<ResizedImageInfo> &resizedImageInfos) {
     std::map <std::string, std::string> postConfig;
     postConfig.insert(pair<std::string, std::string>("postProcessConfigPath", yoloV3ConfigPath));
     postConfig.insert(pair<std::string, std::string>("labelPath", yoloV3LabelPath));
@@ -160,7 +160,7 @@ void SDKYoloV3PostProcess(std::string &yoloV3ConfigPath, std::string &yoloV3Labe
 
     std::vector <std::vector<ObjectInfo>> objectInfos;
 
-    yolov3PostProcess.Process(tensors, objectInfos, imagePreProcessInfos);
+    yolov3PostProcess.Process(tensors, objectInfos, resizedImageInfos);
 
     cout << "size of objectInfos is: " << objectInfos.size() << endl;
     for (size_t i = 0; i < objectInfos.size(); i++) {
@@ -292,14 +292,15 @@ APP_ERROR AsyncYoloV3PostProcessPro(vector <Tensor> &yoloV3Outputs, int batchInd
     string yoloV3Config = "./model/yolov3/yolov3_tf_bs1_fp16.cfg";
     string yoloV3LabelPath = "./model/yolov3/coco.names";
 
-    ImagePreProcessInfo imagePreProcessInfo(params->ResizeImageBatch[dataIndex].GetOriginalSize().width,
-                                            params->ResizeImageBatch[dataIndex].GetOriginalSize().height,
-                                            params->DecodeImageBatch[dataIndex].GetOriginalSize().width,
-                                            params->DecodeImageBatch[dataIndex].GetOriginalSize().height);
-    vector<ImagePreProcessInfo> imagePreProcessInfos{imagePreProcessInfo};
+    ResizedImageInfo resizedImageInfo(params->ResizeImageBatch[dataIndex].GetOriginalSize().width,
+                                      params->ResizeImageBatch[dataIndex].GetOriginalSize().height,
+                                       params->DecodeImageBatch[dataIndex].GetOriginalSize().width,
+                                       params->DecodeImageBatch[dataIndex].GetOriginalSize().height,
+                                       ResizeType::RESIZER_STRETCHING, 0);
+    vector<ResizedImageInfo> resizedImageInfos{resizedImageInfo};
 
     SDKYoloV3PostProcess(yoloV3Config, yoloV3LabelPath, yoloV3Outputs, params->CropConfigRectBatch[dataIndex],
-                         imagePreProcessInfos);
+                         resizedImageInfos);
     if (params->CropConfigRectBatch[dataIndex].empty() || params->CropConfigRectBatch[dataIndex].size() == 0) {
         std::cout << "Failed to run yolov3 postProcess." << std::endl;
         return 0;
@@ -534,7 +535,7 @@ int main(int argc, char *argv[]) {
             std::cout << "remove file [" << filePath << "] failed." << endl;
             return -1;
         } else {
-            std::cout << "remove file [" << filePath << "] failed." << endl;
+            std::cout << "remove file [" << filePath << "] succeed." << endl;
         }
     }
     return 0;

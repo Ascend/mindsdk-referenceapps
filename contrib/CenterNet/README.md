@@ -145,7 +145,7 @@ cp -r  NumCpp/include/NumCpp ./include/
 
 ## 3. 模型转换
 
-本项目中采用的模型是 CenterNet 模型，参考实现代码：https://github.com/xingyizhou/CenterNet ，模型下载链接：https://www.hiascend.com/zh/software/modelzoo/models/detail/1/0699d3e48ff1447cafc85c2c9f007130 。 本项目使用模型转换工具 ATC 将 onnx 模型转换为 om 模型，模型转换工具相关介绍参考链接：https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md 。
+本项目中采用的模型是 CenterNet 模型，参考实现代码：https://github.com/xingyizhou/CenterNet ，模型下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterNet/ATC%20CenterNet.zip . 本项目使用模型转换工具 ATC 将 onnx 模型转换为 om 模型，模型转换工具相关介绍参考链接：https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md 。
 
 
 ### 3.1 业务流程加图像预处理的模型转换方法
@@ -157,7 +157,7 @@ cp -r  NumCpp/include/NumCpp ./include/
 2. 将该模型转换为om模型，具体操作为： ``python/models`` 文件夹下,执行atc指令：
 
 ```
-atc --framework=5 --model=CenterNet.onnx  --output=CenterNet_pre_post --input_format=NCHW --input_shape="actual_input:1,3,512,512" --out_nodes="Conv_949:0;Conv_952:0;Conv_955:0" --log=info --soc_version=Ascend310 --insert_op_conf=./aipp-configs/aipp_bgr.config
+atc --framework=5 --model=CenterNet.onnx  --output=CenterNet_pre_post --input_format=NCHW --input_shape="actual_input:1,3,512,512" --log=info --soc_version=Ascend310 --insert_op_conf=./aipp-configs/aipp_bgr.config
 ```
 
 若终端输出：
@@ -178,7 +178,7 @@ ATC run success, welcome to the next use.
                                                            
 
 ```
-atc --framework=5 --model=CenterNet.onnx  --output=CenterNet_nopre_post --input_format=NCHW --input_shape="actual_input:1,3,512,512" --out_nodes="Conv_949:0;Conv_952:0;Conv_955:0" --log=info --soc_version=Ascend310
+atc --framework=5 --model=CenterNet.onnx  --output=CenterNet_nopre_post --input_format=NCHW --input_shape="actual_input:1,3,512,512" --log=info --soc_version=Ascend310
 ```
 
 
@@ -283,7 +283,7 @@ python3 eval_nopre_post.py
 </center>
 
 ### 4.3 目标精度
-目标精度为：0.364   
+目标精度为：0.364, 波动范围在1%以内均满足要求.   
 
 
 

@@ -40,7 +40,7 @@ namespace MxBase {
 
         CenterNetPostProcess &operator=(const CenterNetPostProcess &other);
 
-        APP_ERROR Init(const std::map <std::string, std::shared_ptr<void>> &postConfig);
+        APP_ERROR Init(const std::map <std::string, std::string> &postConfig);
 
         APP_ERROR DeInit();
 

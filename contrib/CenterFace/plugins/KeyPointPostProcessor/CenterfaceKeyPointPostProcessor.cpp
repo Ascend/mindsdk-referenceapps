@@ -24,7 +24,7 @@
 using namespace std;
 namespace MxBase {
 APP_ERROR CenterfaceKeyPointPostProcessor::Init(
-    const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+    const std::map<std::string, std::string> &postConfig) {
   APP_ERROR ret = KeypointPostProcessBase::Init(postConfig);
   if (ret != APP_ERR_OK) {
     LogError << GetError(ret) << "Fail to superInit in KeypointPostProcessBase.";

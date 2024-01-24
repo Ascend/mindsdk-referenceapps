@@ -57,7 +57,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR CenterNetPostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
+    APP_ERROR CenterNetPostProcess::Init(const std::map<std::string, std::string> &postConfig)
     {
         LogInfo << "Start to Init CenterNetPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);

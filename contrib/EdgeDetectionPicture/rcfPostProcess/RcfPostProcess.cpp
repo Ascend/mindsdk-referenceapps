@@ -30,7 +30,7 @@ namespace {
 }
 using namespace MxBase;
 
-APP_ERROR RcfPostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
+APP_ERROR RcfPostProcess::Init(const std::map<std::string, std::string> &postConfig)
 {
     LogDebug << "Start to Init RcfPostProcess.";
     LogDebug << "End to Init RcfPostProcess.";

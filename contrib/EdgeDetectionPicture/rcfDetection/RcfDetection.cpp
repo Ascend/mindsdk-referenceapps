@@ -29,7 +29,7 @@ namespace {
     const double ALPHA = 255.0 / 255;
 }
 void RcfDetection::SetRcfPostProcessConfig(const InitParam &initParam,
-                                           std::map<std::string, std::shared_ptr<void>> &config)
+                                           std::map<std::string, std::string> &config)
 {
     MxBase::ConfigData configData;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
@@ -40,7 +40,7 @@ void RcfDetection::SetRcfPostProcessConfig(const InitParam &initParam,
     configData.SetJsonValue("INPUT_TYPE", std::to_string(initParam.inputType));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
     auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
+    config["postProcessConfigContent"] = jsonStr;
 }
 
 APP_ERROR RcfDetection::Init(const InitParam &initParam)
@@ -69,7 +69,7 @@ APP_ERROR RcfDetection::Init(const InitParam &initParam)
         return ret;
     }
 
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     SetRcfPostProcessConfig(initParam, config);
     post_ = std::make_shared<RcfPostProcess>();
     ret = post_->Init(config);

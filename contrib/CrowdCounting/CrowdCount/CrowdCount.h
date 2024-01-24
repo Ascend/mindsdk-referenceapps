@@ -45,7 +45,7 @@ protected:
                           const std::vector<MxBase::TensorBase> &postimageMat, const std::vector<int> &results,
 			  const std::string &imgPath);			 
     void SetCrowdCountPostProcessConfig(const InitParam &initParam,
-                                        std::map<std::string, std::shared_ptr<void>> &config);
+                                        std::map<std::string, std::string> &config);
 private:
     std::shared_ptr<MxBase::DvppWrapper> dvppWrapper_;
     std::shared_ptr<MxBase::ModelInferenceProcessor> model_;

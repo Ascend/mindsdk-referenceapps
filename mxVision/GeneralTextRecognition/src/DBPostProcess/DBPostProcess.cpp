@@ -53,7 +53,7 @@ DBPostProcess::DBPostProcess(const DBPostProcess &other)
  * @param labelPath config path and label path.
  * @return APP_ERROR error code.
  */
-APP_ERROR DBPostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
+APP_ERROR DBPostProcess::Init(const std::map<std::string, std::string> &postConfig)
 {
     LogInfo << "Begin to initialize DBPostProcess.";
     // Open config file

@@ -535,7 +535,7 @@ int main(int argc, char *argv[]) {
             std::cout << "remove file [" << filePath << "] failed." << endl;
             return -1;
         } else {
-            std::cout << "remove file [" << filePath << "] failed." << endl;
+            std::cout << "remove file [" << filePath << "] succeed." << endl;
         }
     }
     return 0;

@@ -1007,8 +1007,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
  
 diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_dec.c
 --- ffmpeg-n4.4.4/libavcodec/ascend_dec.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_dec.c	2024-01-22 17:55:51.911376827 +0800
-@@ -0,0 +1,887 @@
++++ Ascendffmpeg/libavcodec/ascend_dec.c	2024-01-24 09:45:40.635150460 +0800
+@@ -0,0 +1,886 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved.
 + *
@@ -1282,12 +1282,11 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_d
 +    pic_info.height = ctx->resize_height;        // Output image height, supports resize, set 0 means no resize.
 +    pic_info.width_stride = FFALIGN(ctx->vdec_width, VDEC_WIDTH_ALIGN);
 +    pic_info.height_stride = FFALIGN(ctx->vdec_height, VDEC_HEIGHT_ALIGN);
-+    uint32_t size = pic_info.width_stride * pic_info.height_stride * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
 +    if (ctx->resize_str && ctx->resize_width != 0 && ctx->resize_height != 0) {
-+        size = ctx->resize_width * ctx->resize_height * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
 +        pic_info.width_stride = FFALIGN(ctx->resize_width, VDEC_WIDTH_ALIGN);
 +        pic_info.height_stride = FFALIGN(ctx->resize_height, VDEC_HEIGHT_ALIGN);
 +    }
++    uint32_t size = pic_info.width_stride * pic_info.height_stride * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
 +        
 +    pic_info.buffer_size = size;
 +    pic_info.pixel_format = HI_PIXEL_FORMAT_YUV_SEMIPLANAR_420;

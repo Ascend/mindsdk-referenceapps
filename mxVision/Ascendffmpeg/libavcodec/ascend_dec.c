@@ -70,6 +70,9 @@ static void *get_frame(void *arg)
         if (ret != 0) {
             av_log(ctx, AV_LOG_ERROR, "HiMpi free stream failed, ret is %d.\n", ret);
         }
+        if (decResult != 0 && frame.v_frame.virt_addr[0] != NULL) {
+            hi_mpi_dvpp_free(frame.v_frame.virt_addr[0]);
+        }
         
         if (decResult != 0 || frame.v_frame.virt_addr[0] == NULL || stream.need_display == HI_FALSE) {
             ret = hi_mpi_vdec_release_frame(ctx->channel_id, &frame);
@@ -268,12 +271,11 @@ static int malloc_and_send_frame(AVCodecContext *avctx, const AVPacket *avpkt)
     pic_info.height = ctx->resize_height;        // Output image height, supports resize, set 0 means no resize.
     pic_info.width_stride = FFALIGN(ctx->vdec_width, VDEC_WIDTH_ALIGN);
     pic_info.height_stride = FFALIGN(ctx->vdec_height, VDEC_HEIGHT_ALIGN);
-    uint32_t size = pic_info.width_stride * pic_info.height_stride * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
     if (ctx->resize_str && ctx->resize_width != 0 && ctx->resize_height != 0) {
-        size = ctx->resize_width * ctx->resize_height * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
         pic_info.width_stride = FFALIGN(ctx->resize_width, VDEC_WIDTH_ALIGN);
         pic_info.height_stride = FFALIGN(ctx->resize_height, VDEC_HEIGHT_ALIGN);
     }
+    uint32_t size = pic_info.width_stride * pic_info.height_stride * YUV_BGR_CONVERT_3 / YUV_BGR_CONVERT_2;
         
     pic_info.buffer_size = size;
     pic_info.pixel_format = HI_PIXEL_FORMAT_YUV_SEMIPLANAR_420;

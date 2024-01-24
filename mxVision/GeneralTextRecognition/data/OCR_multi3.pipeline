@@ -139,7 +139,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/cls/cls.cfg",
         "labelPath": "./data/config/cls/ic15.names",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libresnet50postprocess.so"
+        "postProcessLibPath": "libresnet50postprocess.so"
       },
       "factory": "mxpi_classpostprocessor",
       "next": "mxpi_rotation1:1"
@@ -197,7 +197,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/rec/rec_cfg.txt",
         "labelPath": "./data/config/rec/ppocr_keys_v1.txt",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libcrnnpostprocess.so"
+        "postProcessLibPath": "libcrnnpostprocess.so"
       },
       "factory": "mxpi_textgenerationpostprocessor",
       "next": "queue98"
@@ -360,7 +360,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/cls/cls.cfg",
         "labelPath": "./data/config/cls/ic15.names",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libresnet50postprocess.so"
+        "postProcessLibPath": "libresnet50postprocess.so"
       },
       "factory": "mxpi_classpostprocessor",
       "next": "mxpi_rotation1:1"
@@ -418,7 +418,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/rec/rec_cfg.txt",
         "labelPath": "./data/config/rec/ppocr_keys_v1.txt",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libcrnnpostprocess.so"
+        "postProcessLibPath": "libcrnnpostprocess.so"
       },
       "factory": "mxpi_textgenerationpostprocessor",
       "next": "queue98"
@@ -581,7 +581,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/cls/cls.cfg",
         "labelPath": "./data/config/cls/ic15.names",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libresnet50postprocess.so"
+        "postProcessLibPath": "libresnet50postprocess.so"
       },
       "factory": "mxpi_classpostprocessor",
       "next": "mxpi_rotation1:1"
@@ -639,7 +639,7 @@
       "props": {
         "postProcessConfigPath": "./data/config/rec/rec_cfg.txt",
         "labelPath": "./data/config/rec/ppocr_keys_v1.txt",
-        "postProcessLibPath": "/root/MindX_SDK/mxVision/lib/modelpostprocessors/libcrnnpostprocess.so"
+        "postProcessLibPath": "libcrnnpostprocess.so"
       },
       "factory": "mxpi_textgenerationpostprocessor",
       "next": "queue98"

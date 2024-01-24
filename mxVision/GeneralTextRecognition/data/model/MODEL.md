@@ -82,7 +82,7 @@
 #### 转om模型命令
 
 ##### 转动态batch模型
-	/usr/local/Ascend/ascend-toolkit/latest/atc/bin/atc --model=./ch_ppocr_mobile_v2.0_cls_infer_3_48_192.onnx --framework=5 --output_type=FP32 --output=ch_ppocr_mobile_v2.0_cls_infer_3_48_192 --input_format=NCHW --input_shape="x:-1,3,48,192"  --dynamic_batch_size="1,2,4,8" --soc_version=Ascend310  --insert_op_conf="cls_aipp.cfg"
+	/usr/local/Ascend/ascend-toolkit/latest/atc/bin/atc --model=./ch_ppocr_mobile_v2.0_cls_infer.onnx --framework=5 --output_type=FP32 --output=ch_ppocr_mobile_v2.0_cls_infer_3_48_192 --input_format=NCHW --input_shape="x:-1,3,48,192"  --dynamic_batch_size="1,2,4,8" --soc_version=Ascend310  --insert_op_conf="cls_aipp.cfg"
 
 ### 识别模型
 #### AIPP配置文件

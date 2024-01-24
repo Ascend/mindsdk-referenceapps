@@ -77,7 +77,7 @@ patch -p1 -f < {FFmpeg-Plugin-Dir}/AscendFFmpegPlugin/ascend_ffmpeg.patch
 ### 编译
 * `FFMPEG_LIB_PATH` FFmpeg 编译安装的 lib 文件路径（一般为 FFmpeg 安装目录下的 lib 目录， 安装目录由安装时的 --prefix 编译选项来指定）。
 * `LD_LIBRARY_PATH` 指定 ffmpeg 程序运行时依赖的动态库查找路径。
-* 编译选项
+* 编译选项说明
   ```text
     prefix : FFmpeg 及相关组件安装目录
     enable-shared : FFmpeg 允许生成 so 文件
@@ -86,16 +86,17 @@ patch -p1 -f < {FFmpeg-Plugin-Dir}/AscendFFmpegPlugin/ascend_ffmpeg.patch
     extra-libs : 添加第三方 so 文件
     enable-ascend : 允许使用 ascend 进行硬件加速
   ```
-```bash
-./configure \
-    --prefix=./ascend \
-    --enable-shared \
-    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
-    --extra-ldflags="-L${ASCEND_HOME}/ascend-toolkit/latest/acllib/lib64" \
-    --extra-libs="-lacl_dvpp_mpi -lascendcl" \
-    --enable-ascend \
-    && make -j && make install
-```
+* 编译命令
+  ```bash
+  ./configure \
+      --prefix=./ascend \
+      --enable-shared \
+      --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
+      --extra-ldflags="-L${ASCEND_HOME}/ascend-toolkit/latest/acllib/lib64" \
+      --extra-libs="-lacl_dvpp_mpi -lascendcl" \
+      --enable-ascend \
+      && make -j && make install
+  ```
 
 ### 添加FFmpeg环境变量
 FFMPEG_LIB_PATH: {your_dir}/FFmpeg-n4.4.4/ascend/lib

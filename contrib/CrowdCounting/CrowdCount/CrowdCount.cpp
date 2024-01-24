@@ -30,13 +30,13 @@ namespace{
 }
 // 设置配置参数
 void CrowdCount::SetCrowdCountPostProcessConfig(const InitParam &initParam,
-                                                       std::map<std::string, std::shared_ptr<void>> &config) {
+                                                       std::map<std::string, std::string> &config) {
     MxBase::ConfigData configData;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
     configData.SetJsonValue("CLASS_NUM", std::to_string(initParam.classNum));
     auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
+    config["postProcessConfigContent"] = jsonStr;
 }
 
 APP_ERROR CrowdCount::Init(const InitParam &initParam) {
@@ -63,7 +63,7 @@ APP_ERROR CrowdCount::Init(const InitParam &initParam) {
         LogError << "ModelInferenceProcessor init failed, ret=" << ret << ".";
         return ret;
     }
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     SetCrowdCountPostProcessConfig(initParam, config);
     // 初始化CrowdCount后处理对象
     post_ = std::make_shared<CrowdCountPostProcess>();

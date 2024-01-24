@@ -36,7 +36,7 @@ class CenterfaceKeyPointPostProcessor
     : public MxBase::KeypointPostProcessBase {
 public:
   APP_ERROR
-  Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) override;
+  Init(const std::map<std::string, std::string> &postConfig) override;
 
   APP_ERROR DeInit() override {
     return APP_ERR_OK;

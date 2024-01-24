@@ -44,7 +44,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR EfficientdetPostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+    APP_ERROR EfficientdetPostProcess::Init(const std::map<std::string, std::string> &postConfig) {
         LogInfo << "Start to Init EfficientdetPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
         if (ret != APP_ERR_OK) {

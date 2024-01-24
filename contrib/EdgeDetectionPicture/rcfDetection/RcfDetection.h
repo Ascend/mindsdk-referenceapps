@@ -47,7 +47,7 @@ protected:
     APP_ERROR Resize(const MxBase::TensorBase &inputTensor, MxBase::TensorBase &outputTensor,
 		                 uint32_t resizeHeight, uint32_t resizeWidth);
     APP_ERROR WriteResult(MxBase::TensorBase &inferTensor, const std::string &imgPath);
-    void SetRcfPostProcessConfig(const InitParam &initParam, std::map<std::string, std::shared_ptr<void>> &config);
+    void SetRcfPostProcessConfig(const InitParam &initParam, std::map<std::string, std::string> &config);
 
 private:
     std::shared_ptr<MxBase::DvppWrapper> dvppWrapper_;

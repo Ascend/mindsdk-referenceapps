@@ -32,7 +32,7 @@ namespace MxBase {      // MxBase是命名空间名字
 
         RTM3DPostProcess &operator=(const RTM3DPostProcess &other) = default;    // 重载运算符=  类的对象能互相赋值
 
-        APP_ERROR Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) override;
+        APP_ERROR Init(const std::map <std::string, std::string> &postConfig) override;
 
         APP_ERROR DeInit() override;
 

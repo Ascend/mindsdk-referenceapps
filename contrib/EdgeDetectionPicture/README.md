@@ -9,7 +9,7 @@
 昇腾310(推理)
 
 #### 1.2 支持的版本
-本样例配套的CANN版本为5.0.4，MindX SDK版本为2.0.4
+本样例配套的CANN版本为7.0.0，MindX SDK版本为5.0.0
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1%E5%AE%89%E8%A3%85SDK%E5%BC%80%E5%8F%91%E5%A5%97%E4%BB%B6.md)
 
 #### 1.3 代码目录结构与说明
@@ -39,8 +39,8 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 
 | 软件                | 版本         | 说明                          | 获取方式                                                     |
 | ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |
-| mxVision            | 2.0.4        | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
-| Ascend-CANN-toolkit | 5.0.4        | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
+| mxVision            | 5.0.0        | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
+| Ascend-CANN-toolkit | 7.0.0        | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
 | 操作系统            | Ubuntu 18.04 | 操作系统                      | Ubuntu官网获取                                               |
 
 在编译运行项目前，需要设置环境变量：
@@ -48,11 +48,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 - 环境变量介绍
 
   ```
-  export install_path=/usr/local/Ascend/ascend-toolkit/latest
-  export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-  export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg:$PYTHONPATH
-  export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-  export ASCEND_OPP_PATH=${install_path}/opp
+  . {sdk_install_path}/mxVision/set_env.sh
   
   ```
 
@@ -76,14 +72,8 @@ atc --model=rcf.prototxt --weight=./rcf_bsds.caffemodel --framework=0 --output=r
 **步骤1** 修改CMakeLists.txt文件 将set(MX_SDK_HOME ${SDK安装路径}) 中的${SDK安装路径}替换为实际的SDK安装路径
 
 **步骤2** 设置环境变量
-ASCEND_HOME Ascend安装的路径，一般为/usr/local/Ascend
-LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径，包括ACL，开源软件库，libmxbase.so的路径
 ```
-export MX_SDK_HOME=${MX_SDK_HOME}
-export ASCEND_HOME=/usr/local/Ascend
-export ASCEND_VERSION=nnrt/latest
-export ARCH_PATTERN=.
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib/modelpostprocessors:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:${LD_LIBRARY_PATH}
+. {sdk_install_path}/mxVision/set_env.sh
 ```
 
 **步骤3** 执行如下编译命令：
@@ -135,11 +125,11 @@ vim eval_edge.py
 (5) 测试精度
 
 ``` shell
-python main.py  --result_dir path/to/result  --gt_dir paht/to/BSR/BSDS500/data/groundTruth/test 
+python main.py  --save_dir path/to/result  --gt_dir paht/to/BSR/BSDS500/data/groundTruth/test 
 
 ```
 注: 
-  result_dir: results directory
+  save_dir: results directory
 
   gt_dir    : ground truth directory
 

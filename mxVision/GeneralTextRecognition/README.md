@@ -28,7 +28,8 @@
 | 软件名称 | 版本   |
 | -------- | ------ |
 | cmake    | 3.5.1+ |
-| mxVision | 0.2    |
+| mxVision | 5.0.0   |
+| CANN     | 7.0.0   |
 | Python   | 3.7.5  |
 
 
@@ -81,7 +82,7 @@
 
 **步骤2：** 配置 mxVision SDK 环境变量。
 
-`export MX_SDK_HOME=${安装路径}/mxVision `
+`. {sdk_install_path}/mxVision/set_env.sh `
 
 注：本例中mxVision SDK安装路径为 /root/MindX_SDK。
 
@@ -107,7 +108,7 @@ blank
 
 1. 将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
 
-    `NPU-smi info`
+    `npu-smi info`
 
 2. 文本检测使用的DBNet，后处理由步骤三编译得到，默认生成到"./lib/libDBpostprocess.so", 如有修改，请修改./data/OCR.pipeline的对应配置：
    

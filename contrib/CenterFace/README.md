@@ -12,9 +12,9 @@
 
 ### 1.2 支持的版本
 
-CANN：7.0.RC1
+CANN：7.0.0
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 
 ### 1.3 软件方案介绍
 
@@ -75,8 +75,8 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 | 软件名称 | 版本    |
 | -------- |-------|
 | cmake    | 3.5.+ |
-| MindX SDK | 5.0.RC3    |
-| CANN | 7.0.RC1 |
+| MindX SDK | 5.0.0    |
+| CANN | 7.0.0 |
 | Python   | 3.7.2 |
 | OpenCV   | 3.4.0 |
 | gcc      | 7.5.0 |
@@ -86,11 +86,7 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 在编译运行项目前，需要设置环境变量：
 
 ```bash
-export MX_SDK_HOME=${SDK安装路径}/mxVision
-export LD_LIBRARY_PATH="${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${LD_LIBRARY_PATH}"
-export PYTHONPATH="${MX_SDK_HOME}/python:${PYTHONPATH}"
-export GST_PLUGIN_SCANNER="${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner"
-export GST_PLUGIN_PATH="${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins"
+. {sdk_install_path}/mxVision/set_env.sh
 ```
 
 ## 3.模型转换

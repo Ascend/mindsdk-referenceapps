@@ -10,9 +10,9 @@ CenterNet 目标检测后处理插件基于 MindX SDK 开发，对图片中的�
 
 ### 1.2 支持的版本
 
-CANN：7.0.RC1
+CANN：7.0.0
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 
 
 ### 1.3 软件方案介绍 
@@ -108,8 +108,8 @@ CenterNet 的后处理插件接收模型推理插件输出的特征图。本项�
 | 软件名称 | 版本  |
 | -------- | ----- |
 | cmake    | 3.5+  |
-| MindX SDK | 5.0.RC3    |
-| CANN | 7.0.RC1 |
+| MindX SDK | 5.0.0    |
+| CANN | 7.0.0 |
 | python   | 3.9.2 |
 
 确保环境中正确安装mxVision SDK。
@@ -119,7 +119,7 @@ CenterNet 的后处理插件接收模型推理插件输出的特征图。本项�
 MindX SDK 环境变量:
 
 ```
-. ${SDK-path}/set_env.sh
+. ${SDK-path}/mxVision/set_env.sh
 ```
 
 CANN 环境变量：

@@ -146,7 +146,7 @@ make install
 2. 配置范例
 
    ```
-   ## /*Faceboxes*/
+   /*Faceboxes*/
         "mxpi_tensorinfer0": {
             "props": {
             "modelPath": "./models/faceboxes-b0_bs1.om"
@@ -163,7 +163,7 @@ make install
         "factory": "mxpi_objectpostprocessor",
         "next": "mxpi_dataserialize0"
         },
- ```
+    ```
    根据所需场景，配置pipeline文件，调整路径参数以及插件阈值参数。例如“postProcessLibPath”字段是SDK模型后处理插件库路径。
 
 
@@ -193,7 +193,7 @@ git clone https://github.com/zisianw/FaceBoxes.PyTorch.git
 ```
 到以下链接下载原预训练模型和onnx模型文件，分别放在/weights和/models 目录下：
 (https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/model.zip) 
-
+```
 ### 6.2 onnx转om模型
 
 1.设置环境变量
@@ -211,7 +211,7 @@ export ASCEND_OPP_PATH=${install_path}/opp
 2.在models目录下，使用atc将onnx模型转换为om模型文件，加入--insert_op_conf参数使用AIPP，放到models目录下，工具使用方法可以参考CANN 5.0.2 开发辅助工具指南 (推理) 01
 ```
 atc --framework=5 --model=faceboxes-b0_bs1.onnx --output=faceboxes-b0_bs1 --input_format=NCHW --input_shape="image:1,3,1024,1024" --log=debug --soc_version=Ascend310 --insert_op_conf=../config/FaceBoxes.aippconfig
-
+```
 ## 7 测试
 
 准备好要测试的图片，在test.py中修改好测试图片读取路径以及结果存放路径，并修改 run.sh 文件中的环境路径和项目路径以及要运行的python文件名test.py。
@@ -237,23 +237,7 @@ bash run.sh
 ### 9.1 准备
 1.下载FDDB数据集注释，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip，将注释放在data/ground_truth下面
 
-2.下载所需脚本box_overlaps.pyx、setup.py、convert.py、split.py、evaluate.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
-
-3.将split.py与evaluate.py的代码进行修改：
-（1）split.py: 
-在第22行代码后添加：
-cur_path_dir = os.path.join(cur_path, '1')
-if not os.path.exists(cur_path_dir):
-    os.makedirs(cur_path_dir)
-（2）evaluate.py: 
-在第229行与第230行之间添加：for fold_id in range(1, 11)，添加后代码如下：
-# different setting
-for fold_id in range(1, 11):
-            count_face = 0
-            ...
-
-在第233行代码上进行修改：
-gt = gt_box_dict[event[setting_id]] → gt = gt_box_dict[fold_id]
+2.下载所需脚本box_overlaps.pyx、box_overlaps.c、setup.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
 
 ### 9.2 验证流程
 在运行完main.py后开始进行精度验证，所需代码文件放在script目录下。首先将所依赖的python包安装好（bbox除外），bbox函数直接在终端运行python3.9 setup.py install即可。之后分别运行script目录下的convert.py，split.py和evaluate.py，FDDB集的精度结果在运行完evaluate.py后会打印出来。
@@ -275,9 +259,17 @@ gt = gt_box_dict[event[setting_id]] → gt = gt_box_dict[fold_id]
                 "postProcessConfigPath": "./config/faceboxes-b0_bs1.cfg",
                 "postProcessLibPath": "${MX_SDK_HOME}/lib/modelpostprocessors/libfaceboxespostprocess.so"
         },
-        "factory": "mxpi_objectpostprocessor",
-        "next": "mxpi_dataserialize0"
+            "factory": "mxpi_objectpostprocessor",
+            "next": "mxpi_dataserialize0"
         }
 ```
+### 10.2 运行main.py时出现报错ImportError
 
+#### 问题描述：
+
+运行main.py时出现报错ImportError ：dlopen:cannot load any more object with static TLS
+
+#### 解决方案：
+
+修改导入顺序，将main.py中 "import cv2" 一行移动到 "from StreamManager import XXX" 上方。
 

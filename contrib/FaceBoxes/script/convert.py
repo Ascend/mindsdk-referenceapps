@@ -15,8 +15,8 @@
 import os
 path = os.getcwd()
 
-if not os.path.exists(os.path.join(path,'1')):
-    os.makedirs(os.path.join(path,'1'))
+if not os.path.exists('../data/1'):
+    os.makedirs('../data/1')
 
 with open('../data/FDDB_Evaluation/FDDB_dets.txt', 'r') as f:
     while(True):
@@ -29,7 +29,7 @@ with open('../data/FDDB_Evaluation/FDDB_dets.txt', 'r') as f:
         raw = f.readline().strip('\n').split('.')[0]
         file_name = ''.join([img_name, '.txt'])
         
-        os.chdir(os.path.join(path, '1'))
+        os.chdir('../data/1')
         with open(file_name, 'w') as new_file:
             new_file.write(img_name+'\n')
             new_file.write(raw+'\n')

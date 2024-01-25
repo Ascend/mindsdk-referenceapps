@@ -15,10 +15,9 @@
 import os
 import shutil
 
-path = os.getcwd()
-pre_dir = os.path.join(path, '1')
-cur_path = os.path.join(path, 'pred_sample')
-cur_path_dir = os.path.join(cur_path,'1')
+pre_dir = '../data/1'
+cur_path = '../data/pred_sample'
+cur_path_dir = '../data/pred_sample/1'
 if not os.path.exists(cur_path):
         os.makedirs(cur_path)
 if not os.path.exists(cur_path_dir):

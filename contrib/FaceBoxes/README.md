@@ -74,6 +74,7 @@
 │   ├── split.py
 │   ├── evaluate.py
 │   ├── setup.py
+│   ├── box_overlaps.c
 │   ├── box_overlaps.pyx
 ├── main.py
 ├── test.py
@@ -123,6 +124,7 @@ export MX_SDK_HOME=/MindX_SDK/mxVision/
 ## 进入目录 /plugin
 ## 创建build目录
 mkdir build
+cd build
 ## 使用cmake命令进行编译
 cmake ..
 make -j
@@ -267,9 +269,9 @@ bash run.sh
 
 #### 问题描述：
 
-运行main.py时出现报错ImportError ：dlopen:cannot load any more object with static TLS
+运行py文件时时出现报错ImportError ：dlopen:cannot load any more object with static TLS
 
 #### 解决方案：
 
-修改导入顺序，将main.py中 "import cv2" 一行移动到 "from StreamManager import XXX" 上方。
+修改导入顺序，将py文件中 "import cv2" 一行移动到 "from StreamManager import XXX" 上方。
 

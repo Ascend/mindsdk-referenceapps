@@ -135,10 +135,10 @@ atc --input_shape="data:1,3,224,224" --weight="single.caffemodel" --input_format
 项目运行数据集为Img下img_celeba.7z，运行评测代码所需数据集为Img下img_align_celeba
 
 **步骤2**
-在安装mxVision SDK后，配置SDK安装路径、lib路径以及python路径，这些路径需要根据用户实际情况配置，例如SDK安装路径需要与用户本身安装路径一致，不一致将导致环境错误。同理，lib路径与python路径，都需要与实际情况一致。将下载的模型文件以及其他配置文件放到项目路径中，与pipeline内路径对应。修改pipeline内路径与模型文件一致。后处理插件需要人工运行代码进行转化，运行项目下的build.sh生成so文件，so文件生成在plugins下的build目录下。将so文件放到相应的路径下后，文件配置工作完成。
+在安装mxVision SDK后，配置SDK安装路径、lib路径以及python路径，这些路径需要根据用户实际情况配置，例如SDK安装路径需要与用户本身安装路径一致，不一致将导致环境错误。同理，lib路径与python路径，都需要与实际情况一致。将下载的模型文件以及其他配置文件放到项目路径中，与pipeline内路径对应。修改pipeline内路径与模型文件一致。后处理插件需要人工运行代码进行转化，运行项目下的build.sh生成so文件，so文件生成在plugins下的build目录下，修改该文件权限为440。将so文件放到相应的路径下后（例如models/），文件配置工作完成。
 
 需要修改路径的位置如下：
-Attr_part.pipeline：
+
 ```
 "mxpi_objectpostprocessor0": {
             "props": {
@@ -163,6 +163,7 @@ Attr_part.pipeline：
                "next": "mxpi_facealignment0:1"
            },
 ```
+
 
 
 **步骤3** 

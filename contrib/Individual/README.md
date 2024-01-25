@@ -12,9 +12,9 @@
 
 ### 1.2 支持的版本
 
-支持的SDK版本为2.0.4。
+支持的SDK版本为5.0.0，CANN版本为7.0.0。
 
-版本号查询方法，在Atlas产品环境下，运行命令：npu-smi info进行查看。
+HDK版本号查询方法，在Atlas产品环境下，运行命令：npu-smi info进行查看。
 
 
 ### 1.3 软件方案介绍
@@ -76,7 +76,7 @@
 | 软件名称     | 版本    |
 |----------|-------|
 | cmake    | 3.5.+ |
-| mxVision | 2.0.4 |
+| mxVision | 5.0.0 |
 | python   | 3.9.2 |
 
 模型转换所需ATC工具环境搭建参考链接：https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md

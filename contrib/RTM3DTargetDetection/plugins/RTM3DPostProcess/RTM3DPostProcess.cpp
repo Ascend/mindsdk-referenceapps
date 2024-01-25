@@ -39,7 +39,7 @@ auto uint8Deleter = [] (uint8_t* p) { };
 
 // 在不同的名字空间下可以存在同名的函数、类、变量，它们互不影响    using namespace std方便调用cout、endl等所以不容易发现其实这个习惯可能会出现问题
 namespace MxBase {
-    APP_ERROR RTM3DPostProcess::Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) {
+    APP_ERROR RTM3DPostProcess::Init(const std::map <std::string, std::string> &postConfig) {
         LogDebug << "Start to Init RTM3DPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
         if (ret != APP_ERR_OK) {
@@ -53,7 +53,7 @@ namespace MxBase {
         return APP_ERR_OK;
     }
 
-    bool RTM3DPostProcess::IsValidTensors(const std::vector <TensorBase> &tensors) const {
+    bool RTM3DPostProcess::IsValidTensors(const std::vector <TensorBase> &tensors) {
         long tensor_size[4] = {66560,66560,532480,99840};   // 四个tensor各包含多少数
         if (tensors.size() != (size_t) RTM3DType_) {   // 强制类型转换，int转换成size_t
             LogError << "number of tensors (" << tensors.size() << ") " << "is unequal to RTM3DType_("

@@ -237,7 +237,7 @@ bash run.sh
 ## 9 精度验证
 
 ### 9.1 准备
-1.下载FDDB数据集注释，将注释放在data/ground_truth下面，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
+1.下载FDDB数据集注释，将注释放在data/ground_truth下面，并且在data目录下创建result以及pred_sample文件夹。链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
 
 2.下载所需脚本box_overlaps.pyx、box_overlaps.c、setup.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
 

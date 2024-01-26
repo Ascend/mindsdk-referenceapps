@@ -53,7 +53,7 @@ namespace MxBase {
         return APP_ERR_OK;
     }
 
-    bool RTM3DPostProcess::IsValidTensors(const std::vector <TensorBase> &tensors) {
+    bool RTM3DPostProcess::IsValidTensors(const std::vector <TensorBase> &tensors) const {
         long tensor_size[4] = {66560,66560,532480,99840};   // 四个tensor各包含多少数
         if (tensors.size() != (size_t) RTM3DType_) {   // 强制类型转换，int转换成size_t
             LogError << "number of tensors (" << tensors.size() << ") " << "is unequal to RTM3DType_("

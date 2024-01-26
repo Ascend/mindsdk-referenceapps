@@ -11,7 +11,7 @@
 
 ### 1.2 支持的版本
 
-支持的SDK版本为[2.0.4](https://www.hiascend.com/software/Mindx-sdk)。
+支持的SDK版本为[5.0.0](https://www.hiascend.com/software/Mindx-sdk)。
 
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 
@@ -73,13 +73,19 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 
 | 软件名称  | 版本        |
 | --------- | ----------- |
-| MindX SDK | 2.0.4       |
+| MindX SDK | 5.0.0       |
 | ubantu    | 18.04.1 LTS |
-| CANN      | 5.0.4       |
+| CANN      | 7.0.0       |
 | Python    | 3.9.2       |
 
 在编译运行项目前，需要设置环境变量：
+执行 
+```
+bash ${MX_SDK_HOME}/set_env.sh
+```
+${MX_SDK_HOME}为mxVision SDK安装路径。
 
+或者手动导入环境变量
 - 环境变量介绍
 
 ```
@@ -143,6 +149,7 @@ bash build.sh
 ```
 RTM3DTargetDetection/plugins/plugin/librtm3dpostprocess.so
 ```
+修改librtm3dpostprocess.so权限为440    
 
 **步骤2** 
 

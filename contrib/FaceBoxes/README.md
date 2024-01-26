@@ -27,10 +27,10 @@
   | 软件名称 | 版本  |
   | -------- | ----- |
   | cmake    | 3.5.+ |
-  | mxVision | 2.0.4 |
+  | mxVision | 5.0.0 |
   | Python   | 3.9.2 |
   | Pytorch   | 1.9.0 |
-  | CANN   | 5.0.4 |
+  | CANN   | 7.0.0 |
   | OpenCV   | 4.5.3 |
   | gcc      | 7.5.0 |
   | ffmpeg   | 3.4.8 |
@@ -112,7 +112,13 @@
 **步骤4：** 编译程序前提需要先交叉编译好第三方依赖库。
 
 **步骤5：** 配置环境变量MX_SDK_HOME：
+执行 
+```
+bash ${MX_SDK_HOME}/set_env.sh
+```
+${MX_SDK_HOME}为mxVision SDK安装路径。
 
+或者手动导入环境变量
 ```bash
 export MX_SDK_HOME=/MindX_SDK/mxVision/								
 # 此处MX_SDK_HOME请使用MindX_SDK的实际路径
@@ -199,6 +205,13 @@ git clone https://github.com/zisianw/FaceBoxes.PyTorch.git
 ### 6.2 onnx转om模型
 
 1.设置环境变量
+执行 
+```
+bash ${ASCEND_TOOLKIT_HOME}/set_env.sh
+```
+${ASCEND_TOOLKIT_HOME}为Ascend toolkit安装路径。
+
+或者手动导入环境变量
 ```
 export install_path=/usr/local/Ascend/ascend-toolkit/latest
 

@@ -89,7 +89,7 @@ HDK版本号查询方法，在Atlas产品环境下，运行命令：npu-smi info
 步骤2：配置mxVision SDK环境变量、lib库环境变量以及python环境变量。
 执行 
 ```
-bash ${MX_SDK_HOME}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 ${MX_SDK_HOME}为mxVision SDK安装路径。
 

@@ -54,7 +54,7 @@ Yolov5PostProcess &Yolov5PostProcess::operator=(const Yolov5PostProcess &other) 
     return *this;
 }
 
-APP_ERROR Yolov5PostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+APP_ERROR Yolov5PostProcess::Init(const std::map<std::string, std::string> &postConfig) {
     APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
     if (ret != APP_ERR_OK) {
         LogError << GetError(ret) << "Fail to superInit in ObjectPostProcessBase.";

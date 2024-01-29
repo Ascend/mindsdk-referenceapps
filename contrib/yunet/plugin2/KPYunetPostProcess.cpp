@@ -45,7 +45,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR KPYunetPostProcess::Init(const std::map <std::string, std::shared_ptr<void>>& postConfig)
+    APP_ERROR KPYunetPostProcess::Init(const std::map <std::string, std::string>& postConfig)
     {
         LogDebug << "Start to Init KPYunetPostProcess.";
         APP_ERROR ret = KeypointPostProcessBase::Init(postConfig);

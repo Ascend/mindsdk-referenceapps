@@ -10,9 +10,9 @@ yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可�
 
 ### 1.2 支持的版本
 
-CANN：7.0.RC1
+CANN：7.0.0
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 
 ### 1.3 软件方案介绍
 
@@ -95,17 +95,17 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 推荐系统为ubuntu  18.04,环境软件和版本如下：
 
-| 软件名称            | 版本  | 说明                          | 获取方式                                                  |
-| ------------------- | ----- | ----------------------------- | :-------------------------------------------------------- |
-| MindX SDK           | 5.0.RC3 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
+| 软件名称            | 版本    | 说明                          | 获取方式                                                  |
+| ------------------- |-------| ----------------------------- | :-------------------------------------------------------- |
+| MindX SDK           | 5.0.0 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
 | ubuntu              | 18.04 | 操作系统                      | 请上ubuntu官网获取                                        |
-| Ascend-CANN-toolkit | 7.0.RC1 | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial) |
+| Ascend-CANN-toolkit | 7.0.0 | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial) |
 
 
 
 在编译运行项目前，需要设置环境变量：
 
-MindSDK 环境变量：
+MindXSDK 环境变量：
 
 ```
 . ${SDK-path}/set_env.sh
@@ -232,7 +232,7 @@ make -j
 make install
 ````
 
-如果权限问题，`cd`到MindSDK安装路径的`lib/modelpostprocessors`目录，将`libyunetpostprocess.so`的权限更改为`640`。
+将生成的模型后处理so拷贝至MindXSDK安装路径的`lib/modelpostprocessors`目录。如果权限问题，`cd`到MindXSDK安装路径的`lib/modelpostprocessors`目录，将`libyunetpostprocess.so`的权限更改为`640`。
 
 对于`plugin2`、`plugin3`目录也同样处理。
 

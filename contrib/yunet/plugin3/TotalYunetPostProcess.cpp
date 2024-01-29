@@ -47,7 +47,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR TotalYunetPostProcess::Init(const std::map <std::string, std::shared_ptr<void>>& postConfig)
+    APP_ERROR TotalYunetPostProcess::Init(const std::map <std::string, std::string>& postConfig)
     {
         LogDebug << "Start to Init TotalYunetPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);

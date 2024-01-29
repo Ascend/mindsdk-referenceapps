@@ -102,17 +102,23 @@ int main(int argc, char* argv[])
         return ret;
     }
     get_files(argv[1], files);
+    float totalTime = 0;
     for (uint32_t i = 0; i < files.size(); i++) 
     {
         // 推理业务开始
         std::string imgPath = files[i];
+        auto start = std::chrono::steady_clock::now();
         ret = yolov5->Process(imgPath);
+        auto end = std::chrono::steady_clock::now();
         if (ret != APP_ERR_OK) {
             LogError << "Yolov5Detection process failed, ret=" << ret << ".";
             yolov5->DeInit();
             return ret;
         }
+        totalTime = totalTime + std::chrono::duration<double, std::milli>(end - start).count() / 1000;
     }
+    auto fps = files.size() / totalTime;
+    LogInfo << "Process FPS: " << fps;
     yolov5->DeInit();
     LogInfo << "Project end!!!!";
     return APP_ERR_OK;

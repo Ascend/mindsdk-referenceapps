@@ -19,12 +19,18 @@
 #include "MxBase/MemoryHelper/MemoryHelper.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
 #include "MxBase/Tensor/TensorBase/TensorBase.h"
-#include "MxBase/CV/Segmentation/DrawPixels.h"
 #include "MxBase/PostProcessBases/SemanticSegPostProcessBase.h"
 
 #define INPUT_MODEL_HEIGHT 512
 #define INPUT_MODEL_WIDTH 512
 #define OUTPUT_MODEL_WIDTH 512
+#define CHANNEL0 0
+#define CHANNEL1 1
+#define CHANNEL2 2
+#define RCHANNEL_MUL 34527
+#define GCHANNEL_MUL 78997
+#define BCHANNEL_MUL 12347
+#define COMPRESSION_LEVEL 9
 // Read the information in the file
 static APP_ERROR  readfile(const std::string& filePath, MxStream::MxstDataInput& dataBuffer)
 {
@@ -152,6 +158,28 @@ void semanticsegoutput(const std::vector<MxBase::TensorBase>& tensors,
     }
 }
 
+APP_ERROR DrawPixelsRGB(const std::vector<std::vector<int>>& pixels, std::string outputPath)
+{
+    if (pixels.empty() || pixels[0].empty()) {
+        LogError << "pixels is empty; Draw image failed.";
+        return APP_ERR_INPUT_NOT_MATCH;
+    }
+    cv::Mat mat(pixels.size(), pixels[0].size(), CV_8UC3);
+    for (int i = 0; i < mat.rows; ++i) {
+        for (int j = 0; j < mat.cols; ++j) {
+            int pixel = pixels[i][j];
+            mat.at<cv::Vec3b>(i, j)[CHANNEL0] = (pixel * RCHANNEL_MUL) % (UINT8_MAX + 1);
+            mat.at<cv::Vec3b>(i, j)[CHANNEL1] = (pixel * GCHANNEL_MUL) % (UINT8_MAX + 1);
+            mat.at<cv::Vec3b>(i, j)[CHANNEL2] = (pixel * BCHANNEL_MUL) % (UINT8_MAX + 1);
+        }
+    }
+    std::vector<int> compressionParams;
+    compressionParams.push_back(cv::IMWRITE_PNG_COMPRESSION);
+    compressionParams.push_back(COMPRESSION_LEVEL);
+    imwrite(outputPath, mat, compressionParams);
+    return APP_ERR_OK;
+}
+
 // Mask diagram generation
 APP_ERROR draw(const std::vector<MxBase::TensorBase>& tensors,
                std::vector<MxBase::SemanticSegInfo>& semanticSegInfos,
@@ -165,7 +193,7 @@ APP_ERROR draw(const std::vector<MxBase::TensorBase>& tensors,
         for (uint32_t i = 0; i < semanticSegInfos.size(); i++) {
             std::ostringstream outputPath;
             outputPath << "./data/mask_" << inputPicname;
-            MxBase::DrawPixelsRGB(semanticSegInfos[i].pixels, outputPath.str());
+            DrawPixelsRGB(semanticSegInfos[i].pixels, outputPath.str());
         }
     }
     return APP_ERR_OK;
@@ -193,7 +221,7 @@ void  image_fusion(std::string filename,std::string maskname,std::string &inputP
 int main(int argc, char* argv[])
 {
     // Enter the image name, path
-    std::string inputPicname = "test.jpeg";
+    std::string inputPicname = "test.jpg";
     std::string inputPicPath = "./data/"+inputPicname;
     unsigned long idx = inputPicname.find(".jpg");
 

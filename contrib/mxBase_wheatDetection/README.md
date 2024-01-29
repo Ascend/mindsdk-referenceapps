@@ -88,14 +88,10 @@ python export.py --weights best_v3.pt --img 416 --batch 1 --simplify
 **步骤3** 执行模型转换命令
 
 (1) 配置环境变量
-#### 设置环境变量（请确认install_path路径是否正确）
-#### Set environment PATH (Please confirm that the install_path is correct).
+#### 设置CANN环境变量（请确认install_path路径是否正确）
+#### Set environment PATH (Please confirm that the install_path is correct), ascend-toolkit-path为CANN安装路径
 ```c
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg:$PYTHONPATH
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
+. ${ascend-toolkit-path}/set_env.sh
 ```
 
 (2) 转换模型
@@ -139,13 +135,9 @@ atc --model=./best_v3_t.onnx --framework=5 --output=./onnx_best_v3 --soc_version
 
 **步骤2** 
 
-ASCEND_HOME Ascend安装的路径，一般为/usr/local/Ascend
-LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径，包括ACL，开源软件库，libmxbase.so以及libyolov3postprocess.so的路径
+设置MindXSDK 环境变量，SDK-path为mxVision SDK 安装路径
 ```
-export ASCEND_HOME=/usr/local/Ascend
-export ASCEND_VERSION=nnrt/latest
-export ARCH_PATTERN=.
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib/modelpostprocessors:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:${LD_LIBRARY_PATH}
+. ${SDK-path}/set_env.sh
 ```
 
 **步骤3** 
@@ -164,14 +156,6 @@ cd 到mxBase_wheatDetection目录下
 ./mxBase_wheatDetection ./test/
 ```
 
-## 精度测试
+## 性能测试
 
-使用(https://github.com/Cartucho/mAP)进行map计算，需要参考readme将推理结果数据以下方式转换并存储为txt
-
-```
-<CLASS_NAME> <LEFT> <TOP> <RIGHT> <BOTTOM>
-```
-
-并将相关txt保存至input/detection-results/文件夹，对标签进行相同转换并保存至 input/ground-truth/文件夹。
-随后执行python main.py以计算map并生成相关绘图。
-使用GWHD2020数据集训练集进行测试，map为0.8，性能为14FPS.
+使用GWHD2020数据集训练集进行测试，性能为15FPS。

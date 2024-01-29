@@ -62,7 +62,7 @@ APP_ERROR Yolov5Detection::LoadLabels(const std::string &labelPath, std::map<int
 
 // 设置配置参数
 void Yolov5Detection::SetYolov5PostProcessConfig(const InitParam &initParam, 
-                                                 std::map<std::string, std::shared_ptr<void>> &config) {
+                                                 std::map<std::string, std::string> &config) {
     MxBase::ConfigData g_config_data;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
     g_config_data.SetJsonValue("CLASS_NUM", std::to_string(initParam.classNum));
@@ -78,8 +78,8 @@ void Yolov5Detection::SetYolov5PostProcessConfig(const InitParam &initParam,
     g_config_data.SetJsonValue("CHECK_MODEL", checkTensor);
 
     auto jsonStr = g_config_data.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
-    config["labelPath"] = std::make_shared<std::string>(initParam.labelPath);
+    config["postProcessConfigContent"] = jsonStr;
+    config["labelPath"] = initParam.labelPath;
 }
 
 APP_ERROR Yolov5Detection::Init(const InitParam &initParam) {
@@ -107,7 +107,7 @@ APP_ERROR Yolov5Detection::Init(const InitParam &initParam) {
         return ret;
     }
 
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     SetYolov5PostProcessConfig(initParam, config);
     //  初始化Yolov5后处理对象
     post_ = std::make_shared<Yolov5PostProcess>();
@@ -310,7 +310,6 @@ APP_ERROR Yolov5Detection::WriteResult(MxBase::TensorBase &tensor,
                       green, thickness);
     }
     // 把Mat类型的图像矩阵保存为图像到指定位置。
-    
 
     cv::imwrite(newSavePath, imgBgr);
     return APP_ERR_OK;

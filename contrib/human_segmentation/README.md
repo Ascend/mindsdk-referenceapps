@@ -17,12 +17,12 @@
 ```
 ## 3 依赖
 
-| 软件名称 | 版本   |
-| :--------: | :------: |
-|ubantu 18.04|18.04.1 LTS   |
-|MindX SDK|2.0.4|
-|C++| 11.0|
-|opencv2| |
+| 软件名称 |     版本      |
+| :--------: |:-----------:|
+|ubantu 18.04| 18.04.1 LTS |
+|MindX SDK|    5.0.0    |
+|C++|    11.0     |
+|opencv2|             |
 
 
 ## 4 模型转换
@@ -35,20 +35,13 @@
 
 在pb文件所在目录下执行以下命令  
 ```
-#设置环境变量（请确认install_path路径是否正确）  
-#Set environment PATH (Please confirm that the install_path is correct).
+# 设置CANN环境变量（请确认install_path路径是否正确）  
+# Set environment PATH (Please confirm that the install_path is correct).
+# ascend-toolkit-path: CANN 安装路径
+. ${ascend-toolkit-path}/set_env.sh
 
-export install_path=/usr/local/Ascend/ascend-toolkit/latest    
-
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH 
- 
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg  
-
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH  
-export ASCEND_OPP_PATH=${install_path}/opp    
-
-#执行，转换human_segmentation.pb模型
-#Execute, transform 转换human_segmentation.pb model.
+# 执行，转换human_segmentation.pb模型
+# Execute, transform 转换human_segmentation.pb model.
  
 atc --input_shape="input_rgb:1,512,512,3" --input_format=NHWC --output=human_segmentation --soc_version=Ascend310 --insert_op_conf=./insert_op.cfg --framework=3 --model=./human_segmentation.pb
 ```
@@ -69,20 +62,9 @@ https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5
 2. 配置
 
 ```
-# 执行如下命令，打开.bashrc文件
-vi .bashrc
-# 在.bashrc文件中添加以下环境变量
-MX_SDK_HOME=${SDK安装路径}
-
-LD_LIBRARY_PATH=${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:${FFMPEG_HOME}/lib:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/driver/lib64/
-
-GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner
-
-GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins
-
-# 保存退出.bashrc文件
-# 执行如下命令使环境变量生效
-source ~/.bashrc
+# 设置MindXSDK环境变量
+# SDK-path: mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
 
 #查看环境变量
 env

@@ -52,7 +52,7 @@ public:
 
     Yolov5PostProcess &operator=(const Yolov5PostProcess &other);
 
-    APP_ERROR Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) override;
+    APP_ERROR Init(const std::map<std::string, std::string> &postConfig) override;
 
     APP_ERROR DeInit() override;
 
@@ -61,7 +61,7 @@ public:
                       const std::vector<MxBase::ResizedImageInfo> &resizedImageInfos = {},
                       const std::map<std::string, std::shared_ptr<void>> &paramMap = {}) override;
 protected:
-    bool IsValidTensors(const std::vector<MxBase::TensorBase> &tensors) const override;
+    bool IsValidTensors(const std::vector<MxBase::TensorBase> &tensors) const;
 
     void ObjectDetectionOutput(const std::vector<MxBase::TensorBase> &tensors,
                                std::vector<std::vector<MxBase::ObjectInfo>> &objectInfos,

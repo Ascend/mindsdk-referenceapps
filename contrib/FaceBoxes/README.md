@@ -137,7 +137,7 @@ make -j
 make install
 ```
 
-编译好的插件会自动存放到SDK的插件库中，可以直接在pipeline中使用。
+编译好的插件会自动存放到SDK的插件库中，需要修改该插件权限为440，目录为￥，可以直接在pipeline中使用。
 
 **步骤7:** 配置pipeline
 

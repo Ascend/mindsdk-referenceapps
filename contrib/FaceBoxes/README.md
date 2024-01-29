@@ -114,7 +114,7 @@
 **步骤5：** 配置环境变量MX_SDK_HOME：
 执行 
 ```
-bash ${MX_SDK_HOME}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 ${MX_SDK_HOME}为mxVision SDK安装路径。
 
@@ -207,7 +207,7 @@ git clone https://github.com/zisianw/FaceBoxes.PyTorch.git
 1.设置环境变量
 执行 
 ```
-bash ${ASCEND_TOOLKIT_HOME}/set_env.sh
+. ${ASCEND_TOOLKIT_HOME}/set_env.sh
 ```
 ${ASCEND_TOOLKIT_HOME}为Ascend toolkit安装路径。
 

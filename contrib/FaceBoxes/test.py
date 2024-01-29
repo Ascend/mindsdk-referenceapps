@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # create streams by pipeline config file
 
-    with open("./Faceboxes.pipeline", 'rb') as f:
+    with open("./pipeline/Faceboxes.pipeline", 'rb') as f:
         pipelineStr = f.read()
     ret = streamManagerApi.CreateMultipleStreams(pipelineStr)
     if ret != 0:

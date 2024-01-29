@@ -80,7 +80,7 @@ APP_ERROR FasterRcnnMindsporePost::ReadConfigParams() {
             << "  MAX_PER_IMG: " << maxPerImg_ << " \n";
 }
 
-APP_ERROR FasterRcnnMindsporePost::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) {
+APP_ERROR FasterRcnnMindsporePost::Init(const std::map<std::string, std::string> &postConfig) {
     LogInfo << "Begin to initialize FasterRcnnMindsporePost.";
     APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
     if (ret != APP_ERR_OK) {

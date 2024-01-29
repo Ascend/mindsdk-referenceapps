@@ -9,7 +9,7 @@
 （1）输入类型是图片数据（jpg图片序列）,本项目使用的数据集图片来源是https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PersonCount/data.zip   
 （2）通过调用MindX SDK提供的图像解码接口mxpi_imagedecoder，解码后获取图像数据。  
 （3）然后进行图像尺寸大小变换，调用MindX SDK提供的图像尺寸大小变换接口mxpi_imageresize插件，检测模式的输入图像大小要求高800，宽1408。  
-（4）将尺寸变换后的图像数据输入人群计数模型进行推理,推理使用的caffemodel模型和om模型来源是https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PersonCount/model.zip。  
+（4）将尺寸变换后的图像数据输入人群计数模型进行推理,推理使用的caffemodel模型和om模型来源是https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PersonCount/model.zip     
 （5）模型后处理，调用MindX SDK提供的模型推理插件mxpi_modelinfer，后处理配置文件存放的地址是"models/insert_op.cfg"。然后调用MindX SDK提供的插件mxpi_dataserialize，将stream结果组装成json字符串输出。  
 （6）模型输出经过后处理后，得到人群密度估计图和人群计数估计值。  
 场景限制：  
@@ -64,8 +64,8 @@
 ├─pipeline //本项目使用的前端是python开发，用到的pipeline配置嵌入到main.py，所以该文件夹为空  
 ├─Plugin1  //编译后处理插件所需的源文件，生成的共享库文件存放于build文件夹  
 │  |--CMakeLists.txt  
-│  |--Plugin1.cpp  
-└─ └─Plugin1.h  
+│  |--CountPersonPostProcessor.cpp  
+└─ └─ CountPersonPostProcessor.h  
 
 ### 1.5 技术实现流程图
 
@@ -80,11 +80,19 @@
 
 | 软件名称 | 版本   |
 | -------- | ------ |
-| MindX SDK mxManufacture    |    2.0.4    |
-| ascend-toolkit             |    5.0.4    |
+| MindX SDK mxManufacture    |    5.0.0    |
+| ascend-toolkit             |    7.0.0    |
 
 在编译运行项目前，需要设置环境变量：
-MX_SDK_HOME="~/mxManufacture"  
+执行 
+```
+. ${MX_SDK_HOME}/set_env.sh
+```
+${MX_SDK_HOME}为mxVision SDK安装路径。
+
+或者手动导入环境变量
+```
+MX_SDK_HOME="~/mxVision"  
 LD_LIBRARY_PATH=\\${MX_SDK_HOME}/lib:\\${MX_SDK_HOME}/opensource/lib:\\${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit:\\${LD_LIBRARY_PATH}  
 PYTHONPATH=\\${MX_SDK_HOME}/python:\\${PYTHONPATH}  
 
@@ -92,18 +100,20 @@ install_path=/usr/local/Ascend/ascend-toolkit/latest
 PATH=/usr/local/python3.9.2/bin:\\${install_path}/atc/ccec_compiler/bin:\\${install_path}/atc/bin:\\$PATH  
 PYTHONPATH=\\${install_path}/atc/python/site-packages:\\${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:\\${install_path}/atc/python/site-packages/schedule_search.egg  
 LD_LIBRARY_PATH=\\${install_path}/atc/lib64:\\$LD_LIBRARY_PATH  
-ASCEND_OPP_PATH=\\${install_path}/opp   
+ASCEND_OPP_PATH=\\${install_path}/opp
+```  
 
 - 环境变量介绍  
-MX_SDK_HOME指明MindX SDK mxManufacture的根安装路径，用于包含MindX SDK提供的所有库和头文件。  
+MX_SDK_HOME指明MindX SDK mxVision的根安装路径，用于包含MindX SDK提供的所有库和头文件。  
 LD_LIBRARY_PATH提供了MindX SDK已开发的插件和相关的库信息。  
 install_path指明ascend-toolkit的安装路径。  
 PATH变量中添加了python的执行路径和atc转换工具的执行路径。  
 LD_LIBRARY_PATH添加了ascend-toolkit和MindX SDK提供的库目录路径。  
 ASCEND_OPP_PATH指明atc转换工具需要的目录。  
 
-具体执行命令  
-export MX_SDK_HOME="~/mxManufacture"  
+具体执行命令
+```
+export MX_SDK_HOME="~/mxVision"  
 export LD_LIBRARY_PATH=\\${MX_SDK_HOME}/lib:\\${MX_SDK_HOME}/opensource/lib:\\${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit:\\${LD_LIBRARY_PATH}  
 
 export install_path=/usr/local/Ascend/ascend-toolkit/latest  
@@ -111,14 +121,15 @@ export PATH=/usr/local/python3.9.2/bin:\\${install_path}/atc/ccec_compiler/bin:\
 export PYTHONPATH=\\${install_path}/atc/python/site-packages:\\${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:\\${install_path}/atc/python/site-packages/schedule_search.egg  
 export LD_LIBRARY_PATH=\\${install_path}/atc/lib64:\\$LD_LIBRARY_PATH  
 export ASCEND_OPP_PATH=\\${install_path}/opp    
-
+```
 
 ## 依赖安装
 
-安装MindX SDK mxManufacture：
-chmod u+x Ascend-mindxsdk-mxmanufacture_2.0.4_linux-aarch64.run
-./Ascend-mindxsdk-mxmanufacture_2.0.4_linux-aarch64.run
-
+安装MindX SDK mxVision：
+```
+chmod u+x Ascend-mindxsdk-mxVision_XXX.run
+./Ascend-mindxsdk-mxVision_XXX.run
+```
 ascend-toolkit:
 从/usr/local/Ascend/ascend-toolkit/latest/路径获取
 
@@ -126,14 +137,14 @@ ascend-toolkit:
 （描述项目安装运行的全部步骤，，如果不涉及个人路径，请直接列出具体执行命令）
 
 示例步骤如下：
-**步骤1** （修改相应文件）修改Plugin1目录下的CMakeLists.txt中PROJECT_SOURCE_DIR变量，该变量指向MindX SDK mxManufacture的根安装路径。修改main.py中的Dataset_Path变量，该变量指向待检测的图片路径。修改main.py中gt_num变量，改变了指向待检测图片的groundtruth.此外，如果想要得到pipeline中各个插件的具体运行时间，
-可以修改mxManufacture SDK的sdk.conf文件，使得enable_ps变量为true.
+**步骤1** （修改相应文件）修改Plugin1目录下的CMakeLists.txt中PROJECT_SOURCE_DIR变量，该变量指向MindX SDK mxVision的根安装路径。修改main.py中的DATASET_PATH变量，该变量指向待检测的图片路径。修改main.py中gt_path变量，改变了指向待检测图片的groundtruth.此外，如果想要得到pipeline中各个插件的具体运行时间，
+可以修改mxVisionSDK的sdk.conf文件，使得enable_ps变量为true.
 
 **步骤2** （设置环境变量）按照第二章节设置环境变量所需的具体执行指令执行即可。
 
-**步骤3** （执行编译的步骤）首先通过运行build.sh脚本文件生成后处理使用的共享库如sh build.sh。然后使用模型转换命令将caffe模型转化为om模型待使用，具体命令为atc --input_shape="blob1:8,3,800,1408" --weight="model/count_person.caffe.caffemodel" --input_format=NCHW --output="model/count_person_8.caffe" --soc_version=Ascend310 --insert_op_conf=model/insert_op.cfg --framework=0 --model="model/count_person.caffe.prototxt"。此外，我们已经在文件夹model transformation script提供了模型转换脚本将脚本文件复制到主目录即可运行.
+**步骤3** （执行编译的步骤）首先通过运行build.sh脚本文件生成后处理使用的共享库如sh build.sh，修改构建后的共享库libcountpersonpostprocess.so权限为440。然后使用模型转换命令将caffe模型转化为om模型待使用，具体命令为atc --input_shape="blob1:8,3,800,1408" --weight="model/count_person.caffe.caffemodel" --input_format=NCHW --output="model/count_person_8.caffe" --soc_version=Ascend310 --insert_op_conf=model/insert_op.cfg --framework=0 --model="model/count_person.caffe.prototxt"。此外，我们已经在文件夹model transformation script提供了模型转换脚本将脚本文件复制到主目录即可运行.
 
-**步骤4** （运行及输出结果）直接运行run.sh即可，生成的热度图保存在当前目录的heat_map文件夹下，并且每张热度图的命名以原图片名称为前缀以heatmap为后缀。此外，我们还在文件夹accuracy and performance code提供了精度与性能测试代码，将test.py和test.sh拷贝到主目录中然后执行sh test.sh即可运行精度与性能测试代码。
+**步骤4** （运行及输出结果）直接运行run.sh即可，生成的热度图保存在当前目录的heat_map文件夹下（需要手动创建heat_map目录），并且每张热度图的命名以原图片名称为前缀以heatmap为后缀。此外，我们还在文件夹accuracy and performance code提供了精度与性能测试代码，将test.py和test.sh拷贝到主目录中然后执行sh test.sh即可运行精度与性能测试代码。
 
 
 
@@ -161,4 +172,4 @@ ascend-toolkit:
 ![err information](https://gitee.com/superman418/mindxsdk-referenceapps/raw/master/contrib/PersonCount/img/err1.png)
 **解决方案：**
 
-新版Ascend-mindxsdk-mxmanufacture_2.0.4_linux-aarch64中的tensorinfer插件能够自动组batch然后进行batch模型的推理，可以解决该问题。
+新版Ascend-mindxsdk-mxvision_2.0.4_linux-aarch64中的tensorinfer插件能够自动组batch然后进行batch模型的推理，可以解决该问题。

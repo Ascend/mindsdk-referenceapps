@@ -38,7 +38,7 @@ FaceboxesPostProcess& FaceboxesPostProcess::operator=(const FaceboxesPostProcess
         return *this;
     }
 
-APP_ERROR FaceboxesPostProcess::Init(const std::map <std::string, std::shared_ptr<void>>& postConfig)
+APP_ERROR FaceboxesPostProcess::Init(const std::map <std::string, std::string>& postConfig)
     {
         LogInfo << "Start to Init FaceboxesPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);

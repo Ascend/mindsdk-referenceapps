@@ -19,7 +19,7 @@
 #include "MxBase/Maths/FastMath.h"
 #include "CountPersonPostProcessor.h"
 namespace MxBase {
-APP_ERROR CountPersonPostProcessor::Init(const std::map<std::string, std::shared_ptr<void>> & postConfig)
+APP_ERROR CountPersonPostProcessor::Init(const std::map<std::string, std::string> & postConfig)
 {
     LogDebug << "Start to Init SamplePostProcess.";
     APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);

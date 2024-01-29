@@ -59,7 +59,8 @@ if __name__ == '__main__':
     with open(args.img_info, 'r') as fr:
         for img_address in fr:
             #img_address  e.g. 2002/08/11/big/img_591
-            img_addresses.append(os.path.join(args.image_folder, img_address + '.jpg'))
+            img_addresses.append(os.path.join(args.image_folder, str.strip(img_address) + '.jpg'))
+            img_names.append(str.strip(img_address).replace('/', '_'))
 
     for i, name_img in enumerate(img_addresses):
         with open(name_img, 'rb')as f:

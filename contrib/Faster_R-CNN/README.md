@@ -24,9 +24,9 @@ Welds集中W0003 包括了68张焊接公司的X射线图像。本文基于W0003�
 
 ### 1.3 支持的版本
 
-支持的SDK版本为 2.0.4, CANN 版本为 5.1.1, MindSpore版本为1.8。
+支持的SDK版本为 5.0.0, CANN 版本为 7.0.0, MindSpore版本为1.8。
 
-版本号查询方法，在Atlas产品环境下，运行命令：
+HDK版本号查询方法，在Atlas产品环境下，运行命令：
 
 ```shell
 npu-smi info
@@ -124,9 +124,9 @@ npu-smi info
 |   软件名称    |   版本   |
 | :-----------: | :------: |
 |    ubantu     |  18.04   |
-|   MindX SDK   |  2.0.4   |
+|   MindX SDK   |  5.0.0   |
 |    Python     |  3.9.2   |
-|     CANN      | 5.1.RC1  |
+|     CANN      | 7.0.0  |
 |     numpy     |  1.23.3  |
 | opencv-python | 4.6.0.66 |
 |  pycocotools  |  2.0.5   |

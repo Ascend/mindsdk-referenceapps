@@ -39,7 +39,7 @@ auto uint8Deleter = [] (uint8_t* p) { };
 
 // 在不同的名字空间下可以存在同名的函数、类、变量，它们互不影响    using namespace std方便调用cout、endl等所以不容易发现其实这个习惯可能会出现问题
 namespace MxBase {
-    APP_ERROR RTM3DPostProcess::Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) {
+    APP_ERROR RTM3DPostProcess::Init(const std::map <std::string, std::string> &postConfig) {
         LogDebug << "Start to Init RTM3DPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
         if (ret != APP_ERR_OK) {

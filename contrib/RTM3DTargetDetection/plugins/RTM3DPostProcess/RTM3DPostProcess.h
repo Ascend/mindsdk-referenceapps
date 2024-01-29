@@ -32,7 +32,7 @@ namespace MxBase {      // MxBase是命名空间名字
 
         RTM3DPostProcess &operator=(const RTM3DPostProcess &other) = default;    // 重载运算符=  类的对象能互相赋值
 
-        APP_ERROR Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) override;
+        APP_ERROR Init(const std::map <std::string, std::string> &postConfig) override;
 
         APP_ERROR DeInit() override;
 
@@ -42,7 +42,7 @@ namespace MxBase {      // MxBase是命名空间名字
                           const std::map <std::string, std::shared_ptr<void>> &paramMap = {}) override;
 
     protected:
-        bool IsValidTensors(const std::vector <MxBase::TensorBase> &tensors) const override;
+        bool IsValidTensors(const std::vector <MxBase::TensorBase> &tensors) const;
 
         void ObjectDetectionOutput(const std::vector <MxBase::TensorBase> &tensors,
                                    std::vector <std::vector<MxBase::ObjectInfo>> &objectInfos);

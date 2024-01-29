@@ -86,7 +86,7 @@
 在编译运行项目前，需要设置环境变量：
 执行 
 ```
-bash ${MX_SDK_HOME}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 ${MX_SDK_HOME}为mxVision SDK安装路径。
 

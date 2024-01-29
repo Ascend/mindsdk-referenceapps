@@ -81,7 +81,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 在编译运行项目前，需要设置环境变量：
 执行 
 ```
-bash ${MX_SDK_HOME}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 ${MX_SDK_HOME}为mxVision SDK安装路径。
 

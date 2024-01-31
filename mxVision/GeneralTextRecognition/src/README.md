@@ -24,3 +24,8 @@
 
 ## 注意事项
 - DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等比例缩放`Resizer_KeepAspectRatio_Fit`。
+- 需要确保编译生成的libclipper.so和libDBPostProcess.so文件权限不高于640, 如果文件权限不满足要求, 
+进入到libclipper.so和libDBPostProcess.so所在目录, 执行如下命令修改文件权限
+```
+    chmod 640 libclipper.so libDBPostProcess.so
+```

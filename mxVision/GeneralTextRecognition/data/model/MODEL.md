@@ -11,6 +11,7 @@
 	 pip install paddle2onnx
 ##### 安装方式2
 	 git clone https://github.com/PaddlePaddle/paddle2onnx.git
+	 进入到下载好的paddle2onnx源码根目录, 执行如下命令
 	 python setup.py install
 
 #### 静态图模型导出

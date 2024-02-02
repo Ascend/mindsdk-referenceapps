@@ -74,7 +74,17 @@ static int ascend_device_create(AVHWDeviceContext *device_ctx, const char *devic
 
     if (ascend_device_init(device_ctx) < 0)
         goto error;
-    
+
+    int device_count = 0;
+    ret = aclrtGetDeviceCount(&device_count);
+    if (ret != 0) {
+        goto error;
+    }
+    if (device_idx >= device_count) {
+        av_log(device_ctx, AV_LOG_ERROR, "device id must less than: %d.\n", device_count);
+        goto error;
+    }
+
     ascend_ctx = hwctx->ascend_ctx;
     ascend_ctx->device_id = device_idx;
 

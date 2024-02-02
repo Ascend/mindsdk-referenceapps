@@ -12,7 +12,7 @@ MxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 ```
 
 ## 支持的产品
-Atlas 300I Pro
+Atlas 300I Pro和Atlas 300V Pro
 
 ## 支持的 ACL 版本
 
@@ -80,7 +80,7 @@ vi run.sh
 ./configure \
     --prefix=./ascend \
     --enable-shared \
-    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include"
+    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
     --extra-libs="-lacl_dvpp_mpi -lascendcl" \
     --enable-ascend \
     && make -j && make install
@@ -114,9 +114,9 @@ chmod +x ./ffbuild/*.sh
 * `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数
 * `-channel_id` -   指定解码通道 id [0-255], 默认为0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。
 * `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304。宽要与 16 对齐，高要与 2 对齐。 
-* `-i`          -   指定输入文件（或者可以是 rtsp 流）。
+* `-i`          -   指定输入文件（支持h264和h265及rtsp视频流, 其他视频格式不做保证）。
 
-编码相关参数(注意：解码相关参数需要在 `-i` 参数后设置)：
+编码相关参数(注意：编码相关参数需要在 `-i` 参数后设置)：
 * `-c:v`        -   指定编码器为 h264_ascend (编码成 h265 格式可以使用 h265_ascend)。
 * `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数。
 * `-channel_id` -   指定编码通道 id [0-127], 默认为 0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。

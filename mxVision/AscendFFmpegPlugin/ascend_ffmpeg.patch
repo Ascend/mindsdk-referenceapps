@@ -1,6 +1,124 @@
-diff -urN ffmpeg-n4.4.4/Changelog Ascendffmpeg/Changelog
---- ffmpeg-n4.4.4/Changelog	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/Changelog	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/.gitattributes
++++ /dev/null
+@@ -1,2 +0,0 @@
+-*.pnm -diff -text
+-tests/ref/fate/sub-scc eol=crlf
+--- FFmpeg-n4.4.4/.gitignore
++++ /dev/null
+@@ -1,39 +0,0 @@
+-*.a
+-*.o
+-*.o.*
+-*.d
+-*.def
+-*.dll
+-*.dylib
+-*.exe
+-*.exp
+-*.gcda
+-*.gcno
+-*.h.c
+-*.ilk
+-*.lib
+-*.pc
+-*.pdb
+-*.so
+-*.so.*
+-*.swp
+-*.ver
+-*.version
+-*.ptx
+-*.ptx.c
+-*_g
+-\#*
+-.\#*
+-/.config
+-/.version
+-/ffmpeg
+-/ffplay
+-/ffprobe
+-/config.asm
+-/config.h
+-/coverage.info
+-/avversion.h
+-/lcov/
+-/src
+-/mapfile
+-/tools/python/__pycache__/
+--- FFmpeg-n4.4.4/.mailmap
++++ /dev/null
+@@ -1,25 +0,0 @@
+-<james.darnley@gmail.com> <jdarnley@obe.tv>
+-<jeebjp@gmail.com> <jan.ekstrom@aminocom.com>
+-<sw@jkqxz.net> <mrt@jkqxz.net>
+-<u@pkh.me> <cboesch@gopro.com>
+-<zhilizhao@tencent.com> <quinkblack@foxmail.com>
+-<zhilizhao@tencent.com> <wantlamy@gmail.com>
+-<modmaker@google.com> <modmaker-at-google.com@ffmpeg.org>
+-<stebbins@jetheaddev.com> <jstebbins@jetheaddev.com>
+-<barryjzhao@tencent.com> <mypopydev@gmail.com>
+-<barryjzhao@tencent.com> <jun.zhao@intel.com>
+-<josh@itanimul.li> <joshdk@obe.tv>
+-<michael@niedermayer.cc> <michaelni@gmx.at>
+-<linjie.justin.fu@gmail.com> <linjie.fu@intel.com>
+-<linjie.justin.fu@gmail.com> <fulinjie@zju.edu.cn>
+-<ceffmpeg@gmail.com> <cehoyos@ag.or.at>
+-<ceffmpeg@gmail.com> <cehoyos@rainbow.studorg.tuwien.ac.at>
+-<ffmpeg@gyani.pro> <gyandoshi@gmail.com>
+-<atomnuker@gmail.com> <rpehlivanov@obe.tv>
+-<lizhong1008@gmail.com> <zhong.li@intel.com>
+-<lizhong1008@gmail.com> <zhongli_dev@126.com>
+-<andreas.rheinhardt@gmail.com> <andreas.rheinhardt@googlemail.com>
+-rcombs <rcombs@rcombs.me> <rodger.combs@gmail.com>
+-<thilo.borgmann@mail.de> <thilo.borgmann@googlemail.com>
+-<liuqi05@kuaishou.com> <lq@chinaffmpeg.org>
+-<ruiling.song83@gmail.com> <ruiling.song@intel.com>
+--- FFmpeg-n4.4.4/.travis.yml
++++ /dev/null
+@@ -1,30 +0,0 @@
+-language: c
+-sudo: false
+-os:
+-  - linux
+-  - osx
+-addons:
+-  apt:
+-    packages:
+-      - nasm
+-      - diffutils
+-compiler:
+-  - clang
+-  - gcc
+-matrix:
+-    exclude:
+-        - os: osx
+-          compiler: gcc
+-cache:
+-  directories:
+-    - ffmpeg-samples
+-before_install:
+-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+-install:
+-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install nasm; fi
+-script:
+-  - mkdir -p ffmpeg-samples
+-  - ./configure --samples=ffmpeg-samples --cc=$CC
+-  - make -j 8
+-  - make fate-rsync
+-  - make check -j 8
+--- FFmpeg-n4.4.4/CREDITS
++++ Ascendffmpeg/CREDITS
+@@ -1,6 +1,6 @@
+-See the Git history of the project (https://git.ffmpeg.org/ffmpeg) to
++See the Git history of the project (git://source.ffmpeg.org/ffmpeg) to
+ get the names of people who have contributed to FFmpeg.
+ 
+ To check the log, you can type the command "git log" in the FFmpeg
+ source directory, or browse the online repository at
+-https://git.ffmpeg.org/ffmpeg
++http://source.ffmpeg.org.
+--- FFmpeg-n4.4.4/Changelog
++++ Ascendffmpeg/Changelog
 @@ -1,267 +1,6 @@
  Entries are sorted chronologically from oldest to youngest within each release,
  releases are sorted from youngest to oldest.
@@ -269,9 +387,200 @@ diff -urN ffmpeg-n4.4.4/Changelog Ascendffmpeg/Changelog
  version 4.4.1:
  - avcodec/flac_parser: Consider AV_INPUT_BUFFER_PADDING_SIZE
  - avcodec/ttadsp: Fix integer overflows in tta_filter_process_c()
-diff -urN ffmpeg-n4.4.4/configure Ascendffmpeg/configure
---- ffmpeg-n4.4.4/configure	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/configure	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/MAINTAINERS
++++ Ascendffmpeg/MAINTAINERS
+@@ -615,7 +615,6 @@
+ Loren Merritt                 ABD9 08F4 C920 3F65 D8BE 35D7 1540 DAA7 060F 56DE
+ Lynne                         FE50 139C 6805 72CA FD52 1F8D A2FE A5F0 3F03 4464
+ Michael Niedermayer           9FF2 128B 147E F673 0BAD F133 611E C787 040B 0FAB
+-                              DD1E C9E8 DE08 5C62 9B3E 1846 B18E 8928 B394 8D64
+ Nicolas George                24CE 01CE 9ACC 5CEB 74D8 8D9D B063 D997 36E5 4C93
+ Nikolay Aleksandrov           8978 1D8C FB71 588E 4B27 EAA8 C4F0 B5FC E011 13B1
+ Panagiotis Issaris            6571 13A3 33D9 3726 F728 AA98 F643 B12E ECF3 E029
+--- FFmpeg-n4.4.4/README.md
++++ Ascendffmpeg/README.md
+@@ -1,46 +1,141 @@
+-FFmpeg README
+-=============
++# FFmpeg-Ascend
+ 
+-FFmpeg is a collection of libraries and tools to process multimedia content
+-such as audio, video, subtitles and related metadata.
++## 介绍
+ 
+-## Libraries
++MxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
++为了用户的易用性，MxVision 提供了 FFmepg-Ascend 解决方案。
+ 
+-* `libavcodec` provides implementation of a wider range of codecs.
+-* `libavformat` implements streaming protocols, container formats and basic I/O access.
+-* `libavutil` includes hashers, decompressors and miscellaneous utility functions.
+-* `libavfilter` provides a mean to alter decoded Audio and Video through chain of filters.
+-* `libavdevice` provides an abstraction to access capture and playback devices.
+-* `libswresample` implements audio mixing and resampling routines.
+-* `libswscale` implements color conversion and scaling routines.
++该样例的处理流程为：
+ 
+-## Tools
++```
++准备芯片及环境 > 安装 CANN 版本包 > 拉取 FFmpeg-Ascend 代码 > 编译 > 执行
++```
+ 
+-* [ffmpeg](https://ffmpeg.org/ffmpeg.html) is a command line toolbox to
+-  manipulate, convert and stream multimedia content.
+-* [ffplay](https://ffmpeg.org/ffplay.html) is a minimalistic multimedia player.
+-* [ffprobe](https://ffmpeg.org/ffprobe.html) is a simple analysis tool to inspect
+-  multimedia content.
+-* Additional small tools such as `aviocat`, `ismindex` and `qt-faststart`.
++## 支持的产品
++Atlas 300I Pro和Atlas 300V Pro
+ 
+-## Documentation
++## 支持的 ACL 版本
+ 
+-The offline documentation is available in the **doc/** directory.
++5.1.RC2
++*注意：目前只支持 HiMpi 接口即 310P 昇腾 AI芯片。
+ 
+-The online documentation is available in the main [website](https://ffmpeg.org)
+-and in the [wiki](https://trac.ffmpeg.org).
++查询 ACL 版本号的方法是，在 Atlas 产品环境下，运行以下命令：
++```bash
++npu-smi info
++```
+ 
+-### Examples
++## 支持的功能
++|功能|mpeg4|h264/h265|多路|
++|:----:|:----:|:----:|:----:|
++|硬件解码|√|√|√|
++|硬件编码|√|√|√|
++|硬件转码|√|√|√|
++|硬件缩放|√|√|√|
+ 
+-Coding examples are available in the **doc/examples** directory.
++## 安装 CANN 版本包
++详情请参考: https://support.huawei.com/enterprise/zh/doc/EDOC1100234042/f1fad1e0
+ 
+-## License
++## FFmpeg-Ascend目录结构
+ 
+-FFmpeg codebase is mainly LGPL-licensed with optional components licensed under
+-GPL. Please refer to the LICENSE file for detailed information.
++FFmpeg-Ascend 目录主要文件：
++.
++|-- configure (FFmpeg 编译入口)
++|
++|-- README.md (FFmpeg-Ascend 使用手册)
++|
++|-- ffbuild (编译相关文件)
++|
++|-- fftools (FFmpeg 相关命令行工具)
++|
++|-- libavcodec (FFmpeg 编解码器)
++|
++|-- libavutil (FFmpeg 相关工具，包含硬件加速相关流程)
+ 
+-## Contributing
++## 依赖条件
+ 
+-Patches should be submitted to the ffmpeg-devel mailing list using
+-`git format-patch` or `git send-email`. Github pull requests should be
+-avoided because they are not part of our review process and will be ignored.
++设置环境变量：
++* `ASCEND_HOME`     Ascend 安装的路径，一般为 `/usr/local/Ascend`
++* `FFMPEG_LIB_PATH` FFmpeg 编译安装的 lib 文件路径（一般为 FFmpeg 安装目录下的 lib 目录， 由安装时的 --prefix 编译选项来指定）。
++* `LD_LIBRARY_PATH` 指定 ffmpeg 程序运行时依赖的动态库查找路径。
++
++```bash
++export ASCEND_HOME=/usr/local/Ascend
++export LD_LIBRARY_PATH=${FFMPEG_LIB_PATH}:${ASCEND_HOME}/ascend-toolkit/latest/acllib/lib64:$LD_LIBRARY_PATH
++```
++
++## 编译
++
++编写编译脚本
++```bash
++vi run.sh
++```
++
++`run.sh` 内编译选项: 
++* `prefix` : FFmpeg 及相关组件安装目录
++* `enable-shared` : FFmpeg 允许生成 so 文件
++* `extra-cflags` : 添加第三方头文件
++* `extra-libs` : 添加第三方 so 文件
++* `enable-ascend` : 允许使用 ascend 进行硬件加速
++```bash
++./configure \
++    --prefix=./ascend \
++    --enable-shared \
++    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
++    --extra-libs="-lacl_dvpp_mpi -lascendcl" \
++    --enable-ascend \
++    && make -j && make install
++```
++
++脚本添加可执行权限
++```bash
++chmod +x run.sh
++```
++
++运行脚本
++```bash
++./run.sh
++```
++
++
++注意：若是运行失败，则可能是 `./configure` 没有可执行权限
++```bash
++chmod +x ./configure
++chmod +x ./ffbuild/*.sh
++```
++
++## 运行
++当前目录或者 FFmpeg 安装目录下均会生成 `ffmpeg` 可执行文件，均可以使用。
++相关指令参数：
++
++* `-hwaccel`    -   指定采用 ascend 来进行硬件加速, 用来做硬件相关初始化工作。
++
++解码相关参数(注意：解码相关参数需要在 `-i` 参数前设置)：
++* `-c:v`        -   指定解码器为 h264_ascend (解码 h265 格式可以使用 h265_ascend)。
++* `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数
++* `-channel_id` -   指定解码通道 id [0-255], 默认为0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。
++* `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304。宽要与 16 对齐，高要与 2 对齐。 
++* `-i`          -   指定输入文件（支持h264和h265及rtsp视频流, 其他视频格式不做保证）。
++
++编码相关参数(注意：编码相关参数需要在 `-i` 参数后设置)：
++* `-c:v`        -   指定编码器为 h264_ascend (编码成 h265 格式可以使用 h265_ascend)。
++* `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数。
++* `-channel_id` -   指定编码通道 id [0-127], 默认为 0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。
++* `-profile`    -   指定视频编码的画质级别（0: baseline, 1: main, 2: high, 默认为 1。 H265 编码器只支持 main）。
++* `-rc_mode`    -   指定视频编码器的速率控制模式（0: CBR, 1: VBR, 默认为 0）。
++* `-gop`        -   指定关键帧间隔, [1, 65536], 默认为 30。
++* `-frame_rate` -   指定帧率, [1, 240], 默认为25。
++* `-max_bit_rate` - 限制码流的最大比特率, [2， 614400], 默认为 20000。
++* `-movement_scene` - 指定视频场景（0：静态场景（监控视频等）， 1：动态场景（直播，游戏等））, 默认为 1。
++
++```bash
++./ffmpeg -hwaccel ascend -c:v h264_ascend -i test.264 -c:v h264_ascend out.264
++```
++
++```bash
++./ffmpeg -hwaccel ascend -c:v h264_ascend -device_id 0 -channel_id 0 -resize 1024x1000 -i test.264 -c:v h264_ascend -device_id 0 -channel_id 0 -profile 2 -rc_mode 0 -gop 30 -frame_rate 25 -max_bit_rate 20000 out.264
++```
++
++```bash
++./ffmpeg -hwaccel ascend -c:v h264_ascend -i test.264 out.yuv
++./ffmpeg -hwaccel ascend -s 1920x1080 -pix_fmt nv12 -i out.yuv -c:v h264_ascend out.264
++```
+\ No newline at end of file
+--- FFmpeg-n4.4.4/RELEASE
++++ Ascendffmpeg/RELEASE
+@@ -1 +1 @@
+-4.4.4
++4.4.1
+--- FFmpeg-n4.4.4/configure
++++ Ascendffmpeg/configure
 @@ -349,6 +349,7 @@
    --disable-vaapi          disable Video Acceleration API (mainly Unix/Intel) code [autodetect]
    --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
@@ -381,21 +690,19 @@ diff -urN ffmpeg-n4.4.4/configure Ascendffmpeg/configure
  #define FFMPEG_DATADIR "$(eval c_escape $datadir)"
  #define AVCONV_DATADIR "$(eval c_escape $datadir)"
  #define CC_IDENT "$(c_escape ${cc_ident:-Unknown compiler})"
-diff -urN ffmpeg-n4.4.4/CREDITS Ascendffmpeg/CREDITS
---- ffmpeg-n4.4.4/CREDITS	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/CREDITS	2024-01-22 17:46:39.048708081 +0800
-@@ -1,6 +1,6 @@
--See the Git history of the project (https://git.ffmpeg.org/ffmpeg) to
-+See the Git history of the project (git://source.ffmpeg.org/ffmpeg) to
- get the names of people who have contributed to FFmpeg.
+--- FFmpeg-n4.4.4/doc/Doxyfile
++++ Ascendffmpeg/doc/Doxyfile
+@@ -38,7 +38,7 @@
+ # could be handy for archiving the generated documentation or if some version
+ # control system is used.
  
- To check the log, you can type the command "git log" in the FFmpeg
- source directory, or browse the online repository at
--https://git.ffmpeg.org/ffmpeg
-+http://source.ffmpeg.org.
-diff -urN ffmpeg-n4.4.4/doc/authors.texi Ascendffmpeg/doc/authors.texi
---- ffmpeg-n4.4.4/doc/authors.texi	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/doc/authors.texi	2024-01-22 17:46:39.048708081 +0800
+-PROJECT_NUMBER         = 4.4.4
++PROJECT_NUMBER         = 4.4.1
+ 
+ # Using the PROJECT_BRIEF tag one can provide an optional one line description
+ # for a project that appears at the top of each page and should give viewer a
+--- FFmpeg-n4.4.4/doc/authors.texi
++++ Ascendffmpeg/doc/authors.texi
 @@ -3,9 +3,9 @@
  The FFmpeg developers.
  
@@ -408,21 +715,8 @@ diff -urN ffmpeg-n4.4.4/doc/authors.texi Ascendffmpeg/doc/authors.texi
  
  Maintainers for the specific components are listed in the file
  @file{MAINTAINERS} in the source code tree.
-diff -urN ffmpeg-n4.4.4/doc/Doxyfile Ascendffmpeg/doc/Doxyfile
---- ffmpeg-n4.4.4/doc/Doxyfile	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/doc/Doxyfile	2024-01-22 17:46:39.048708081 +0800
-@@ -38,7 +38,7 @@
- # could be handy for archiving the generated documentation or if some version
- # control system is used.
- 
--PROJECT_NUMBER         = 4.4.4
-+PROJECT_NUMBER         = 4.4.1
- 
- # Using the PROJECT_BRIEF tag one can provide an optional one line description
- # for a project that appears at the top of each page and should give viewer a
-diff -urN ffmpeg-n4.4.4/doc/git-howto.texi Ascendffmpeg/doc/git-howto.texi
---- ffmpeg-n4.4.4/doc/git-howto.texi	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/doc/git-howto.texi	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/doc/git-howto.texi
++++ Ascendffmpeg/doc/git-howto.texi
 @@ -53,7 +53,7 @@
  @section Cloning the source tree
  
@@ -432,7 +726,7 @@ diff -urN ffmpeg-n4.4.4/doc/git-howto.texi Ascendffmpeg/doc/git-howto.texi
  @end example
  
  This will put the FFmpeg sources into the directory @var{<target>}.
-@@ -187,18 +187,11 @@
+@@ -187,20 +187,13 @@
  git add [-i|-p|-A] <filenames/dirnames>
  @end example
  
@@ -443,19 +737,22 @@ diff -urN ffmpeg-n4.4.4/doc/git-howto.texi Ascendffmpeg/doc/git-howto.texi
  git config --global user.name "My Name"
  git config --global user.email my@@email.invalid
 -git config --global user.signingkey ABCDEF0123245
--@end example
--
+ @end example
+ 
 -Enable signing all commits or use -S
 -
 -@example
 -git config --global commit.gpgsign true
- @end example
- 
+-@end example
+-
  Use @option{--global} to set the global configuration for all your Git checkouts.
-@@ -400,19 +393,6 @@
+ 
+ Git will select the changes to the files for commit. Optionally you can use
+@@ -399,19 +392,6 @@
+ 
  where @var{$SHA1} is the commit hash from the @command{git log} output.
  
- 
+-
 -@chapter gpg key generation
 -
 -If you have no gpg key yet, we recommend that you create a ed25519 based key as it
@@ -468,62 +765,31 @@ diff -urN ffmpeg-n4.4.4/doc/git-howto.texi Ascendffmpeg/doc/git-howto.texi
 -When generating a key, make sure the email specified matches the email used in git as some sites like
 -github consider mismatches a reason to declare such commits unverified. After generating a key you
 -can add it to the MAINTAINER file and upload it to a keyserver.
--
+ 
  @chapter Pre-push checklist
  
- Once you have a set of commits that you feel are ready for pushing,
-diff -urN ffmpeg-n4.4.4/.gitattributes Ascendffmpeg/.gitattributes
---- ffmpeg-n4.4.4/.gitattributes	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/.gitattributes	1970-01-01 08:00:00.000000000 +0800
-@@ -1,2 +0,0 @@
--*.pnm -diff -text
--tests/ref/fate/sub-scc eol=crlf
-diff -urN ffmpeg-n4.4.4/.gitignore Ascendffmpeg/.gitignore
---- ffmpeg-n4.4.4/.gitignore	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/.gitignore	1970-01-01 08:00:00.000000000 +0800
-@@ -1,39 +0,0 @@
--*.a
--*.o
--*.o.*
--*.d
--*.def
--*.dll
--*.dylib
--*.exe
--*.exp
--*.gcda
--*.gcno
--*.h.c
--*.ilk
--*.lib
--*.pc
--*.pdb
--*.so
--*.so.*
--*.swp
--*.ver
--*.version
--*.ptx
--*.ptx.c
--*_g
--\#*
--.\#*
--/.config
--/.version
--/ffmpeg
--/ffplay
--/ffprobe
--/config.asm
--/config.h
--/coverage.info
--/avversion.h
--/lcov/
--/src
--/mapfile
--/tools/python/__pycache__/
-diff -urN ffmpeg-n4.4.4/libavcodec/012v.c Ascendffmpeg/libavcodec/012v.c
---- ffmpeg-n4.4.4/libavcodec/012v.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/012v.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/fftools/ffmpeg_hw.c
++++ Ascendffmpeg/fftools/ffmpeg_hw.c
+@@ -339,8 +339,15 @@
+         } else if (ist->hwaccel_id == HWACCEL_GENERIC) {
+             type = ist->hwaccel_device_type;
+             dev = hw_device_get_by_type(type);
+-            if (!dev)
+-                err = hw_device_init_from_type(type, NULL, &dev);
++            if (!dev) {
++                char* device_id = "device_id";
++                AVDictionaryEntry* opt = av_dict_get(ist->decoder_opts, device_id, NULL, 0);
++                if (opt) {
++                    err = hw_device_init_from_type(type, opt->value, &dev);
++                } else {
++                    err = hw_device_init_from_type(type, NULL, &dev);
++                }
++            }
+         } else {
+             dev = hw_device_match_by_codec(ist->dec);
+             if (!dev) {
+--- FFmpeg-n4.4.4/libavcodec/012v.c
++++ Ascendffmpeg/libavcodec/012v.c
 @@ -131,8 +131,8 @@
              u = x/2 + (uint16_t *)(pic->data[1] + line * pic->linesize[1]);
              v = x/2 + (uint16_t *)(pic->data[2] + line * pic->linesize[2]);
@@ -535,9 +801,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/012v.c Ascendffmpeg/libavcodec/012v.c
          }
  
          line_end += stride;
-diff -urN ffmpeg-n4.4.4/libavcodec/8bps.c Ascendffmpeg/libavcodec/8bps.c
---- ffmpeg-n4.4.4/libavcodec/8bps.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/8bps.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/8bps.c
++++ Ascendffmpeg/libavcodec/8bps.c
 @@ -70,9 +70,6 @@
      unsigned char *planemap = c->planemap;
      int ret;
@@ -548,10 +813,86 @@ diff -urN ffmpeg-n4.4.4/libavcodec/8bps.c Ascendffmpeg/libavcodec/8bps.c
      if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
          return ret;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/aasc.c Ascendffmpeg/libavcodec/aasc.c
---- ffmpeg-n4.4.4/libavcodec/aasc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/aasc.c	2024-01-22 17:46:39.078708226 +0800
-@@ -104,26 +104,26 @@
+--- FFmpeg-n4.4.4/libavcodec/Makefile
++++ Ascendffmpeg/libavcodec/Makefile
+@@ -25,6 +25,8 @@
+           videotoolbox.h                                                \
+           vorbis_parser.h                                               \
+           xvmc.h                                                        \
++          ascend_dec.h                                                  \
++          ascend_enc.h                                                  \
+ 
+ OBJS = ac3_parser.o                                                     \
+        adts_parser.o                                                    \
+@@ -132,6 +134,7 @@
+                                           motion_est.o ratecontrol.o    \
+                                           mpegvideoencdsp.o
+ OBJS-$(CONFIG_MSS34DSP)                += mss34dsp.o
++OBJS-$(CONFIG_NVENC)                   += nvenc.o
+ OBJS-$(CONFIG_PIXBLOCKDSP)             += pixblockdsp.o
+ OBJS-$(CONFIG_QPELDSP)                 += qpeldsp.o
+ OBJS-$(CONFIG_QSV)                     += qsv.o
+@@ -369,14 +372,16 @@
+                                           h264_mb.o h264_picture.o \
+                                           h264_refs.o h264_sei.o \
+                                           h264_slice.o h264data.o
++OBJS-$(CONFIG_H264_ASCEND_DECODER)     += ascend_dec.o
++OBJS-$(CONFIG_H264_ASCEND_ENCODER)     += ascend_enc.o
+ OBJS-$(CONFIG_H264_AMF_ENCODER)        += amfenc_h264.o
+ OBJS-$(CONFIG_H264_CUVID_DECODER)      += cuviddec.o
+ OBJS-$(CONFIG_H264_MEDIACODEC_DECODER) += mediacodecdec.o
+ OBJS-$(CONFIG_H264_MF_ENCODER)         += mfenc.o mf_utils.o
+ OBJS-$(CONFIG_H264_MMAL_DECODER)       += mmaldec.o
+-OBJS-$(CONFIG_H264_NVENC_ENCODER)      += nvenc.o nvenc_h264.o
+-OBJS-$(CONFIG_NVENC_ENCODER)           += nvenc.o nvenc_h264.o
+-OBJS-$(CONFIG_NVENC_H264_ENCODER)      += nvenc.o nvenc_h264.o
++OBJS-$(CONFIG_H264_NVENC_ENCODER)      += nvenc_h264.o
++OBJS-$(CONFIG_NVENC_ENCODER)           += nvenc_h264.o
++OBJS-$(CONFIG_NVENC_H264_ENCODER)      += nvenc_h264.o
+ OBJS-$(CONFIG_H264_OMX_ENCODER)        += omx.o
+ OBJS-$(CONFIG_H264_QSV_DECODER)        += qsvdec.o
+ OBJS-$(CONFIG_H264_QSV_ENCODER)        += qsvenc_h264.o
+@@ -392,12 +397,14 @@
+ OBJS-$(CONFIG_HEVC_DECODER)            += hevcdec.o hevc_mvs.o \
+                                           hevc_cabac.o hevc_refs.o hevcpred.o    \
+                                           hevcdsp.o hevc_filter.o hevc_data.o
++OBJS-$(CONFIG_H265_ASCEND_DECODER)     += ascend_dec.o
++OBJS-$(CONFIG_H265_ASCEND_ENCODER)     += ascend_enc.o
+ OBJS-$(CONFIG_HEVC_AMF_ENCODER)        += amfenc_hevc.o
+ OBJS-$(CONFIG_HEVC_CUVID_DECODER)      += cuviddec.o
+ OBJS-$(CONFIG_HEVC_MEDIACODEC_DECODER) += mediacodecdec.o
+ OBJS-$(CONFIG_HEVC_MF_ENCODER)         += mfenc.o mf_utils.o
+-OBJS-$(CONFIG_HEVC_NVENC_ENCODER)      += nvenc.o nvenc_hevc.o
+-OBJS-$(CONFIG_NVENC_HEVC_ENCODER)      += nvenc.o nvenc_hevc.o
++OBJS-$(CONFIG_HEVC_NVENC_ENCODER)      += nvenc_hevc.o
++OBJS-$(CONFIG_NVENC_HEVC_ENCODER)      += nvenc_hevc.o
+ OBJS-$(CONFIG_HEVC_QSV_DECODER)        += qsvdec.o
+ OBJS-$(CONFIG_HEVC_QSV_ENCODER)        += qsvenc_hevc.o hevc_ps_enc.o       \
+                                           hevc_data.o
+@@ -874,7 +881,6 @@
+ OBJS-$(CONFIG_ADPCM_G726LE_DECODER)       += g726.o
+ OBJS-$(CONFIG_ADPCM_G726LE_ENCODER)       += g726.o
+ OBJS-$(CONFIG_ADPCM_IMA_AMV_DECODER)      += adpcm.o adpcm_data.o
+-OBJS-$(CONFIG_ADPCM_IMA_AMV_ENCODER)      += adpcmenc.o adpcm_data.o
+ OBJS-$(CONFIG_ADPCM_IMA_ALP_DECODER)      += adpcm.o adpcm_data.o
+ OBJS-$(CONFIG_ADPCM_IMA_ALP_ENCODER)      += adpcmenc.o adpcm_data.o
+ OBJS-$(CONFIG_ADPCM_IMA_APC_DECODER)      += adpcm.o adpcm_data.o
+@@ -1271,6 +1277,12 @@
+ else
+ $(SUBDIR)%_tablegen$(HOSTEXESUF): HOSTCFLAGS += -DCONFIG_SMALL=0
+ endif
++
++#ifdef CONFIG_ASCEND
++CFLAGS += -DENABLE_DVPP_INTERFACE=1
++#else
++#$(SUBDIR)%_tablegen$(HOSTEXESUF): HOSTCFLAGS += -DENABLE_DVPP_INTERFACE=0
++#endif
+ 
+ GEN_HEADERS = cbrt_tables.h cbrt_fixed_tables.h aacps_tables.h aacps_fixed_tables.h \
+               dv_tables.h     \
+--- FFmpeg-n4.4.4/libavcodec/aasc.c
++++ Ascendffmpeg/libavcodec/aasc.c
+@@ -104,25 +104,25 @@
          ff_msrle_decode(avctx, s->frame, 8, &s->gb);
          break;
      case MKTAG('A', 'A', 'S', 'C'):
@@ -582,7 +923,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/aasc.c Ascendffmpeg/libavcodec/aasc.c
 +            buf += stride;
 +            buf_size -= stride;
          }
-         break;
++        break;
 +    case 1:
 +        bytestream2_init(&s->gb, buf, buf_size);
 +        ff_msrle_decode(avctx, s->frame, 8, &s->gb);
@@ -591,13 +932,11 @@ diff -urN ffmpeg-n4.4.4/libavcodec/aasc.c Ascendffmpeg/libavcodec/aasc.c
 +        av_log(avctx, AV_LOG_ERROR, "Unknown compression type %d\n", compr);
 +        return AVERROR_INVALIDDATA;
 +    }
-+        break;
+         break;
      default:
          av_log(avctx, AV_LOG_ERROR, "Unknown FourCC: %X\n", avctx->codec_tag);
-         return -1;
-diff -urN ffmpeg-n4.4.4/libavcodec/ac3.h Ascendffmpeg/libavcodec/ac3.h
---- ffmpeg-n4.4.4/libavcodec/ac3.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ac3.h	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/ac3.h
++++ Ascendffmpeg/libavcodec/ac3.h
 @@ -74,7 +74,6 @@
  #define AC3_DYNAMIC_RANGE1      0
  
@@ -614,9 +953,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ac3.h Ascendffmpeg/libavcodec/ac3.h
  typedef float                   SHORTFLOAT;
  
  #endif /* USE_FIXED */
-diff -urN ffmpeg-n4.4.4/libavcodec/alacdsp.c Ascendffmpeg/libavcodec/alacdsp.c
---- ffmpeg-n4.4.4/libavcodec/alacdsp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/alacdsp.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/alacdsp.c
++++ Ascendffmpeg/libavcodec/alacdsp.c
 @@ -29,12 +29,12 @@
      int i;
  
@@ -632,9 +970,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/alacdsp.c Ascendffmpeg/libavcodec/alacdsp.c
          b += a;
  
          buffer[0][i] = b;
-diff -urN ffmpeg-n4.4.4/libavcodec/allcodecs.c Ascendffmpeg/libavcodec/allcodecs.c
---- ffmpeg-n4.4.4/libavcodec/allcodecs.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/allcodecs.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/allcodecs.c
++++ Ascendffmpeg/libavcodec/allcodecs.c
 @@ -787,6 +787,10 @@
  extern AVCodec ff_av1_qsv_decoder;
  extern AVCodec ff_libopenh264_encoder;
@@ -646,9 +983,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/allcodecs.c Ascendffmpeg/libavcodec/allcodecs
  extern AVCodec ff_h264_amf_encoder;
  extern AVCodec ff_h264_cuvid_decoder;
  extern AVCodec ff_h264_mf_encoder;
-diff -urN ffmpeg-n4.4.4/libavcodec/alsdec.c Ascendffmpeg/libavcodec/alsdec.c
---- ffmpeg-n4.4.4/libavcodec/alsdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/alsdec.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/alsdec.c
++++ Ascendffmpeg/libavcodec/alsdec.c
 @@ -1017,7 +1017,7 @@
  
      *bd->shift_lsbs = 0;
@@ -658,9 +994,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/alsdec.c Ascendffmpeg/libavcodec/alsdec.c
          return AVERROR_INVALIDDATA;
  
      // read block type flag and read the samples accordingly
-diff -urN ffmpeg-n4.4.4/libavcodec/apedec.c Ascendffmpeg/libavcodec/apedec.c
---- ffmpeg-n4.4.4/libavcodec/apedec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/apedec.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/apedec.c
++++ Ascendffmpeg/libavcodec/apedec.c
 @@ -102,7 +102,7 @@
      int16_t *historybuffer; ///< filter memory
      int16_t *delay;         ///< filtered values
@@ -730,9 +1065,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/apedec.c Ascendffmpeg/libavcodec/apedec.c
          }
          break;
      case 16:
-diff -urN ffmpeg-n4.4.4/libavcodec/argo.c Ascendffmpeg/libavcodec/argo.c
---- ffmpeg-n4.4.4/libavcodec/argo.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/argo.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/argo.c
++++ Ascendffmpeg/libavcodec/argo.c
 @@ -608,9 +608,6 @@
      uint32_t chunk;
      int ret;
@@ -743,9 +1077,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/argo.c Ascendffmpeg/libavcodec/argo.c
      bytestream2_init(gb, avpkt->data, avpkt->size);
  
      if ((ret = ff_reget_buffer(avctx, frame, 0)) < 0)
-diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm/sbcdsp_neon.S
---- ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/arm/sbcdsp_neon.S	2024-01-22 17:46:39.148708562 +0800
+--- FFmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S
++++ Ascendffmpeg/libavcodec/arm/sbcdsp_neon.S
 @@ -38,49 +38,49 @@
          /* TODO: merge even and odd cases (or even merge all four calls to this
           * function) in order to have only aligned reads from 'in' array
@@ -759,36 +1092,33 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 -        vld1.16         {d18, d19}, [r0, :64]!
 -        vmull.s16       q1, d17, d21
 -        vld1.16         {d22, d23}, [r2, :128]!
--
--        vmlal.s16       q0, d18, d22
--        vld1.16         {d16, d17}, [r0, :64]!
--        vmlal.s16       q1, d19, d23
--        vld1.16         {d20, d21}, [r2, :128]!
--
--        vmlal.s16       q0, d16, d20
--        vld1.16         {d18, d19}, [r0, :64]!
--        vmlal.s16       q1, d17, d21
--        vld1.16         {d22, d23}, [r2, :128]!
--
--        vmlal.s16       q0, d18, d22
--        vld1.16         {d16, d17}, [r0, :64]!
--        vmlal.s16       q1, d19, d23
--        vld1.16         {d20, d21}, [r2, :128]!
 +        vmull.s16       q0, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmull.s16       q1, d5, d9
 +        vld1.16         {d10, d11}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q0, d18, d22
+-        vld1.16         {d16, d17}, [r0, :64]!
+-        vmlal.s16       q1, d19, d23
+-        vld1.16         {d20, d21}, [r2, :128]!
 +        vmlal.s16       q0, d6, d10
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmlal.s16       q1, d7, d11
 +        vld1.16         {d8, d9}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q0, d16, d20
+-        vld1.16         {d18, d19}, [r0, :64]!
+-        vmlal.s16       q1, d17, d21
+-        vld1.16         {d22, d23}, [r2, :128]!
 +        vmlal.s16       q0, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmlal.s16       q1, d5, d9
 +        vld1.16         {d10, d11}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q0, d18, d22
+-        vld1.16         {d16, d17}, [r0, :64]!
+-        vmlal.s16       q1, d19, d23
+-        vld1.16         {d20, d21}, [r2, :128]!
 +        vmlal.s16       q0, d6, d10
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmlal.s16       q1, d7, d11
@@ -843,46 +1173,6 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 -        vld1.16         {d16, d17}, [r0, :64]!
 -        vmull.s16       q15, d19, d23
 -        vld1.16         {d20, d21}, [r2, :128]!
--
--        vmlal.s16       q12, d16, d20
--        vld1.16         {d18, d19}, [r0, :64]!
--        vmlal.s16       q13, d17, d21
--        vld1.16         {d22, d23}, [r2, :128]!
--        vmlal.s16       q14, d18, d22
--        vld1.16         {d16, d17}, [r0, :64]!
--        vmlal.s16       q15, d19, d23
--        vld1.16         {d20, d21}, [r2, :128]!
--
--        vmlal.s16       q12, d16, d20
--        vld1.16         {d18, d19}, [r0, :64]!
--        vmlal.s16       q13, d17, d21
--        vld1.16         {d22, d23}, [r2, :128]!
--        vmlal.s16       q14, d18, d22
--        vld1.16         {d16, d17}, [r0, :64]!
--        vmlal.s16       q15, d19, d23
--        vld1.16         {d20, d21}, [r2, :128]!
--
--        vmlal.s16       q12, d16, d20
--        vld1.16         {d18, d19}, [r0, :64]!
--        vmlal.s16       q13, d17, d21
--        vld1.16         {d22, d23}, [r2, :128]!
--        vmlal.s16       q14, d18, d22
--        vld1.16         {d16, d17}, [r0, :64]!
--        vmlal.s16       q15, d19, d23
--        vld1.16         {d20, d21}, [r2, :128]!
--
--        vmlal.s16       q12, d16, d20
--        vld1.16         {d18, d19}, [r0, :64]!
--        vmlal.s16       q13, d17, d21
--        vld1.16         {d22, d23}, [r2, :128]!
--
--        vmlal.s16       q14, d18, d22
--        vmlal.s16       q15, d19, d23
--
--        vpadd.s32       d0, d24, d25
--        vpadd.s32       d1, d26, d27
--        vpadd.s32       d2, d28, d29
--        vpadd.s32       d3, d30, d31
 +        vmull.s16       q6, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmull.s16       q7, d5, d9
@@ -891,7 +1181,15 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmull.s16       q9, d7, d11
 +        vld1.16         {d8, d9}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q12, d16, d20
+-        vld1.16         {d18, d19}, [r0, :64]!
+-        vmlal.s16       q13, d17, d21
+-        vld1.16         {d22, d23}, [r2, :128]!
+-        vmlal.s16       q14, d18, d22
+-        vld1.16         {d16, d17}, [r0, :64]!
+-        vmlal.s16       q15, d19, d23
+-        vld1.16         {d20, d21}, [r2, :128]!
 +        vmlal.s16       q6, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmlal.s16       q7, d5, d9
@@ -900,7 +1198,15 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmlal.s16       q9, d7, d11
 +        vld1.16         {d8, d9}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q12, d16, d20
+-        vld1.16         {d18, d19}, [r0, :64]!
+-        vmlal.s16       q13, d17, d21
+-        vld1.16         {d22, d23}, [r2, :128]!
+-        vmlal.s16       q14, d18, d22
+-        vld1.16         {d16, d17}, [r0, :64]!
+-        vmlal.s16       q15, d19, d23
+-        vld1.16         {d20, d21}, [r2, :128]!
 +        vmlal.s16       q6, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmlal.s16       q7, d5, d9
@@ -909,7 +1215,15 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmlal.s16       q9, d7, d11
 +        vld1.16         {d8, d9}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q12, d16, d20
+-        vld1.16         {d18, d19}, [r0, :64]!
+-        vmlal.s16       q13, d17, d21
+-        vld1.16         {d22, d23}, [r2, :128]!
+-        vmlal.s16       q14, d18, d22
+-        vld1.16         {d16, d17}, [r0, :64]!
+-        vmlal.s16       q15, d19, d23
+-        vld1.16         {d20, d21}, [r2, :128]!
 +        vmlal.s16       q6, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmlal.s16       q7, d5, d9
@@ -918,15 +1232,25 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 +        vld1.16         {d4, d5}, [r0, :64]!
 +        vmlal.s16       q9, d7, d11
 +        vld1.16         {d8, d9}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q12, d16, d20
+-        vld1.16         {d18, d19}, [r0, :64]!
+-        vmlal.s16       q13, d17, d21
+-        vld1.16         {d22, d23}, [r2, :128]!
 +        vmlal.s16       q6, d4, d8
 +        vld1.16         {d6,  d7}, [r0, :64]!
 +        vmlal.s16       q7, d5, d9
 +        vld1.16         {d10, d11}, [r2, :128]!
-+
+ 
+-        vmlal.s16       q14, d18, d22
+-        vmlal.s16       q15, d19, d23
 +        vmlal.s16       q8, d6, d10
 +        vmlal.s16       q9, d7, d11
-+
+ 
+-        vpadd.s32       d0, d24, d25
+-        vpadd.s32       d1, d26, d27
+-        vpadd.s32       d2, d28, d29
+-        vpadd.s32       d3, d30, d31
 +        vpadd.s32       d0, d12, d13
 +        vpadd.s32       d1, d14, d15
 +        vpadd.s32       d2, d16, d17
@@ -944,60 +1268,56 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
 -        vmull.s16       q13, d17, d0
 -        vmull.s16       q14, d18, d0
 -        vmull.s16       q15, d19, d0
--
--        vld1.16         {d16, d17}, [r2, :128]!
--        vmlal.s16       q12, d16, d1
--        vld1.16         {d18, d19}, [r2, :128]!
--        vmlal.s16       q13, d17, d1
--        vmlal.s16       q14, d18, d1
--        vmlal.s16       q15, d19, d1
--
--        vld1.16         {d16, d17}, [r2, :128]!
--        vmlal.s16       q12, d16, d2
--        vld1.16         {d18, d19}, [r2, :128]!
--        vmlal.s16       q13, d17, d2
--        vmlal.s16       q14, d18, d2
--        vmlal.s16       q15, d19, d2
--
--        vld1.16         {d16, d17}, [r2, :128]!
--        vmlal.s16       q12, d16, d3
--        vld1.16         {d18, d19}, [r2, :128]!
--        vmlal.s16       q13, d17, d3
--        vmlal.s16       q14, d18, d3
--        vmlal.s16       q15, d19, d3
--
--        vpadd.s32       d0, d24, d25 /* TODO: can be eliminated */
--        vpadd.s32       d1, d26, d27 /* TODO: can be eliminated */
--        vpadd.s32       d2, d28, d29 /* TODO: can be eliminated */
--        vpadd.s32       d3, d30, d31 /* TODO: can be eliminated */
 +        vld1.16         {d4, d5}, [r2, :128]!
 +        vmull.s16       q6, d4, d0
 +        vld1.16         {d6, d7}, [r2, :128]!
 +        vmull.s16       q7, d5, d0
 +        vmull.s16       q8, d6, d0
 +        vmull.s16       q9, d7, d0
-+
+ 
+-        vld1.16         {d16, d17}, [r2, :128]!
+-        vmlal.s16       q12, d16, d1
+-        vld1.16         {d18, d19}, [r2, :128]!
+-        vmlal.s16       q13, d17, d1
+-        vmlal.s16       q14, d18, d1
+-        vmlal.s16       q15, d19, d1
 +        vld1.16         {d4, d5}, [r2, :128]!
 +        vmlal.s16       q6, d4, d1
 +        vld1.16         {d6, d7}, [r2, :128]!
 +        vmlal.s16       q7, d5, d1
 +        vmlal.s16       q8, d6, d1
 +        vmlal.s16       q9, d7, d1
-+
+ 
+-        vld1.16         {d16, d17}, [r2, :128]!
+-        vmlal.s16       q12, d16, d2
+-        vld1.16         {d18, d19}, [r2, :128]!
+-        vmlal.s16       q13, d17, d2
+-        vmlal.s16       q14, d18, d2
+-        vmlal.s16       q15, d19, d2
 +        vld1.16         {d4, d5}, [r2, :128]!
 +        vmlal.s16       q6, d4, d2
 +        vld1.16         {d6, d7}, [r2, :128]!
 +        vmlal.s16       q7, d5, d2
 +        vmlal.s16       q8, d6, d2
 +        vmlal.s16       q9, d7, d2
-+
+ 
+-        vld1.16         {d16, d17}, [r2, :128]!
+-        vmlal.s16       q12, d16, d3
+-        vld1.16         {d18, d19}, [r2, :128]!
+-        vmlal.s16       q13, d17, d3
+-        vmlal.s16       q14, d18, d3
+-        vmlal.s16       q15, d19, d3
 +        vld1.16         {d4, d5}, [r2, :128]!
 +        vmlal.s16       q6, d4, d3
 +        vld1.16         {d6, d7}, [r2, :128]!
 +        vmlal.s16       q7, d5, d3
 +        vmlal.s16       q8, d6, d3
 +        vmlal.s16       q9, d7, d3
-+
+ 
+-        vpadd.s32       d0, d24, d25 /* TODO: can be eliminated */
+-        vpadd.s32       d1, d26, d27 /* TODO: can be eliminated */
+-        vpadd.s32       d2, d28, d29 /* TODO: can be eliminated */
+-        vpadd.s32       d3, d30, d31 /* TODO: can be eliminated */
 +        vpadd.s32       d0, d12, d13 /* TODO: can be eliminated */
 +        vpadd.s32       d1, d14, d15 /* TODO: can be eliminated */
 +        vpadd.s32       d2, d16, d17 /* TODO: can be eliminated */
@@ -1005,9 +1325,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/arm/sbcdsp_neon.S Ascendffmpeg/libavcodec/arm
  
          vst1.32         {d0, d1, d2, d3}, [r1, :128]
  
-diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_dec.c
---- ffmpeg-n4.4.4/libavcodec/ascend_dec.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_dec.c	2024-01-24 09:45:40.635150460 +0800
+--- /dev/null
++++ Ascendffmpeg/libavcodec/ascend_dec.c
 @@ -0,0 +1,886 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved.
@@ -1081,7 +1400,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_d
 +        if (ret != 0) {
 +            av_log(ctx, AV_LOG_ERROR, "HiMpi free stream failed, ret is %d.\n", ret);
 +        }
-+	if (decResult != 0 && frame.v_frame.virt_addr[0] != NULL) {
++        if (decResult != 0 && frame.v_frame.virt_addr[0] != NULL) {
 +            hi_mpi_dvpp_free(frame.v_frame.virt_addr[0]);
 +        }
 +        
@@ -1895,9 +2214,9 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_d
 +#if CONFIG_H265_ASCEND_DECODER
 +ASCEND_DEC_CODEC(h265, H265)
 +#endif
-diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.h Ascendffmpeg/libavcodec/ascend_dec.h
---- ffmpeg-n4.4.4/libavcodec/ascend_dec.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_dec.h	2024-01-22 17:46:39.078708226 +0800
+\ No newline at end of file
+--- /dev/null
++++ Ascendffmpeg/libavcodec/ascend_dec.h
 @@ -0,0 +1,148 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -2047,11 +2366,10 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_dec.h Ascendffmpeg/libavcodec/ascend_d
 +}
 +
 +#endif // FFMPEG_ASCEND_ASCEND_DEC_H
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.c Ascendffmpeg/libavcodec/ascend_enc.c
---- ffmpeg-n4.4.4/libavcodec/ascend_enc.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_enc.c	2024-01-22 17:46:39.078708226 +0800
-@@ -0,0 +1,928 @@
+\ No newline at end of file
+--- /dev/null
++++ Ascendffmpeg/libavcodec/ascend_enc.c
+@@ -0,0 +1,937 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved.
 + *
@@ -2377,6 +2695,10 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.c Ascendffmpeg/libavcodec/ascend_e
 +        }
 +    } else if (ctx->avctx->codec->id == AV_CODEC_ID_H265) {
 +        ctx->chn_attr_.venc_attr.type = HI_PT_H265;
++        if (ctx->profile != 1) {
++            av_log(ctx, AV_LOG_ERROR, "'profile' param only support value is 1 when ascend encoder is h265, please check.\n");
++            return AVERROR(EINVAL);
++        }
 +        ctx->chn_attr_.venc_attr.profile = HI_VENC_H265_MAIN_LEVEL;
 +
 +        if (ctx->rc_mode == 1) {
@@ -2835,6 +3157,11 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.c Ascendffmpeg/libavcodec/ascend_e
 +        return AVERROR(EINVAL);
 +    }
 +
++    if (ctx->ascend_ctx == NULL || ctx->ascend_ctx->context == NULL) {
++        av_log(NULL, AV_LOG_ERROR, "Early error in ff_himpi_enc_close.\n");
++        return AVERROR(EINVAL);
++    }
++
 +    ret = aclrtSetCurrentContext(ctx->ascend_ctx->context);
 +    if (ret != 0) {
 +        av_log(ctx, AV_LOG_ERROR, "Set context failed at line(%d) in func(%s), ret is %d", __LINE__, __func__, ret);
@@ -2980,10 +3307,9 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.c Ascendffmpeg/libavcodec/ascend_e
 +#if CONFIG_H265_ASCEND_ENCODER
 +ASCEND_ENC_CODEC(h265, H265)
 +#endif
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.h Ascendffmpeg/libavcodec/ascend_enc.h
---- ffmpeg-n4.4.4/libavcodec/ascend_enc.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_enc.h	2024-01-22 17:46:39.078708226 +0800
+\ No newline at end of file
+--- /dev/null
++++ Ascendffmpeg/libavcodec/ascend_enc.h
 @@ -0,0 +1,153 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -3138,10 +3464,25 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ascend_enc.h Ascendffmpeg/libavcodec/ascend_e
 +}
 +
 +#endif // FFMPEG_ASCEND_ASCEND_ENC_H
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.c Ascendffmpeg/libavcodec/av1dec.c
---- ffmpeg-n4.4.4/libavcodec/av1dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/av1dec.c	2024-01-22 17:46:39.088708273 +0800
+\ No newline at end of file
+--- FFmpeg-n4.4.4/libavcodec/av1.h
++++ Ascendffmpeg/libavcodec/av1.h
+@@ -114,13 +114,6 @@
+     AV1_WARP_MODEL_TRANSLATION = 1,
+     AV1_WARP_MODEL_ROTZOOM     = 2,
+     AV1_WARP_MODEL_AFFINE      = 3,
+-    AV1_WARP_PARAM_REDUCE_BITS = 6,
+-
+-    AV1_DIV_LUT_BITS      = 8,
+-    AV1_DIV_LUT_PREC_BITS = 14,
+-    AV1_DIV_LUT_NUM       = 257,
+-
+-    AV1_MAX_LOOP_FILTER = 63,
+ };
+ 
+ 
+--- FFmpeg-n4.4.4/libavcodec/av1dec.c
++++ Ascendffmpeg/libavcodec/av1dec.c
 @@ -28,34 +28,6 @@
  #include "internal.h"
  #include "profiles.h"
@@ -3177,7 +3518,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.c Ascendffmpeg/libavcodec/av1dec.c
  static uint32_t inverse_recenter(int r, uint32_t v)
  {
      if (v > 2 * r)
-@@ -125,70 +97,6 @@
+@@ -125,71 +97,7 @@
                                         -mx, mx + 1, r) << prec_diff) + round;
  }
  
@@ -3193,7 +3534,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.c Ascendffmpeg/libavcodec/av1dec.c
 -    return ((x<0) ? -((int64_t)round_two(-x, n)) : (int64_t)round_two(x, n));
 -}
 -
--/**
+ /**
 - * Resolve divisor process.
 - * see spec 7.11.3.7
 - */
@@ -3245,9 +3586,10 @@ diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.c Ascendffmpeg/libavcodec/av1dec.c
 -    return 1;
 -}
 -
- /**
+-/**
  * update gm type/params, since cbs already implemented part of this funcation,
  * so we don't need to full implement spec.
+ */
 @@ -236,9 +144,6 @@
              read_global_param(s, type, ref, 0);
              read_global_param(s, type, ref, 1);
@@ -3268,9 +3610,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.c Ascendffmpeg/libavcodec/av1dec.c
      memcpy(dst->gm_type,
             src->gm_type,
             AV1_NUM_REF_FRAMES * sizeof(uint8_t));
-diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.h Ascendffmpeg/libavcodec/av1dec.h
---- ffmpeg-n4.4.4/libavcodec/av1dec.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/av1dec.h	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/av1dec.h
++++ Ascendffmpeg/libavcodec/av1dec.h
 @@ -42,7 +42,6 @@
      int temporal_id;
      int spatial_id;
@@ -3279,26 +3620,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/av1dec.h Ascendffmpeg/libavcodec/av1dec.h
      uint8_t gm_type[AV1_NUM_REF_FRAMES];
      int32_t gm_params[AV1_NUM_REF_FRAMES][6];
  
-diff -urN ffmpeg-n4.4.4/libavcodec/av1.h Ascendffmpeg/libavcodec/av1.h
---- ffmpeg-n4.4.4/libavcodec/av1.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/av1.h	2024-01-22 17:46:39.088708273 +0800
-@@ -114,13 +114,6 @@
-     AV1_WARP_MODEL_TRANSLATION = 1,
-     AV1_WARP_MODEL_ROTZOOM     = 2,
-     AV1_WARP_MODEL_AFFINE      = 3,
--    AV1_WARP_PARAM_REDUCE_BITS = 6,
--
--    AV1_DIV_LUT_BITS      = 8,
--    AV1_DIV_LUT_PREC_BITS = 14,
--    AV1_DIV_LUT_NUM       = 257,
--
--    AV1_MAX_LOOP_FILTER = 63,
- };
- 
- 
-diff -urN ffmpeg-n4.4.4/libavcodec/bink.c Ascendffmpeg/libavcodec/bink.c
---- ffmpeg-n4.4.4/libavcodec/bink.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/bink.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/bink.c
++++ Ascendffmpeg/libavcodec/bink.c
 @@ -869,7 +869,7 @@
  
      binkb_init_bundles(c);
@@ -3344,9 +3667,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/bink.c Ascendffmpeg/libavcodec/bink.c
                  bx++;
                  dst  += 8;
                  prev += 8;
-diff -urN ffmpeg-n4.4.4/libavcodec/cbs_av1_syntax_template.c Ascendffmpeg/libavcodec/cbs_av1_syntax_template.c
---- ffmpeg-n4.4.4/libavcodec/cbs_av1_syntax_template.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/cbs_av1_syntax_template.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/cbs_av1_syntax_template.c
++++ Ascendffmpeg/libavcodec/cbs_av1_syntax_template.c
 @@ -355,7 +355,7 @@
          AV1_REF_FRAME_ALTREF2, AV1_REF_FRAME_ALTREF
      };
@@ -3356,9 +3678,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/cbs_av1_syntax_template.c Ascendffmpeg/libavc
      int cur_frame_hint, latest_order_hint, earliest_order_hint, ref;
      int i, j;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/cdgraphics.c Ascendffmpeg/libavcodec/cdgraphics.c
---- ffmpeg-n4.4.4/libavcodec/cdgraphics.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/cdgraphics.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/cdgraphics.c
++++ Ascendffmpeg/libavcodec/cdgraphics.c
 @@ -239,7 +239,7 @@
      for (y = FFMAX(0, vinc); y < FFMIN(CDG_FULL_HEIGHT + vinc, CDG_FULL_HEIGHT); y++)
          memcpy(out + FFMAX(0, hinc) + stride * y,
@@ -3368,9 +3689,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/cdgraphics.c Ascendffmpeg/libavcodec/cdgraphi
  
      if (vinc > 0)
          cdg_fill_wrapper(0, 0, out,
-diff -urN ffmpeg-n4.4.4/libavcodec/cfhd.c Ascendffmpeg/libavcodec/cfhd.c
---- ffmpeg-n4.4.4/libavcodec/cfhd.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/cfhd.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/cfhd.c
++++ Ascendffmpeg/libavcodec/cfhd.c
 @@ -838,7 +838,7 @@
                              const uint16_t q = s->quantisation;
  
@@ -3389,9 +3709,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/cfhd.c Ascendffmpeg/libavcodec/cfhd.c
                                  *coeff_data++ *= q;
                              }
                          } else {
-diff -urN ffmpeg-n4.4.4/libavcodec/diracdec.c Ascendffmpeg/libavcodec/diracdec.c
---- ffmpeg-n4.4.4/libavcodec/diracdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/diracdec.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/diracdec.c
++++ Ascendffmpeg/libavcodec/diracdec.c
 @@ -1432,8 +1432,8 @@
      int *c      = s->globalmc[ref].perspective;
  
@@ -3403,9 +3722,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/diracdec.c Ascendffmpeg/libavcodec/diracdec.c
  
      block->u.mv[ref][0] = (mx + (1<<(ez+ep))) >> (ez+ep);
      block->u.mv[ref][1] = (my + (1<<(ez+ep))) >> (ez+ep);
-diff -urN ffmpeg-n4.4.4/libavcodec/dnxhdenc.c Ascendffmpeg/libavcodec/dnxhdenc.c
---- ffmpeg-n4.4.4/libavcodec/dnxhdenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/dnxhdenc.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/dnxhdenc.c
++++ Ascendffmpeg/libavcodec/dnxhdenc.c
 @@ -1353,7 +1353,7 @@
      av_freep(&ctx->qmatrix_c16);
      av_freep(&ctx->qmatrix_l16);
@@ -3415,9 +3733,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/dnxhdenc.c Ascendffmpeg/libavcodec/dnxhdenc.c
          for (i = 1; i < avctx->thread_count; i++)
              av_freep(&ctx->thread[i]);
      }
-diff -urN ffmpeg-n4.4.4/libavcodec/dstdec.c Ascendffmpeg/libavcodec/dstdec.c
---- ffmpeg-n4.4.4/libavcodec/dstdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/dstdec.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/dstdec.c
++++ Ascendffmpeg/libavcodec/dstdec.c
 @@ -215,7 +215,7 @@
      return (ff_reverse[c & 127] >> 1) + 1;
  }
@@ -3457,9 +3774,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/dstdec.c Ascendffmpeg/libavcodec/dstdec.c
  
      memset(s->status, 0xAA, sizeof(s->status));
      memset(dsd, 0, frame->nb_samples * 4 * channels);
-diff -urN ffmpeg-n4.4.4/libavcodec/dxva2_av1.c Ascendffmpeg/libavcodec/dxva2_av1.c
---- ffmpeg-n4.4.4/libavcodec/dxva2_av1.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/dxva2_av1.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/dxva2_av1.c
++++ Ascendffmpeg/libavcodec/dxva2_av1.c
 @@ -139,7 +139,7 @@
          pp->frame_refs[i].Index  = ref_frame->buf[0] ? ref_idx : 0xFF;
  
@@ -3469,9 +3785,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/dxva2_av1.c Ascendffmpeg/libavcodec/dxva2_av1
          pp->frame_refs[i].wmtype    = h->cur_frame.gm_type[AV1_REF_FRAME_LAST + i];
          for (j = 0; j < 6; ++j) {
               pp->frame_refs[i].wmmat[j] = h->cur_frame.gm_params[AV1_REF_FRAME_LAST + i][j];
-diff -urN ffmpeg-n4.4.4/libavcodec/eac3dec.c Ascendffmpeg/libavcodec/eac3dec.c
---- ffmpeg-n4.4.4/libavcodec/eac3dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/eac3dec.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/eac3dec.c
++++ Ascendffmpeg/libavcodec/eac3dec.c
 @@ -139,11 +139,9 @@
              // spx_noise_blend and spx_signal_blend are both FP.23
              nscale *= 1.0 / (1<<23);
@@ -3485,9 +3800,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/eac3dec.c Ascendffmpeg/libavcodec/eac3dec.c
                  s->transform_coeffs[ch][bin]   *= sscale;
                  s->transform_coeffs[ch][bin++] += noise;
              }
-diff -urN ffmpeg-n4.4.4/libavcodec/eatgq.c Ascendffmpeg/libavcodec/eatgq.c
---- ffmpeg-n4.4.4/libavcodec/eatgq.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/eatgq.c	2024-01-22 17:46:39.088708273 +0800
+--- FFmpeg-n4.4.4/libavcodec/eatgq.c
++++ Ascendffmpeg/libavcodec/eatgq.c
 @@ -61,7 +61,7 @@
      return 0;
  }
@@ -3537,9 +3851,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/eatgq.c Ascendffmpeg/libavcodec/eatgq.c
          tgq_idct_put_mb(s, s->block, frame, mb_x, mb_y);
          bytestream2_skip(&s->gb, mode);
      } else {
-diff -urN ffmpeg-n4.4.4/libavcodec/escape124.c Ascendffmpeg/libavcodec/escape124.c
---- ffmpeg-n4.4.4/libavcodec/escape124.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/escape124.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/escape124.c
++++ Ascendffmpeg/libavcodec/escape124.c
 @@ -88,6 +88,11 @@
      unsigned i, j;
      CodeBook cb = { 0 };
@@ -3577,9 +3890,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/escape124.c Ascendffmpeg/libavcodec/escape124
          }
      }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/exr.c Ascendffmpeg/libavcodec/exr.c
---- ffmpeg-n4.4.4/libavcodec/exr.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/exr.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/exr.c
++++ Ascendffmpeg/libavcodec/exr.c
 @@ -1240,8 +1240,7 @@
          td->ysize = FFMIN(s->tile_attr.ySize, s->ydelta - tile_y * s->tile_attr.ySize);
          td->xsize = FFMIN(s->tile_attr.xSize, s->xdelta - tile_x * s->tile_attr.xSize);
@@ -3626,10 +3938,9 @@ diff -urN ffmpeg-n4.4.4/libavcodec/exr.c Ascendffmpeg/libavcodec/exr.c
                  return AVERROR_INVALIDDATA;
  
              bytestream2_skip(gb, psize);
-diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec.c Ascendffmpeg/libavcodec/ffv1dec.c
---- ffmpeg-n4.4.4/libavcodec/ffv1dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ffv1dec.c	2024-01-22 17:46:39.098708323 +0800
-@@ -166,34 +166,24 @@
+--- FFmpeg-n4.4.4/libavcodec/ffv1dec.c
++++ Ascendffmpeg/libavcodec/ffv1dec.c
+@@ -166,35 +166,25 @@
      RangeCoder *c = &fs->c;
      uint8_t state[CONTEXT_SIZE];
      unsigned ps, i, context_count;
@@ -3643,12 +3954,25 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec.c Ascendffmpeg/libavcodec/ffv1dec.c
  
      av_assert0(f->version > 2);
  
--
++    fs->slice_x      =  get_symbol(c, state, 0)      * f->width ;
++    fs->slice_y      =  get_symbol(c, state, 0)      * f->height;
++    fs->slice_width  = (get_symbol(c, state, 0) + 1) * f->width  + fs->slice_x;
++    fs->slice_height = (get_symbol(c, state, 0) + 1) * f->height + fs->slice_y;
+ 
 -    if (sx < 0 || sy < 0 || sw <= 0 || sh <= 0)
 -        return AVERROR_INVALIDDATA;
 -    if (sx > f->num_h_slices - sw || sy > f->num_v_slices - sh)
 -        return AVERROR_INVALIDDATA;
--
++    fs->slice_x /= f->num_h_slices;
++    fs->slice_y /= f->num_v_slices;
++    fs->slice_width  = fs->slice_width /f->num_h_slices - fs->slice_x;
++    fs->slice_height = fs->slice_height/f->num_v_slices - fs->slice_y;
++    if ((unsigned)fs->slice_width > f->width || (unsigned)fs->slice_height > f->height)
++        return -1;
++    if (    (unsigned)fs->slice_x + (uint64_t)fs->slice_width  > f->width
++         || (unsigned)fs->slice_y + (uint64_t)fs->slice_height > f->height)
++        return -1;
+ 
 -    fs->slice_x      =  sx       * (int64_t)f->width  / f->num_h_slices;
 -    fs->slice_y      =  sy       * (int64_t)f->height / f->num_v_slices;
 -    fs->slice_width  = (sx + sw) * (int64_t)f->width  / f->num_h_slices - fs->slice_x;
@@ -3661,23 +3985,10 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec.c Ascendffmpeg/libavcodec/ffv1dec.c
 -
 -    if (fs->ac == AC_GOLOMB_RICE && fs->slice_width >= (1<<23))
 -        return AVERROR_INVALIDDATA;
-+    fs->slice_x      =  get_symbol(c, state, 0)      * f->width ;
-+    fs->slice_y      =  get_symbol(c, state, 0)      * f->height;
-+    fs->slice_width  = (get_symbol(c, state, 0) + 1) * f->width  + fs->slice_x;
-+    fs->slice_height = (get_symbol(c, state, 0) + 1) * f->height + fs->slice_y;
-+
-+    fs->slice_x /= f->num_h_slices;
-+    fs->slice_y /= f->num_v_slices;
-+    fs->slice_width  = fs->slice_width /f->num_h_slices - fs->slice_x;
-+    fs->slice_height = fs->slice_height/f->num_v_slices - fs->slice_y;
-+    if ((unsigned)fs->slice_width > f->width || (unsigned)fs->slice_height > f->height)
-+        return -1;
-+    if (    (unsigned)fs->slice_x + (uint64_t)fs->slice_width  > f->width
-+         || (unsigned)fs->slice_y + (uint64_t)fs->slice_height > f->height)
-+        return -1;
- 
+-
      for (i = 0; i < f->plane_count; i++) {
          PlaneContext * const p = &fs->plane[i];
+         int idx = get_symbol(c, state, 0);
 @@ -308,11 +298,8 @@
      }
      if ((ret = ff_ffv1_init_slice_state(f, fs)) < 0)
@@ -3711,13 +4022,12 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec.c Ascendffmpeg/libavcodec/ffv1dec.c
 -            int sy = get_symbol(c, state, 0);
 -            int sw = get_symbol(c, state, 0) + 1U;
 -            int sh = get_symbol(c, state, 0) + 1U;
--
--            if (sx < 0 || sy < 0 || sw <= 0 || sh <= 0)
 +            fs->slice_x      =  get_symbol(c, state, 0)      * f->width ;
 +            fs->slice_y      =  get_symbol(c, state, 0)      * f->height;
 +            fs->slice_width  = (get_symbol(c, state, 0) + 1) * f->width  + fs->slice_x;
 +            fs->slice_height = (get_symbol(c, state, 0) + 1) * f->height + fs->slice_y;
-+
+ 
+-            if (sx < 0 || sy < 0 || sw <= 0 || sh <= 0)
 +            fs->slice_x     /= f->num_h_slices;
 +            fs->slice_y     /= f->num_v_slices;
 +            fs->slice_width  = fs->slice_width  / f->num_h_slices - fs->slice_x;
@@ -3742,9 +4052,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec.c Ascendffmpeg/libavcodec/ffv1dec.c
          }
  
          for (i = 0; i < f->plane_count; i++) {
-diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec_template.c Ascendffmpeg/libavcodec/ffv1dec_template.c
---- ffmpeg-n4.4.4/libavcodec/ffv1dec_template.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ffv1dec_template.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/ffv1dec_template.c
++++ Ascendffmpeg/libavcodec/ffv1dec_template.c
 @@ -93,11 +93,11 @@
                          run_count--;
                      }
@@ -3762,9 +4071,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/ffv1dec_template.c Ascendffmpeg/libavcodec/ff
                  }
                  run_count--;
                  if (run_count < 0) {
-diff -urN ffmpeg-n4.4.4/libavcodec/fmvc.c Ascendffmpeg/libavcodec/fmvc.c
---- ffmpeg-n4.4.4/libavcodec/fmvc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/fmvc.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/fmvc.c
++++ Ascendffmpeg/libavcodec/fmvc.c
 @@ -401,17 +401,20 @@
      PutByteContext *pb = &s->pb;
      AVFrame *frame = data;
@@ -3802,22 +4110,21 @@ diff -urN ffmpeg-n4.4.4/libavcodec/fmvc.c Ascendffmpeg/libavcodec/fmvc.c
          src = s->buffer;
          dst = frame->data[0] + (avctx->height - 1) * frame->linesize[0];
          for (y = 0; y < avctx->height; y++) {
-@@ -517,12 +514,6 @@
+@@ -516,12 +513,6 @@
+             }
              dst = &rect[block_h * s->stride];
          }
- 
+-
 -        if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
 -            return ret;
 -
 -        frame->key_frame = 0;
 -        frame->pict_type = AV_PICTURE_TYPE_P;
--
+ 
          ssrc = s->buffer;
          ddst = frame->data[0] + (avctx->height - 1) * frame->linesize[0];
-         for (y = 0; y < avctx->height; y++) {
-diff -urN ffmpeg-n4.4.4/libavcodec/g729_parser.c Ascendffmpeg/libavcodec/g729_parser.c
---- ffmpeg-n4.4.4/libavcodec/g729_parser.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/g729_parser.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/g729_parser.c
++++ Ascendffmpeg/libavcodec/g729_parser.c
 @@ -49,9 +49,6 @@
          s->block_size = (avctx->bit_rate < 8000) ? G729D_6K4_BLOCK_SIZE : G729_8K_BLOCK_SIZE;
          if (avctx->codec_id == AV_CODEC_ID_ACELP_KELVIN)
@@ -3828,21 +4135,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/g729_parser.c Ascendffmpeg/libavcodec/g729_pa
          s->block_size *= avctx->channels;
          s->duration   = avctx->frame_size;
      }
-diff -urN ffmpeg-n4.4.4/libavcodec/h263dec.c Ascendffmpeg/libavcodec/h263dec.c
---- ffmpeg-n4.4.4/libavcodec/h263dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/h263dec.c	2024-01-22 17:46:39.098708323 +0800
-@@ -545,8 +545,6 @@
-     avctx->has_b_frames = !s->low_delay;
- 
-     if (CONFIG_MPEG4_DECODER && avctx->codec_id == AV_CODEC_ID_MPEG4) {
--        if (s->pict_type != AV_PICTURE_TYPE_B && s->mb_num/2 > get_bits_left(&s->gb))
--            return AVERROR_INVALIDDATA;
-         if (ff_mpeg4_workaround_bugs(avctx) == 1)
-             goto retry;
-         if (s->studio_profile != (s->idsp.idct == NULL))
-diff -urN ffmpeg-n4.4.4/libavcodec/h263.h Ascendffmpeg/libavcodec/h263.h
---- ffmpeg-n4.4.4/libavcodec/h263.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/h263.h	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/h263.h
++++ Ascendffmpeg/libavcodec/h263.h
 @@ -100,16 +100,15 @@
  
  
@@ -3863,9 +4157,19 @@ diff -urN ffmpeg-n4.4.4/libavcodec/h263.h Ascendffmpeg/libavcodec/h263.h
          val--;
          code = (val >> bit_size) + 1;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/h264dec.c Ascendffmpeg/libavcodec/h264dec.c
---- ffmpeg-n4.4.4/libavcodec/h264dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/h264dec.c	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/h263dec.c
++++ Ascendffmpeg/libavcodec/h263dec.c
+@@ -545,8 +545,6 @@
+     avctx->has_b_frames = !s->low_delay;
+ 
+     if (CONFIG_MPEG4_DECODER && avctx->codec_id == AV_CODEC_ID_MPEG4) {
+-        if (s->pict_type != AV_PICTURE_TYPE_B && s->mb_num/2 > get_bits_left(&s->gb))
+-            return AVERROR_INVALIDDATA;
+         if (ff_mpeg4_workaround_bugs(avctx) == 1)
+             goto retry;
+         if (s->studio_profile != (s->idsp.idct == NULL))
+--- FFmpeg-n4.4.4/libavcodec/h264dec.c
++++ Ascendffmpeg/libavcodec/h264dec.c
 @@ -654,10 +654,6 @@
              avpriv_request_sample(avctx, "data partitioning");
              break;
@@ -3877,34 +4181,9 @@ diff -urN ffmpeg-n4.4.4/libavcodec/h264dec.c Ascendffmpeg/libavcodec/h264dec.c
              ret = ff_h264_sei_decode(&h->sei, &nal->gb, &h->ps, avctx);
              h->has_recovery_point = h->has_recovery_point || h->sei.recovery_point.recovery_frame_cnt != -1;
              if (avctx->debug & FF_DEBUG_GREEN_MD)
-diff -urN ffmpeg-n4.4.4/libavcodec/hevcdec.c Ascendffmpeg/libavcodec/hevcdec.c
---- ffmpeg-n4.4.4/libavcodec/hevcdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hevcdec.c	2024-01-22 17:46:39.098708323 +0800
-@@ -3338,7 +3338,7 @@
-         }
-     } else {
-         /* verify the SEI checksum */
--        if (avctx->err_recognition & AV_EF_CRCCHECK && s->ref && s->is_decoded &&
-+        if (avctx->err_recognition & AV_EF_CRCCHECK && s->is_decoded &&
-             s->sei.picture_hash.is_md5) {
-             ret = verify_md5(s, s->ref->frame);
-             if (ret < 0 && avctx->err_recognition & AV_EF_EXPLODE) {
-diff -urN ffmpeg-n4.4.4/libavcodec/hevcdsp_template.c Ascendffmpeg/libavcodec/hevcdsp_template.c
---- ffmpeg-n4.4.4/libavcodec/hevcdsp_template.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hevcdsp_template.c	2024-01-22 17:46:39.098708323 +0800
-@@ -313,7 +313,7 @@
-         offset_table[(k + sao_left_class) & 31] = sao_offset_val[k + 1];
-     for (y = 0; y < height; y++) {
-         for (x = 0; x < width; x++)
--            dst[x] = av_clip_pixel(src[x] + offset_table[(src[x] >> shift) & 31]);
-+            dst[x] = av_clip_pixel(src[x] + offset_table[src[x] >> shift]);
-         dst += stride_dst;
-         src += stride_src;
-     }
-diff -urN ffmpeg-n4.4.4/libavcodec/hevc_filter.c Ascendffmpeg/libavcodec/hevc_filter.c
---- ffmpeg-n4.4.4/libavcodec/hevc_filter.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hevc_filter.c	2024-01-22 17:46:39.098708323 +0800
-@@ -145,22 +145,11 @@
+--- FFmpeg-n4.4.4/libavcodec/hevc_filter.c
++++ Ascendffmpeg/libavcodec/hevc_filter.c
+@@ -145,21 +145,10 @@
  
      if (((intptr_t)dst | (intptr_t)src | stride_dst | stride_src) & 15) {
          for (i = 0; i < height; i++) {
@@ -3913,7 +4192,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/hevc_filter.c Ascendffmpeg/libavcodec/hevc_fi
                  AV_COPY64U(dst+j, src+j);
              dst += stride_dst;
              src += stride_src;
-         }
+-        }
 -        if (width&7) {
 -            dst += ((width>>3)<<3) - stride_dst * height;
 -            src += ((width>>3)<<3) - stride_src * height;
@@ -3924,13 +4203,33 @@ diff -urN ffmpeg-n4.4.4/libavcodec/hevc_filter.c Ascendffmpeg/libavcodec/hevc_fi
 -                dst += stride_dst;
 -                src += stride_src;
 -            }
--        }
+         }
      } else {
          for (i = 0; i < height; i++) {
-             for (j = 0; j < width; j+=16)
-diff -urN ffmpeg-n4.4.4/libavcodec/hwaccels.h Ascendffmpeg/libavcodec/hwaccels.h
---- ffmpeg-n4.4.4/libavcodec/hwaccels.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hwaccels.h	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/hevcdec.c
++++ Ascendffmpeg/libavcodec/hevcdec.c
+@@ -3338,7 +3338,7 @@
+         }
+     } else {
+         /* verify the SEI checksum */
+-        if (avctx->err_recognition & AV_EF_CRCCHECK && s->ref && s->is_decoded &&
++        if (avctx->err_recognition & AV_EF_CRCCHECK && s->is_decoded &&
+             s->sei.picture_hash.is_md5) {
+             ret = verify_md5(s, s->ref->frame);
+             if (ret < 0 && avctx->err_recognition & AV_EF_EXPLODE) {
+--- FFmpeg-n4.4.4/libavcodec/hevcdsp_template.c
++++ Ascendffmpeg/libavcodec/hevcdsp_template.c
+@@ -313,7 +313,7 @@
+         offset_table[(k + sao_left_class) & 31] = sao_offset_val[k + 1];
+     for (y = 0; y < height; y++) {
+         for (x = 0; x < width; x++)
+-            dst[x] = av_clip_pixel(src[x] + offset_table[(src[x] >> shift) & 31]);
++            dst[x] = av_clip_pixel(src[x] + offset_table[src[x] >> shift]);
+         dst += stride_dst;
+         src += stride_src;
+     }
+--- FFmpeg-n4.4.4/libavcodec/hwaccels.h
++++ Ascendffmpeg/libavcodec/hwaccels.h
 @@ -35,6 +35,7 @@
  extern const AVHWAccel ff_h264_vaapi_hwaccel;
  extern const AVHWAccel ff_h264_vdpau_hwaccel;
@@ -3939,9 +4238,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/hwaccels.h Ascendffmpeg/libavcodec/hwaccels.h
  extern const AVHWAccel ff_hevc_d3d11va_hwaccel;
  extern const AVHWAccel ff_hevc_d3d11va2_hwaccel;
  extern const AVHWAccel ff_hevc_dxva2_hwaccel;
-diff -urN ffmpeg-n4.4.4/libavcodec/hwconfig.h Ascendffmpeg/libavcodec/hwconfig.h
---- ffmpeg-n4.4.4/libavcodec/hwconfig.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hwconfig.h	2024-01-22 17:46:39.098708323 +0800
+--- FFmpeg-n4.4.4/libavcodec/hwconfig.h
++++ Ascendffmpeg/libavcodec/hwconfig.h
 @@ -80,6 +80,8 @@
      HW_CONFIG_HWACCEL(0, 0, 1, D3D11VA_VLD,  NONE,         ff_ ## codec ## _d3d11va_hwaccel)
  #define HWACCEL_XVMC(codec) \
@@ -3951,9 +4249,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/hwconfig.h Ascendffmpeg/libavcodec/hwconfig.h
  
  #define HW_CONFIG_ENCODER(device, frames, ad_hoc, format, device_type_) \
      &(const AVCodecHWConfigInternal) { \
-diff -urN ffmpeg-n4.4.4/libavcodec/jpeglsdec.c Ascendffmpeg/libavcodec/jpeglsdec.c
---- ffmpeg-n4.4.4/libavcodec/jpeglsdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/jpeglsdec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/jpeglsdec.c
++++ Ascendffmpeg/libavcodec/jpeglsdec.c
 @@ -67,7 +67,7 @@
          s->t3     = get_bits(&s->gb, 16);
          s->reset  = get_bits(&s->gb, 16);
@@ -4031,9 +4328,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/jpeglsdec.c Ascendffmpeg/libavcodec/jpeglsdec
                          int r    = src[x+0] - ((                       359 * (src[x+2]-128) + 490) >> 8);
                          int g    = src[x+0] - (( 88 * (src[x+1]-128) - 183 * (src[x+2]-128) +  30) >> 8);
                          int b    = src[x+0] + ((454 * (src[x+1]-128)                        + 574) >> 8);
-diff -urN ffmpeg-n4.4.4/libavcodec/lagarith.c Ascendffmpeg/libavcodec/lagarith.c
---- ffmpeg-n4.4.4/libavcodec/lagarith.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/lagarith.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/lagarith.c
++++ Ascendffmpeg/libavcodec/lagarith.c
 @@ -408,9 +408,6 @@
          if (zero_run) {
              zero_run = 0;
@@ -4044,9 +4340,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/lagarith.c Ascendffmpeg/libavcodec/lagarith.c
              memcpy(dst, src, i);
              dst += i;
              l->zeros_rem = lag_calc_zero_run(src[i]);
-diff -urN ffmpeg-n4.4.4/libavcodec/libdav1d.c Ascendffmpeg/libavcodec/libdav1d.c
---- ffmpeg-n4.4.4/libavcodec/libdav1d.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/libdav1d.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/libdav1d.c
++++ Ascendffmpeg/libavcodec/libdav1d.c
 @@ -127,11 +127,7 @@
  {
      Libdav1dContext *dav1d = c->priv_data;
@@ -4080,9 +4375,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/libdav1d.c Ascendffmpeg/libavcodec/libdav1d.c
      }
  
      res = dav1d_get_picture(dav1d->c, p);
-diff -urN ffmpeg-n4.4.4/libavcodec/libkvazaar.c Ascendffmpeg/libavcodec/libkvazaar.c
---- ffmpeg-n4.4.4/libavcodec/libkvazaar.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/libkvazaar.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/libkvazaar.c
++++ Ascendffmpeg/libavcodec/libkvazaar.c
 @@ -210,19 +210,13 @@
  
          // Copy pixels from frame to input_pic.
@@ -4104,9 +4398,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/libkvazaar.c Ascendffmpeg/libavcodec/libkvaza
                            (const uint8_t **)frame->data, frame->linesize,
                            frame->format, frame->width, frame->height);
          }
-diff -urN ffmpeg-n4.4.4/libavcodec/libopenh264dec.c Ascendffmpeg/libavcodec/libopenh264dec.c
---- ffmpeg-n4.4.4/libavcodec/libopenh264dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/libopenh264dec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/libopenh264dec.c
++++ Ascendffmpeg/libavcodec/libopenh264dec.c
 @@ -91,8 +91,8 @@
  {
      SVCContext *s = avctx->priv_data;
@@ -4126,9 +4419,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/libopenh264dec.c Ascendffmpeg/libavcodec/libo
      av_image_copy(avframe->data, avframe->linesize, (const uint8_t **) ptrs, linesize, avctx->pix_fmt, avctx->width, avctx->height);
  
      avframe->pts     = info.uiOutYuvTimeStamp;
-diff -urN ffmpeg-n4.4.4/libavcodec/libuavs3d.c Ascendffmpeg/libavcodec/libuavs3d.c
---- ffmpeg-n4.4.4/libavcodec/libuavs3d.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/libuavs3d.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/libuavs3d.c
++++ Ascendffmpeg/libavcodec/libuavs3d.c
 @@ -208,9 +208,7 @@
                  }
                  avctx->has_b_frames  = !seqh->low_delay;
@@ -4140,9 +4432,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/libuavs3d.c Ascendffmpeg/libavcodec/libuavs3d
                  h->got_seqhdr = 1;
  
                  if (seqh->colour_description) {
-diff -urN ffmpeg-n4.4.4/libavcodec/libxavs2.c Ascendffmpeg/libavcodec/libxavs2.c
---- ffmpeg-n4.4.4/libavcodec/libxavs2.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/libxavs2.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/libxavs2.c
++++ Ascendffmpeg/libavcodec/libxavs2.c
 @@ -205,7 +205,7 @@
          ret = cae->api->encoder_encode(cae->encoder, &pic, &cae->packet);
  
@@ -4152,87 +4443,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/libxavs2.c Ascendffmpeg/libavcodec/libxavs2.c
              return AVERROR_EXTERNAL;
          }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/Makefile Ascendffmpeg/libavcodec/Makefile
---- ffmpeg-n4.4.4/libavcodec/Makefile	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/Makefile	2024-01-22 17:46:39.078708226 +0800
-@@ -25,6 +25,8 @@
-           videotoolbox.h                                                \
-           vorbis_parser.h                                               \
-           xvmc.h                                                        \
-+          ascend_dec.h                                                  \
-+          ascend_enc.h                                                  \
- 
- OBJS = ac3_parser.o                                                     \
-        adts_parser.o                                                    \
-@@ -132,6 +134,7 @@
-                                           motion_est.o ratecontrol.o    \
-                                           mpegvideoencdsp.o
- OBJS-$(CONFIG_MSS34DSP)                += mss34dsp.o
-+OBJS-$(CONFIG_NVENC)                   += nvenc.o
- OBJS-$(CONFIG_PIXBLOCKDSP)             += pixblockdsp.o
- OBJS-$(CONFIG_QPELDSP)                 += qpeldsp.o
- OBJS-$(CONFIG_QSV)                     += qsv.o
-@@ -369,14 +372,16 @@
-                                           h264_mb.o h264_picture.o \
-                                           h264_refs.o h264_sei.o \
-                                           h264_slice.o h264data.o
-+OBJS-$(CONFIG_H264_ASCEND_DECODER)     += ascend_dec.o
-+OBJS-$(CONFIG_H264_ASCEND_ENCODER)     += ascend_enc.o
- OBJS-$(CONFIG_H264_AMF_ENCODER)        += amfenc_h264.o
- OBJS-$(CONFIG_H264_CUVID_DECODER)      += cuviddec.o
- OBJS-$(CONFIG_H264_MEDIACODEC_DECODER) += mediacodecdec.o
- OBJS-$(CONFIG_H264_MF_ENCODER)         += mfenc.o mf_utils.o
- OBJS-$(CONFIG_H264_MMAL_DECODER)       += mmaldec.o
--OBJS-$(CONFIG_H264_NVENC_ENCODER)      += nvenc.o nvenc_h264.o
--OBJS-$(CONFIG_NVENC_ENCODER)           += nvenc.o nvenc_h264.o
--OBJS-$(CONFIG_NVENC_H264_ENCODER)      += nvenc.o nvenc_h264.o
-+OBJS-$(CONFIG_H264_NVENC_ENCODER)      += nvenc_h264.o
-+OBJS-$(CONFIG_NVENC_ENCODER)           += nvenc_h264.o
-+OBJS-$(CONFIG_NVENC_H264_ENCODER)      += nvenc_h264.o
- OBJS-$(CONFIG_H264_OMX_ENCODER)        += omx.o
- OBJS-$(CONFIG_H264_QSV_DECODER)        += qsvdec.o
- OBJS-$(CONFIG_H264_QSV_ENCODER)        += qsvenc_h264.o
-@@ -392,12 +397,14 @@
- OBJS-$(CONFIG_HEVC_DECODER)            += hevcdec.o hevc_mvs.o \
-                                           hevc_cabac.o hevc_refs.o hevcpred.o    \
-                                           hevcdsp.o hevc_filter.o hevc_data.o
-+OBJS-$(CONFIG_H265_ASCEND_DECODER)     += ascend_dec.o
-+OBJS-$(CONFIG_H265_ASCEND_ENCODER)     += ascend_enc.o
- OBJS-$(CONFIG_HEVC_AMF_ENCODER)        += amfenc_hevc.o
- OBJS-$(CONFIG_HEVC_CUVID_DECODER)      += cuviddec.o
- OBJS-$(CONFIG_HEVC_MEDIACODEC_DECODER) += mediacodecdec.o
- OBJS-$(CONFIG_HEVC_MF_ENCODER)         += mfenc.o mf_utils.o
--OBJS-$(CONFIG_HEVC_NVENC_ENCODER)      += nvenc.o nvenc_hevc.o
--OBJS-$(CONFIG_NVENC_HEVC_ENCODER)      += nvenc.o nvenc_hevc.o
-+OBJS-$(CONFIG_HEVC_NVENC_ENCODER)      += nvenc_hevc.o
-+OBJS-$(CONFIG_NVENC_HEVC_ENCODER)      += nvenc_hevc.o
- OBJS-$(CONFIG_HEVC_QSV_DECODER)        += qsvdec.o
- OBJS-$(CONFIG_HEVC_QSV_ENCODER)        += qsvenc_hevc.o hevc_ps_enc.o       \
-                                           hevc_data.o
-@@ -874,7 +881,6 @@
- OBJS-$(CONFIG_ADPCM_G726LE_DECODER)       += g726.o
- OBJS-$(CONFIG_ADPCM_G726LE_ENCODER)       += g726.o
- OBJS-$(CONFIG_ADPCM_IMA_AMV_DECODER)      += adpcm.o adpcm_data.o
--OBJS-$(CONFIG_ADPCM_IMA_AMV_ENCODER)      += adpcmenc.o adpcm_data.o
- OBJS-$(CONFIG_ADPCM_IMA_ALP_DECODER)      += adpcm.o adpcm_data.o
- OBJS-$(CONFIG_ADPCM_IMA_ALP_ENCODER)      += adpcmenc.o adpcm_data.o
- OBJS-$(CONFIG_ADPCM_IMA_APC_DECODER)      += adpcm.o adpcm_data.o
-@@ -1272,6 +1278,12 @@
- $(SUBDIR)%_tablegen$(HOSTEXESUF): HOSTCFLAGS += -DCONFIG_SMALL=0
- endif
- 
-+#ifdef CONFIG_ASCEND
-+CFLAGS += -DENABLE_DVPP_INTERFACE=1
-+#else
-+#$(SUBDIR)%_tablegen$(HOSTEXESUF): HOSTCFLAGS += -DENABLE_DVPP_INTERFACE=0
-+#endif
-+
- GEN_HEADERS = cbrt_tables.h cbrt_fixed_tables.h aacps_tables.h aacps_fixed_tables.h \
-               dv_tables.h     \
-               sinewin_tables.h sinewin_fixed_tables.h mpegaudio_tables.h \
-diff -urN ffmpeg-n4.4.4/libavcodec/midivid.c Ascendffmpeg/libavcodec/midivid.c
---- ffmpeg-n4.4.4/libavcodec/midivid.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/midivid.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/midivid.c
++++ Ascendffmpeg/libavcodec/midivid.c
 @@ -202,7 +202,12 @@
      bytestream2_skip(gb, 8);
      uncompressed = bytestream2_get_le32(gb);
@@ -4247,24 +4459,22 @@ diff -urN ffmpeg-n4.4.4/libavcodec/midivid.c Ascendffmpeg/libavcodec/midivid.c
          av_fast_padded_malloc(&s->uncompressed, &s->uncompressed_size, 16LL * (avpkt->size - 12));
          if (!s->uncompressed)
              return AVERROR(ENOMEM);
-@@ -211,13 +216,9 @@
+@@ -211,12 +216,8 @@
          if (ret < 0)
              return ret;
          bytestream2_init(gb, s->uncompressed, ret);
 +        ret = decode_mvdv(s, avctx, frame);
      }
- 
+-
 -    if ((ret = ff_reget_buffer(avctx, s->frame, 0)) < 0)
 -        return ret;
 -
 -    ret = decode_mvdv(s, avctx, frame);
--
+ 
      if (ret < 0)
          return ret;
-     key = ret;
-diff -urN ffmpeg-n4.4.4/libavcodec/mjpegbdec.c Ascendffmpeg/libavcodec/mjpegbdec.c
---- ffmpeg-n4.4.4/libavcodec/mjpegbdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mjpegbdec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mjpegbdec.c
++++ Ascendffmpeg/libavcodec/mjpegbdec.c
 @@ -57,7 +57,6 @@
      buf_end = buf + buf_size;
      s->got_picture = 0;
@@ -4273,9 +4483,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mjpegbdec.c Ascendffmpeg/libavcodec/mjpegbdec
  
  read_header:
      /* reset on every SOI */
-diff -urN ffmpeg-n4.4.4/libavcodec/mjpegdec.c Ascendffmpeg/libavcodec/mjpegdec.c
---- ffmpeg-n4.4.4/libavcodec/mjpegdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mjpegdec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mjpegdec.c
++++ Ascendffmpeg/libavcodec/mjpegdec.c
 @@ -1082,10 +1082,6 @@
          return AVERROR_INVALIDDATA;
      if (s->v_max != 1 || s->h_max != 1 || !s->lossless)
@@ -4305,9 +4514,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mjpegdec.c Ascendffmpeg/libavcodec/mjpegdec.c
          if (s->got_picture)
              if (rgb != s->rgb || pegasus_rct != s->pegasus_rct) {
                  av_log(s->avctx, AV_LOG_WARNING, "Mismatching LJIF tag\n");
-diff -urN ffmpeg-n4.4.4/libavcodec/mjpegenc_common.c Ascendffmpeg/libavcodec/mjpegenc_common.c
---- ffmpeg-n4.4.4/libavcodec/mjpegenc_common.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mjpegenc_common.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mjpegenc_common.c
++++ Ascendffmpeg/libavcodec/mjpegenc_common.c
 @@ -247,7 +247,7 @@
      default: av_assert0(0);
      }
@@ -4317,9 +4525,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mjpegenc_common.c Ascendffmpeg/libavcodec/mjp
      if (lossless && (  avctx->pix_fmt == AV_PIX_FMT_BGR0
                      || avctx->pix_fmt == AV_PIX_FMT_BGRA
                      || avctx->pix_fmt == AV_PIX_FMT_BGR24))
-diff -urN ffmpeg-n4.4.4/libavcodec/mlpdec.c Ascendffmpeg/libavcodec/mlpdec.c
---- ffmpeg-n4.4.4/libavcodec/mlpdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mlpdec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mlpdec.c
++++ Ascendffmpeg/libavcodec/mlpdec.c
 @@ -521,7 +521,7 @@
  
      /* This should happen for TrueHD streams with >6 channels and MLP's noise
@@ -4329,9 +4536,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mlpdec.c Ascendffmpeg/libavcodec/mlpdec.c
          avpriv_request_sample(m->avctx,
                                "%d channels (more than the "
                                "maximum supported by the decoder)",
-diff -urN ffmpeg-n4.4.4/libavcodec/mobiclip.c Ascendffmpeg/libavcodec/mobiclip.c
---- ffmpeg-n4.4.4/libavcodec/mobiclip.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mobiclip.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mobiclip.c
++++ Ascendffmpeg/libavcodec/mobiclip.c
 @@ -329,7 +329,7 @@
      return 0;
  }
@@ -4350,9 +4556,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mobiclip.c Ascendffmpeg/libavcodec/mobiclip.c
          if (ret < 0)
              return ret;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/motion_est.c Ascendffmpeg/libavcodec/motion_est.c
---- ffmpeg-n4.4.4/libavcodec/motion_est.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/motion_est.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/motion_est.c
++++ Ascendffmpeg/libavcodec/motion_est.c
 @@ -1614,7 +1614,7 @@
          for(y=0; y<s->mb_height; y++){
              int x;
@@ -4382,9 +4587,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/motion_est.c Ascendffmpeg/libavcodec/motion_e
              }
          }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/motionpixels.c Ascendffmpeg/libavcodec/motionpixels.c
---- ffmpeg-n4.4.4/libavcodec/motionpixels.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/motionpixels.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/motionpixels.c
++++ Ascendffmpeg/libavcodec/motionpixels.c
 @@ -184,7 +184,7 @@
      int color;
  
@@ -4394,9 +4598,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/motionpixels.c Ascendffmpeg/libavcodec/motion
  }
  
  static void mp_set_rgb_from_yuv(MotionPixelsContext *mp, int x, int y, const YuvPixel *p)
-diff -urN ffmpeg-n4.4.4/libavcodec/movtextenc.c Ascendffmpeg/libavcodec/movtextenc.c
---- ffmpeg-n4.4.4/libavcodec/movtextenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/movtextenc.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/movtextenc.c
++++ Ascendffmpeg/libavcodec/movtextenc.c
 @@ -85,7 +85,7 @@
      uint8_t box_flags;
      StyleBox d;
@@ -4427,9 +4630,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/movtextenc.c Ascendffmpeg/libavcodec/movtexte
      MovTextContext *s = priv;
      av_bprint_append_data(&s->buffer, text, len);
      // If it's not utf-8, just use the byte length
-diff -urN ffmpeg-n4.4.4/libavcodec/mpeg12dec.c Ascendffmpeg/libavcodec/mpeg12dec.c
---- ffmpeg-n4.4.4/libavcodec/mpeg12dec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mpeg12dec.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mpeg12dec.c
++++ Ascendffmpeg/libavcodec/mpeg12dec.c
 @@ -2999,10 +2999,6 @@
      AVFrame * const frame = data;
      int ret;
@@ -4441,9 +4643,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mpeg12dec.c Ascendffmpeg/libavcodec/mpeg12dec
      ret = ff_get_buffer(avctx, frame, 0);
      if (ret < 0)
          return ret;
-diff -urN ffmpeg-n4.4.4/libavcodec/mpegaudiodec_template.c Ascendffmpeg/libavcodec/mpegaudiodec_template.c
---- ffmpeg-n4.4.4/libavcodec/mpegaudiodec_template.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mpegaudiodec_template.c	2024-01-22 17:46:39.108708370 +0800
+--- FFmpeg-n4.4.4/libavcodec/mpegaudiodec_template.c
++++ Ascendffmpeg/libavcodec/mpegaudiodec_template.c
 @@ -372,7 +372,7 @@
          crc_val = av_crc(crc_tab, crc_val, &buf[6], sec_byte_len);
  
@@ -4453,9 +4654,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mpegaudiodec_template.c Ascendffmpeg/libavcod
                  ((s->crc << 16) >> sec_rem_bits));
  
          crc_val = av_crc(crc_tab, crc_val, tmp_buf, 3);
-diff -urN ffmpeg-n4.4.4/libavcodec/mss4.c Ascendffmpeg/libavcodec/mss4.c
---- ffmpeg-n4.4.4/libavcodec/mss4.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/mss4.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/mss4.c
++++ Ascendffmpeg/libavcodec/mss4.c
 @@ -26,7 +26,6 @@
   */
  
@@ -4474,9 +4674,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/mss4.c Ascendffmpeg/libavcodec/mss4.c
      if (quality < 1 || quality > 100) {
          av_log(avctx, AV_LOG_ERROR, "Invalid quality setting %d\n", quality);
          return AVERROR_INVALIDDATA;
-diff -urN ffmpeg-n4.4.4/libavcodec/nvenc.c Ascendffmpeg/libavcodec/nvenc.c
---- ffmpeg-n4.4.4/libavcodec/nvenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/nvenc.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/nvenc.c
++++ Ascendffmpeg/libavcodec/nvenc.c
 @@ -1025,9 +1025,8 @@
  
          av_log(avctx, AV_LOG_VERBOSE, "CQ(%d) mode enabled.\n", tmp_quality);
@@ -4506,9 +4705,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/nvenc.c Ascendffmpeg/libavcodec/nvenc.c
  
      return 0;
  }
-diff -urN ffmpeg-n4.4.4/libavcodec/opus_silk.c Ascendffmpeg/libavcodec/opus_silk.c
---- ffmpeg-n4.4.4/libavcodec/opus_silk.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/opus_silk.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/opus_silk.c
++++ Ascendffmpeg/libavcodec/opus_silk.c
 @@ -198,8 +198,7 @@
      }
  }
@@ -4519,9 +4717,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/opus_silk.c Ascendffmpeg/libavcodec/opus_silk
  {
      int i, j;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/pictordec.c Ascendffmpeg/libavcodec/pictordec.c
---- ffmpeg-n4.4.4/libavcodec/pictordec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/pictordec.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/pictordec.c
++++ Ascendffmpeg/libavcodec/pictordec.c
 @@ -245,6 +245,8 @@
                          run = bytestream2_get_le16(&s->g);
                      val = bytestream2_get_byte(&s->g);
@@ -4531,9 +4728,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/pictordec.c Ascendffmpeg/libavcodec/pictordec
  
                  if (bits_per_plane == 8) {
                      picmemset_8bpp(s, frame, val, run, &x, &y);
-diff -urN ffmpeg-n4.4.4/libavcodec/pixlet.c Ascendffmpeg/libavcodec/pixlet.c
---- ffmpeg-n4.4.4/libavcodec/pixlet.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/pixlet.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/pixlet.c
++++ Ascendffmpeg/libavcodec/pixlet.c
 @@ -405,7 +405,7 @@
                  (int64_t) low [i - 1] * -INT64_C(325392907)  +
                  (int64_t) high[i + 0] *  INT64_C(1518500249) +
@@ -4552,9 +4748,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/pixlet.c Ascendffmpeg/libavcodec/pixlet.c
      }
  }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/pngdec.c Ascendffmpeg/libavcodec/pngdec.c
---- ffmpeg-n4.4.4/libavcodec/pngdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/pngdec.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/pngdec.c
++++ Ascendffmpeg/libavcodec/pngdec.c
 @@ -322,7 +322,7 @@
  static void deloco_ ## NAME(TYPE *dst, int size, int alpha) \
  { \
@@ -4564,9 +4759,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/pngdec.c Ascendffmpeg/libavcodec/pngdec.c
          int g = dst [i + 1]; \
          dst[i + 0] += g; \
          dst[i + 2] += g; \
-diff -urN ffmpeg-n4.4.4/libavcodec/pthread_frame.c Ascendffmpeg/libavcodec/pthread_frame.c
---- ffmpeg-n4.4.4/libavcodec/pthread_frame.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/pthread_frame.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/pthread_frame.c
++++ Ascendffmpeg/libavcodec/pthread_frame.c
 @@ -145,12 +145,6 @@
                                      * Set for the first N packets, where N is the number of threads.
                                      * While it is set, ff_thread_en/decode_frame won't return any results.
@@ -4655,23 +4849,22 @@ diff -urN ffmpeg-n4.4.4/libavcodec/pthread_frame.c Ascendffmpeg/libavcodec/pthre
      if (fctx->prev_thread && fctx->prev_thread != fctx->threads)
          if (update_context_from_thread(fctx->threads->avctx, fctx->prev_thread->avctx, 0) < 0) {
              av_log(avctx, AV_LOG_ERROR, "Final thread update failed\n");
-@@ -820,13 +803,6 @@
+@@ -819,13 +802,6 @@
+ 
      av_freep(&fctx->threads);
      free_pthread(fctx, thread_ctx_offsets);
- 
+-
 -    /* if we have stashed hwaccel state, move it to the user-facing context,
 -     * so it will be freed in avcodec_close() */
 -    av_assert0(!avctx->hwaccel);
 -    FFSWAP(const AVHWAccel*, avctx->hwaccel,                     fctx->stash_hwaccel);
 -    FFSWAP(void*,            avctx->hwaccel_context,             fctx->stash_hwaccel_context);
 -    FFSWAP(void*,            avctx->internal->hwaccel_priv_data, fctx->stash_hwaccel_priv);
--
+ 
      av_freep(&avctx->internal->thread_ctx);
  
-     if (avctx->priv_data && avctx->codec && avctx->codec->priv_class)
-diff -urN ffmpeg-n4.4.4/libavcodec/qdrw.c Ascendffmpeg/libavcodec/qdrw.c
---- ffmpeg-n4.4.4/libavcodec/qdrw.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/qdrw.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/qdrw.c
++++ Ascendffmpeg/libavcodec/qdrw.c
 @@ -369,7 +369,7 @@
              bytestream2_skip(&gbc, 18);
              colors = bytestream2_get_be16(&gbc);
@@ -4681,9 +4874,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/qdrw.c Ascendffmpeg/libavcodec/qdrw.c
                  av_log(avctx, AV_LOG_ERROR,
                         "Error color count - %i(0x%X)\n", colors, colors);
                  return AVERROR_INVALIDDATA;
-diff -urN ffmpeg-n4.4.4/libavcodec/qpeldsp.c Ascendffmpeg/libavcodec/qpeldsp.c
---- ffmpeg-n4.4.4/libavcodec/qpeldsp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/qpeldsp.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/qpeldsp.c
++++ Ascendffmpeg/libavcodec/qpeldsp.c
 @@ -198,7 +198,7 @@
      uint8_t full[16 * 9];                                                     \
      uint8_t half[64];                                                         \
@@ -4738,9 +4930,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/qpeldsp.c Ascendffmpeg/libavcodec/qpeldsp.c
      put ## RND ## mpeg4_qpel16_v_lowpass(half, full, 16, 24);                 \
      OPNAME ## pixels16_l2_8(dst, full + 24, half, stride, 24, 16, 16);        \
  }                                                                             \
-diff -urN ffmpeg-n4.4.4/libavcodec/rasc.c Ascendffmpeg/libavcodec/rasc.c
---- ffmpeg-n4.4.4/libavcodec/rasc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/rasc.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/rasc.c
++++ Ascendffmpeg/libavcodec/rasc.c
 @@ -722,7 +722,6 @@
              break;
          default:
@@ -4749,9 +4940,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/rasc.c Ascendffmpeg/libavcodec/rasc.c
          }
  
          if (ret < 0)
-diff -urN ffmpeg-n4.4.4/libavcodec/rpzaenc.c Ascendffmpeg/libavcodec/rpzaenc.c
---- ffmpeg-n4.4.4/libavcodec/rpzaenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/rpzaenc.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/rpzaenc.c
++++ Ascendffmpeg/libavcodec/rpzaenc.c
 @@ -204,7 +204,7 @@
  
      // loop thru and compare pixels
@@ -4790,7 +4980,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/rpzaenc.c Ascendffmpeg/libavcodec/rpzaenc.c
          memcpy(dest_pixels, src_pixels, 8);
          dest_pixels += bi->rowstride;
          src_pixels += bi->rowstride;
-@@ -730,15 +728,14 @@
+@@ -730,25 +728,19 @@
  
              if (err > s->sixteen_color_thresh) { // DO SIXTEEN COLOR BLOCK
                  uint16_t *row_ptr;
@@ -4809,21 +4999,18 @@ diff -urN ffmpeg-n4.4.4/libavcodec/rpzaenc.c Ascendffmpeg/libavcodec/rpzaenc.c
                          rgb555 = row_ptr[x] & ~0x8000;
  
                          put_bits(&s->pb, 16, rgb555);
-@@ -746,11 +743,6 @@
+                     }
                      row_ptr += bi.rowstride;
-                 }
- 
+-                }
+-
 -                for (int y = y_size; y < 4; y++) {
 -                    for (int x = 0; x < 4; x++)
 -                        put_bits(&s->pb, 16, 0);
--                }
--
+                 }
+ 
                  block_counter++;
-             } else { // FOUR COLOR BLOCK
-                 block_counter += encode_four_color_block(min_color, max_color,
-diff -urN ffmpeg-n4.4.4/libavcodec/sbrdsp_fixed.c Ascendffmpeg/libavcodec/sbrdsp_fixed.c
---- ffmpeg-n4.4.4/libavcodec/sbrdsp_fixed.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/sbrdsp_fixed.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/sbrdsp_fixed.c
++++ Ascendffmpeg/libavcodec/sbrdsp_fixed.c
 @@ -114,8 +114,8 @@
  {
      int i;
@@ -4835,22 +5022,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/sbrdsp_fixed.c Ascendffmpeg/libavcodec/sbrdsp
      }
  }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/scpr3.c Ascendffmpeg/libavcodec/scpr3.c
---- ffmpeg-n4.4.4/libavcodec/scpr3.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/scpr3.c	2024-01-22 17:46:39.118708418 +0800
-@@ -1168,9 +1168,6 @@
-                 int run, bx = x * 16 + sx1, by = y * 16 + sy1;
-                 uint32_t clr, ptype = 0, r, g, b;
- 
--                if (bx >= avctx->width)
--                    return AVERROR_INVALIDDATA;
--
-                 for (; by < y * 16 + sy2 && by < avctx->height;) {
-                     ret = decode_value3(s, 5, &s->op_model3[ptype].cntsum,
-                                         s->op_model3[ptype].freqs[0],
-diff -urN ffmpeg-n4.4.4/libavcodec/scpr.c Ascendffmpeg/libavcodec/scpr.c
---- ffmpeg-n4.4.4/libavcodec/scpr.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/scpr.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/scpr.c
++++ Ascendffmpeg/libavcodec/scpr.c
 @@ -459,9 +459,6 @@
                  int run, bx = x * 16 + sx1, by = y * 16 + sy1;
                  uint32_t r, g, b, clr, ptype = 0;
@@ -4861,9 +5034,20 @@ diff -urN ffmpeg-n4.4.4/libavcodec/scpr.c Ascendffmpeg/libavcodec/scpr.c
                  for (; by < y * 16 + sy2 && by < avctx->height;) {
                      ret = decode_value(s, s->op_model[ptype], 6, 1000, &ptype);
                      if (ret < 0)
-diff -urN ffmpeg-n4.4.4/libavcodec/snowenc.c Ascendffmpeg/libavcodec/snowenc.c
---- ffmpeg-n4.4.4/libavcodec/snowenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/snowenc.c	2024-01-22 17:46:39.118708418 +0800
+--- FFmpeg-n4.4.4/libavcodec/scpr3.c
++++ Ascendffmpeg/libavcodec/scpr3.c
+@@ -1168,9 +1168,6 @@
+                 int run, bx = x * 16 + sx1, by = y * 16 + sy1;
+                 uint32_t clr, ptype = 0, r, g, b;
+ 
+-                if (bx >= avctx->width)
+-                    return AVERROR_INVALIDDATA;
+-
+                 for (; by < y * 16 + sy2 && by < avctx->height;) {
+                     ret = decode_value3(s, 5, &s->op_model3[ptype].cntsum,
+                                         s->op_model3[ptype].freqs[0],
+--- FFmpeg-n4.4.4/libavcodec/snowenc.c
++++ Ascendffmpeg/libavcodec/snowenc.c
 @@ -1544,10 +1544,10 @@
      int level, orientation, x, y;
  
@@ -4891,9 +5075,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/snowenc.c Ascendffmpeg/libavcodec/snowenc.c
      }
  }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/sonic.c Ascendffmpeg/libavcodec/sonic.c
---- ffmpeg-n4.4.4/libavcodec/sonic.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/sonic.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/sonic.c
++++ Ascendffmpeg/libavcodec/sonic.c
 @@ -1004,7 +1004,7 @@
  
      // dequantize
@@ -4903,9 +5086,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/sonic.c Ascendffmpeg/libavcodec/sonic.c
  
      if (s->lossless)
          quant = 1;
-diff -urN ffmpeg-n4.4.4/libavcodec/speedhq.c Ascendffmpeg/libavcodec/speedhq.c
---- ffmpeg-n4.4.4/libavcodec/speedhq.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/speedhq.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/speedhq.c
++++ Ascendffmpeg/libavcodec/speedhq.c
 @@ -498,9 +498,7 @@
      uint32_t second_field_offset;
      int ret;
@@ -4917,9 +5099,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/speedhq.c Ascendffmpeg/libavcodec/speedhq.c
          return AVERROR_INVALIDDATA;
  
      quality = buf[0];
-diff -urN ffmpeg-n4.4.4/libavcodec/sunrast.c Ascendffmpeg/libavcodec/sunrast.c
---- ffmpeg-n4.4.4/libavcodec/sunrast.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/sunrast.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/sunrast.c
++++ Ascendffmpeg/libavcodec/sunrast.c
 @@ -19,7 +19,6 @@
   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
   */
@@ -4975,9 +5156,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/sunrast.c Ascendffmpeg/libavcodec/sunrast.c
              av_log(avctx, AV_LOG_WARNING, "invalid colormap length\n");
              return AVERROR_INVALIDDATA;
          }
-diff -urN ffmpeg-n4.4.4/libavcodec/takdsp.c Ascendffmpeg/libavcodec/takdsp.c
---- ffmpeg-n4.4.4/libavcodec/takdsp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/takdsp.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/takdsp.c
++++ Ascendffmpeg/libavcodec/takdsp.c
 @@ -65,7 +65,7 @@
      for (i = 0; i < length; i++) {
          int32_t a = p1[i];
@@ -4987,9 +5167,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/takdsp.c Ascendffmpeg/libavcodec/takdsp.c
          p1[i]     = b - a;
      }
  }
-diff -urN ffmpeg-n4.4.4/libavcodec/tests/snowenc.c Ascendffmpeg/libavcodec/tests/snowenc.c
---- ffmpeg-n4.4.4/libavcodec/tests/snowenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/tests/snowenc.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/libavcodec/tests/snowenc.c
++++ Ascendffmpeg/libavcodec/tests/snowenc.c
 @@ -31,13 +31,11 @@
  #define width  256
  #define height 256
@@ -5076,9 +5255,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/tests/snowenc.c Ascendffmpeg/libavcodec/tests
 -    return ret;
 +    return 0;
  }
-diff -urN ffmpeg-n4.4.4/libavcodec/texturedspenc.c Ascendffmpeg/libavcodec/texturedspenc.c
---- ffmpeg-n4.4.4/libavcodec/texturedspenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/texturedspenc.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/texturedspenc.c
++++ Ascendffmpeg/libavcodec/texturedspenc.c
 @@ -255,11 +255,11 @@
  
          muv = minv = maxv = bp[0];
@@ -5094,9 +5272,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/texturedspenc.c Ascendffmpeg/libavcodec/textu
                      maxv = bp[x * 4 + y * stride];
              }
          }
-diff -urN ffmpeg-n4.4.4/libavcodec/tiff.c Ascendffmpeg/libavcodec/tiff.c
---- ffmpeg-n4.4.4/libavcodec/tiff.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/tiff.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/tiff.c
++++ Ascendffmpeg/libavcodec/tiff.c
 @@ -100,6 +100,7 @@
      int is_tiled;
      int tile_byte_counts_offset, tile_offsets_offset;
@@ -5144,7 +5321,7 @@ diff -urN ffmpeg-n4.4.4/libavcodec/tiff.c Ascendffmpeg/libavcodec/tiff.c
              return ret;
          return 0;
      }
-@@ -976,8 +987,11 @@
+@@ -976,9 +987,12 @@
      int pos_x = 0, pos_y = 0;
      int ret;
  
@@ -5152,12 +5329,13 @@ diff -urN ffmpeg-n4.4.4/libavcodec/tiff.c Ascendffmpeg/libavcodec/tiff.c
 -        return AVERROR_INVALIDDATA;
 +    s->jpgframe->width  = s->tile_width;
 +    s->jpgframe->height = s->tile_length;
-+
+ 
 +    s->avctx_mjpeg->width = s->tile_width;
 +    s->avctx_mjpeg->height = s->tile_length;
- 
++
      has_width_leftover = (s->width % s->tile_width != 0);
      has_height_leftover = (s->height % s->tile_length != 0);
+ 
 @@ -987,7 +1001,7 @@
      tile_count_y = (s->height + s->tile_length - 1) / s->tile_length;
  
@@ -5217,9 +5395,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/tiff.c Ascendffmpeg/libavcodec/tiff.c
      ret = avcodec_open2(s->avctx_mjpeg, codec, NULL);
      if (ret < 0) {
          return ret;
-diff -urN ffmpeg-n4.4.4/libavcodec/tta.c Ascendffmpeg/libavcodec/tta.c
---- ffmpeg-n4.4.4/libavcodec/tta.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/tta.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/tta.c
++++ Ascendffmpeg/libavcodec/tta.c
 @@ -371,15 +371,8 @@
      case 3: {
          // shift samples for 24-bit sample format
@@ -5238,9 +5415,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/tta.c Ascendffmpeg/libavcodec/tta.c
          // reset decode buffer
          s->decode_buffer = NULL;
          break;
-diff -urN ffmpeg-n4.4.4/libavcodec/utils.c Ascendffmpeg/libavcodec/utils.c
---- ffmpeg-n4.4.4/libavcodec/utils.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/utils.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/utils.c
++++ Ascendffmpeg/libavcodec/utils.c
 @@ -236,8 +236,6 @@
      case AV_PIX_FMT_GBRAP16BE:
          w_align = 16; //FIXME assume 16 pixel per macroblock
@@ -5258,19 +5434,18 @@ diff -urN ffmpeg-n4.4.4/libavcodec/utils.c Ascendffmpeg/libavcodec/utils.c
          s->codec_id == AV_CODEC_ID_VP5  || s->codec_id == AV_CODEC_ID_VP6 ||
          s->codec_id == AV_CODEC_ID_VP6F || s->codec_id == AV_CODEC_ID_VP6A
      ) {
-@@ -330,9 +327,6 @@
+@@ -328,9 +325,6 @@
+         // it requires a temporary area large enough to hold a 21x21 block,
+         // increasing witdth ensure that the temporary area is large enough,
          // the next rounded up width is 32
-         *width = FFMAX(*width, 32);
-     }
--    if (s->codec_id == AV_CODEC_ID_SVQ3) {
 -        *width = FFMAX(*width, 32);
 -    }
+-    if (s->codec_id == AV_CODEC_ID_SVQ3) {
+         *width = FFMAX(*width, 32);
+     }
  
-     for (i = 0; i < 4; i++)
-         linesize_align[i] = STRIDE_ALIGN;
-diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_av1.c Ascendffmpeg/libavcodec/vaapi_av1.c
---- ffmpeg-n4.4.4/libavcodec/vaapi_av1.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vaapi_av1.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vaapi_av1.c
++++ Ascendffmpeg/libavcodec/vaapi_av1.c
 @@ -21,28 +21,8 @@
  #include "libavutil/pixdesc.h"
  #include "hwconfig.h"
@@ -5362,9 +5537,9 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_av1.c Ascendffmpeg/libavcodec/vaapi_av1
 -    uint8_t segmentation_feature_signed[AV1_SEG_LVL_MAX] = {1, 1, 1, 1, 1, 0, 0, 0};
 -    uint8_t segmentation_feature_max[AV1_SEG_LVL_MAX] = {255, AV1_MAX_LOOP_FILTER,
 -        AV1_MAX_LOOP_FILTER, AV1_MAX_LOOP_FILTER, AV1_MAX_LOOP_FILTER, 7 , 0 , 0 };
-+
-+    pic->output_surface = vaapi_av1_surface_id(&s->cur_frame);
  
++    pic->output_surface = vaapi_av1_surface_id(&s->cur_frame);
++
      bit_depth_idx = vaapi_av1_get_bit_depth_idx(avctx);
      if (bit_depth_idx < 0)
          goto fail;
@@ -5550,9 +5725,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_av1.c Ascendffmpeg/libavcodec/vaapi_av1
 +    .priv_data_size       = sizeof(VAAPIDecodeContext),
      .caps_internal        = HWACCEL_CAP_ASYNC_SAFE,
  };
-diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_decode.c Ascendffmpeg/libavcodec/vaapi_decode.c
---- ffmpeg-n4.4.4/libavcodec/vaapi_decode.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vaapi_decode.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vaapi_decode.c
++++ Ascendffmpeg/libavcodec/vaapi_decode.c
 @@ -577,10 +577,10 @@
          switch (avctx->codec_id) {
          case AV_CODEC_ID_H264:
@@ -5565,9 +5739,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_decode.c Ascendffmpeg/libavcodec/vaapi_
              frames->initial_pool_size += 8;
              break;
          case AV_CODEC_ID_VP8:
-diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_encode.c Ascendffmpeg/libavcodec/vaapi_encode.c
---- ffmpeg-n4.4.4/libavcodec/vaapi_encode.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vaapi_encode.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vaapi_encode.c
++++ Ascendffmpeg/libavcodec/vaapi_encode.c
 @@ -2366,11 +2366,6 @@
      VAStatus vas;
      int err;
@@ -5590,21 +5763,20 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vaapi_encode.c Ascendffmpeg/libavcodec/vaapi_
      ctx->input_frames_ref = av_buffer_ref(avctx->hw_frames_ctx);
      if (!ctx->input_frames_ref) {
          err = AVERROR(ENOMEM);
-@@ -2533,11 +2531,6 @@
+@@ -2532,11 +2530,6 @@
+ {
      VAAPIEncodeContext *ctx = avctx->priv_data;
      VAAPIEncodePicture *pic, *next;
- 
+-
 -    /* We check ctx->frame to know whether ff_vaapi_encode_init()
 -     * has been called and va_config/va_context initialized. */
 -    if (!ctx->frame)
 -        return 0;
--
+ 
      for (pic = ctx->pic_start; pic; pic = next) {
          next = pic->next;
-         vaapi_encode_free(avctx, pic);
-diff -urN ffmpeg-n4.4.4/libavcodec/videodsp_template.c Ascendffmpeg/libavcodec/videodsp_template.c
---- ffmpeg-n4.4.4/libavcodec/videodsp_template.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/videodsp_template.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/videodsp_template.c
++++ Ascendffmpeg/libavcodec/videodsp_template.c
 @@ -60,7 +60,7 @@
      av_assert2(start_x < end_x && block_w);
  
@@ -5623,9 +5795,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/videodsp_template.c Ascendffmpeg/libavcodec/v
      while (block_h--) {
          pixel *bufp = (pixel *) buf;
  
-diff -urN ffmpeg-n4.4.4/libavcodec/videotoolbox.c Ascendffmpeg/libavcodec/videotoolbox.c
---- ffmpeg-n4.4.4/libavcodec/videotoolbox.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/videotoolbox.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/videotoolbox.c
++++ Ascendffmpeg/libavcodec/videotoolbox.c
 @@ -608,7 +608,8 @@
                                            CMTime pts,
                                            CMTime duration)
@@ -5655,18 +5826,17 @@ diff -urN ffmpeg-n4.4.4/libavcodec/videotoolbox.c Ascendffmpeg/libavcodec/videot
  
      status = VTDecompressionSessionCreate(NULL,                      // allocator
                                            videotoolbox->cm_fmt_desc, // videoFormatDescription
-@@ -1040,8 +1040,6 @@
+@@ -1039,8 +1039,6 @@
+     VTContext *vtctx = avctx->internal->hwaccel_priv_data;
      AVHWFramesContext *hw_frames;
      int err;
- 
--    vtctx->logctx = avctx;
 -
+-    vtctx->logctx = avctx;
+ 
      // Old API - do nothing.
      if (avctx->hwaccel_context)
-         return 0;
-diff -urN ffmpeg-n4.4.4/libavcodec/vp3.c Ascendffmpeg/libavcodec/vp3.c
---- ffmpeg-n4.4.4/libavcodec/vp3.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vp3.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vp3.c
++++ Ascendffmpeg/libavcodec/vp3.c
 @@ -2683,27 +2683,15 @@
      if ((ret = ff_thread_get_buffer(avctx, &s->current_frame, AV_GET_BUFFER_FLAG_REF)) < 0)
          goto error;
@@ -5697,9 +5867,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vp3.c Ascendffmpeg/libavcodec/vp3.c
                  if (avctx->frame_number == 0)
                      av_log(s->avctx, AV_LOG_DEBUG,
                             "VP version: %d\n", s->version);
-diff -urN ffmpeg-n4.4.4/libavcodec/vqavideo.c Ascendffmpeg/libavcodec/vqavideo.c
---- ffmpeg-n4.4.4/libavcodec/vqavideo.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vqavideo.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vqavideo.c
++++ Ascendffmpeg/libavcodec/vqavideo.c
 @@ -588,14 +588,13 @@
          if (s->partial_countdown <= 0) {
              bytestream2_init(&s->gb, s->next_codebook_buffer, s->next_codebook_buffer_index);
@@ -5718,9 +5887,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vqavideo.c Ascendffmpeg/libavcodec/vqavideo.c
          }
      }
  
-diff -urN ffmpeg-n4.4.4/libavcodec/vt_internal.h Ascendffmpeg/libavcodec/vt_internal.h
---- ffmpeg-n4.4.4/libavcodec/vt_internal.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/vt_internal.h	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/vt_internal.h
++++ Ascendffmpeg/libavcodec/vt_internal.h
 @@ -42,8 +42,6 @@
      // Current H264 parameters (used to trigger decoder restart on SPS changes).
      uint8_t                     sps[3];
@@ -5730,9 +5898,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/vt_internal.h Ascendffmpeg/libavcodec/vt_inte
  } VTContext;
  
  int ff_videotoolbox_alloc_frame(AVCodecContext *avctx, AVFrame *frame);
-diff -urN ffmpeg-n4.4.4/libavcodec/wavpack.c Ascendffmpeg/libavcodec/wavpack.c
---- ffmpeg-n4.4.4/libavcodec/wavpack.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/wavpack.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/wavpack.c
++++ Ascendffmpeg/libavcodec/wavpack.c
 @@ -128,7 +128,7 @@
      e   = (1 << (p + 1)) - k - 1;
      res = get_bitsz(gb, p);
@@ -5760,9 +5927,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/wavpack.c Ascendffmpeg/libavcodec/wavpack.c
              while (DSD_BYTE_READY(high, low) && bytestream2_get_bytes_left(&s->gbyte)) {
                  value = (value << 8) | bytestream2_get_byte(&s->gbyte);
                  high = (high << 8) | 0xff;
-diff -urN ffmpeg-n4.4.4/libavcodec/wmadec.c Ascendffmpeg/libavcodec/wmadec.c
---- ffmpeg-n4.4.4/libavcodec/wmadec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/wmadec.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/wmadec.c
++++ Ascendffmpeg/libavcodec/wmadec.c
 @@ -980,7 +980,6 @@
      .capabilities   = AV_CODEC_CAP_DR1,
      .sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
@@ -5778,9 +5944,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/wmadec.c Ascendffmpeg/libavcodec/wmadec.c
 -    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
  };
  #endif
-diff -urN ffmpeg-n4.4.4/libavcodec/wmaenc.c Ascendffmpeg/libavcodec/wmaenc.c
---- ffmpeg-n4.4.4/libavcodec/wmaenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/wmaenc.c	2024-01-22 17:46:39.128708468 +0800
+--- FFmpeg-n4.4.4/libavcodec/wmaenc.c
++++ Ascendffmpeg/libavcodec/wmaenc.c
 @@ -436,7 +436,6 @@
      .close          = ff_wma_end,
      .sample_fmts    = (const enum AVSampleFormat[]) { AV_SAMPLE_FMT_FLTP,
@@ -5796,9 +5961,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/wmaenc.c Ascendffmpeg/libavcodec/wmaenc.c
 -    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
  };
  #endif
-diff -urN ffmpeg-n4.4.4/libavcodec/wnv1.c Ascendffmpeg/libavcodec/wnv1.c
---- ffmpeg-n4.4.4/libavcodec/wnv1.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/wnv1.c	2024-01-22 17:46:39.138708515 +0800
+--- FFmpeg-n4.4.4/libavcodec/wnv1.c
++++ Ascendffmpeg/libavcodec/wnv1.c
 @@ -126,9 +126,6 @@
  {
      static AVOnce init_static_once = AV_ONCE_INIT;
@@ -5809,9 +5973,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/wnv1.c Ascendffmpeg/libavcodec/wnv1.c
      avctx->pix_fmt = AV_PIX_FMT_YUV422P;
  
      ff_thread_once(&init_static_once, wnv1_init_static);
-diff -urN ffmpeg-n4.4.4/libavcodec/xpmdec.c Ascendffmpeg/libavcodec/xpmdec.c
---- ffmpeg-n4.4.4/libavcodec/xpmdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/xpmdec.c	2024-01-22 17:46:39.138708515 +0800
+--- FFmpeg-n4.4.4/libavcodec/xpmdec.c
++++ Ascendffmpeg/libavcodec/xpmdec.c
 @@ -355,9 +355,6 @@
          return AVERROR_INVALIDDATA;
      }
@@ -5822,9 +5985,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/xpmdec.c Ascendffmpeg/libavcodec/xpmdec.c
      size *= 4;
  
      ptr += mod_strcspn(ptr, ",") + 1;
-diff -urN ffmpeg-n4.4.4/libavcodec/zmbvenc.c Ascendffmpeg/libavcodec/zmbvenc.c
---- ffmpeg-n4.4.4/libavcodec/zmbvenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavcodec/zmbvenc.c	2024-01-22 17:46:39.138708515 +0800
+--- FFmpeg-n4.4.4/libavcodec/zmbvenc.c
++++ Ascendffmpeg/libavcodec/zmbvenc.c
 @@ -73,7 +73,6 @@
      int keyint, curfrm;
      int bypp;
@@ -5867,9 +6029,8 @@ diff -urN ffmpeg-n4.4.4/libavcodec/zmbvenc.c Ascendffmpeg/libavcodec/zmbvenc.c
                                                       AV_PIX_FMT_NONE },
 -    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
  };
-diff -urN ffmpeg-n4.4.4/libavdevice/xv.c Ascendffmpeg/libavdevice/xv.c
---- ffmpeg-n4.4.4/libavdevice/xv.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavdevice/xv.c	2024-01-22 17:46:39.158708612 +0800
+--- FFmpeg-n4.4.4/libavdevice/xv.c
++++ Ascendffmpeg/libavdevice/xv.c
 @@ -296,7 +296,7 @@
  {
      XVContext *xv = s->priv_data;
@@ -5879,9 +6040,8 @@ diff -urN ffmpeg-n4.4.4/libavdevice/xv.c Ascendffmpeg/libavdevice/xv.c
          img->data + img->offsets[0],
          img->data + img->offsets[1],
          img->data + img->offsets[2]
-diff -urN ffmpeg-n4.4.4/libavfilter/aeval.c Ascendffmpeg/libavfilter/aeval.c
---- ffmpeg-n4.4.4/libavfilter/aeval.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/aeval.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libavfilter/aeval.c
++++ Ascendffmpeg/libavfilter/aeval.c
 @@ -124,10 +124,11 @@
      }
  
@@ -5897,9 +6057,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/aeval.c Ascendffmpeg/libavfilter/aeval.c
          eval->expr[eval->nb_channels-1] = NULL;                         \
          ret = av_expr_parse(&eval->expr[eval->nb_channels - 1], expr_,  \
                              var_names, func1_names, func1,              \
-diff -urN ffmpeg-n4.4.4/libavfilter/af_surround.c Ascendffmpeg/libavfilter/af_surround.c
---- ffmpeg-n4.4.4/libavfilter/af_surround.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/af_surround.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libavfilter/af_surround.c
++++ Ascendffmpeg/libavfilter/af_surround.c
 @@ -203,13 +203,13 @@
      s->rdft = av_calloc(inlink->channels, sizeof(*s->rdft));
      if (!s->rdft)
@@ -5930,9 +6089,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/af_surround.c Ascendffmpeg/libavfilter/af_su
      s->output_levels = av_malloc_array(s->nb_out_channels, sizeof(*s->output_levels));
      if (!s->output_levels)
          return AVERROR(ENOMEM);
-diff -urN ffmpeg-n4.4.4/libavfilter/af_vibrato.c Ascendffmpeg/libavfilter/af_vibrato.c
---- ffmpeg-n4.4.4/libavfilter/af_vibrato.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/af_vibrato.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libavfilter/af_vibrato.c
++++ Ascendffmpeg/libavfilter/af_vibrato.c
 @@ -157,11 +157,11 @@
      int c;
      AVFilterContext *ctx = inlink->dst;
@@ -5946,9 +6104,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/af_vibrato.c Ascendffmpeg/libavfilter/af_vib
      s->buf_size = lrint(inlink->sample_rate * 0.005 + 0.5);
      for (c = 0; c < s->channels; c++) {
          s->buf[c] = av_malloc_array(s->buf_size, sizeof(*s->buf[c]));
-diff -urN ffmpeg-n4.4.4/libavfilter/asrc_flite.c Ascendffmpeg/libavfilter/asrc_flite.c
---- ffmpeg-n4.4.4/libavfilter/asrc_flite.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/asrc_flite.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libavfilter/asrc_flite.c
++++ Ascendffmpeg/libavfilter/asrc_flite.c
 @@ -196,12 +196,10 @@
  {
      FliteContext *flite = ctx->priv;
@@ -5966,9 +6123,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/asrc_flite.c Ascendffmpeg/libavfilter/asrc_f
      delete_wave(flite->wave);
      flite->wave = NULL;
  }
-diff -urN ffmpeg-n4.4.4/libavfilter/avfilter.c Ascendffmpeg/libavfilter/avfilter.c
---- ffmpeg-n4.4.4/libavfilter/avfilter.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/avfilter.c	2024-01-22 17:46:39.178708707 +0800
+--- FFmpeg-n4.4.4/libavfilter/avfilter.c
++++ Ascendffmpeg/libavfilter/avfilter.c
 @@ -925,8 +925,6 @@
          ret = ctx->filter->init(ctx);
      else if (ctx->filter->init_dict)
@@ -5987,9 +6143,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/avfilter.c Ascendffmpeg/libavfilter/avfilter
  }
  
  int avfilter_init_str(AVFilterContext *filter, const char *args)
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_frei0r.c Ascendffmpeg/libavfilter/vf_frei0r.c
---- ffmpeg-n4.4.4/libavfilter/vf_frei0r.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_frei0r.c	2024-01-22 17:46:39.178708707 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_frei0r.c
++++ Ascendffmpeg/libavfilter/vf_frei0r.c
 @@ -353,20 +353,14 @@
  {
      Frei0rContext *s = inlink->dst->priv;
@@ -6036,9 +6191,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_frei0r.c Ascendffmpeg/libavfilter/vf_frei
  
      if (!frame)
          return AVERROR(ENOMEM);
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_idet.c Ascendffmpeg/libavfilter/vf_idet.c
---- ffmpeg-n4.4.4/libavfilter/vf_idet.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_idet.c	2024-01-22 17:46:39.178708707 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_idet.c
++++ Ascendffmpeg/libavfilter/vf_idet.c
 @@ -336,19 +336,20 @@
  static av_cold void uninit(AVFilterContext *ctx)
  {
@@ -6063,9 +6217,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_idet.c Ascendffmpeg/libavfilter/vf_idet.c
             idet->total_poststat[TFF],
             idet->total_poststat[BFF],
             idet->total_poststat[PROGRESSIVE],
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_scale.c Ascendffmpeg/libavfilter/vf_scale.c
---- ffmpeg-n4.4.4/libavfilter/vf_scale.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_scale.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_scale.c
++++ Ascendffmpeg/libavfilter/vf_scale.c
 @@ -493,19 +493,19 @@
      if ((ret = scale_eval_dimensions(ctx)) < 0)
          goto fail;
@@ -6106,9 +6259,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_scale.c Ascendffmpeg/libavfilter/vf_scale
              av_opt_set(scale, "h", buf, 0);
  
              ret = scale_parse_expr(ctx, NULL, &scale->w_pexpr, "width", scale->w_expr);
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_showinfo.c Ascendffmpeg/libavfilter/vf_showinfo.c
---- ffmpeg-n4.4.4/libavfilter/vf_showinfo.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_showinfo.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_showinfo.c
++++ Ascendffmpeg/libavfilter/vf_showinfo.c
 @@ -454,15 +454,12 @@
              av_log(ctx, AV_LOG_INFO, " %08"PRIX32, plane_checksum[plane]);
          av_log(ctx, AV_LOG_INFO, "] mean:[");
@@ -6129,9 +6281,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_showinfo.c Ascendffmpeg/libavfilter/vf_sh
      }
      av_log(ctx, AV_LOG_INFO, "\n");
  
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_signature.c Ascendffmpeg/libavfilter/vf_signature.c
---- ffmpeg-n4.4.4/libavfilter/vf_signature.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_signature.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_signature.c
++++ Ascendffmpeg/libavfilter/vf_signature.c
 @@ -224,7 +224,7 @@
      dw1 = inlink->w / 32;
      if (inlink->w % 32)
@@ -6150,9 +6301,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_signature.c Ascendffmpeg/libavfilter/vf_s
  
      for (i = 0; i < ELEMENT_COUNT; i++) {
          const ElemCat* elemcat = elements[i];
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_subtitles.c Ascendffmpeg/libavfilter/vf_subtitles.c
---- ffmpeg-n4.4.4/libavfilter/vf_subtitles.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_subtitles.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_subtitles.c
++++ Ascendffmpeg/libavfilter/vf_subtitles.c
 @@ -145,16 +145,9 @@
      ff_draw_init(&ass->draw, inlink->format, ass->alpha ? FF_DRAW_PROCESS_ALPHA : 0);
  
@@ -6171,9 +6321,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_subtitles.c Ascendffmpeg/libavfilter/vf_s
      if (ass->shaping != -1)
          ass_set_shaper(ass->renderer, ass->shaping);
  
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_untile.c Ascendffmpeg/libavfilter/vf_untile.c
---- ffmpeg-n4.4.4/libavfilter/vf_untile.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_untile.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_untile.c
++++ Ascendffmpeg/libavfilter/vf_untile.c
 @@ -139,8 +139,8 @@
          if (!(s->desc->flags & AV_PIX_FMT_FLAG_PAL || s->desc->flags & FF_PSEUDOPAL)) {
              for (i = 1; i < 3; i ++) {
@@ -6185,9 +6334,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_untile.c Ascendffmpeg/libavfilter/vf_unti
                  }
              }
          }
-diff -urN ffmpeg-n4.4.4/libavfilter/vf_w3fdif.c Ascendffmpeg/libavfilter/vf_w3fdif.c
---- ffmpeg-n4.4.4/libavfilter/vf_w3fdif.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vf_w3fdif.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vf_w3fdif.c
++++ Ascendffmpeg/libavfilter/vf_w3fdif.c
 @@ -283,7 +283,7 @@
      AVFilterContext *ctx = inlink->dst;
      W3FDIFContext *s = ctx->priv;
@@ -6211,9 +6359,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vf_w3fdif.c Ascendffmpeg/libavfilter/vf_w3fd
  
      for (i = 0; i < s->nb_threads; i++) {
          s->work_line[i] = av_calloc(FFALIGN(s->linesize[0], 32), sizeof(*s->work_line[0]));
-diff -urN ffmpeg-n4.4.4/libavfilter/video.c Ascendffmpeg/libavfilter/video.c
---- ffmpeg-n4.4.4/libavfilter/video.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/video.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/video.c
++++ Ascendffmpeg/libavfilter/video.c
 @@ -41,7 +41,7 @@
      return ff_get_video_buffer(link->dst->outputs[0], w, h);
  }
@@ -6223,21 +6370,20 @@ diff -urN ffmpeg-n4.4.4/libavfilter/video.c Ascendffmpeg/libavfilter/video.c
  {
      AVFrame *frame = NULL;
      int pool_width = 0;
-@@ -96,11 +96,6 @@
-     return frame;
- }
+@@ -94,11 +94,6 @@
+     frame->sample_aspect_ratio = link->sample_aspect_ratio;
  
+     return frame;
+-}
+-
 -AVFrame *ff_default_get_video_buffer(AVFilterLink *link, int w, int h)
 -{
 -    return ff_default_get_video_buffer2(link, w, h, av_cpu_max_align());
--}
--
+ }
+ 
  AVFrame *ff_get_video_buffer(AVFilterLink *link, int w, int h)
- {
-     AVFrame *ret = NULL;
-diff -urN ffmpeg-n4.4.4/libavfilter/video.h Ascendffmpeg/libavfilter/video.h
---- ffmpeg-n4.4.4/libavfilter/video.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/video.h	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/video.h
++++ Ascendffmpeg/libavfilter/video.h
 @@ -24,7 +24,6 @@
  #include "avfilter.h"
  
@@ -6246,9 +6392,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/video.h Ascendffmpeg/libavfilter/video.h
  AVFrame *ff_null_get_video_buffer(AVFilterLink *link, int w, int h);
  
  /**
-diff -urN ffmpeg-n4.4.4/libavfilter/vsrc_mandelbrot.c Ascendffmpeg/libavfilter/vsrc_mandelbrot.c
---- ffmpeg-n4.4.4/libavfilter/vsrc_mandelbrot.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavfilter/vsrc_mandelbrot.c	2024-01-22 17:46:39.188708757 +0800
+--- FFmpeg-n4.4.4/libavfilter/vsrc_mandelbrot.c
++++ Ascendffmpeg/libavfilter/vsrc_mandelbrot.c
 @@ -134,9 +134,6 @@
      s-> next_cache= av_malloc_array(s->cache_allocated, sizeof(*s-> next_cache));
      s-> zyklus    = av_malloc_array(s->maxiter + 16, sizeof(*s->zyklus));
@@ -6259,9 +6404,8 @@ diff -urN ffmpeg-n4.4.4/libavfilter/vsrc_mandelbrot.c Ascendffmpeg/libavfilter/v
      return 0;
  }
  
-diff -urN ffmpeg-n4.4.4/libavformat/4xm.c Ascendffmpeg/libavformat/4xm.c
---- ffmpeg-n4.4.4/libavformat/4xm.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/4xm.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/4xm.c
++++ Ascendffmpeg/libavformat/4xm.c
 @@ -137,8 +137,7 @@
          return AVERROR_INVALIDDATA;
  
@@ -6282,9 +6426,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/4xm.c Ascendffmpeg/libavformat/4xm.c
      }
      fourxm->tracks[track].adpcm       = AV_RL32(buf + 12);
      fourxm->tracks[track].channels    = AV_RL32(buf + 36);
-diff -urN ffmpeg-n4.4.4/libavformat/aadec.c Ascendffmpeg/libavformat/aadec.c
---- ffmpeg-n4.4.4/libavformat/aadec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/aadec.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/aadec.c
++++ Ascendffmpeg/libavformat/aadec.c
 @@ -130,8 +130,8 @@
                  AV_WB32(&header_key[idx * 4], header_key_part[idx]); // convert each part to BE!
              }
@@ -6296,9 +6439,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/aadec.c Ascendffmpeg/libavformat/aadec.c
              av_log(s, AV_LOG_DEBUG, "\n");
          } else {
              av_dict_set(&s->metadata, key, val, 0);
-diff -urN ffmpeg-n4.4.4/libavformat/aaxdec.c Ascendffmpeg/libavformat/aaxdec.c
---- ffmpeg-n4.4.4/libavformat/aaxdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/aaxdec.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/aaxdec.c
++++ Ascendffmpeg/libavformat/aaxdec.c
 @@ -262,8 +262,6 @@
  
                  start = avio_rb32(pb);
@@ -6308,9 +6450,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/aaxdec.c Ascendffmpeg/libavformat/aaxdec.c
                  a->segments[r].start = start + a->data_offset;
                  a->segments[r].end   = a->segments[r].start + size;
              } else {
-diff -urN ffmpeg-n4.4.4/libavformat/act.c Ascendffmpeg/libavformat/act.c
---- ffmpeg-n4.4.4/libavformat/act.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/act.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/act.c
++++ Ascendffmpeg/libavformat/act.c
 @@ -66,7 +66,6 @@
      AVIOContext *pb = s->pb;
      int size;
@@ -6330,9 +6471,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/act.c Ascendffmpeg/libavformat/act.c
  
      /*
        8000Hz (Fine-rec) file format has 10 bytes long
-diff -urN ffmpeg-n4.4.4/libavformat/aiffdec.c Ascendffmpeg/libavformat/aiffdec.c
---- ffmpeg-n4.4.4/libavformat/aiffdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/aiffdec.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/aiffdec.c
++++ Ascendffmpeg/libavformat/aiffdec.c
 @@ -53,9 +53,9 @@
  }
  
@@ -6345,7 +6485,7 @@ diff -urN ffmpeg-n4.4.4/libavformat/aiffdec.c Ascendffmpeg/libavformat/aiffdec.c
  
      if (avio_feof(pb))
          return AVERROR(EIO);
-@@ -63,16 +63,16 @@
+@@ -63,17 +63,17 @@
      *tag = avio_rl32(pb);
      size = avio_rb32(pb);
  
@@ -6360,13 +6500,14 @@ diff -urN ffmpeg-n4.4.4/libavformat/aiffdec.c Ascendffmpeg/libavformat/aiffdec.c
 +static void get_meta(AVFormatContext *s, const char *key, int size)
  {
 -    uint8_t *str = NULL;
--
--    if (size < SIZE_MAX)
--        str = av_malloc(size+1);
 +    uint8_t *str = av_malloc(size+1);
  
+-    if (size < SIZE_MAX)
+-        str = av_malloc(size+1);
+-
      if (str) {
          int res = avio_read(s->pb, str, size);
+         if (res < 0){
 @@ -89,7 +89,7 @@
  }
  
@@ -6463,9 +6604,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/aiffdec.c Ascendffmpeg/libavformat/aiffdec.c
      return 0;
  }
  
-diff -urN ffmpeg-n4.4.4/libavformat/ape.c Ascendffmpeg/libavformat/ape.c
---- ffmpeg-n4.4.4/libavformat/ape.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/ape.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/ape.c
++++ Ascendffmpeg/libavformat/ape.c
 @@ -42,8 +42,8 @@
  
  typedef struct APEFrame {
@@ -6513,9 +6653,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/ape.c Ascendffmpeg/libavformat/ape.c
                 ape->frames[ape->currentframe].size);
          ape->currentframe++;
          return AVERROR(EIO);
-diff -urN ffmpeg-n4.4.4/libavformat/aqtitledec.c Ascendffmpeg/libavformat/aqtitledec.c
---- ffmpeg-n4.4.4/libavformat/aqtitledec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/aqtitledec.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/aqtitledec.c
++++ Ascendffmpeg/libavformat/aqtitledec.c
 @@ -74,8 +74,7 @@
              new_event = 1;
              pos = avio_tell(s->pb);
@@ -6526,9 +6665,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/aqtitledec.c Ascendffmpeg/libavformat/aqtitl
                  sub = NULL;
              }
          } else if (*line) {
-diff -urN ffmpeg-n4.4.4/libavformat/argo_asf.c Ascendffmpeg/libavformat/argo_asf.c
---- ffmpeg-n4.4.4/libavformat/argo_asf.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/argo_asf.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/argo_asf.c
++++ Ascendffmpeg/libavformat/argo_asf.c
 @@ -422,7 +422,7 @@
      ArgoASFMuxContext *ctx = s->priv_data;
      int64_t ret;
@@ -6538,9 +6676,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/argo_asf.c Ascendffmpeg/libavformat/argo_asf
          return ret;
  
      avio_wl32(s->pb, (uint32_t)ctx->nb_blocks);
-diff -urN ffmpeg-n4.4.4/libavformat/asfdec_f.c Ascendffmpeg/libavformat/asfdec_f.c
---- ffmpeg-n4.4.4/libavformat/asfdec_f.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/asfdec_f.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/asfdec_f.c
++++ Ascendffmpeg/libavformat/asfdec_f.c
 @@ -104,7 +104,7 @@
      int ts_is_pts;
      int packet_multi_size;
@@ -6567,9 +6704,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/asfdec_f.c Ascendffmpeg/libavformat/asfdec_f
              asf_st->pkt.stream_index = asf->stream_index;
              asf_st->pkt.pos          = asf_st->packet_pos = asf->packet_pos;
              asf_st->pkt_clean        = 0;
-diff -urN ffmpeg-n4.4.4/libavformat/asfdec_o.c Ascendffmpeg/libavformat/asfdec_o.c
---- ffmpeg-n4.4.4/libavformat/asfdec_o.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/asfdec_o.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/asfdec_o.c
++++ Ascendffmpeg/libavformat/asfdec_o.c
 @@ -113,7 +113,6 @@
      int64_t data_offset;
      int64_t first_packet_offset; // packet offset
@@ -6610,9 +6746,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/asfdec_o.c Ascendffmpeg/libavformat/asfdec_o
      error_flags = avio_r8(pb); // read Error Correction Flags
      if (error_flags & ASF_PACKET_FLAG_ERROR_CORRECTION_PRESENT) {
          if (!(error_flags & ASF_ERROR_CORRECTION_LENGTH_TYPE)) {
-diff -urN ffmpeg-n4.4.4/libavformat/avidec.c Ascendffmpeg/libavformat/avidec.c
---- ffmpeg-n4.4.4/libavformat/avidec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/avidec.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/avidec.c
++++ Ascendffmpeg/libavformat/avidec.c
 @@ -79,8 +79,6 @@
      int stream_index;
      DVDemuxContext *dv_demux;
@@ -6688,9 +6823,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/avidec.c Ascendffmpeg/libavformat/avidec.c
                      st->codecpar->height = FFABS(st->codecpar->height);
  
  //                    avio_skip(pb, size - 5 * 4);
-diff -urN ffmpeg-n4.4.4/libavformat/aviobuf.c Ascendffmpeg/libavformat/aviobuf.c
---- ffmpeg-n4.4.4/libavformat/aviobuf.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/aviobuf.c	2024-01-22 17:46:39.048708081 +0800
+--- FFmpeg-n4.4.4/libavformat/aviobuf.c
++++ Ascendffmpeg/libavformat/aviobuf.c
 @@ -1005,9 +1005,6 @@
      if (buf_size <= s->buf_end - s->buf_ptr)
          return 0;
@@ -6701,9 +6835,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/aviobuf.c Ascendffmpeg/libavformat/aviobuf.c
      buf_size += max_buffer_size - 1;
  
      if (buf_size + s->buf_ptr - s->buffer <= s->buffer_size || s->seekable || !s->read_packet)
-diff -urN ffmpeg-n4.4.4/libavformat/bfi.c Ascendffmpeg/libavformat/bfi.c
---- ffmpeg-n4.4.4/libavformat/bfi.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/bfi.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/bfi.c
++++ Ascendffmpeg/libavformat/bfi.c
 @@ -140,12 +140,12 @@
          audio_offset    = avio_rl32(pb);
          avio_rl32(pb);
@@ -6720,9 +6853,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/bfi.c Ascendffmpeg/libavformat/bfi.c
  
          //Tossing an audio packet at the audio decoder.
          ret = av_get_packet(pb, pkt, audio_size);
-diff -urN ffmpeg-n4.4.4/libavformat/cafdec.c Ascendffmpeg/libavformat/cafdec.c
---- ffmpeg-n4.4.4/libavformat/cafdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/cafdec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/cafdec.c
++++ Ascendffmpeg/libavformat/cafdec.c
 @@ -241,8 +241,6 @@
          char value[1024];
          avio_get_str(pb, INT_MAX, key, sizeof(key));
@@ -6741,9 +6873,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/cafdec.c Ascendffmpeg/libavformat/cafdec.c
              st->nb_frames = (caf->data_size / caf->bytes_per_packet) * caf->frames_per_packet;
      } else if (st->nb_index_entries && st->duration > 0) {
          if (st->codecpar->sample_rate && caf->data_size / st->duration > INT64_MAX / st->codecpar->sample_rate / 8) {
-diff -urN ffmpeg-n4.4.4/libavformat/cafenc.c Ascendffmpeg/libavformat/cafenc.c
---- ffmpeg-n4.4.4/libavformat/cafenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/cafenc.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/cafenc.c
++++ Ascendffmpeg/libavformat/cafenc.c
 @@ -28,6 +28,7 @@
  
  typedef struct {
@@ -6827,9 +6958,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/cafenc.c Ascendffmpeg/libavformat/cafenc.c
      return 0;
  }
  
-diff -urN ffmpeg-n4.4.4/libavformat/dxa.c Ascendffmpeg/libavformat/dxa.c
---- ffmpeg-n4.4.4/libavformat/dxa.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/dxa.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/dxa.c
++++ Ascendffmpeg/libavformat/dxa.c
 @@ -118,12 +118,9 @@
              if(tag == MKTAG('d', 'a', 't', 'a')) break;
              avio_skip(pb, fsize);
@@ -6845,9 +6975,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/dxa.c Ascendffmpeg/libavformat/dxa.c
          c->bytes_left = fsize;
          c->wavpos = avio_tell(pb);
          avio_seek(pb, c->vidpos, SEEK_SET);
-diff -urN ffmpeg-n4.4.4/libavformat/flvdec.c Ascendffmpeg/libavformat/flvdec.c
---- ffmpeg-n4.4.4/libavformat/flvdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/flvdec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/flvdec.c
++++ Ascendffmpeg/libavformat/flvdec.c
 @@ -64,7 +64,7 @@
      uint8_t resync_buffer[2*RESYNC_BUFFER_SIZE];
  
@@ -6886,9 +7015,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/flvdec.c Ascendffmpeg/libavformat/flvdec.c
              avio_seek(s->pb, pos + 1, SEEK_SET);
              ret = resync(s);
              av_packet_unref(pkt);
-diff -urN ffmpeg-n4.4.4/libavformat/genh.c Ascendffmpeg/libavformat/genh.c
---- ffmpeg-n4.4.4/libavformat/genh.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/genh.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/genh.c
++++ Ascendffmpeg/libavformat/genh.c
 @@ -67,9 +67,6 @@
          return AVERROR_INVALIDDATA;
      st->codecpar->block_align = align * st->codecpar->channels;
@@ -6899,9 +7027,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/genh.c Ascendffmpeg/libavformat/genh.c
      avio_skip(s->pb, 4);
      st->duration = avio_rl32(s->pb);
  
-diff -urN ffmpeg-n4.4.4/libavformat/hls.c Ascendffmpeg/libavformat/hls.c
---- ffmpeg-n4.4.4/libavformat/hls.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/hls.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/hls.c
++++ Ascendffmpeg/libavformat/hls.c
 @@ -236,7 +236,6 @@
  {
      int i;
@@ -6950,9 +7077,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/hls.c Ascendffmpeg/libavformat/hls.c
                      memset(seg->iv, 0, sizeof(seg->iv));
                      AV_WB64(seg->iv + 8, seq);
                  }
-diff -urN ffmpeg-n4.4.4/libavformat/icodec.c Ascendffmpeg/libavformat/icodec.c
---- ffmpeg-n4.4.4/libavformat/icodec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/icodec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/icodec.c
++++ Ascendffmpeg/libavformat/icodec.c
 @@ -203,9 +203,6 @@
              AV_WL32(buf + 32, image->nb_pal);
          }
@@ -6963,9 +7089,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/icodec.c Ascendffmpeg/libavformat/icodec.c
          AV_WL32(buf - 4, 14 + 40 + image->nb_pal * 4);
          AV_WL32(buf + 8, AV_RL32(buf + 8) / 2);
      }
-diff -urN ffmpeg-n4.4.4/libavformat/id3v2.c Ascendffmpeg/libavformat/id3v2.c
---- ffmpeg-n4.4.4/libavformat/id3v2.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/id3v2.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/id3v2.c
++++ Ascendffmpeg/libavformat/id3v2.c
 @@ -376,10 +376,10 @@
      lang[3] = '\0';
      taglen -= 3;
@@ -6979,9 +7104,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/id3v2.c Ascendffmpeg/libavformat/id3v2.c
          goto error;
  
      // FFmpeg does not support hierarchical metadata, so concatenate the keys.
-diff -urN ffmpeg-n4.4.4/libavformat/iff.c Ascendffmpeg/libavformat/iff.c
---- ffmpeg-n4.4.4/libavformat/iff.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/iff.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/iff.c
++++ Ascendffmpeg/libavformat/iff.c
 @@ -385,7 +385,7 @@
                  avio_skip(pb, 1);
              pkt->flags |= AV_PKT_FLAG_KEY;
@@ -7011,9 +7135,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/iff.c Ascendffmpeg/libavformat/iff.c
              iff->body_end = iff->body_pos + data_size;
              iff->body_size = data_size;
              if (chunk_id == ID_DST) {
-diff -urN ffmpeg-n4.4.4/libavformat/jacosubdec.c Ascendffmpeg/libavformat/jacosubdec.c
---- ffmpeg-n4.4.4/libavformat/jacosubdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/jacosubdec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/jacosubdec.c
++++ Ascendffmpeg/libavformat/jacosubdec.c
 @@ -152,7 +152,7 @@
      ret = 0;
      switch (n) {
@@ -7023,9 +7146,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/jacosubdec.c Ascendffmpeg/libavformat/jacosu
          break;
      case 3:
          ret = sign * ((         (int64_t)a*60 + b) * timeres + c);
-diff -urN ffmpeg-n4.4.4/libavformat/jacosubenc.c Ascendffmpeg/libavformat/jacosubenc.c
---- ffmpeg-n4.4.4/libavformat/jacosubenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/jacosubenc.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/jacosubenc.c
++++ Ascendffmpeg/libavformat/jacosubenc.c
 @@ -24,7 +24,7 @@
      const AVCodecParameters *par = s->streams[0]->codecpar;
  
@@ -7035,9 +7157,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/jacosubenc.c Ascendffmpeg/libavformat/jacosu
      }
      return 0;
  }
-diff -urN ffmpeg-n4.4.4/libavformat/libzmq.c Ascendffmpeg/libavformat/libzmq.c
---- ffmpeg-n4.4.4/libavformat/libzmq.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/libzmq.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/libzmq.c
++++ Ascendffmpeg/libavformat/libzmq.c
 @@ -51,7 +51,7 @@
      zmq_pollitem_t items = { .socket = socket, .fd = 0, .events = ev, .revents = 0 };
      ret = zmq_poll(&items, 1, POLLING_TIME);
@@ -7113,9 +7234,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/libzmq.c Ascendffmpeg/libavformat/libzmq.c
          return AVERROR_EXTERNAL;
      }
      if (ret > size) {
-diff -urN ffmpeg-n4.4.4/libavformat/matroskadec.c Ascendffmpeg/libavformat/matroskadec.c
---- ffmpeg-n4.4.4/libavformat/matroskadec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/matroskadec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/matroskadec.c
++++ Ascendffmpeg/libavformat/matroskadec.c
 @@ -1690,7 +1690,7 @@
      case MATROSKA_TRACK_ENCODING_COMP_ZLIB:
      {
@@ -7190,12 +7310,12 @@ diff -urN ffmpeg-n4.4.4/libavformat/matroskadec.c Ascendffmpeg/libavformat/matro
 -                double desc_sec, calc_bits_per_second, percent, mod_bits_per_second;
 -                if (desc_bytes <= 0)
 -                    return -1;
--
--                desc_sec = desc_ns / nano_seconds_per_second;
--                calc_bits_per_second = (desc_bytes * 8) / desc_sec;
 +                double desc_sec = desc_ns / nano_seconds_per_second;
 +                double calc_bits_per_second = (desc_bytes * 8) / desc_sec;
  
+-                desc_sec = desc_ns / nano_seconds_per_second;
+-                calc_bits_per_second = (desc_bytes * 8) / desc_sec;
+-
                  // Drop the bps by the percentage of bytes buffered.
 -                percent = (desc_bytes - prebuffer_bytes) / desc_bytes;
 -                mod_bits_per_second = calc_bits_per_second * percent;
@@ -7204,9 +7324,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/matroskadec.c Ascendffmpeg/libavformat/matro
  
                  if (prebuffer < desc_sec) {
                      double search_sec =
-diff -urN ffmpeg-n4.4.4/libavformat/moflex.c Ascendffmpeg/libavformat/moflex.c
---- ffmpeg-n4.4.4/libavformat/moflex.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/moflex.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/moflex.c
++++ Ascendffmpeg/libavformat/moflex.c
 @@ -172,7 +172,7 @@
          unsigned type, ssize, codec_id = 0;
          unsigned codec_type, width = 0, height = 0, sample_rate = 0, channels = 0;
@@ -7248,9 +7367,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/moflex.c Ascendffmpeg/libavformat/moflex.c
          }
      }
  
-diff -urN ffmpeg-n4.4.4/libavformat/mov.c Ascendffmpeg/libavformat/mov.c
---- ffmpeg-n4.4.4/libavformat/mov.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/mov.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/mov.c
++++ Ascendffmpeg/libavformat/mov.c
 @@ -607,13 +607,11 @@
      for (i = 0; i < entries; i++) {
          MOVDref *dref = &sc->drefs[i];
@@ -7338,9 +7456,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/mov.c Ascendffmpeg/libavformat/mov.c
          a.size -= 8;
          if (a.size < 0)
              break;
-diff -urN ffmpeg-n4.4.4/libavformat/movenc.c Ascendffmpeg/libavformat/movenc.c
---- ffmpeg-n4.4.4/libavformat/movenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/movenc.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/movenc.c
++++ Ascendffmpeg/libavformat/movenc.c
 @@ -91,7 +91,7 @@
      { "frag_duration", "Maximum fragment duration", offsetof(MOVMuxContext, max_fragment_duration), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, AV_OPT_FLAG_ENCODING_PARAM},
      { "min_frag_duration", "Minimum fragment duration", offsetof(MOVMuxContext, min_fragment_duration), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, AV_OPT_FLAG_ENCODING_PARAM},
@@ -7350,9 +7467,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/movenc.c Ascendffmpeg/libavformat/movenc.c
      { "video_track_timescale", "set timescale of all video tracks", offsetof(MOVMuxContext, video_track_timescale), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, AV_OPT_FLAG_ENCODING_PARAM},
      { "brand",    "Override major brand", offsetof(MOVMuxContext, major_brand),   AV_OPT_TYPE_STRING, {.str = NULL}, .flags = AV_OPT_FLAG_ENCODING_PARAM },
      { "use_editlist", "use edit list", offsetof(MOVMuxContext, use_editlist), AV_OPT_TYPE_BOOL, {.i64 = -1}, -1, 1, AV_OPT_FLAG_ENCODING_PARAM},
-diff -urN ffmpeg-n4.4.4/libavformat/mxfdec.c Ascendffmpeg/libavformat/mxfdec.c
---- ffmpeg-n4.4.4/libavformat/mxfdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/mxfdec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/mxfdec.c
++++ Ascendffmpeg/libavformat/mxfdec.c
 @@ -60,7 +60,6 @@
  #include "mxf.h"
  
@@ -7457,9 +7573,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/mxfdec.c Ascendffmpeg/libavformat/mxfdec.c
  
      if (p->buf_size < sizeof(mxf_header_partition_pack_key))
          return 0;
-diff -urN ffmpeg-n4.4.4/libavformat/nutdec.c Ascendffmpeg/libavformat/nutdec.c
---- ffmpeg-n4.4.4/libavformat/nutdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/nutdec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/nutdec.c
++++ Ascendffmpeg/libavformat/nutdec.c
 @@ -199,8 +199,6 @@
      int tmp_stream, tmp_mul, tmp_pts, tmp_size, tmp_res, tmp_head_idx;
  
@@ -7522,9 +7637,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/nutdec.c Ascendffmpeg/libavformat/nutdec.c
  
      /* stream headers */
      pos = 0;
-diff -urN ffmpeg-n4.4.4/libavformat/omadec.c Ascendffmpeg/libavformat/omadec.c
---- ffmpeg-n4.4.4/libavformat/omadec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/omadec.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/omadec.c
++++ Ascendffmpeg/libavformat/omadec.c
 @@ -494,7 +494,7 @@
          AV_WL16(&edata[6],  jsflag);        // coding mode
          AV_WL16(&edata[8],  jsflag);        // coding mode
@@ -7534,9 +7648,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/omadec.c Ascendffmpeg/libavformat/omadec.c
  
          avpriv_set_pts_info(st, 64, 1, st->codecpar->sample_rate);
          break;
-diff -urN ffmpeg-n4.4.4/libavformat/replaygain.c Ascendffmpeg/libavformat/replaygain.c
---- ffmpeg-n4.4.4/libavformat/replaygain.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/replaygain.c	2024-01-22 17:46:39.058708128 +0800
+--- FFmpeg-n4.4.4/libavformat/replaygain.c
++++ Ascendffmpeg/libavformat/replaygain.c
 @@ -61,7 +61,7 @@
          }
      }
@@ -7546,9 +7659,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/replaygain.c Ascendffmpeg/libavformat/replay
          return min;
  
      return db * 100000 + sign * mb;
-diff -urN ffmpeg-n4.4.4/libavformat/rmdec.c Ascendffmpeg/libavformat/rmdec.c
---- ffmpeg-n4.4.4/libavformat/rmdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/rmdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/rmdec.c
++++ Ascendffmpeg/libavformat/rmdec.c
 @@ -128,6 +128,10 @@
      uint32_t version;
      int ret;
@@ -7581,9 +7693,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/rmdec.c Ascendffmpeg/libavformat/rmdec.c
      avio_skip(pb, tag_size - 8);
  
      for(;;) {
-diff -urN ffmpeg-n4.4.4/libavformat/rpl.c Ascendffmpeg/libavformat/rpl.c
---- ffmpeg-n4.4.4/libavformat/rpl.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/rpl.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/rpl.c
++++ Ascendffmpeg/libavformat/rpl.c
 @@ -276,7 +276,7 @@
      error |= read_line(pb, line, sizeof(line));  // size of "helpful" sprite
      if (vst) {
@@ -7593,9 +7704,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/rpl.c Ascendffmpeg/libavformat/rpl.c
      }
  
      // Read the index
-diff -urN ffmpeg-n4.4.4/libavformat/rtsp.c Ascendffmpeg/libavformat/rtsp.c
---- ffmpeg-n4.4.4/libavformat/rtsp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/rtsp.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/rtsp.c
++++ Ascendffmpeg/libavformat/rtsp.c
 @@ -952,8 +952,6 @@
                               ";,", &p);
              }
@@ -7605,9 +7715,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/rtsp.c Ascendffmpeg/libavformat/rtsp.c
          }
          if (!av_strcasecmp(lower_transport, "TCP"))
              th->lower_transport = RTSP_LOWER_TRANSPORT_TCP;
-diff -urN ffmpeg-n4.4.4/libavformat/sbgdec.c Ascendffmpeg/libavformat/sbgdec.c
---- ffmpeg-n4.4.4/libavformat/sbgdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/sbgdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/sbgdec.c
++++ Ascendffmpeg/libavformat/sbgdec.c
 @@ -1316,8 +1316,6 @@
  
      /* Pseudo event before the first one */
@@ -7617,9 +7726,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/sbgdec.c Ascendffmpeg/libavformat/sbgdec.c
      ev0.ts_int   -= period;
      ev0.ts_trans -= period;
      ev0.ts_next  -= period;
-diff -urN ffmpeg-n4.4.4/libavformat/sccdec.c Ascendffmpeg/libavformat/sccdec.c
---- ffmpeg-n4.4.4/libavformat/sccdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/sccdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/sccdec.c
++++ Ascendffmpeg/libavformat/sccdec.c
 @@ -63,7 +63,8 @@
  {
      SCCContext *scc = s->priv_data;
@@ -7630,7 +7738,7 @@ diff -urN ffmpeg-n4.4.4/libavformat/sccdec.c Ascendffmpeg/libavformat/sccdec.c
      ptrdiff_t len;
      uint8_t out[4096];
      FFTextReader tr;
-@@ -76,26 +77,47 @@
+@@ -76,27 +77,48 @@
      st->codecpar->codec_type = AVMEDIA_TYPE_SUBTITLE;
      st->codecpar->codec_id   = AV_CODEC_ID_EIA_608;
  
@@ -7660,9 +7768,12 @@ diff -urN ffmpeg-n4.4.4/libavformat/sccdec.c Ascendffmpeg/libavformat/sccdec.c
 +                if (av_sscanf(line, "%d:%d:%d%*[:;]%d", &hh, &mm, &ss, &fs) == 4)
 +                    break;
 +            }
-+
+ 
+-        ts = (hh * 3600LL + mm * 60LL + ss) * 1000LL + fs * 33LL;
+-        if (sub)
+-            sub->duration = ts - sub->pts;
 +            ts = (hh * 3600LL + mm * 60LL + ss) * 1000LL + fs * 33LL;
-+
+ 
 +            while (!ff_text_eof(&tr)) {
 +                len = ff_subtitles_read_line(&tr, line2, sizeof(line2));
 +                if (len <= 13)
@@ -7684,14 +7795,12 @@ diff -urN ffmpeg-n4.4.4/libavformat/sccdec.c Ascendffmpeg/libavformat/sccdec.c
 +                    break;
 +            }
 +        }
- 
--        ts = (hh * 3600LL + mm * 60LL + ss) * 1000LL + fs * 33LL;
--        if (sub)
--            sub->duration = ts - sub->pts;
++
 +        next_ts = (hh * 3600LL + mm * 60LL + ss) * 1000LL + fs * 33LL;
- 
++
          pos = ff_text_pos(&tr);
          lline = (char *)&line;
+         lline += 12;
 @@ -146,6 +168,8 @@
  
          sub->pos = pos;
@@ -7701,9 +7810,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/sccdec.c Ascendffmpeg/libavformat/sccdec.c
      }
  
      ff_subtitles_queue_finalize(s, &scc->q);
-diff -urN ffmpeg-n4.4.4/libavformat/sctp.c Ascendffmpeg/libavformat/sctp.c
---- ffmpeg-n4.4.4/libavformat/sctp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/sctp.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/sctp.c
++++ Ascendffmpeg/libavformat/sctp.c
 @@ -282,8 +282,6 @@
          goto restart;
      }
@@ -7713,9 +7821,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/sctp.c Ascendffmpeg/libavformat/sctp.c
      ret = AVERROR(EIO);
      freeaddrinfo(ai);
      return ret;
-diff -urN ffmpeg-n4.4.4/libavformat/sdsdec.c Ascendffmpeg/libavformat/sdsdec.c
---- ffmpeg-n4.4.4/libavformat/sdsdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/sdsdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/sdsdec.c
++++ Ascendffmpeg/libavformat/sdsdec.c
 @@ -112,7 +112,7 @@
      st->codecpar->codec_type = AVMEDIA_TYPE_AUDIO;
      st->codecpar->channels = 1;
@@ -7725,9 +7832,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/sdsdec.c Ascendffmpeg/libavformat/sdsdec.c
  
      avpriv_set_pts_info(st, 64, 1, st->codecpar->sample_rate);
  
-diff -urN ffmpeg-n4.4.4/libavformat/spdifdec.c Ascendffmpeg/libavformat/spdifdec.c
---- ffmpeg-n4.4.4/libavformat/spdifdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/spdifdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/spdifdec.c
++++ Ascendffmpeg/libavformat/spdifdec.c
 @@ -226,7 +226,7 @@
      if (!s->bit_rate && s->streams[0]->codecpar->sample_rate)
          /* stream bitrate matches 16-bit stereo PCM bitrate for currently
@@ -7737,9 +7843,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/spdifdec.c Ascendffmpeg/libavformat/spdifdec
  
      return 0;
  }
-diff -urN ffmpeg-n4.4.4/libavformat/subtitles.c Ascendffmpeg/libavformat/subtitles.c
---- ffmpeg-n4.4.4/libavformat/subtitles.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/subtitles.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/subtitles.c
++++ Ascendffmpeg/libavformat/subtitles.c
 @@ -418,7 +418,6 @@
      size_t cur = 0;
      if (!size)
@@ -7748,9 +7853,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/subtitles.c Ascendffmpeg/libavformat/subtitl
      while (cur + 1 < size) {
          unsigned char c = ff_text_r8(tr);
          if (!c)
-diff -urN ffmpeg-n4.4.4/libavformat/subviewerdec.c Ascendffmpeg/libavformat/subviewerdec.c
---- ffmpeg-n4.4.4/libavformat/subviewerdec.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/subviewerdec.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/subviewerdec.c
++++ Ascendffmpeg/libavformat/subviewerdec.c
 @@ -51,32 +51,26 @@
      return 0;
  }
@@ -7798,9 +7902,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/subviewerdec.c Ascendffmpeg/libavformat/subv
          *duration = end - *start;
          return 0;
      }
-diff -urN ffmpeg-n4.4.4/libavformat/tee.c Ascendffmpeg/libavformat/tee.c
---- ffmpeg-n4.4.4/libavformat/tee.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/tee.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/tee.c
++++ Ascendffmpeg/libavformat/tee.c
 @@ -124,7 +124,6 @@
      unsigned i;
      int ret = 0;
@@ -7826,9 +7929,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/tee.c Ascendffmpeg/libavformat/tee.c
      av_dict_free(&options);
      av_dict_free(&bsf_options);
      av_freep(&tmp_select);
-diff -urN ffmpeg-n4.4.4/libavformat/tls_mbedtls.c Ascendffmpeg/libavformat/tls_mbedtls.c
---- ffmpeg-n4.4.4/libavformat/tls_mbedtls.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/tls_mbedtls.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/tls_mbedtls.c
++++ Ascendffmpeg/libavformat/tls_mbedtls.c
 @@ -19,7 +19,8 @@
   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
   */
@@ -7855,7 +7957,7 @@ diff -urN ffmpeg-n4.4.4/libavformat/tls_mbedtls.c Ascendffmpeg/libavformat/tls_m
      case MBEDTLS_ERR_SSL_FATAL_ALERT_MESSAGE:
          av_log(h, AV_LOG_ERROR, "A fatal alert message was received from the peer, has the peer a correct certificate?\n");
          break;
-@@ -200,30 +195,25 @@
+@@ -200,28 +195,23 @@
          }
      }
  
@@ -7882,8 +7984,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/tls_mbedtls.c Ascendffmpeg/libavformat/tls_m
              handle_pk_parse_error(h, ret);
              goto fail;
          }
-     }
- 
++    }
++
 +    // seed the random number generator
 +    if ((ret = mbedtls_ctr_drbg_seed(&tls_ctx->ctr_drbg_context,
 +                                     mbedtls_entropy_func,
@@ -7891,14 +7993,11 @@ diff -urN ffmpeg-n4.4.4/libavformat/tls_mbedtls.c Ascendffmpeg/libavformat/tls_m
 +                                     NULL, 0)) != 0) {
 +        av_log(h, AV_LOG_ERROR, "mbedtls_ctr_drbg_seed returned %d\n", ret);
 +        goto fail;
-+    }
-+
+     }
+ 
      if ((ret = mbedtls_ssl_config_defaults(&tls_ctx->ssl_config,
-                                            shr->listen ? MBEDTLS_SSL_IS_SERVER : MBEDTLS_SSL_IS_CLIENT,
-                                            MBEDTLS_SSL_TRANSPORT_STREAM,
-diff -urN ffmpeg-n4.4.4/libavformat/udp.c Ascendffmpeg/libavformat/udp.c
---- ffmpeg-n4.4.4/libavformat/udp.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/udp.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/udp.c
++++ Ascendffmpeg/libavformat/udp.c
 @@ -740,10 +740,8 @@
      /* XXX: fix av_url_split */
      if (hostname[0] == '\0' || hostname[0] == '?') {
@@ -7923,9 +8022,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/udp.c Ascendffmpeg/libavformat/udp.c
  
      s->local_addr_storage=my_addr; //store for future multicast join
  
-diff -urN ffmpeg-n4.4.4/libavformat/utils.c Ascendffmpeg/libavformat/utils.c
---- ffmpeg-n4.4.4/libavformat/utils.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/utils.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/utils.c
++++ Ascendffmpeg/libavformat/utils.c
 @@ -4997,7 +4997,7 @@
          key_len = ptr - key;
  
@@ -7935,9 +8033,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/utils.c Ascendffmpeg/libavformat/utils.c
  
          if (*ptr == '\"') {
              ptr++;
-diff -urN ffmpeg-n4.4.4/libavformat/vividas.c Ascendffmpeg/libavformat/vividas.c
---- ffmpeg-n4.4.4/libavformat/vividas.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/vividas.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/vividas.c
++++ Ascendffmpeg/libavformat/vividas.c
 @@ -683,7 +683,6 @@
  
      if (viv->sb_entries[viv->current_sb_entry].flag == 0) {
@@ -7965,9 +8062,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/vividas.c Ascendffmpeg/libavformat/vividas.c
          viv->current_audio_subpacket = 0;
  
      } else {
-diff -urN ffmpeg-n4.4.4/libavformat/vivo.c Ascendffmpeg/libavformat/vivo.c
---- ffmpeg-n4.4.4/libavformat/vivo.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/vivo.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/vivo.c
++++ Ascendffmpeg/libavformat/vivo.c
 @@ -26,7 +26,6 @@
   * @sa http://wiki.multimedia.cx/index.php?title=Vivo
   */
@@ -8010,9 +8106,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/vivo.c Ascendffmpeg/libavformat/vivo.c
  
      avpriv_set_pts_info(ast, 64, 1, ast->codecpar->sample_rate);
      avpriv_set_pts_info(vst, 64, fps.num, fps.den);
-diff -urN ffmpeg-n4.4.4/libavformat/webmdashenc.c Ascendffmpeg/libavformat/webmdashenc.c
---- ffmpeg-n4.4.4/libavformat/webmdashenc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/webmdashenc.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/webmdashenc.c
++++ Ascendffmpeg/libavformat/webmdashenc.c
 @@ -93,7 +93,7 @@
      }
      avio_printf(pb, "  minBufferTime=\"PT%gS\"\n", min_buffer_time);
@@ -8022,9 +8117,8 @@ diff -urN ffmpeg-n4.4.4/libavformat/webmdashenc.c Ascendffmpeg/libavformat/webmd
                  w->is_live ? "\n" : ">\n");
      if (w->is_live) {
          time_t local_time = time(NULL);
-diff -urN ffmpeg-n4.4.4/libavformat/xwma.c Ascendffmpeg/libavformat/xwma.c
---- ffmpeg-n4.4.4/libavformat/xwma.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavformat/xwma.c	2024-01-22 17:46:39.068708178 +0800
+--- FFmpeg-n4.4.4/libavformat/xwma.c
++++ Ascendffmpeg/libavformat/xwma.c
 @@ -278,7 +278,7 @@
           * the total duration using the average bits per sample and the
           * total data length.
@@ -8034,10 +8128,65 @@ diff -urN ffmpeg-n4.4.4/libavformat/xwma.c Ascendffmpeg/libavformat/xwma.c
      }
  
  fail:
-diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_ascend.c Ascendffmpeg/libavutil/hwcontext_ascend.c
---- ffmpeg-n4.4.4/libavutil/hwcontext_ascend.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_ascend.c	2024-01-22 17:46:39.158708612 +0800
-@@ -0,0 +1,316 @@
+--- FFmpeg-n4.4.4/libavutil/Makefile
++++ Ascendffmpeg/libavutil/Makefile
+@@ -35,6 +35,7 @@
+           hdr_dynamic_metadata.h                                        \
+           hmac.h                                                        \
+           hwcontext.h                                                   \
++          hwcontext_ascend.h                                            \
+           hwcontext_cuda.h                                              \
+           hwcontext_d3d11va.h                                           \
+           hwcontext_drm.h                                               \
+@@ -174,6 +175,7 @@
+        film_grain_params.o                                              \
+ 
+ 
++OBJS-$(CONFIG_ASCEND)                   += hwcontext_ascend.o
+ OBJS-$(CONFIG_CUDA)                     += hwcontext_cuda.o
+ OBJS-$(CONFIG_D3D11VA)                  += hwcontext_d3d11va.o
+ OBJS-$(CONFIG_DXVA2)                    += hwcontext_dxva2.o
+@@ -192,6 +194,7 @@
+ # Windows resource file
+ SLIBOBJS-$(HAVE_GNU_WINDRES)            += avutilres.o
+ 
++SKIPHEADERS-$(CONFIG_ASCEND)           += hwcontext_ascend.h
+ SKIPHEADERS-$(HAVE_CUDA_H)             += hwcontext_cuda.h
+ SKIPHEADERS-$(CONFIG_CUDA)             += hwcontext_cuda_internal.h     \
+                                           cuda_check.h
+--- FFmpeg-n4.4.4/libavutil/hwcontext.c
++++ Ascendffmpeg/libavutil/hwcontext.c
+@@ -62,6 +62,9 @@
+ #if CONFIG_VULKAN
+     &ff_hwcontext_type_vulkan,
+ #endif
++#if CONFIG_ASCEND
++    &ff_hwcontext_type_ascend,
++#endif
+     NULL,
+ };
+ 
+@@ -77,6 +80,7 @@
+     [AV_HWDEVICE_TYPE_VIDEOTOOLBOX] = "videotoolbox",
+     [AV_HWDEVICE_TYPE_MEDIACODEC] = "mediacodec",
+     [AV_HWDEVICE_TYPE_VULKAN] = "vulkan",
++    [AV_HWDEVICE_TYPE_ASCEND] = "ascend",
+ };
+ 
+ enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
+--- FFmpeg-n4.4.4/libavutil/hwcontext.h
++++ Ascendffmpeg/libavutil/hwcontext.h
+@@ -37,6 +37,7 @@
+     AV_HWDEVICE_TYPE_OPENCL,
+     AV_HWDEVICE_TYPE_MEDIACODEC,
+     AV_HWDEVICE_TYPE_VULKAN,
++    AV_HWDEVICE_TYPE_ASCEND,
+ };
+ 
+ typedef struct AVHWDeviceInternal AVHWDeviceInternal;
+--- /dev/null
++++ Ascendffmpeg/libavutil/hwcontext_ascend.c
+@@ -0,0 +1,326 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
 + *
@@ -8114,7 +8263,17 @@ diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_ascend.c Ascendffmpeg/libavutil/hwco
 +
 +    if (ascend_device_init(device_ctx) < 0)
 +        goto error;
-+    
++
++    int device_count = 0;
++    ret = aclrtGetDeviceCount(&device_count);
++    if (ret != 0) {
++        goto error;
++    }
++    if (device_idx >= device_count) {
++        av_log(device_ctx, AV_LOG_ERROR, "device id must less than: %d.\n", device_count);
++        goto error;
++    }
++
 +    ascend_ctx = hwctx->ascend_ctx;
 +    ascend_ctx->device_id = device_idx;
 +
@@ -8354,10 +8513,9 @@ diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_ascend.c Ascendffmpeg/libavutil/hwco
 +
 +    .pix_fmts               = (const enum AVPixelFormat[]) {AV_PIX_FMT_ASCEND, AV_PIX_FMT_NONE},
 +};
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_ascend.h Ascendffmpeg/libavutil/hwcontext_ascend.h
---- ffmpeg-n4.4.4/libavutil/hwcontext_ascend.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_ascend.h	2024-01-22 17:46:39.158708612 +0800
+\ No newline at end of file
+--- /dev/null
++++ Ascendffmpeg/libavutil/hwcontext_ascend.h
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -8391,42 +8549,9 @@ diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_ascend.h Ascendffmpeg/libavutil/hwco
 +} AVASCENDDeviceContext;
 +
 +#endif //FFMPEG_ASCEND_HWCONTEXT_ASCEND_H
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/libavutil/hwcontext.c Ascendffmpeg/libavutil/hwcontext.c
---- ffmpeg-n4.4.4/libavutil/hwcontext.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext.c	2024-01-22 17:46:39.158708612 +0800
-@@ -62,6 +62,9 @@
- #if CONFIG_VULKAN
-     &ff_hwcontext_type_vulkan,
- #endif
-+#if CONFIG_ASCEND
-+    &ff_hwcontext_type_ascend,
-+#endif
-     NULL,
- };
- 
-@@ -77,6 +80,7 @@
-     [AV_HWDEVICE_TYPE_VIDEOTOOLBOX] = "videotoolbox",
-     [AV_HWDEVICE_TYPE_MEDIACODEC] = "mediacodec",
-     [AV_HWDEVICE_TYPE_VULKAN] = "vulkan",
-+    [AV_HWDEVICE_TYPE_ASCEND] = "ascend",
- };
- 
- enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
-diff -urN ffmpeg-n4.4.4/libavutil/hwcontext.h Ascendffmpeg/libavutil/hwcontext.h
---- ffmpeg-n4.4.4/libavutil/hwcontext.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext.h	2024-01-22 17:46:39.158708612 +0800
-@@ -37,6 +37,7 @@
-     AV_HWDEVICE_TYPE_OPENCL,
-     AV_HWDEVICE_TYPE_MEDIACODEC,
-     AV_HWDEVICE_TYPE_VULKAN,
-+    AV_HWDEVICE_TYPE_ASCEND,
- };
- 
- typedef struct AVHWDeviceInternal AVHWDeviceInternal;
-diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_internal.h Ascendffmpeg/libavutil/hwcontext_internal.h
---- ffmpeg-n4.4.4/libavutil/hwcontext_internal.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_internal.h	2024-01-22 17:46:39.158708612 +0800
+\ No newline at end of file
+--- FFmpeg-n4.4.4/libavutil/hwcontext_internal.h
++++ Ascendffmpeg/libavutil/hwcontext_internal.h
 @@ -174,5 +174,6 @@
  extern const HWContextType ff_hwcontext_type_videotoolbox;
  extern const HWContextType ff_hwcontext_type_mediacodec;
@@ -8434,36 +8559,8 @@ diff -urN ffmpeg-n4.4.4/libavutil/hwcontext_internal.h Ascendffmpeg/libavutil/hw
 +extern const HWContextType ff_hwcontext_type_ascend;
  
  #endif /* AVUTIL_HWCONTEXT_INTERNAL_H */
-diff -urN ffmpeg-n4.4.4/libavutil/Makefile Ascendffmpeg/libavutil/Makefile
---- ffmpeg-n4.4.4/libavutil/Makefile	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/Makefile	2024-01-22 17:46:39.158708612 +0800
-@@ -35,6 +35,7 @@
-           hdr_dynamic_metadata.h                                        \
-           hmac.h                                                        \
-           hwcontext.h                                                   \
-+          hwcontext_ascend.h                                            \
-           hwcontext_cuda.h                                              \
-           hwcontext_d3d11va.h                                           \
-           hwcontext_drm.h                                               \
-@@ -174,6 +175,7 @@
-        film_grain_params.o                                              \
- 
- 
-+OBJS-$(CONFIG_ASCEND)                   += hwcontext_ascend.o
- OBJS-$(CONFIG_CUDA)                     += hwcontext_cuda.o
- OBJS-$(CONFIG_D3D11VA)                  += hwcontext_d3d11va.o
- OBJS-$(CONFIG_DXVA2)                    += hwcontext_dxva2.o
-@@ -192,6 +194,7 @@
- # Windows resource file
- SLIBOBJS-$(HAVE_GNU_WINDRES)            += avutilres.o
- 
-+SKIPHEADERS-$(CONFIG_ASCEND)           += hwcontext_ascend.h
- SKIPHEADERS-$(HAVE_CUDA_H)             += hwcontext_cuda.h
- SKIPHEADERS-$(CONFIG_CUDA)             += hwcontext_cuda_internal.h     \
-                                           cuda_check.h
-diff -urN ffmpeg-n4.4.4/libavutil/pixdesc.c Ascendffmpeg/libavutil/pixdesc.c
---- ffmpeg-n4.4.4/libavutil/pixdesc.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/pixdesc.c	2024-01-22 17:46:39.158708612 +0800
+--- FFmpeg-n4.4.4/libavutil/pixdesc.c
++++ Ascendffmpeg/libavutil/pixdesc.c
 @@ -2395,6 +2395,10 @@
          .name = "vulkan",
          .flags = AV_PIX_FMT_FLAG_HWACCEL,
@@ -8475,9 +8572,8 @@ diff -urN ffmpeg-n4.4.4/libavutil/pixdesc.c Ascendffmpeg/libavutil/pixdesc.c
  };
  #if FF_API_PLUS1_MINUS1
  FF_ENABLE_DEPRECATION_WARNINGS
-diff -urN ffmpeg-n4.4.4/libavutil/pixfmt.h Ascendffmpeg/libavutil/pixfmt.h
---- ffmpeg-n4.4.4/libavutil/pixfmt.h	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/pixfmt.h	2024-01-22 17:46:39.158708612 +0800
+--- FFmpeg-n4.4.4/libavutil/pixfmt.h
++++ Ascendffmpeg/libavutil/pixfmt.h
 @@ -232,6 +232,7 @@
       * HW acceleration through CUDA. data[i] contain CUdeviceptr pointers
       * exactly as for system memory frames.
@@ -8486,9 +8582,8 @@ diff -urN ffmpeg-n4.4.4/libavutil/pixfmt.h Ascendffmpeg/libavutil/pixfmt.h
      AV_PIX_FMT_CUDA,
  
      AV_PIX_FMT_0RGB,        ///< packed RGB 8:8:8, 32bpp, XRGBXRGB...   X=unused/undefined
-diff -urN ffmpeg-n4.4.4/libavutil/utils.c Ascendffmpeg/libavutil/utils.c
---- ffmpeg-n4.4.4/libavutil/utils.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libavutil/utils.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libavutil/utils.c
++++ Ascendffmpeg/libavutil/utils.c
 @@ -37,6 +37,10 @@
  
  unsigned avutil_version(void)
@@ -8508,9 +8603,8 @@ diff -urN ffmpeg-n4.4.4/libavutil/utils.c Ascendffmpeg/libavutil/utils.c
      return LIBAVUTIL_VERSION_INT;
  }
  
-diff -urN ffmpeg-n4.4.4/libswscale/aarch64/yuv2rgb_neon.S Ascendffmpeg/libswscale/aarch64/yuv2rgb_neon.S
---- ffmpeg-n4.4.4/libswscale/aarch64/yuv2rgb_neon.S	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libswscale/aarch64/yuv2rgb_neon.S	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libswscale/aarch64/yuv2rgb_neon.S
++++ Ascendffmpeg/libswscale/aarch64/yuv2rgb_neon.S
 @@ -118,8 +118,8 @@
  .endm
  
@@ -8533,9 +8627,8 @@ diff -urN ffmpeg-n4.4.4/libswscale/aarch64/yuv2rgb_neon.S Ascendffmpeg/libswscal
      increment_\ifmt
      subs                w1, w1, #1                                      // height -= 1
      b.gt                1b
-diff -urN ffmpeg-n4.4.4/libswscale/input.c Ascendffmpeg/libswscale/input.c
---- ffmpeg-n4.4.4/libswscale/input.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libswscale/input.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libswscale/input.c
++++ Ascendffmpeg/libswscale/input.c
 @@ -84,9 +84,9 @@
      int32_t rv = rgb2yuv[RV_IDX], gv = rgb2yuv[GV_IDX], bv = rgb2yuv[BV_IDX];
      av_assert1(src1==src2);
@@ -8581,9 +8674,8 @@ diff -urN ffmpeg-n4.4.4/libswscale/input.c Ascendffmpeg/libswscale/input.c
  
          dstU[i] = (ru*r + gu*g + bu*b + (0x10001 << (RGB2YUV_SHIFT - 1))) >> RGB2YUV_SHIFT;
          dstV[i] = (rv*r + gv*g + bv*b + (0x10001 << (RGB2YUV_SHIFT - 1))) >> RGB2YUV_SHIFT;
-diff -urN ffmpeg-n4.4.4/libswscale/output.c Ascendffmpeg/libswscale/output.c
---- ffmpeg-n4.4.4/libswscale/output.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/libswscale/output.c	2024-01-22 17:46:39.168708660 +0800
+--- FFmpeg-n4.4.4/libswscale/output.c
++++ Ascendffmpeg/libswscale/output.c
 @@ -1043,8 +1043,8 @@
          Y2 -= c->yuv2rgb_y_offset;
          Y1 *= c->yuv2rgb_y_coeff;
@@ -8836,243 +8928,8 @@ diff -urN ffmpeg-n4.4.4/libswscale/output.c Ascendffmpeg/libswscale/output.c
              if (eightbytes) {
                  output_pixel(&dest[3], av_clip_uintp2(A, 30) >> 14);
                  dest += 4;
-diff -urN ffmpeg-n4.4.4/.mailmap Ascendffmpeg/.mailmap
---- ffmpeg-n4.4.4/.mailmap	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/.mailmap	1970-01-01 08:00:00.000000000 +0800
-@@ -1,25 +0,0 @@
--<james.darnley@gmail.com> <jdarnley@obe.tv>
--<jeebjp@gmail.com> <jan.ekstrom@aminocom.com>
--<sw@jkqxz.net> <mrt@jkqxz.net>
--<u@pkh.me> <cboesch@gopro.com>
--<zhilizhao@tencent.com> <quinkblack@foxmail.com>
--<zhilizhao@tencent.com> <wantlamy@gmail.com>
--<modmaker@google.com> <modmaker-at-google.com@ffmpeg.org>
--<stebbins@jetheaddev.com> <jstebbins@jetheaddev.com>
--<barryjzhao@tencent.com> <mypopydev@gmail.com>
--<barryjzhao@tencent.com> <jun.zhao@intel.com>
--<josh@itanimul.li> <joshdk@obe.tv>
--<michael@niedermayer.cc> <michaelni@gmx.at>
--<linjie.justin.fu@gmail.com> <linjie.fu@intel.com>
--<linjie.justin.fu@gmail.com> <fulinjie@zju.edu.cn>
--<ceffmpeg@gmail.com> <cehoyos@ag.or.at>
--<ceffmpeg@gmail.com> <cehoyos@rainbow.studorg.tuwien.ac.at>
--<ffmpeg@gyani.pro> <gyandoshi@gmail.com>
--<atomnuker@gmail.com> <rpehlivanov@obe.tv>
--<lizhong1008@gmail.com> <zhong.li@intel.com>
--<lizhong1008@gmail.com> <zhongli_dev@126.com>
--<andreas.rheinhardt@gmail.com> <andreas.rheinhardt@googlemail.com>
--rcombs <rcombs@rcombs.me> <rodger.combs@gmail.com>
--<thilo.borgmann@mail.de> <thilo.borgmann@googlemail.com>
--<liuqi05@kuaishou.com> <lq@chinaffmpeg.org>
--<ruiling.song83@gmail.com> <ruiling.song@intel.com>
-diff -urN ffmpeg-n4.4.4/MAINTAINERS Ascendffmpeg/MAINTAINERS
---- ffmpeg-n4.4.4/MAINTAINERS	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/MAINTAINERS	2024-01-22 17:46:39.048708081 +0800
-@@ -615,7 +615,6 @@
- Loren Merritt                 ABD9 08F4 C920 3F65 D8BE 35D7 1540 DAA7 060F 56DE
- Lynne                         FE50 139C 6805 72CA FD52 1F8D A2FE A5F0 3F03 4464
- Michael Niedermayer           9FF2 128B 147E F673 0BAD F133 611E C787 040B 0FAB
--                              DD1E C9E8 DE08 5C62 9B3E 1846 B18E 8928 B394 8D64
- Nicolas George                24CE 01CE 9ACC 5CEB 74D8 8D9D B063 D997 36E5 4C93
- Nikolay Aleksandrov           8978 1D8C FB71 588E 4B27 EAA8 C4F0 B5FC E011 13B1
- Panagiotis Issaris            6571 13A3 33D9 3726 F728 AA98 F643 B12E ECF3 E029
-diff -urN ffmpeg-n4.4.4/README.md Ascendffmpeg/README.md
---- ffmpeg-n4.4.4/README.md	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/README.md	2024-01-22 17:46:39.048708081 +0800
-@@ -1,46 +1,141 @@
--FFmpeg README
--=============
-+# FFmpeg-Ascend
- 
--FFmpeg is a collection of libraries and tools to process multimedia content
--such as audio, video, subtitles and related metadata.
-+## 介绍
- 
--## Libraries
-+MxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
-+为了用户的易用性，MxVision 提供了 FFmepg-Ascend 解决方案。
- 
--* `libavcodec` provides implementation of a wider range of codecs.
--* `libavformat` implements streaming protocols, container formats and basic I/O access.
--* `libavutil` includes hashers, decompressors and miscellaneous utility functions.
--* `libavfilter` provides a mean to alter decoded Audio and Video through chain of filters.
--* `libavdevice` provides an abstraction to access capture and playback devices.
--* `libswresample` implements audio mixing and resampling routines.
--* `libswscale` implements color conversion and scaling routines.
-+该样例的处理流程为：
- 
--## Tools
--
--* [ffmpeg](https://ffmpeg.org/ffmpeg.html) is a command line toolbox to
--  manipulate, convert and stream multimedia content.
--* [ffplay](https://ffmpeg.org/ffplay.html) is a minimalistic multimedia player.
--* [ffprobe](https://ffmpeg.org/ffprobe.html) is a simple analysis tool to inspect
--  multimedia content.
--* Additional small tools such as `aviocat`, `ismindex` and `qt-faststart`.
--
--## Documentation
--
--The offline documentation is available in the **doc/** directory.
--
--The online documentation is available in the main [website](https://ffmpeg.org)
--and in the [wiki](https://trac.ffmpeg.org).
--
--### Examples
--
--Coding examples are available in the **doc/examples** directory.
--
--## License
--
--FFmpeg codebase is mainly LGPL-licensed with optional components licensed under
--GPL. Please refer to the LICENSE file for detailed information.
--
--## Contributing
--
--Patches should be submitted to the ffmpeg-devel mailing list using
--`git format-patch` or `git send-email`. Github pull requests should be
--avoided because they are not part of our review process and will be ignored.
-+```
-+准备芯片及环境 > 安装 CANN 版本包 > 拉取 FFmpeg-Ascend 代码 > 编译 > 执行
-+```
-+
-+## 支持的产品
-+Atlas 300I Pro
-+
-+## 支持的 ACL 版本
-+
-+5.1.RC2
-+*注意：目前只支持 HiMpi 接口即 310P 昇腾 AI芯片。
-+
-+查询 ACL 版本号的方法是，在 Atlas 产品环境下，运行以下命令：
-+```bash
-+npu-smi info
-+```
-+
-+## 支持的功能
-+|功能|mpeg4|h264/h265|多路|
-+|:----:|:----:|:----:|:----:|
-+|硬件解码|√|√|√|
-+|硬件编码|√|√|√|
-+|硬件转码|√|√|√|
-+|硬件缩放|√|√|√|
-+
-+## 安装 CANN 版本包
-+详情请参考: https://support.huawei.com/enterprise/zh/doc/EDOC1100234042/f1fad1e0
-+
-+## FFmpeg-Ascend目录结构
-+
-+FFmpeg-Ascend 目录主要文件：
-+.
-+|-- configure (FFmpeg 编译入口)
-+|
-+|-- README.md (FFmpeg-Ascend 使用手册)
-+|
-+|-- ffbuild (编译相关文件)
-+|
-+|-- fftools (FFmpeg 相关命令行工具)
-+|
-+|-- libavcodec (FFmpeg 编解码器)
-+|
-+|-- libavutil (FFmpeg 相关工具，包含硬件加速相关流程)
-+
-+## 依赖条件
-+
-+设置环境变量：
-+* `ASCEND_HOME`     Ascend 安装的路径，一般为 `/usr/local/Ascend`
-+* `FFMPEG_LIB_PATH` FFmpeg 编译安装的 lib 文件路径（一般为 FFmpeg 安装目录下的 lib 目录， 由安装时的 --prefix 编译选项来指定）。
-+* `LD_LIBRARY_PATH` 指定 ffmpeg 程序运行时依赖的动态库查找路径。
-+
-+```bash
-+export ASCEND_HOME=/usr/local/Ascend
-+export LD_LIBRARY_PATH=${FFMPEG_LIB_PATH}:${ASCEND_HOME}/ascend-toolkit/latest/acllib/lib64:$LD_LIBRARY_PATH
-+```
-+
-+## 编译
-+
-+编写编译脚本
-+```bash
-+vi run.sh
-+```
-+
-+`run.sh` 内编译选项: 
-+* `prefix` : FFmpeg 及相关组件安装目录
-+* `enable-shared` : FFmpeg 允许生成 so 文件
-+* `extra-cflags` : 添加第三方头文件
-+* `extra-libs` : 添加第三方 so 文件
-+* `enable-ascend` : 允许使用 ascend 进行硬件加速
-+```bash
-+./configure \
-+    --prefix=./ascend \
-+    --enable-shared \
-+    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include"
-+    --extra-libs="-lacl_dvpp_mpi -lascendcl" \
-+    --enable-ascend \
-+    && make -j && make install
-+```
-+
-+脚本添加可执行权限
-+```bash
-+chmod +x run.sh
-+```
-+
-+运行脚本
-+```bash
-+./run.sh
-+```
-+
-+
-+注意：若是运行失败，则可能是 `./configure` 没有可执行权限
-+```bash
-+chmod +x ./configure
-+chmod +x ./ffbuild/*.sh
-+```
-+
-+## 运行
-+当前目录或者 FFmpeg 安装目录下均会生成 `ffmpeg` 可执行文件，均可以使用。
-+相关指令参数：
-+
-+* `-hwaccel`    -   指定采用 ascend 来进行硬件加速, 用来做硬件相关初始化工作。
-+
-+解码相关参数(注意：解码相关参数需要在 `-i` 参数前设置)：
-+* `-c:v`        -   指定解码器为 h264_ascend (解码 h265 格式可以使用 h265_ascend)。
-+* `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数
-+* `-channel_id` -   指定解码通道 id [0-255], 默认为0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。
-+* `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304。宽要与 16 对齐，高要与 2 对齐。 
-+* `-i`          -   指定输入文件（或者可以是 rtsp 流）。
-+
-+编码相关参数(注意：解码相关参数需要在 `-i` 参数后设置)：
-+* `-c:v`        -   指定编码器为 h264_ascend (编码成 h265 格式可以使用 h265_ascend)。
-+* `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数。
-+* `-channel_id` -   指定编码通道 id [0-127], 默认为 0, 若是指定的通道已被占用, 则自动寻找并申请新的通道。
-+* `-profile`    -   指定视频编码的画质级别（0: baseline, 1: main, 2: high, 默认为 1。 H265 编码器只支持 main）。
-+* `-rc_mode`    -   指定视频编码器的速率控制模式（0: CBR, 1: VBR, 默认为 0）。
-+* `-gop`        -   指定关键帧间隔, [1, 65536], 默认为 30。
-+* `-frame_rate` -   指定帧率, [1, 240], 默认为25。
-+* `-max_bit_rate` - 限制码流的最大比特率, [2， 614400], 默认为 20000。
-+* `-movement_scene` - 指定视频场景（0：静态场景（监控视频等）， 1：动态场景（直播，游戏等））, 默认为 1。
-+
-+```bash
-+./ffmpeg -hwaccel ascend -c:v h264_ascend -i test.264 -c:v h264_ascend out.264
-+```
-+
-+```bash
-+./ffmpeg -hwaccel ascend -c:v h264_ascend -device_id 0 -channel_id 0 -resize 1024x1000 -i test.264 -c:v h264_ascend -device_id 0 -channel_id 0 -profile 2 -rc_mode 0 -gop 30 -frame_rate 25 -max_bit_rate 20000 out.264
-+```
-+
-+```bash
-+./ffmpeg -hwaccel ascend -c:v h264_ascend -i test.264 out.yuv
-+./ffmpeg -hwaccel ascend -s 1920x1080 -pix_fmt nv12 -i out.yuv -c:v h264_ascend out.264
-+```
-\ 文件尾没有换行符
-diff -urN ffmpeg-n4.4.4/RELEASE Ascendffmpeg/RELEASE
---- ffmpeg-n4.4.4/RELEASE	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/RELEASE	2024-01-22 17:46:39.048708081 +0800
-@@ -1 +1 @@
--4.4.4
-+4.4.1
-diff -urN ffmpeg-n4.4.4/tools/target_dec_fuzzer.c Ascendffmpeg/tools/target_dec_fuzzer.c
---- ffmpeg-n4.4.4/tools/target_dec_fuzzer.c	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/tools/target_dec_fuzzer.c	2024-01-22 17:46:39.078708226 +0800
+--- FFmpeg-n4.4.4/tools/target_dec_fuzzer.c
++++ Ascendffmpeg/tools/target_dec_fuzzer.c
 @@ -172,7 +172,6 @@
      case AV_CODEC_ID_INTERPLAY_ACM: maxsamples /= 16384;  break;
      case AV_CODEC_ID_LAGARITH:    maxpixels  /= 1024;  break;
@@ -9081,37 +8938,3 @@ diff -urN ffmpeg-n4.4.4/tools/target_dec_fuzzer.c Ascendffmpeg/tools/target_dec_
      case AV_CODEC_ID_MOTIONPIXELS:maxpixels  /= 256;   break;
      case AV_CODEC_ID_MP4ALS:      maxsamples /= 65536; break;
      case AV_CODEC_ID_MSA1:        maxpixels  /= 16384; break;
-diff -urN ffmpeg-n4.4.4/.travis.yml Ascendffmpeg/.travis.yml
---- ffmpeg-n4.4.4/.travis.yml	2023-04-13 02:27:11.000000000 +0800
-+++ Ascendffmpeg/.travis.yml	1970-01-01 08:00:00.000000000 +0800
-@@ -1,30 +0,0 @@
--language: c
--sudo: false
--os:
--  - linux
--  - osx
--addons:
--  apt:
--    packages:
--      - nasm
--      - diffutils
--compiler:
--  - clang
--  - gcc
--matrix:
--    exclude:
--        - os: osx
--          compiler: gcc
--cache:
--  directories:
--    - ffmpeg-samples
--before_install:
--  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
--install:
--  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install nasm; fi
--script:
--  - mkdir -p ffmpeg-samples
--  - ./configure --samples=ffmpeg-samples --cc=$CC
--  - make -j 8
--  - make fate-rsync
--  - make check -j 8

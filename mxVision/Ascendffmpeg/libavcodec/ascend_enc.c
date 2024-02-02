@@ -323,6 +323,10 @@ static inline int create_venc_channel(ASCENDEncContext_t *ctx)
         }
     } else if (ctx->avctx->codec->id == AV_CODEC_ID_H265) {
         ctx->chn_attr_.venc_attr.type = HI_PT_H265;
+        if (ctx->profile != 1) {
+            av_log(ctx, AV_LOG_ERROR, "'profile' param only support value is 1 when ascend encoder is h265, please check.\n");
+            return AVERROR(EINVAL);
+        }
         ctx->chn_attr_.venc_attr.profile = HI_VENC_H265_MAIN_LEVEL;
 
         if (ctx->rc_mode == 1) {
@@ -777,6 +781,11 @@ static av_cold int ff_himpi_enc_close(AVCodecContext *avctx)
     struct timespec ts;
 
     if (avctx == NULL || ctx == NULL) {
+        av_log(NULL, AV_LOG_ERROR, "Early error in ff_himpi_enc_close.\n");
+        return AVERROR(EINVAL);
+    }
+
+    if (ctx->ascend_ctx == NULL || ctx->ascend_ctx->context == NULL) {
         av_log(NULL, AV_LOG_ERROR, "Early error in ff_himpi_enc_close.\n");
         return AVERROR(EINVAL);
     }

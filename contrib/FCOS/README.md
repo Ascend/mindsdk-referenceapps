@@ -93,11 +93,11 @@
 
 项目运行过程中涉及到的第三方软件依赖如下表所示：
 
-| 软件名称    | 版本   | 说明                 | 使用教程                                                  |
-| ----------- | ------ | -------------------- | --------------------------------------------------------- |
-| pycocotools | 2.0.0  | 用于实现代码测评     | [点击打开链接](https://cocodataset.org/)                  |
-| mmdetection | 2.25.0 | 用于实现模型精度评估 | [点击打开链接](https://github.com/open-mmlab/mmdetection) |
-| mmcv        | 1.3.17 | 用于实现图片前处理   | [点击打开链接](https://github.com/open-mmlab/mmcv)        |
+| 软件名称     | 说明                 | 使用教程                                                  |
+| ----------- | -------------------- | --------------------------------------------------------- |
+| pycocotools | 用于实现代码测评     | [点击打开链接](https://cocodataset.org/)                  |
+| mmdetection | 用于实现模型精度评估 | [点击打开链接](https://github.com/open-mmlab/mmdetection) |
+| mmcv        | 用于实现图片前处理   | [点击打开链接](https://github.com/open-mmlab/mmcv)        |
 
 .安装python COCO测评工具,mmcv和mmdetection。执行命令：
 
@@ -114,11 +114,6 @@ pip3 install mmdet
 模型转换步骤如下：
 
 1.从下载链接处下载onnx模型至FCOS/models文件夹下。
-
-2.进入models文件夹目录下，设置环境变量如下：
-
-
-设置完环境变量之后，就进行模型的转换：
 
 模型转换语句如下：
 
@@ -249,4 +244,46 @@ python3 evaluate.py
                 "factory": "mxpi_objectpostprocessor",
                 "next": "mxpi_dataserialize0"
             },
+```
+### 8.2 精度测试脚本运行时, TypeError报错问题：
+问题描述:
+运行精度测试脚本过程中, 出现如下类似报错:
+```
+*********
+File "***/pycocotools/cocoeval.py", line 507 in setDetParams
+    self.iouThrs = np.linspace(.5, 0.95, np.round((0.95 - .5) / .05) + 1, endpoint=True)
+********
+TypeError: 'numpy.float64' object cannot be interpreted as an integer
+```
+
+解决措施:
+打开pycocotools库下的cocoeval.py文件, 将文件中的代码:
+```
+self.iouThrs = np.linspace(.5, 0.95, np.round((0.95 - .5) / .05) + 1, endpoint=True)
+self.recThrs = np.linspace(.0, 1.00, np.round((1.00 - .0) / .01) + 1, endpoint=True)
+```
+修改为:
+```
+self.iouThrs = np.linspace(.5, 0.95, 10, endpoint=True)
+self.recThrs = np.linspace(.0, 1.00, 101, endpoint=True)
+```
+
+### 8.3 精度测试脚本运行时, NameError报错问题：
+问题描述:
+运行精度测试脚本过程中, 出现如下类似报错:
+```
+*********
+File "***/pycocotools/coco.py", line 308 in loadRes
+    if type(resFile) == str or type(resFile) == unicode:
+NameError: name 'unicode' is not defined
+```
+
+解决措施:
+打开pycocotools库下的coco.py文件, 将文件中的代码:
+```
+if type(resFile) == str or type(resFile) == unicode:
+```
+修改为:
+```
+if type(resFile) == str:
 ```

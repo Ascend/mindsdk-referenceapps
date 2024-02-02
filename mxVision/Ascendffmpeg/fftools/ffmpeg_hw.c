@@ -339,7 +339,7 @@ int hw_device_setup_for_decode(InputStream *ist)
         } else if (ist->hwaccel_id == HWACCEL_GENERIC) {
             type = ist->hwaccel_device_type;
             dev = hw_device_get_by_type(type);
-            if (!dev)
+            if (!dev) {
                 char* device_id = "device_id";
                 AVDictionaryEntry* opt = av_dict_get(ist->decoder_opts, device_id, NULL, 0);
                 if (opt) {
@@ -347,6 +347,7 @@ int hw_device_setup_for_decode(InputStream *ist)
                 } else {
                     err = hw_device_init_from_type(type, NULL, &dev);
                 }
+            }
         } else {
             dev = hw_device_match_by_codec(ist->dec);
             if (!dev) {

@@ -48,6 +48,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 - 环境变量介绍
 
   ```
+  . {cann_install_path}/ascend-toolkit/set_env.sh
   . {sdk_install_path}/mxVision/set_env.sh
   
   ```
@@ -69,17 +70,11 @@ atc --model=rcf.prototxt --weight=./rcf_bsds.caffemodel --framework=0 --output=r
 ```
 
 ## 4 编译与运行
-**步骤1** 修改CMakeLists.txt文件 将set(MX_SDK_HOME ${SDK安装路径}) 中的${SDK安装路径}替换为实际的SDK安装路径
 
-**步骤2** 设置环境变量
-```
-. {sdk_install_path}/mxVision/set_env.sh
-```
-
-**步骤3** 执行如下编译命令：
+**步骤1** 执行如下编译命令：
 bash build.sh
 
-**步骤4** 进行图像边缘检测
+**步骤2** 进行图像边缘检测
 请自行准备jpg格式的测试图像保存在文件夹中(例如 data/**.jpg)进行边缘检测 
 ```
 ./edge_detection_picture ./data
@@ -113,7 +108,7 @@ source build.sh
 (4) 修改检测代码
 
 vim mian.py
-注释第17行代码 nms_process(model_name_list, result_dir, save_dir, key, file_format)
+注释第17行代码 nms_process(model_name_list, result_dir, save_dir, key, file_format), 
 修改18行为   eval_edge(alg, model_name_list, result_dir, gt_dir, workers)
 
 vim /impl/edges_eval_dir.py
@@ -125,11 +120,31 @@ vim eval_edge.py
 (5) 测试精度
 
 ``` shell
-python main.py  --save_dir path/to/result  --gt_dir paht/to/BSR/BSDS500/data/groundTruth/test 
+python main.py  --result_dir path/to/result  --gt_dir paht/to/BSR/BSDS500/data/groundTruth/test 
 
 ```
 注: 
-  save_dir: results directory
+  result_dir: results directory
 
   gt_dir    : ground truth directory
 
+
+## 6常见问题
+### 6.1 精度测试脚本运行时, ModuleNotFoundError报错问题：
+问题描述:
+运行精度测试脚本过程中, 出现如下类似报错:
+```
+*********
+File "***/nms_process.py", line 6 in <module>
+    from impl.toolbox import conv_tri, grad2
+ModuleNotFoundError: No module named 'impl.toolbox'
+```
+
+解决措施:
+```
+方法一:
+将环境变量PYTHONPATH里面的/usr/local/Ascend/ascend-toolkit/latest/opp/built-in/op_impl/ai_core/tbe去掉, 该路径根据cann实际安装位置不同可能会不一样,须自行确认
+
+方法二:
+执行命令: unset PYTHONPATH
+```

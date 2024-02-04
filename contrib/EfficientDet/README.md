@@ -120,6 +120,7 @@ EfficientDet 的后处理插件接收模型推理插件输出的两个特征图�
 
 在编译运行项目前，需要设置环境变量：
 ```
+. {cann_install_path}/ascend-toolkit/set_env.sh
 . {sdk_install_path}/mxVision/set_env.sh
 ```
 
@@ -144,6 +145,7 @@ ATC run success, welcome to the next use.
 ```
 表示命令执行成功。
 
+### 3.1 可选操作
 上述方法使用提供的 onnx 模型转换得到 om 模型，该模型的输入尺寸是 (512, 512)，若想转换得到其他输入尺寸的模型，或者想从 pytorch 模型转 onnx 模型，相关操作步骤如下：
 1. 从上述参考实现代码链接下载 pytorch 项目文件，执行：
 ```
@@ -185,7 +187,7 @@ bash model_convertion_d{compound_coef}.sh
 
 **步骤3** 编译。在项目目录下执行bash build.sh命令。
 
-此时硬生成postprocess/build/libefficientdetpostprocess.so 文件
+此时会生成postprocess/build/libefficientdetpostprocess.so 文件
 
 **步骤4** 图片检测。将一张图片放在项目目录下，命名为 img.jpg，在该图片上进行检测
 >**如提示so库异常，则需要从 ```main.py``` 中找到使用的 pipeline 文件路径，将其中 mxpi_objectpostprocessor0 插件的 postProcessLibPath 属性值改为具体路径值**
@@ -201,7 +203,7 @@ python3 main.py
 
 1. 安装 python COCO 评测工具。执行命令：
 ```
-pip3.9 install pycocotools
+pip3 install pycocotools
 ```
 
 2. 下载 COCO VAL 2017 数据集和标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/EfficientDet/data.zip，  在 ``python`` 目录下创建 ``dataset`` 目录，将数据集压缩文件和标注数据压缩文件都解压至 ``python/dataset`` 目录下。确保解压后的 python 目录结构为：

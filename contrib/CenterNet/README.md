@@ -119,20 +119,20 @@ CenterNet 的后处理插件接收模型推理插件输出的特征图。本项�
 MindX SDK 环境变量:
 
 ```
-. ${SDK-path}/mxVision/set_env.sh
+. {sdk_install_path}/mxVision/set_env.sh
 ```
 
 CANN 环境变量：
 
 ```
-. ${ascend-toolkit-path}/set_env.sh
+. {cann_install_path}/ascend-toolkit/set_env.sh
 ```
 
 - 环境变量介绍
 
 ```
-SDK-path: SDK mxVision 安装路径
-ascend-toolkit-path: CANN 安装路径
+sdk_install_path: SDK mxVision 安装路径
+cann_install_path: CANN 安装路径
 ```
 
 需要安装的NumCpp库：

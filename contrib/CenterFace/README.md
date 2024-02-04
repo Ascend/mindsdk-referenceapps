@@ -85,21 +85,15 @@ SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 
 在编译运行项目前，需要设置环境变量：
 
-```bash
+```
+. {cann_install_path}/ascend-toolkit/set_env.sh
 . {sdk_install_path}/mxVision/set_env.sh
 ```
 
 ## 3.模型转换
 
-本项目推理模型采用[CenterFace](https://github.com/Star-Clouds/CenterFace)，onnx模型下载[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterFaceWithDynamicResolution/centerface_offical.onnx)，使用之前须使用转化工具ATC将模型转化为om模型，模型转换工具相关介绍参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)。ATC工具参考环境变量配置：
+本项目推理模型采用[CenterFace](https://github.com/Star-Clouds/CenterFace)，onnx模型下载[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterFaceWithDynamicResolution/centerface_offical.onnx)，使用之前须使用转化工具ATC将模型转化为om模型，模型转换工具相关介绍参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)。
 
-```bash
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-```
 
 下载onnx模型之后，将onnx文件移至"/model",并在终端执行如下命令：
 
@@ -189,6 +183,7 @@ var_reci_chn_2: 1.0
 
   <img src="README/image-20220525150747282.png" alt="image-20220525150747282" style="zoom:80%;" />
 
-  本方案使用了osd可视化插件，请参考官方技术文档[mxpi_opencvosd](https://support.huawei.com/enterprise/zh/doc/EDOC1100234263/e25ede48)页面生成所需的模型文件。
+  本方案使用了osd可视化插件，请参考官方技术文档[mxpi_opencvosd](https://www.hiascend.com/document/detail/zh/mind-sdk/500/overview/index.html)页面
+  "mxVison 用户指南/插件参考/屏幕展示(OSD)插件"章节, 生成所需的模型文件。
 
   

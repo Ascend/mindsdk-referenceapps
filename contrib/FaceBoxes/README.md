@@ -229,7 +229,7 @@ bash run.sh
 2.下载所需脚本box_overlaps.pyx、box_overlaps.c、setup.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
 
 ### 9.2 验证流程
-在运行完main.py后开始进行精度验证，所需代码文件放在script目录下。进入script目录，首先将所依赖的python包安装好（bbox除外），bbox函数直接在终端运行python3.9 setup.py install即可。之后，分别运行该目录下的convert.py，split.py和evaluate.py，FDDB集的精度结果在运行完evaluate.py后会打印出来。
+在运行完main.py后开始进行精度验证，所需代码文件放在script目录下。进入script目录，首先将所依赖的python包安装好（bbox除外），bbox函数直接在终端运行python3.9 setup.py install即可。之后，依次运行该目录下的convert.py，split.py和evaluate.py，FDDB集的精度结果在运行完evaluate.py后会打印出来。
 
 
 ## 10 常见问题

@@ -197,6 +197,7 @@ key = b'mxpi_objectpostprocessor0'
 ```
 . ${ASCEND_TOOLKIT_HOME}/set_env.sh
 ```
+${ASCEND_TOOLKIT_HOME}为Ascend-toolkit安装目录。
 
 2.在models目录下，使用atc将onnx模型转换为om模型文件
 ```

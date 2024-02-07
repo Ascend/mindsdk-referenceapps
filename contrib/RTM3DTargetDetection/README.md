@@ -38,9 +38,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 ```
 ├── models
 │   ├── coco.names                  # 标签文件，但本项目单纯调用但不使用
-│   ├── dla34.aippconfig            # 模型转换aipp配置文件
 │   ├── rtm3d.cfg      # 后处理配置文件，但本项目单纯调用但不使用
-│   ├── model_best.onnx             # rtm3d模型onnx格式
 │   └── model_best.om               # rtm3d模型om格式
 ├── pipeline
 │   └── rtm3d.pipeline        # pipeline文件
@@ -100,37 +98,11 @@ export PYTHONPATH=${MX_SDK_HOME}/python
 
 ### 3.1 模型获取
 
-此处提供未进行模型转换的3D目标检测模型的onnx文件以及转换好的om文件：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RTM3DTargetDetection/model.zip)
+此处提供3D目标检测的om文件：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RTM3DTargetDetection/model.zip)
 
 此处提供项目的数据集（ left color images of object data set (12 GB)），其压缩包中包含testing和training两个数据集：[下载地址](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d)
 
 注：下载后请将模型放置于models目录下
-
-### 3.2 onnx转om
-
-在models文件目录下，需要执行的模型转换脚本示例如下：
-
-```
-# 该脚本用来将.onnx模型文件转换成.om模型文件
-
-# 设置环境变量（请确认install_path路径是否正确）
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-
-# 执行，转换rtm3d模型
-atc --model=./model_best.onnx --framework=5 --output=./model_best --soc_version=Ascend310 --input_format=NCHW --input_shape="images:1,3,416,1280" --output_type=FP32 --insert_op_conf=./dla34.aippconfig
-```
-
-执行该命令后会在当前文件夹下生成项目需要的模型文件 model_best.om。执行后终端输出为：
-
-```
-ATC start working now, please wait for a moment.
-ATC run success, welcome to the next use.
-```
-
 
 
 ## 4 编译与运行

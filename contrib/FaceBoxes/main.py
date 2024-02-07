@@ -16,11 +16,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
+import cv2
 from StreamManagerApi import StreamManagerApi, MxDataInput, StringVector
 import numpy as np
 import MxpiDataType_pb2 as MxpiDataType
-import cv2
 import os
 import argparse
 

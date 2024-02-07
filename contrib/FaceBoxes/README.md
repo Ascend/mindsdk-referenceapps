@@ -218,12 +218,13 @@ bash run.sh
 
 ## 8 数据集获取
 
-该模型使用[FDDB官网]的2845张验证集进行测试，图片与标签分别存放在data/FDDB/images与/data/FDDB/img_list.txt，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
+该模型使用[FDDB官网]的2845张验证集进行测试，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
 
 ## 9 精度验证
 
 ### 9.1 准备
-1.下载FDDB数据集注释，在解压后的FDDB-folders目录下, 将注释放在data/ground_truth下面（需要手动创建），并且在data目录下创建result以及pred_sample文件夹。链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
+1.下载FDDB图片及注释，图片与标签在解压后的FDDB目录下，需分别存放在data/FDDB/images与/data/FDDB/img_list.txt（data目录需要手动创建）。数据集注释在解压后的FDDB-folders目录下, 将注释放在data/ground_truth下面（需要手动创建），并且在data目录下创建result以及pred_sample文件夹。
+链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
 
 2.下载所需脚本box_overlaps.pyx、box_overlaps.c、setup.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
 

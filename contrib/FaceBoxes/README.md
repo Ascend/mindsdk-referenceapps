@@ -110,8 +110,12 @@ export MX_SDK_HOME=/MindX_SDK/mxVision/
 # 此处MX_SDK_HOME请使用MindX_SDK的实际路径
 ```
 
-**步骤3**：在插件代码目录下创建build文件夹，使用cmake命令进行编译，生成.so文件。下面以单人独处插件的编译过程作为范例：
+**步骤3**：编译插件 
+
 进入目录 plugin/FaceBoxesPostProcess
+```bash
+cd plugin/FaceBoxesPostProcess
+```
 执行
 ```bash
 bash build.sh 
@@ -194,7 +198,7 @@ key = b'mxpi_objectpostprocessor0'
 . ${ASCEND_TOOLKIT_HOME}/set_env.sh
 ```
 
-2.在models目录下，使用atc将onnx模型转换为om模型文件，加入--insert_op_conf参数使用AIPP，放到models目录下
+2.在models目录下，使用atc将onnx模型转换为om模型文件
 ```
 atc --framework=5 --model=faceboxes-b0_bs1.onnx --output=faceboxes-b0_bs1 --input_format=NCHW --input_shape="image:1,3,1024,1024" --log=debug --soc_version=Ascend310 --insert_op_conf=../config/FaceBoxes.aippconfig
 ```
@@ -246,13 +250,4 @@ bash run.sh
             "next": "mxpi_dataserialize0"
         }
 ```
-### 10.2 运行main.py时出现报错ImportError
-
-#### 问题描述：
-
-运行py文件时时出现报错ImportError ：dlopen:cannot load any more object with static TLS
-
-#### 解决方案：
-
-修改导入顺序，将py文件中 "import cv2" 一行移动到 "from StreamManager import XXX" 上方。
 

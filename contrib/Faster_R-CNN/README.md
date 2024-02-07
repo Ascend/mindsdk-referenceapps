@@ -77,10 +77,10 @@ npu-smi info
 │   │   ├── draw_predict.py
 │   │   └── postprocess.py
 │   ├── models
-│   │   ├── aipp-configs               （需创建）
+│   │   ├── aipp-configs               
 │   │   │   ├── aipp.cfg               # sdk做图像预处理aipp配置文件
 │   │   │   └── aipp_rgb.cfg           # opencv做图像预处理aipp配置文件
-│   │   ├── conversion-scripts         # 转换前后模型所放的位置   
+│   │   ├── conversion-scripts         #（需创建）转换前后模型所放的位置   
 │   │   ├── convert_om.sh              # 模型转换相关环境变量配置可参考该文件
 │   │   ├── coco2017.names             # 支持的缺陷类别
 │   │   ├── fasterrcnn_coco2017.cfg    # 高性能要求配置
@@ -89,12 +89,12 @@ npu-smi info
 │   │   ├── test                       # 用于测试该系统功能的数据集目录
 │   │   │   ├── infer_result           # 小图(滑窗裁剪后的图片)推理结果所在目录
 │   │   │   ├── draw_result            # 最终推理结果的可视化
-│   │   │   ├── cut                    # 测试图片所在目录     （需创建）
+│   │   │   ├── cut                    # 测试图片所在目录
 │   │   │   ├── crop                   # 滑窗裁剪后的小图片所在目录
 │   │   │   ├── img_txt                # 小图推理结果txt格式
 │   │   │   ├── img_huizong_txt        # 还原到焊缝图片上的未经过nmx去重的标注框信息
 │   │   │   └── img_huizong_txt_nms    # 最终推理结果标注框信息(txt格式)
-│   │   ├── eval                       # 用于精度测试的数据集  （需创建）
+│   │   ├── eval                       # 用于精度测试的数据集
 │   │   │   ├── cocodataset            # 进行验证时数据的coco格式
 │   │   │   ├── VOCdevkit              # 进行验证时数据的VOC格式
 │   └── pipeline
@@ -160,7 +160,7 @@ ascend-toolkit-path: CANN 安装路径。
 本项目中采用的模型是 Faster—RCNN模型，参考实现代码：https://www.hiascend.com/zh/software/modelzoo/models/detail/C/8d8b656fe2404616a1f0f491410a224c/1
 
 
-1. 将训练好的模型  [fasterrcnn_mindspore.air](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faster-RCNN/fasterrcnn_mindspore.air)  下载至 ``python/models/conversion-scripts`` 文件夹下。
+1. 将训练好的模型  [fasterrcnn_mindspore.air](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faster-RCNN/fasterrcnn_mindspore.air)  下载至 ``python/models/conversion-scripts``（文件夹需创建）文件夹下。
 
 
 2. 将该模型转换为om模型，具体操作为： ``python/models`` 文件夹下,执行指令进行模型转换：
@@ -193,7 +193,7 @@ bash build.sh
 
 **步骤2** 准备测试图片
 
-在``python/data/test/cut/``目录下放好待检测的焊缝图片（``./images``下有一张测试图片W0003_0001.jpg）
+在``python/data/test/cut/``（文件夹需创建）目录下放好待检测的焊缝图片（``./images``下有一张测试图片W0003_0001.jpg）
 
 **步骤3** 图片检测
 

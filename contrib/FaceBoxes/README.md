@@ -111,9 +111,13 @@ export MX_SDK_HOME=/MindX_SDK/mxVision/
 ```
 
 **步骤3**：在插件代码目录下创建build文件夹，使用cmake命令进行编译，生成.so文件。下面以单人独处插件的编译过程作为范例：
-
+进入目录 plugin/FaceBoxesPostProcess
+执行
 ```bash
-## 进入目录 plugin/FaceBoxesPostProcess
+bash build.sh 
+```
+或者
+```bash
 ## 创建build目录
 mkdir build
 cd build

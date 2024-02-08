@@ -8,7 +8,7 @@
 2.模型转换；
 3.数据集预处理;
 4.模型离线推理；
-5.精度、性能对比
+5.精度测试
 
 
 ## 2 环境依赖
@@ -29,11 +29,9 @@
   | cmake    | 3.5.+ |
   | mxVision | 5.0.0 |
   | Python   | 3.9.2 |
-  | Pytorch   | 1.9.0 |
   | CANN   | 7.0.0 |
-  | OpenCV   | 4.5.3 |
+  | opencv-python   | 4.5.3 |
   | gcc      | 7.5.0 |
-  | ffmpeg   | 3.4.8 |
 
 ## ３ 代码主要目录介绍
 
@@ -56,8 +54,6 @@
 │   │   ├── 1
 │   │   │	 ├── ...
 │   └── 1
-├── weights
-│   ├── FaceBoxesProd.pth
 ├── models
 │   ├── faceboxes-b0_bs1.om
 │   ├── faceboxes-b0_bs1.onnx
@@ -101,17 +97,7 @@
 
 **步骤1：** 参考安装教程《mxVision 用户指南》安装 mxVision SDK。
 
-**步骤2：** 配置 mxVision SDK 环境变量。
-
-`export MX_SDK_HOME=${安装路径}/mxVision `
-
-注：本例中mxVision SDK安装路径为 /home/uestc_luo1/MindX_SDK/mxVision。
-
-**步骤3：** 推荐在${MX_SDK_HOME}/samples/mxVision下创建FaceBoxes根目录，在项目根目录下创建目录models `mkdir models`，将离线模型faceboxes-b0_bs1.om文件放入文件夹下。
-
-**步骤4：** 编译程序前提需要先交叉编译好第三方依赖库。
-
-**步骤5：** 配置环境变量MX_SDK_HOME：
+**步骤2：** 配置环境变量MX_SDK_HOME：
 执行 
 ```
 . ${MX_SDK_HOME}/set_env.sh
@@ -124,10 +110,18 @@ export MX_SDK_HOME=/MindX_SDK/mxVision/
 # 此处MX_SDK_HOME请使用MindX_SDK的实际路径
 ```
 
-**步骤6**：在插件代码目录下创建build文件夹，使用cmake命令进行编译，生成.so文件。下面以单人独处插件的编译过程作为范例：
+**步骤3**：编译插件 
 
+进入目录 plugin/FaceBoxesPostProcess
 ```bash
-## 进入目录 /plugin
+cd plugin/FaceBoxesPostProcess
+```
+执行
+```bash
+bash build.sh 
+```
+或者
+```bash
 ## 创建build目录
 mkdir build
 cd build
@@ -137,9 +131,9 @@ make -j
 make install
 ```
 
-编译好的插件会自动存放到SDK的插件库中，需要修改该插件权限为440，目录为${MX_SDK_HOME}/lib/modelpostprocessors/libfaceboxespostprocess.so，可以直接在pipeline中使用。
+编译好的插件会生成在build目录中，需要修改该插件权限为440，移动到SDK插件目录下，目录为${MX_SDK_HOME}/lib/modelpostprocessors/libfaceboxespostprocess.so，可以直接在pipeline中使用。
 
-**步骤7:** 配置pipeline
+**步骤4:** 配置pipeline
 
 1.  插件参数介绍
 
@@ -157,7 +151,7 @@ make install
    /*Faceboxes*/
         "mxpi_tensorinfer0": {
             "props": {
-            "modelPath": "./models/faceboxes-b0_bs1.om"
+            "modelPath": "./models/faceboxes-b0_bs1.om" # 模型路径配置，需要与 6 模型转换 步骤生成的模型路径一致
         },
         "factory": "mxpi_tensorinfer",
         "next": "mxpi_objectpostprocessor0"
@@ -165,8 +159,8 @@ make install
         "mxpi_objectpostprocessor0": {
             "props": {
                 "dataSource": "mxpi_tensorinfer0",
-                "postProcessConfigPath": "./config/faceboxes-b0_bs1.cfg",
-                "postProcessLibPath": "${MX_SDK_HOME}/lib/modelpostprocessors/libfaceboxespostprocess.so"
+                "postProcessConfigPath": "./config/faceboxes-b0_bs1.cfg", # 模型后处理参数配置文件
+                "postProcessLibPath": "${MX_SDK_HOME}/lib/modelpostprocessors/libfaceboxespostprocess.so" # 插件so生成路径配置
         },
         "factory": "mxpi_objectpostprocessor",
         "next": "mxpi_dataserialize0"
@@ -175,7 +169,7 @@ make install
    根据所需场景，配置pipeline文件，调整路径参数以及插件阈值参数。例如“postProcessLibPath”字段是SDK模型后处理插件库路径。
 
 
-**步骤8：** 在main.py中，修改pipeline路径、对应的流名称以及需要获取结果的插件名称，最终程序运行完将所有图片的可视化结果写在data/results目录下，参数结果写在data/FDDB_Evaluation/FDDB_dets.txt里
+**步骤5：** 在main.py中，修改pipeline路径、对应的流名称以及需要获取结果的插件名称，最终程序运行完将所有图片的可视化结果写在data/results目录下，参数结果写在data/FDDB_Evaluation/FDDB_dets.txt里
 
 ```python
 ## 插件位置
@@ -188,18 +182,12 @@ key = b'mxpi_objectpostprocessor0'
 ```
 ## 6 模型转换
 
-本项目中用到的模型有：Faceboxes
+本项目中用到的模型有：Faceboxes，原始Pytorch模型为：https://github.com/zisianw/FaceBoxes.PyTorch.git
 
-### 6.1 pth转onnx模型
+### 6.1 预训练模型获取
 
-1.FaceBoxes模型代码下载
 ```
-cd ./FaceBoxes
-git clone https://github.com/zisianw/FaceBoxes.PyTorch.git
-```
-2.预训练模型获取。
-```
-到以下链接下载原预训练模型和onnx模型文件，分别放在/weights和/models 目录下：
+到以下链接下载onnx模型文件，放在models 目录下：
 (https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/model.zip) 
 ```
 ### 6.2 onnx转om模型
@@ -209,32 +197,17 @@ git clone https://github.com/zisianw/FaceBoxes.PyTorch.git
 ```
 . ${ASCEND_TOOLKIT_HOME}/set_env.sh
 ```
-${ASCEND_TOOLKIT_HOME}为Ascend toolkit安装路径。
+${ASCEND_TOOLKIT_HOME}为Ascend-toolkit安装目录。
 
-或者手动导入环境变量
-```
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-
-export PYTHONPATH=${install_path}/atc/python/site-packages:$PYTHONPATH
-
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:${install_path}/acllib/lib64:$LD_LIBRARY_PATH
-
-export ASCEND_OPP_PATH=${install_path}/opp
-```
-2.在models目录下，使用atc将onnx模型转换为om模型文件，加入--insert_op_conf参数使用AIPP，放到models目录下，工具使用方法可以参考CANN 5.0.2 开发辅助工具指南 (推理) 01
+2.在models目录下，使用atc将onnx模型转换为om模型文件
 ```
 atc --framework=5 --model=faceboxes-b0_bs1.onnx --output=faceboxes-b0_bs1 --input_format=NCHW --input_shape="image:1,3,1024,1024" --log=debug --soc_version=Ascend310 --insert_op_conf=../config/FaceBoxes.aippconfig
 ```
+
 ## 7 测试
 
 准备好要测试的图片，在test.py中修改好测试图片读取路径以及结果存放路径，并修改 run.sh 文件中的环境路径和项目路径以及要运行的python文件名test.py。
 
-```bash
-export MX_SDK_HOME=${CUR_PATH}/../../..
-## 注意当前目录CUR_PATH与MX_SDK_HOME环境目录的相对位置
-```
 直接运行
 
 ```bash
@@ -245,17 +218,18 @@ bash run.sh
 
 ## 8 数据集获取
 
-该模型使用[FDDB官网]的2845张验证集进行测试，图片与标签分别存放在/data/FDDB/images与/data/FDDB/img_list.txt，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
+该模型使用[FDDB官网]的2845张验证集进行测试，链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
 
 ## 9 精度验证
 
 ### 9.1 准备
-1.下载FDDB数据集注释，将注释放在data/ground_truth下面，并且在data目录下创建result以及pred_sample文件夹。链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
+1.下载FDDB图片及注释，图片与标签在解压后的FDDB目录下，需分别存放在data/FDDB/images与/data/FDDB/img_list.txt（data目录需要手动创建）。数据集注释在解压后的FDDB-folders目录下, 将注释放在data/ground_truth下面（需要手动创建），并且在data目录下创建result以及pred_sample文件夹。
+链接为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faceboxes/data.zip
 
 2.下载所需脚本box_overlaps.pyx、box_overlaps.c、setup.py，放到script目录下，下载链接为：https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/face/FaceBoxes/FDDB_Evaluation
 
 ### 9.2 验证流程
-在运行完main.py后开始进行精度验证，所需代码文件放在script目录下。首先将所依赖的python包安装好（bbox除外），bbox函数直接在终端运行python3.9 setup.py install即可。之后进入script目录，分别运行该目录下的convert.py，split.py和evaluate.py，FDDB集的精度结果在运行完evaluate.py后会打印出来。
+在运行完main.py后开始进行精度验证，所需代码文件放在script目录下。进入script目录，首先将所依赖的python包安装好（bbox除外），bbox函数直接在终端运行python3.9 setup.py install即可。之后，依次运行该目录下的convert.py，split.py和evaluate.py，FDDB集的精度结果在运行完evaluate.py后会打印出来。
 
 
 ## 10 常见问题
@@ -278,13 +252,4 @@ bash run.sh
             "next": "mxpi_dataserialize0"
         }
 ```
-### 10.2 运行main.py时出现报错ImportError
-
-#### 问题描述：
-
-运行py文件时时出现报错ImportError ：dlopen:cannot load any more object with static TLS
-
-#### 解决方案：
-
-修改导入顺序，将py文件中 "import cv2" 一行移动到 "from StreamManager import XXX" 上方。
 

@@ -38,6 +38,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 ```
 ├── models
 │   ├── coco.names                  # 标签文件，但本项目单纯调用但不使用
+│   ├── dla34.aippconfig            # 模型转换aipp配置文件，不使用
 │   ├── rtm3d.cfg      # 后处理配置文件，但本项目单纯调用但不使用
 │   └── model_best.om               # rtm3d模型om格式
 ├── pipeline

@@ -27,7 +27,6 @@ add_executable(CartoonGAN_picture main.cpp CartoonGANPicture/CartoonGANPicture.c
 target_link_libraries(CartoonGAN_picture
         glog
         mxbase
-        cpprest
         opencv_world
         boost_filesystem
         stdc++fs

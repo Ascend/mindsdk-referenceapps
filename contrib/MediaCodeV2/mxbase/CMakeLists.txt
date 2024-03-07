@@ -32,7 +32,6 @@ add_executable(mediacodecV2 mainV2.cpp MediaCodecV2.cpp)
 target_link_libraries(mediacodecV2
         glog
         mxbase
-        cpprest
         opencv_world
         pthread
         avcodec

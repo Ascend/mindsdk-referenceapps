@@ -29,6 +29,5 @@ target_link_libraries(main
         mxpidatatype
         plugintoolkit
         streammanager
-        cpprest
         mindxsdk_protobuf
 )

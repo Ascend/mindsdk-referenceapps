@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <stdatomic.h>
 #include <stdint.h>
+#include <csignal>
 
 #if HAVE_IO_H
 #include <io.h>

@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string>
+#include <fstream>
 
 namespace{
     const uint32_t YUV_BYTE_NU = 3;

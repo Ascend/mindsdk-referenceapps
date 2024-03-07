@@ -19,6 +19,7 @@
 #include "MxBase/Log/Log.h"
 #include "MxBase/MemoryHelper/MemoryHelper.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
+#include <fstream>
 
 namespace {
     const uint32_t YUV_BYTES_NU = 3;

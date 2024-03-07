@@ -27,7 +27,6 @@ add_executable(mxbaseV2_sample main.cpp)
 target_link_libraries(mxbaseV2_sample
         glog
         mxbase
-        cpprest
         opencv_world
         yolov3postprocess #! if use sdk yolov3 postprocess must ADD this lib
         )

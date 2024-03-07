@@ -37,6 +37,5 @@ target_link_libraries(sample
         glog
         mxbase
         yolov3postprocess
-        cpprest
         opencv_world
 )

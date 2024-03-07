@@ -15,6 +15,7 @@
 */
 
 #include <sstream>
+#include <fstream>
 #include <functional>
 #include "ConfigParser.h"
 

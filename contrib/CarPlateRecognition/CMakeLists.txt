@@ -34,7 +34,6 @@ add_executable(car_plate_recognition ${SRC_FILES})
 target_link_libraries(car_plate_recognition
         glog
         mxbase
-        cpprest
         opencv_world
         freetype
         )

@@ -16,6 +16,7 @@
 #include "MxBase/ErrorCode/ErrorCodes.h"
 #include "MxBase/Log/Log.h"
 #include "Yolov3Detection.h"
+#include <fstream>
 
 namespace {
     const uint32_t YUV_BYTE_NU = 3;

@@ -30,7 +30,6 @@ add_executable(edge_detection_picture main.cpp ${RCF_DETECTION} ${RCF_POSTPROCES
 target_link_libraries(edge_detection_picture
         glog
         mxbase
-        cpprest
         opencv_world
 	boost_system
 	boost_filesystem

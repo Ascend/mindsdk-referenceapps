@@ -15,6 +15,7 @@
 */
 
 #include <thread>
+#include <csignal>
 #include "MxBase/Log/Log.h"
 #include "MxBase/ConfigUtil/ConfigUtil.h"
 #include "MxStream/DataType/DataHelper.h"

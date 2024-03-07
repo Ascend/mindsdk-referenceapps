@@ -19,6 +19,7 @@
 #include "MxBase/ConfigUtil/ConfigUtil.h"
 
 #include "MultiChannelVideoReasoner/MultiChannelVideoReasoner.h"
+#include <csignal>
 
 namespace {
     // device id

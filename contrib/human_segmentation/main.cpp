@@ -20,6 +20,7 @@
 #include "MxStream/StreamManager/MxStreamManager.h"
 #include "MxBase/Tensor/TensorBase/TensorBase.h"
 #include "MxBase/PostProcessBases/SemanticSegPostProcessBase.h"
+#include <fstream>
 
 #define INPUT_MODEL_HEIGHT 512
 #define INPUT_MODEL_WIDTH 512

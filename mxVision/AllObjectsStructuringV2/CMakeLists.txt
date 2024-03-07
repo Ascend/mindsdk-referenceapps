@@ -58,7 +58,6 @@ add_executable(main main.cpp)
 target_link_libraries(main 
             glog 
             mxbase 
-            cpprest 
             yolov3postprocess 
             ResnetAttributePostProcess 
             SsdVggPostProcess 

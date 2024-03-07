@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <fstream>
 #include <dirent.h>
 #include <cstring>
 #include <unistd.h>

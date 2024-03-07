@@ -16,6 +16,7 @@
 
 #include "ResnetDetector.h"
 #include "MxBase/Tensor/TensorContext/TensorContext.h"
+#include <fstream>
 
 namespace AscendResnetDetector {
 namespace {

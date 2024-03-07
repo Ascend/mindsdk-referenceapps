@@ -40,4 +40,4 @@ link_directories(
 )
 
 add_executable(${TARGET_NAME} mainMultiThread.cpp)
-target_link_libraries(${TARGET_NAME} glog mxbase plugintoolkit mxpidatatype streammanager cpprest mindxsdk_protobuf)
+target_link_libraries(${TARGET_NAME} glog mxbase plugintoolkit mxpidatatype streammanager mindxsdk_protobuf)

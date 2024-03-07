@@ -86,4 +86,4 @@ link_directories(
 # Set the target executable file
 add_executable(main ${SOURCE_FILE})
 
-target_link_libraries(main ascendcl acl_dvpp opencv_world mxbase cpprest glog pthread -Wl,-z,relro,-z,now,-z,noexecstack -pie -s)
+target_link_libraries(main ascendcl acl_dvpp opencv_world mxbase glog pthread -Wl,-z,relro,-z,now,-z,noexecstack -pie -s)

@@ -29,7 +29,6 @@ add_executable(${TARGET} main.cpp ${CROWDCOUNT} ${CROWDCOUNT_POSTPROCESS})
 target_link_libraries(${TARGET}
         glog
         mxbase
-        cpprest
         opencv_world
         )
 install(TARGETS ${TARGET} RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/)

@@ -31,6 +31,5 @@ add_executable(mxBase_sample main.cpp ${YOLOV3_DETECTION} ${YOLOV3_POSTPROCESS})
 target_link_libraries(mxBase_sample
         glog
         mxbase
-        cpprest
         opencv_world
         )

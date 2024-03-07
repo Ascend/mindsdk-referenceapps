@@ -19,6 +19,7 @@
 #include "MxBase/Log/Log.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
 #include "MxTools/Proto/MxpiOSDType.pb.h"
+#include <fstream>
 
 namespace {
 const int SLEEP_TIME = 2;

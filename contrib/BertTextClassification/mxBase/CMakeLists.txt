@@ -30,6 +30,5 @@ add_executable(mxBase_text_classification main.cpp ${BertClassification} ${Test}
 target_link_libraries(mxBase_text_classification
         glog
         mxbase
-        cpprest
         opencv_world
         )

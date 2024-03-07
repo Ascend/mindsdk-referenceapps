@@ -46,7 +46,6 @@ target_link_libraries(${OUTPUT_NAME}
         swresample
         glog
         mxbase
-        cpprest
         opencv_world
         pthread m
         yolov3postprocess

@@ -21,7 +21,8 @@
 #include <glob.h>
 #include <string>
 #include <sys/stat.h>
-#include<set>
+#include <set>
+#include <fstream>
 namespace {
 const uint32_t YUV_BYTES_NU = 3;
 const uint32_t YUV_BYTES_DE = 2;

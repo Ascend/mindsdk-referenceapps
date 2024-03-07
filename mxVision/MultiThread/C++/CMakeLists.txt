@@ -27,4 +27,4 @@ link_directories(${MX_SDK_HOME}/opensource/lib)
 link_directories(/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64)
 
 add_executable(${TARGET_NAME} main.cpp)
-target_link_libraries(${TARGET_NAME} mxbase plugintoolkit mxpidatatype streammanager cpprest glog mindxsdk_protobuf opencv_world)
+target_link_libraries(${TARGET_NAME} mxbase plugintoolkit mxpidatatype streammanager glog mindxsdk_protobuf opencv_world)

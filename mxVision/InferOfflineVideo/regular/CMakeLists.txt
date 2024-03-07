@@ -28,7 +28,6 @@ target_link_libraries(${OUTPUT_NAME}
         glog
         mxbase
         streammanager
-        cpprest
         mindxsdk_protobuf
         )
 

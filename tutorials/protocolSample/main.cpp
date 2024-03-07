@@ -17,6 +17,7 @@
 #include <cstring>
 #include "MxBase/Log/Log.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
+#include <fstream>
 
 // protocol_example Does not contain running part in main()
 namespace protocol_example {

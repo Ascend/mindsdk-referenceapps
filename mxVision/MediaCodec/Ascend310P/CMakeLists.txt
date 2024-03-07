@@ -26,4 +26,4 @@ link_directories(${MX_SDK_HOME}/opensource/lib)
 link_directories(/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64)
 
 add_executable(${TARGET_NAME} main.cpp)
-target_link_libraries(${TARGET_NAME} mxbase streammanager cpprest glog pthread)
+target_link_libraries(${TARGET_NAME} mxbase streammanager glog pthread)

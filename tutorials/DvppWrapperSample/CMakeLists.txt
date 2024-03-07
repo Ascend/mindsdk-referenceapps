@@ -35,6 +35,6 @@ link_directories(
 
 add_executable(DvppWrapperSample main.cpp)
 
-target_link_libraries(DvppWrapperSample glog mxbase streammanager cpprest mindxsdk_protobuf)
+target_link_libraries(DvppWrapperSample glog mxbase streammanager mindxsdk_protobuf)
 
 install(TARGETS DvppWrapperSample DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

@@ -17,6 +17,7 @@
 #include "MxBase/Log/Log.h"
 #include "MxBase/Maths/FastMath.h"
 #include "MxBase/CV/ObjectDetection/Nms/Nms.h"
+#include <cmath>
 
 namespace {
     const uint32_t REG_MAX = 7;

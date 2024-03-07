@@ -16,6 +16,7 @@
 
 #include "MxBase/Log/Log.h"
 #include "Plugin_ViolentAction.h"
+#include <fstream>
 
 using namespace MxPlugins;
 using namespace MxTools;

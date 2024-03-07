@@ -18,6 +18,7 @@
 #include "MxBase/Log/Log.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include "VideoGestureReasoner/VideoGestureReasoner.h"
+#include <csignal>
 
 namespace {
     // device id

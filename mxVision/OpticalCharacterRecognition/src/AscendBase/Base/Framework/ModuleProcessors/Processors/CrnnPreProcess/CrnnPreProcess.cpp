@@ -1,3 +1,4 @@
+#include <cmath>
 #include "CrnnPreProcess.h"
 #include "CrnnInferProcess/CrnnInferProcess.h"
 #include "Utils.h"

@@ -16,6 +16,7 @@
 
 #include <cstring>
 #include <unistd.h>
+#include <csignal>
 #include "MxStream/StreamManager/MxStreamManager.h"
 
 namespace {

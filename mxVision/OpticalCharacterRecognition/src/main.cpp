@@ -29,6 +29,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <cmath>
 #include <experimental/filesystem>
 #include <csignal>
 #include <unistd.h>

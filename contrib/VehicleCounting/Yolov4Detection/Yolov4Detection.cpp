@@ -17,6 +17,7 @@
 #include "MxBase/Log/Log.h"
 #include "Yolov4Detection.h"
 #include <algorithm>
+#include <fstream>
 
 namespace {
     const uint32_t YUV_BYTE_NU = 3;

@@ -30,6 +30,5 @@ add_executable(mxBase_sentiment_analysis main.cpp ${SentimentAnalysis} ${Test})
 target_link_libraries(mxBase_sentiment_analysis
         glog
         mxbase
-        cpprest
         opencv_world
         )

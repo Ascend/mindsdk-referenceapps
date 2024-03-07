@@ -28,7 +28,6 @@ target_link_libraries(IOsample
         plugintoolkit
         mxpidatatype
         streammanager
-        cpprest
         mindxsdk_protobuf
         opencv_world)
 

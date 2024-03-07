@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+#include <fstream>
 #include "math.h"
 #include <opencv2/opencv.hpp>
 #include "MxBase/Log/Log.h"

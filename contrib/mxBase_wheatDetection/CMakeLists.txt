@@ -31,6 +31,5 @@ add_executable(mxBase_wheatDetection main.cpp ${YOLOV5_DETECTION} ${YOLOV5_POSTP
 target_link_libraries(mxBase_wheatDetection
         glog
         mxbase
-        cpprest
         opencv_world
         )

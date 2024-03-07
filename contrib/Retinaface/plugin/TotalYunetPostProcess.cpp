@@ -17,6 +17,7 @@
 #include "TotalYunetPostProcess.h"
 #include "MxBase/Log/Log.h"
 #include <map>
+#include <cmath>
 namespace {
     const uint32_t LEFTTOPX = 0;
     const uint32_t LEFTTOPY = 1;

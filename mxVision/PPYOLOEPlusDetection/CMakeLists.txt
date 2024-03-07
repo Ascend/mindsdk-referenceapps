@@ -24,7 +24,6 @@ add_executable(sample main.cpp)
 target_link_libraries(sample
     glog
     mxbase
-    cpprest
     opencv_world
     ppyoloepostprocess
 )

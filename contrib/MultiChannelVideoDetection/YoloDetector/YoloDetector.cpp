@@ -15,7 +15,7 @@
  */
 
 #include "YoloDetector.h"
-
+#include <fstream>
 #include "MxBase/Tensor/TensorContext/TensorContext.h"
 
 namespace AscendYoloDetector {

@@ -17,6 +17,7 @@
 #ifndef MAIN_RESNETATTRIBUTEPOSTPROCESS_H
 #define MAIN_RESNETATTRIBUTEPOSTPROCESS_H
 
+#include <fstream>
 #include "MxBase/MxBase.h"
 #include "MxBase/ErrorCode/ErrorCode.h"
 #include "MxBase/ConfigUtil/ConfigUtil.h"

@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <vector>
+#include <csignal>
 #include "MediaCodecV2.h"
 #include "MxBase/Log/Log.h"
 

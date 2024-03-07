@@ -18,6 +18,7 @@
 #include "MxBase/Log/Log.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
 #include "mxpiSampleProto.pb.h"
+#include <fstream>
 namespace {
 APP_ERROR ReadFile(const std::string& filePath, MxStream::MxstDataInput& dataBuffer)
 {

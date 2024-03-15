@@ -19,6 +19,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <thread>
+#include <sys/time.h>
 #include "MxBase/Log/Log.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
 

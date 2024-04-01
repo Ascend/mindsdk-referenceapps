@@ -7,7 +7,7 @@
 ## 运行
 
 ```python
- python gen_font_textures.py --font simsun.ttc --font_size_pixel 60 --char_table "vocabChinese.txt"
+ python gen_font_textures.py --font simsun.ttc --font_size_pixel 60 --char_table "vocab.txt"
 ```
 
 ## 输出

@@ -30,7 +30,7 @@ struct FontFile{
     std::string fontSize;
 };
 //以下关于字符管理的常量需自行配置
-static const std::string FONT_DIR_PATH = "";
+static const std::string FONT_DIR_PATH = "../vocab/";
 static const FontFile timesNewRoman = {"times", "60px"};
 static const FontFile simsun = {"simsun", "60px"};
 FontFile FONT_LIST[] = {timesNewRoman, simsun};
@@ -81,7 +81,7 @@ bool CaptionGenManager::Init()
         hsize_vec.push_back(vocabImage.cols);
         hsize_vec.push_back(1);
         std::vector<uint8_t> src(vocabImage.reshape(0, 1));
-        MxBase::Tensor vocabImageNpu(src.data(), hsize_vec, MxBase::TensorDtype::UINT8, -1);
+        MxBase::Tensor vocabImageNpu(src.data(), hsize_vec, MxBase::TensorDType::UINT8, -1);
         vocabImageNpu.ToDevice(0);
         fontInfo.vocabImage = vocabImageNpu;
         // 词典和字库图片均加载成功，则放入fontsInfo库中，供后续使用
@@ -168,7 +168,7 @@ std::vector<std::string> split(const std::string &str, const std::string &delim)
     for (uint i = 0; i < size; ++i) {
         pos = strs.find(delim, i);  // pos为分隔符第一次出现的位置，从i到pos之前的字符串是分隔出来的字符串
         if (pos < size) {  // 如果查找到，如果没有查找到分隔符，pos为string::npos
-            std::stirng s = strs.substr(i, pos - i);  // ****从i开始长度为pos-i的子字符串
+            std::string s = strs.substr(i, pos - i);  // ****从i开始长度为pos-i的子字符串
             res.push_back(s);  // 两个连续空格之间切割出的字符串为空字符串，这里没有判断s是否为空，所以最后的结果中有空字符的输出
             i = (uint) (pos + delim.size() - 1);
         }

@@ -4,8 +4,8 @@ set(CMAKE_C_COMPILER "/usr/bin/gcc")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
 add_definitions(-Dgoogle=mindxsdk_private)
-set(CMAKE_EXE_LINKER_FLAGS "-WL,--copy-dt-needed-entries")
-add_definitions(-D-GLIBCXX_USE_CXX11_ABI=0)
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--copy-dt-needed-entries")
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 include_directories(
         $ENV{MX_SDK_HOME}/include
         $ENV{MX_SDK_HOME}/opensource/include

@@ -66,7 +66,7 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
 {
     this->backgroundSize_ = bgSize;
     // 为字幕生成操作分配字幕变量
-    captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height}, (uint32_t)backgroundSize_.width, 1},
+    captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
                                   MxBase::TensorDType::UINT8, 0};
     captionCompBGR_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
                                      MxBase::TensorDType::UINT8, 0};
@@ -81,9 +81,12 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     compTextColor_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
                                      MxBase::TensorDType::UINT8, 0};
     MxBase::Tensor::TensorMalloc(compTextColor_);
-    MxBase::Tensor compTextColor_r = MxBase::Tensor{compTextColor_.GetShape(), MxBase::TensorDType::UINT8, 0};
-    MxBase::Tensor compTextColor_g = MxBase::Tensor{compTextColor_.GetShape(), MxBase::TensorDType::UINT8, 0};
-    MxBase::Tensor compTextColor_b = MxBase::Tensor{compTextColor_.GetShape(), MxBase::TensorDType::UINT8, 0};
+    MxBase::Tensor compTextColor_r = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
+    MxBase::Tensor compTextColor_g = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
+    MxBase::Tensor compTextColor_b = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
     MxBase::Tensor::TensorMalloc(compTextColor_r);
     MxBase::Tensor::TensorMalloc(compTextColor_g);
     MxBase::Tensor::TensorMalloc(compTextColor_b);
@@ -158,8 +161,8 @@ std::vector<std::pair<int, int>> CaptionGeneration::SentenceToTokensId(const std
     return sentenceTokens;
 }
 
-APP_ERR_OK CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackbord,
-                                              const std::vector<std::pari<int, int>> &sentenceTokens,
+APP_ERROR CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackboard,
+                                              const std::vector<std::pair<int, int>> &sentenceTokens,
                                               uint32_t startX, uint32_t startY,
                                               const std::vector<uint32_t> &returnChrIndex, const uint32_t startToken)
 {
@@ -180,7 +183,7 @@ APP_ERR_OK CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackbord,
         int srcHeight = CaptionGenManager::getInstance().FindHeight(font, fontSizeMap_[font]);
         MxBase::Rect RSrc(0, token.first * srcHeight, srcWidth, token.first * srcHeight +srcHeight);
         // 宽度超过的丢弃
-        if (startX + (uint32_t)srcWidth > _blackbord.GetShape()[SHAPE_WIDTH]) {
+        if (startX + (uint32_t)srcWidth > _blackboard.GetShape()[SHAPE_WIDTH]) {
             continue;
         }
         // 计算该token在caption中的区域

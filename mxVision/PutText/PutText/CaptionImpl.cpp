@@ -75,7 +75,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
     // 字幕背景生成
     coloredTensor_ = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 3},
                                     MxBase::TensorDType::UINT8, 0);
-    MxBase::Tensor color_r = MxBase::Tensor(std::vector{caption_.GetShape()[0], caption_.GetShape()[1], 1},
+    MxBase::Tensor color_r = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
                                             MxBase::TensorDType::UINT8, 0);
     MxBase::Tensor::TensorMalloc(color_r);
 
@@ -85,7 +85,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
         return APP_ERR_COMM_FAILURE;
     }
     MxBase::Tensor color_g = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDtype::UINT8, 0);
+                                            MxBase::TensorDType::UINT8, 0);
     MxBase::Tensor::TensorMalloc(color_g);
     ret = color_g.SetTensorValue((uint8_t) backgroundColor[1]);
     if (ret != APP_ERR_OK) {

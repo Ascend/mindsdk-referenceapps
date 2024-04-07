@@ -32,7 +32,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     }
     deviceId_ = deviceId;
     // 初始化CaptionGenerator
-    auto ret = captionGenerator_.init(inputFont, fontSize, inputFont2, fontSize2, deviceId);
+    ret = captionGenerator_.init(inputFont, fontSize, inputFont2, fontSize2, deviceId);
     if (ret != 0) {
         LogError << "Fail to init captionGenerator";
         return APP_ERR_COMM_FAILURE;

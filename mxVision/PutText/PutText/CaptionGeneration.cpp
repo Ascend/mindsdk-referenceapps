@@ -39,7 +39,7 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
         LogError << "Device id is out of range, current deviceId is " << deviceId << "." << GetErrorInfo(ret);
         return APP_ERR_COMM_FAILURE;
     }
-    devideId_ = deviceId;
+    deviceId_ = deviceId;
     // 校验字体在字库管理类中是否存在
     bool fontIsValid = CaptionGenManager::getInstance().isFontValid(inputFont, inputFontSize);
     if (fontIsValid != true) {
@@ -77,11 +77,11 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     this->backgroundSize_ = bgSize;
     // 为字幕生成操作分配字幕变量
     captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
-                                  MxBase::TensorDType::UINT8, devideId_};
+                                  MxBase::TensorDType::UINT8, deviceId_};
     captionCompBGR_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
-                                     MxBase::TensorDType::UINT8, devideId_};
-    captionNormalized_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, devideId_};
-    captionColored_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, devideId_};
+                                     MxBase::TensorDType::UINT8, deviceId_};
+    captionNormalized_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
+    captionColored_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(captionComp_);
     MxBase::Tensor::TensorMalloc(captionCompBGR_);
     MxBase::Tensor::TensorMalloc(captionNormalized_);
@@ -92,11 +92,11 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
                                      MxBase::TensorDType::UINT8, devideId_};
     MxBase::Tensor::TensorMalloc(compTextColor_);
     MxBase::Tensor compTextColor_r = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, devideId_};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor compTextColor_g = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, devideId_};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor compTextColor_b = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, devideId_};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(compTextColor_r);
     MxBase::Tensor::TensorMalloc(compTextColor_g);
     MxBase::Tensor::TensorMalloc(compTextColor_b);
@@ -123,7 +123,7 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     }
 
     // 初始化变量captionNormalizer_, 该变量用于作为归一化操作中的除数，值为255
-    captionNormalizer_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, devideId_};
+    captionNormalizer_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(captionNormalizer_);
     ret = compTextColor_b.SetTensorValue((uint8_t)255);
     if (ret != APP_ERR_OK) {

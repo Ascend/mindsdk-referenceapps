@@ -57,9 +57,9 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
     fontSizeMap_[inputFont] = inputFontSize;
     fontSizeMap_[inputFont2] = inputFontSize2;
     vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone();
-    vocabImage_.ToDevice(devideId_);
+    vocabImage_.ToDevice(deviceId_);
     vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize2).Clone();
-    vocabImage2_.ToDevice(devideId_);
+    vocabImage2_.ToDevice(deviceId_);
     startX_ = 0;
     startY_ = 0;
     // 选择中文字体和英文字体中最高的高度作为字体最终的高度

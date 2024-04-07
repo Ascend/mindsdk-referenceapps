@@ -89,7 +89,7 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
 
     // 初始化字体颜色变量compTextColor_, 改变了用于为字幕上色
     compTextColor_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
-                                     MxBase::TensorDType::UINT8, devideId_};
+                                     MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(compTextColor_);
     MxBase::Tensor compTextColor_r = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
                                                     (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};

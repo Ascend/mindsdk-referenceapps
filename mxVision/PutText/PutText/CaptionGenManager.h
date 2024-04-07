@@ -42,7 +42,6 @@ public:
     bool isFontValid(const std::string &font, const std::string &fontSize);
     static CaptionGenManager& getInstance()
     {
-        static CaptionGenManager instance;
         return instance;
     }
     bool Init();

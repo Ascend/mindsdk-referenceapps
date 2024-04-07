@@ -34,6 +34,8 @@ struct FontInfo {
 
 class CaptionGenManager {
 public:
+    static CaptionGenManager instance;
+public:
     int FindIndex(const std::string &font, const std::string &fontSize, const std::string &item);
     int FindWidth(const std::string &font, const std::string &fontSize, const int index);
     MxBase::Tensor getVocabImage(const std::string &font, const std::string &fontSize);
@@ -45,10 +47,10 @@ public:
     }
     bool Init();
     int FindHeight(const std::string &font, const std::string &fontSize);
+    virtual ~CaptionGenManager() {};
 
 private:
     CaptionGenManager();
-    virtual ~CaptionGenManager() {}
     std::unordered_map<std::string, FontInfo> fontsInfo_;
     static bool _loadVocab(const std::string &vocabFile, FontInfo &singleFont);
     static bool _loadMapBin(const std::string &filePath, cv::Mat &map, FontInfo &singleFont, int imageCols);

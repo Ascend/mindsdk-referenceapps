@@ -17,15 +17,22 @@
 #include "CaptionImpl.h"
 #include "MxBase/MxBase.h"
 #include "MxBase/Log/Log.h"
+#include "MxBase/DeviceManager/DeviceManager.h"
 
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
 
 APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fontSize,
-                            const std::string &inputFont2, const std::string &fontSize2) {
+                            const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId) {
+    APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
+    if (ret != APP_ERR_OK) {
+        LogError << "Device id is out of range, current deviceId is " << deviceId << "." << GetErrorInfo(ret);
+        return APP_ERR_COMM_FAILURE;
+    }
+    deviceId_ = deviceId;
     // 初始化CaptionGenerator
-    auto ret = captionGenerator_.init(inputFont, fontSize, inputFont2, fontSize2);
+    auto ret = captionGenerator_.init(inputFont, fontSize, inputFont2, fontSize2, deviceId);
     if (ret != 0) {
         LogError << "Fail to init captionGenerator";
         return APP_ERR_COMM_FAILURE;
@@ -65,7 +72,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
 
     // 分配保存字幕结果的Tensor
     caption_ = MxBase::Tensor(std::vector<uint32_t>{uint32_t(dstBackgroundHeight_), uint32_t(dstBackgroundWidth_), 3},
-                              MxBase::TensorDType::UINT8, 0);
+                              MxBase::TensorDType::UINT8, deviceId_);
     ret = MxBase::Tensor::TensorMalloc(caption_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to malloc caption tensor.";
@@ -74,9 +81,9 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
 
     // 字幕背景生成
     coloredTensor_ = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 3},
-                                    MxBase::TensorDType::UINT8, 0);
+                                    MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor color_r = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, 0);
+                                            MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_r);
 
     ret = color_r.SetTensorValue((uint8_t) backgroundColor[2]);
@@ -85,7 +92,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
         return APP_ERR_COMM_FAILURE;
     }
     MxBase::Tensor color_g = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, 0);
+                                            MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_g);
     ret = color_g.SetTensorValue((uint8_t) backgroundColor[1]);
     if (ret != APP_ERR_OK) {
@@ -93,7 +100,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
         return APP_ERR_COMM_FAILURE;
     }
     MxBase::Tensor color_b = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, 0);
+                                            MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_b);
     ret = color_b.SetTensorValue((uint8_t) backgroundColor[0]);
     if (ret != APP_ERR_OK) {
@@ -110,6 +117,10 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
 }
 
 APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
+    if (img.GetDeviceId() != deviceId_) {
+        LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
     // Step0: 校验字幕贴字位置
     int rightBottomX = org.x + dstBackgroundWidth_;
     int rightBottomY = org.y + dstBackgroundHeight_;

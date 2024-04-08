@@ -7,13 +7,13 @@
 APP_ERROR DrawCaption(MxBase::Tensor img) {
     //Step1: 初始化CaptionImpl的字体资源
     CaptionImpl captionImpl1;
-    APP_ERROR ret = captionImpl1.init("simsun", "60px", "times", "60px");
+    APP_ERROR ret = captionImpl1.init("simsun", "60px", "times", "60px", 0);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionImpl1.";
         return APP_ERR_COMM_FAILURE;
     }
     CaptionImpl captionImpl2;
-    ret = captionImpl2.init("simsun", "60px", "times", "60px");
+    ret = captionImpl2.init("simsun", "60px", "times", "60px", 0);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionImpl2.";
         return APP_ERR_COMM_FAILURE;

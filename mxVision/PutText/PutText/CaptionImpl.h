@@ -28,7 +28,7 @@ public:
     * @return 初始化是否成功完成
     * */
     APP_ERROR init(const std::string &inputFont, const std::string &fontSize,
-                   const std::string &inputFont2, const std::string &fontSize2);
+                   const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId);
 
     /**
     * 初始化字体颜色和文本背景宽度
@@ -72,6 +72,7 @@ private:
     double fontScale_;
     int dstBackgroundWidth_;
     int dstBackgroundHeight_;
+    int32_t deviceId_;
 };
 
 #endif

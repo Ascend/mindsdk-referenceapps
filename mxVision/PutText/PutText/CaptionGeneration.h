@@ -35,7 +35,7 @@ public:
      * @return 初始化是否成功完成
      * */
     APP_ERROR init(const std::string &inputFont, const std::string &inputFontSize,
-                   const std::string &inputFont2, const std::string &inputFontSize2);
+                   const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId);
 
     /**
      * 初始化矩形框
@@ -83,6 +83,7 @@ private:
     MxBase::Tensor captionNormalizer_; // 值为255的Tensor，用于归一化操作中作为除数
     MxBase::Tensor captionNormalized_; // 3. 归一化到[0, 1]区间的三通道字幕
     MxBase::Tensor captionColored_; // 4. 上色后的字幕
+    int32_t deviceId_;
 
     APP_ERROR getCaptionImage(MxBase::Tensor &_blackboard, const std::vector<std::pair<int, int>> &sentenceTokens,
                               uint32_t startX, uint32_t startY, const std::vector<uint32_t> &returnChrIndex = {},

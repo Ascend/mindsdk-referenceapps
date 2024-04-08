@@ -19,6 +19,8 @@
 #include "CaptionGenManager.h"
 #include <ctime>
 #include <opencv2/imgcodecs.hpp>
+#include "MxBase/DeviceManager/DeviceManager.h"
+
 using namespace std;
 
 const std::string UNK_SYMBOL = "*";
@@ -30,8 +32,14 @@ enum tokenType {
 };
 
 APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::string &inputFontSize,
-                                  const std::string &inputFont2, const std::string &inputFontSize2)
+                                  const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId)
 {
+    APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
+    if (ret != APP_ERR_OK) {
+        LogError << "Device id is out of range, current deviceId is " << deviceId << "." << GetErrorInfo(ret);
+        return APP_ERR_COMM_FAILURE;
+    }
+    deviceId_ = deviceId;
     // 校验字体在字库管理类中是否存在
     bool fontIsValid = CaptionGenManager::getInstance().isFontValid(inputFont, inputFontSize);
     if (fontIsValid != true) {
@@ -48,8 +56,10 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
     font2_ = inputFont2;
     fontSizeMap_[inputFont] = inputFontSize;
     fontSizeMap_[inputFont2] = inputFontSize2;
-    vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize);
-    vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize2);
+    vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone();
+    vocabImage_.ToDevice(deviceId_);
+    vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize2).Clone();
+    vocabImage2_.ToDevice(deviceId_);
     startX_ = 0;
     startY_ = 0;
     // 选择中文字体和英文字体中最高的高度作为字体最终的高度
@@ -67,11 +77,11 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     this->backgroundSize_ = bgSize;
     // 为字幕生成操作分配字幕变量
     captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
-                                  MxBase::TensorDType::UINT8, 0};
+                                  MxBase::TensorDType::UINT8, deviceId_};
     captionCompBGR_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
-                                     MxBase::TensorDType::UINT8, 0};
-    captionNormalized_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, 0};
-    captionColored_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, 0};
+                                     MxBase::TensorDType::UINT8, deviceId_};
+    captionNormalized_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
+    captionColored_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(captionComp_);
     MxBase::Tensor::TensorMalloc(captionCompBGR_);
     MxBase::Tensor::TensorMalloc(captionNormalized_);
@@ -79,14 +89,14 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
 
     // 初始化字体颜色变量compTextColor_, 改变了用于为字幕上色
     compTextColor_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
-                                     MxBase::TensorDType::UINT8, 0};
+                                     MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(compTextColor_);
     MxBase::Tensor compTextColor_r = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor compTextColor_g = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor compTextColor_b = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height,
-                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, 0};
+                                                    (uint32_t)backgroundSize_.width, 1}, MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(compTextColor_r);
     MxBase::Tensor::TensorMalloc(compTextColor_g);
     MxBase::Tensor::TensorMalloc(compTextColor_b);
@@ -113,13 +123,15 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     }
 
     // 初始化变量captionNormalizer_, 该变量用于作为归一化操作中的除数，值为255
-    captionNormalizer_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, 0};
+    captionNormalizer_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(captionNormalizer_);
     ret = compTextColor_b.SetTensorValue((uint8_t)255);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of captionNormalizer_.";
         return APP_ERR_COMM_FAILURE;
     }
+    // init Devide
+    MxBase::Divide(captionCompBGR_, captionNormalizer_, captionNormalized_);
     return APP_ERR_OK;
 }
 

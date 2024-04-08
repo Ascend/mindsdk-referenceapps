@@ -73,6 +73,9 @@ private:
     int dstBackgroundWidth_;
     int dstBackgroundHeight_;
     int32_t deviceId_;
+    std::string formerText1_;
+    std::string formerText2_;
+    MxBase::Tensor mask_;
 };
 
 #endif

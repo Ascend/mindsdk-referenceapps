@@ -136,26 +136,28 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
     }
 
     // Step1: 字幕生成
-    MxBase::Tensor mask;
     bool isResize = true;
     if (fontScale_ == 1) {
         isResize = false;
     }
-    APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask, isResize);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to generate caption.";
-        return APP_ERR_COMM_FAILURE;
+    if (text1 != formerText1_ || text2 != formerText2_) {
+        mask_ = MxBase::Tensor();
+        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to generate caption.";
+            return APP_ERR_COMM_FAILURE;
+        }
     }
 
     // step2: 图片+字幕+字幕背景叠加
     MxBase::Rect dstRect(org.x, org.y, org.x + dstBackgroundWidth_, org.y + dstBackgroundHeight_);
     MxBase::Rect srcRect(0, 0, dstBackgroundWidth_, dstBackgroundHeight_);
-    ret = img.SetReferRect(dstRect);
+    APP_ERROR ret = img.SetReferRect(dstRect);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set referRect for image.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = mask.SetReferRect(srcRect);
+    ret = mask_.SetReferRect(srcRect);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set referRect for mask.";
         return APP_ERR_COMM_FAILURE;
@@ -170,11 +172,13 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "Fail to set referRect for caption.";
         return APP_ERR_COMM_FAILURE;
     }
-    int blendRet = MxBase::BlendImageCaption(img, caption_, mask, coloredTensor_, opacity);
+    int blendRet = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
     if (blendRet != APP_ERR_OK) {
         LogError << "Fail to conduct blendImageCaption operator.";
         return APP_ERR_COMM_FAILURE;
     }
+    formerText1_ = text1;
+    formerText2_ = text2;
     return APP_ERR_OK;
 }
 

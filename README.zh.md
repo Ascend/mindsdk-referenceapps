@@ -180,6 +180,10 @@ mxSdkReferenceApps是基于MindX SDK开发的参考样例。
 
 欢迎参与贡献。更多详情，请参阅我们的[CONTRIBUTING.md](./contrib/CONTRIBUTING.md)
 
+## 免责声明
+
+参考设计不属于商用发布产品，仅供用户参考。如需使用，需要用户自行完成产品化，并进行安全防护，华为不承担安全责任。
+
 ## 版权说明
 
 请参阅 [License.md](License.md)

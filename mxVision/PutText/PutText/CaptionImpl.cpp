@@ -22,6 +22,7 @@
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
+const int EXTRA_MARGIN_SIZE = 64;
 
 APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fontSize,
                             const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId) {
@@ -40,9 +41,9 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     int font1Height = CaptionGenManager::getInstance().FindHeight(inputFont, fontSize);
     int font2Height = CaptionGenManager::getInstance().FindHeight(inputFont2, fontSize2);
     if (font1Height < font2Height) {
-        height_ = font2Height * 2;
+        height_ = font2Height;
     } else {
-        height_ = font1Height * 2;
+        height_ = font1Height;
     }
     font_ = inputFont;
     font2_ = inputFont2;
@@ -52,18 +53,18 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
 }
 
 APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgroundColor, double fontScale, int width) {
-    if (width < 64) {
+    if (width < 20) {
         LogError << "The width of backgroundSize or the height of backgroundSize should be >= 64.";
     }
     width_ = width;
     textColor_ = textColor;
     backgroundColor_ = backgroundColor;
     fontScale_ = fontScale;
-    dstBackgroundWidth_ = int(fontScale * width_);
-    dstBackgroundHeight_ = int(fontScale * height_);
+    dstBackgroundWidth_ = int(fontScale * (width_ + EXTRA_MARGIN_SIZE));
+    dstBackgroundHeight_ = int(fontScale * (height_ * 2 + EXTRA_MARGIN_SIZE));
 
     // 初始化captionGenerator
-    cv::Size backgroundSize(width, height_);
+    cv::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * 2 + EXTRA_MARGIN_SIZE);
     APP_ERROR ret = captionGenerator_.initRectAndTextColor(backgroundSize, textColor);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionGenerator";
@@ -116,42 +117,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
     return APP_ERR_OK;
 }
 
-APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
-    if (img.GetDeviceId() != deviceId_) {
-        LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
-        return APP_ERR_COMM_FAILURE;
-    }
-    // Step0: 校验字幕贴字位置
-    int rightBottomX = org.x + dstBackgroundWidth_;
-    int rightBottomY = org.y + dstBackgroundHeight_;
-    if (rightBottomY > img.GetShape()[0]) {
-        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
-                << img.GetShape()[0] << ". The text is automatically putted in the margin.";
-        org.y = img.GetShape()[0] - dstBackgroundHeight_;
-    }
-    if (rightBottomX > img.GetShape()[1]) {
-        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
-                << img.GetShape()[1] << ". The text is automatically putted in the margin.";
-        org.x = img.GetShape()[1] - dstBackgroundWidth_;
-    }
-
-    // Step1: 字幕生成
-    bool isResize = true;
-    if (fontScale_ == 1) {
-        isResize = false;
-    }
-    if (text1 != formerText1_ || text2 != formerText2_) {
-        mask_ = MxBase::Tensor();
-        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize);
-        if (ret != APP_ERR_OK) {
-            LogError << "Fail to generate caption.";
-            return APP_ERR_COMM_FAILURE;
-        }
-    }
-
-    // step2: 图片+字幕+字幕背景叠加
-    MxBase::Rect dstRect(org.x, org.y, org.x + dstBackgroundWidth_, org.y + dstBackgroundHeight_);
-    MxBase::Rect srcRect(0, 0, dstBackgroundWidth_, dstBackgroundHeight_);
+APP_ERROR CaptionImpl::setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect srcRect, MxBase::Rect dstRect) {
     APP_ERROR ret = img.SetReferRect(dstRect);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set referRect for image.";
@@ -172,13 +138,85 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "Fail to set referRect for caption.";
         return APP_ERR_COMM_FAILURE;
     }
-    int blendRet = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
-    if (blendRet != APP_ERR_OK) {
-        LogError << "Fail to conduct blendImageCaption operator.";
+    return APP_ERR_OK;
+}
+APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point &org) {
+    if (img.GetDeviceId() != deviceId_) {
+        LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
         return APP_ERR_COMM_FAILURE;
     }
-    formerText1_ = text1;
-    formerText2_ = text2;
+    // Step0: 校验字幕贴字位置
+    int roiLength1 = getLength(text1) * fontScale_;
+    int roiLength2 = getLength(text2) * fontScale_;
+    if (roiLength1 > dstBackgroundWidth_ || roiLength2 > dstBackgroundWidth_) {
+        LogError << "The text length exceeds the maximum length of initialized temp tensor. Please initialize again.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    int maxLength = (roiLength1 > roiLength2) ? roiLength1 : roiLength2;
+    if (maxLength > img.GetShape()[1]) {
+        LogError << "The text length exceeds the maximum length of image.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    int rightBottomX = org.x + maxLength;
+    int rightBottomY = org.y + dstBackgroundHeight_;
+    if (rightBottomY > img.GetShape()[0]) {
+        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
+                << img.GetShape()[0] << ". The text is automatically putted in the margin.";
+        org.y = img.GetShape()[0] - dstBackgroundHeight_;
+    }
+    if (rightBottomX > img.GetShape()[1]) {
+        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
+                << img.GetShape()[1] << ". The text is automatically putted in the margin.";
+        org.x = img.GetShape()[1] - maxLength;
+    }
+    return APP_ERR_OK;
+}
+APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
+    if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
+        LogError << "The requirements of putText are not met.";
+        return APP_ERR_COMM_FAILURE;
+    }
+
+    // Step1: 字幕生成
+    bool isResize = true;
+    if (fontScale_ == 1) {
+        isResize = false;
+    }
+    if (text1 != formerText1_ || text2 != formerText2_) {
+        mask_ = MxBase::Tensor();
+        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to generate caption for putText function.";
+            return APP_ERR_COMM_FAILURE;
+        }
+    }
+    // step2: 图片+字幕+字幕背景叠加
+    int roiHeight = height_ * fontScale_;
+    if (text1 != "") {
+        int roiLength = getLength(text1) * fontScale_;
+        MxBase::Rect dstRect(org.x, org.y, org.x + roiLength, org.y + roiHeight);
+        MxBase::Rect srcRect(0, 0, roiLength, roiHeight);
+        setTensorsReferRect(img, srcRect, dstRect);
+        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to conduct blendImageCaption operator.";
+            return APP_ERR_COMM_FAILURE;
+        }
+        formerText1_ = text1;
+    }
+
+    if (text2 != "") {
+        int roiLength = getLength(text2) * fontScale_;
+        MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * 2);
+        MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * 2);
+        setTensorsReferRect(img, srcRect, dstRect);
+        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to conduct blendImageCaption operator.";
+            return APP_ERR_COMM_FAILURE;
+        }
+        formerText2_ = text2;
+    }
     return APP_ERR_OK;
 }
 

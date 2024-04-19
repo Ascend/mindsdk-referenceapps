@@ -74,7 +74,7 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
 
 APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorCompleted)
 {
-    this->backgroundSize_ = bgSize;
+    this->backgroundSize_ = cv::(bgSize.width, bgSize.height);
     // 为字幕生成操作分配字幕变量
     captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
                                   MxBase::TensorDType::UINT8, deviceId_};
@@ -215,7 +215,11 @@ APP_ERROR CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackboard,
         } else {
             word = MxBase::Tensor(vocabImage2_, RSrcAll[i]);
         }
-        subRegion.Clone(word);
+        auto ret = subRegion.Clone(word);
+        if (ret != APP_ERR_OK){
+            LogError << "Fail to clone the word caption form vocab image.";
+            return APP_ERR_COMM_FAILURE;
+        }
     }
     return APP_ERR_OK;
 }

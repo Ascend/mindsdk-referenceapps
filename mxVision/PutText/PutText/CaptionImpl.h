@@ -59,6 +59,9 @@ public:
     int getLength(const std::string text);
 
 private:
+    APP_ERROR checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point &org);
+
+private:
     CaptionGeneration captionGenerator_;
     MxBase::Tensor coloredTensor_;
     MxBase::Tensor caption_;
@@ -76,6 +79,8 @@ private:
     std::string formerText1_;
     std::string formerText2_;
     MxBase::Tensor mask_;
+    std::string formerText1 = "";
+    std::string formerText2 = "";
 };
 
 #endif

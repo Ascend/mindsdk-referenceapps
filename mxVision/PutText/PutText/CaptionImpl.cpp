@@ -23,8 +23,6 @@ enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
 
-const int LINE_NUMBER = 2;
-
 APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fontSize,
                             const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId) {
     APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
@@ -56,6 +54,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
 APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgroundColor, double fontScale, int width) {
     const int EXTRA_MARGIN_SIZE = 64;
     const int WIDTH_MIN_VALUE = 20;
+    const int LINE_NUMBER = 2;
     if (width < WIDTH_MIN_VALUE) {
         LogError << "The width of backgroundSize or the height of backgroundSize should be >= 64.";
     }
@@ -175,6 +174,7 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
     return APP_ERR_OK;
 }
 APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
+    const int LINE_NUMBER = 2;
     if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
         LogError << "The requirements of putText are not met.";
         return APP_ERR_COMM_FAILURE;

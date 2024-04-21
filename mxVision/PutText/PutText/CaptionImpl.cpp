@@ -22,7 +22,8 @@
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
-const int EXTRA_MARGIN_SIZE = 64;
+
+const int LINE_NUMBER = 2;
 
 APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fontSize,
                             const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId) {
@@ -53,7 +54,9 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
 }
 
 APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgroundColor, double fontScale, int width) {
-    if (width < 20) {
+    const int EXTRA_MARGIN_SIZE = 64;
+    const int WIDTH_MIN_VALUE = 20;
+    if (width < WIDTH_MIN_VALUE) {
         LogError << "The width of backgroundSize or the height of backgroundSize should be >= 64.";
     }
     width_ = width;
@@ -61,10 +64,10 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
     backgroundColor_ = backgroundColor;
     fontScale_ = fontScale;
     dstBackgroundWidth_ = int(fontScale * (width_ + EXTRA_MARGIN_SIZE));
-    dstBackgroundHeight_ = int(fontScale * (height_ * 2 + EXTRA_MARGIN_SIZE));
+    dstBackgroundHeight_ = int(fontScale * (height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE));
 
     // 初始化captionGenerator
-    cv::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * 2 + EXTRA_MARGIN_SIZE);
+    cv::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE);
     APP_ERROR ret = captionGenerator_.initRectAndTextColor(backgroundSize, textColor);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionGenerator";
@@ -207,8 +210,8 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
 
     if (text2 != "") {
         int roiLength = getLength(text2) * fontScale_;
-        MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * 2);
-        MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * 2);
+        MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * LINE_NUMBER);
+        MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * LINE_NUMBER);
         setTensorsReferRect(img, srcRect, dstRect);
         APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
         if (ret != APP_ERR_OK) {

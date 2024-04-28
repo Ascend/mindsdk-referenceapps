@@ -49,7 +49,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     fontSizeMap_[inputFont] = fontSize;
     fontSizeMap_[inputFont2] = fontSize2;
     ascendStream_ = MxBase::AscendStream(deviceId);
-    ascendStream_.CreatAscendStream();
+    ascendStream_.CreateAscendStream();
     return APP_ERR_OK;
 }
 

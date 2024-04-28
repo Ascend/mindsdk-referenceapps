@@ -86,8 +86,8 @@ private:
     int32_t deviceId_;
 
     APP_ERROR getCaptionImage(MxBase::Tensor &_blackboard, const std::vector<std::pair<int, int>> &sentenceTokens,
-                              uint32_t startX, uint32_t startY, const std::vector<uint32_t> &returnChrIndex = {},
-                              uint32_t startToken = 0, MxBase::AscendStream &stream);
+                              uint32_t startX, uint32_t startY, MxBase::AscendStream &stream,
+                              const std::vector<uint32_t> &returnChrIndex = {}, uint32_t startToken = 0);
 };
 
 #endif

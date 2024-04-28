@@ -177,7 +177,7 @@ std::vector<std::pair<int, int>> CaptionGeneration::SentenceToTokensId(const std
 APP_ERROR CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackboard,
                                               const std::vector<std::pair<int, int>> &sentenceTokens,
                                               uint32_t startX, uint32_t startY, MxBase::AscendStream &stream,
-                                              const std::vector<uint32_t> &returnChrIndex, const uint32_t startToken,)
+                                              const std::vector<uint32_t> &returnChrIndex, const uint32_t startToken)
 {
     if (startToken >= sentenceTokens.size()) { return APP_ERR_OK; }
     std::vector<MxBase::Rect> RSrcAll;

@@ -36,7 +36,7 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
 {
     APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
     if (ret != APP_ERR_OK) {
-        LogError << "Device id is out of range, current deviceId is " << deviceId << "." << GetErrorInfo(ret);
+        LogError << "Device id is out of range, current deviceId is " << deviceId << ".";
         return APP_ERR_COMM_FAILURE;
     }
     deviceId_ = deviceId;
@@ -72,7 +72,8 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
     return APP_ERR_OK;
 }
 
-APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorCompleted)
+APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorCompleted,
+                                                  MxBase::AscendStream &stream)
 {
     this->backgroundSize_ = cv::Size(bgSize.width, bgSize.height);
     // 为字幕生成操作分配字幕变量
@@ -100,23 +101,23 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     MxBase::Tensor::TensorMalloc(compTextColor_r);
     MxBase::Tensor::TensorMalloc(compTextColor_g);
     MxBase::Tensor::TensorMalloc(compTextColor_b);
-    APP_ERROR ret = compTextColor_r.SetTensorValue((uint8_t)textColorCompleted[2]);
+    APP_ERROR ret = compTextColor_r.SetTensorValue((uint8_t)textColorCompleted[2], stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of red color for text.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = compTextColor_g.SetTensorValue((uint8_t)textColorCompleted[1]);
+    ret = compTextColor_g.SetTensorValue((uint8_t)textColorCompleted[1], stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of green color for text.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = compTextColor_b.SetTensorValue((uint8_t)textColorCompleted[0]);
+    ret = compTextColor_b.SetTensorValue((uint8_t)textColorCompleted[0], stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of blue color for text.";
         return APP_ERR_COMM_FAILURE;
     }
     std::vector<MxBase::Tensor> compTextColorVec{compTextColor_r, compTextColor_g, compTextColor_b};
-    ret = MxBase::Merge(compTextColorVec, compTextColor_);
+    ret = MxBase::Merge(compTextColorVec, compTextColor_, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to merge RGB color.";
         return APP_ERR_COMM_FAILURE;
@@ -125,13 +126,13 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(cv::Size bgSize, cv::Scalar te
     // 初始化变量captionNormalizer_, 该变量用于作为归一化操作中的除数，值为255
     captionNormalizer_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
     MxBase::Tensor::TensorMalloc(captionNormalizer_);
-    ret = compTextColor_b.SetTensorValue((uint8_t)255);
+    ret = compTextColor_b.SetTensorValue((uint8_t)255, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of captionNormalizer_.";
         return APP_ERR_COMM_FAILURE;
     }
     // init Devide
-    MxBase::Divide(captionCompBGR_, captionNormalizer_, captionNormalized_);
+    MxBase::Divide(captionCompBGR_, captionNormalizer_, captionNormalized_, stream);
     return APP_ERR_OK;
 }
 
@@ -176,7 +177,8 @@ std::vector<std::pair<int, int>> CaptionGeneration::SentenceToTokensId(const std
 APP_ERROR CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackboard,
                                               const std::vector<std::pair<int, int>> &sentenceTokens,
                                               uint32_t startX, uint32_t startY,
-                                              const std::vector<uint32_t> &returnChrIndex, const uint32_t startToken)
+                                              const std::vector<uint32_t> &returnChrIndex, const uint32_t startToken,
+                                              MxBase::AscendStream &stream)
 {
     if (startToken >= sentenceTokens.size()) { return APP_ERR_OK; }
     std::vector<MxBase::Rect> RSrcAll;
@@ -215,7 +217,7 @@ APP_ERROR CaptionGeneration::getCaptionImage(MxBase::Tensor &_blackboard,
         } else {
             word = MxBase::Tensor(vocabImage2_, RSrcAll[i]);
         }
-        auto ret = subRegion.Clone(word);
+        auto ret = subRegion.Clone(word, stream);
         if (ret != APP_ERR_OK){
             LogError << "Fail to clone the word caption form vocab image.";
             return APP_ERR_COMM_FAILURE;
@@ -236,19 +238,19 @@ APP_ERROR CaptionGeneration::captionGen(MxBase::Tensor& caption, MxBase::Tensor&
     std::vector<std::pair<int, int>> tokens2 = SentenceToTokensId(sentence2, compChrNum);
 
     // Step2: 得到字幕原始图片
-    APP_ERROR ret = captionComp_.SetTensorValue((uint8_t)0);
+    APP_ERROR ret = captionComp_.SetTensorValue((uint8_t)0, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of captionComp_ tensor.";
         return APP_ERR_COMM_FAILURE;
     }
     startX_ = 0;
     startY_ = 0;
-    ret = getCaptionImage(captionComp_, tokens1, 0, 0);
+    ret = getCaptionImage(captionComp_, tokens1, 0, 0, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to get the first line of caption.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = getCaptionImage(captionComp_, tokens2, 0, wordHeight_);
+    ret = getCaptionImage(captionComp_, tokens2, 0, wordHeight_, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to get the second line of caption.";
         return APP_ERR_COMM_FAILURE;
@@ -290,6 +292,5 @@ APP_ERROR CaptionGeneration::captionGen(MxBase::Tensor& caption, MxBase::Tensor&
         LogError << "Fail to resize the mask.";
         return APP_ERR_COMM_FAILURE;
     }
-    stream.Synchronize();
     return APP_ERR_OK;
 }

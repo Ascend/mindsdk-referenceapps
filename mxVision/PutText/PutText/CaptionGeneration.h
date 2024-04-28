@@ -43,7 +43,7 @@ public:
      * @param textColorComplete: 字幕颜色
      * @return 初始化是否成功完成
      * */
-    APP_ERROR initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorComplete);
+    APP_ERROR initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorComplete, MxBase::AscendStream &stream);
 
      /**
      * 字幕合成接口
@@ -87,7 +87,7 @@ private:
 
     APP_ERROR getCaptionImage(MxBase::Tensor &_blackboard, const std::vector<std::pair<int, int>> &sentenceTokens,
                               uint32_t startX, uint32_t startY, const std::vector<uint32_t> &returnChrIndex = {},
-                              uint32_t startToken = 0);
+                              uint32_t startToken = 0, MxBase::AscendStream &stream);
 };
 
 #endif

@@ -27,7 +27,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
                             const std::string &inputFont2, const std::string &fontSize2, int32_t deviceId) {
     APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
     if (ret != APP_ERR_OK) {
-        LogError << "Device id is out of range, current deviceId is " << deviceId << "." << GetErrorInfo(ret);
+        LogError << "Device id is out of range, current deviceId is " << deviceId << ".";
         return APP_ERR_COMM_FAILURE;
     }
     deviceId_ = deviceId;
@@ -48,6 +48,8 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     font2_ = inputFont2;
     fontSizeMap_[inputFont] = fontSize;
     fontSizeMap_[inputFont2] = fontSize2;
+    ascendStream_ = MxBase::AscendStream(deviceId);
+    ascendStream_.CreatAscendStream();
     return APP_ERR_OK;
 }
 
@@ -67,7 +69,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
 
     // 初始化captionGenerator
     cv::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE);
-    APP_ERROR ret = captionGenerator_.initRectAndTextColor(backgroundSize, textColor);
+    APP_ERROR ret = captionGenerator_.initRectAndTextColor(backgroundSize, textColor, ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionGenerator";
         return APP_ERR_COMM_FAILURE;
@@ -89,7 +91,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
                                             MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_r);
 
-    ret = color_r.SetTensorValue((uint8_t) backgroundColor[2]);
+    ret = color_r.SetTensorValue((uint8_t) backgroundColor[2], ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of red color for caption background.";
         return APP_ERR_COMM_FAILURE;
@@ -97,7 +99,7 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
     MxBase::Tensor color_g = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
                                             MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_g);
-    ret = color_g.SetTensorValue((uint8_t) backgroundColor[1]);
+    ret = color_g.SetTensorValue((uint8_t) backgroundColor[1], ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of green color for caption background.";
         return APP_ERR_COMM_FAILURE;
@@ -105,17 +107,18 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
     MxBase::Tensor color_b = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
                                             MxBase::TensorDType::UINT8, deviceId_);
     MxBase::Tensor::TensorMalloc(color_b);
-    ret = color_b.SetTensorValue((uint8_t) backgroundColor[0]);
+    ret = color_b.SetTensorValue((uint8_t) backgroundColor[0], ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set the value of blue color for caption background.";
         return APP_ERR_COMM_FAILURE;
     }
     std::vector<MxBase::Tensor> color_vec{color_r, color_g, color_b};
-    ret = MxBase::Merge(color_vec, coloredTensor_);
+    ret = MxBase::Merge(color_vec, coloredTensor_, ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to merge RGB color for caption background.";
         return APP_ERR_COMM_FAILURE;
     }
+    ascendStream_.Synchronize();
     return APP_ERR_OK;
 }
 
@@ -175,9 +178,12 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
 }
 APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
     const int LINE_NUMBER = 2;
-    if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
-        LogError << "The requirements of putText are not met.";
-        return APP_ERR_COMM_FAILURE;
+    if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
+        text1 != formerText1_ || text2 != formerText2_ || org != formerPoint_) {
+        if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
+            LogError << "The requirements of putText are not met.";
+            return APP_ERR_COMM_FAILURE;
+        }
     }
 
     // Step1: 字幕生成
@@ -187,7 +193,8 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
     }
     if (text1 != formerText1_ || text2 != formerText2_) {
         mask_ = MxBase::Tensor();
-        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize);
+        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize,
+                                                     ascendStream_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to generate caption for putText function.";
             return APP_ERR_COMM_FAILURE;
@@ -200,7 +207,7 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         MxBase::Rect dstRect(org.x, org.y, org.x + roiLength, org.y + roiHeight);
         MxBase::Rect srcRect(0, 0, roiLength, roiHeight);
         setTensorsReferRect(img, srcRect, dstRect);
-        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
+        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity, ascendStream_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
@@ -213,13 +220,17 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * LINE_NUMBER);
         MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * LINE_NUMBER);
         setTensorsReferRect(img, srcRect, dstRect);
-        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity);
+        APP_ERROR ret = MxBase::BlendImageCaption(img, caption_, mask_, coloredTensor_, opacity, ascendStream_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
         }
         formerText2_ = text2;
     }
+    ascendStream_.Synchronize();
+    formerImageHeight_ = img.GetShape()[0];
+    formerImageWidth_ = img.GetShape()[1];
+    formerPoint_ = org;
     return APP_ERR_OK;
 }
 

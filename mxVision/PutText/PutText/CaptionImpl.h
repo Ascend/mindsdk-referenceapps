@@ -83,6 +83,11 @@ private:
     MxBase::Tensor mask_;
     std::string formerText1 = "";
     std::string formerText2 = "";
+    AscendStream ascendStream_;
+    std::string formerImageHeight_;
+    uint32_t formerImageHeight_;
+    uint32_t formerImageWidth_;
+    cv::Point formerPoint_;
 };
 
 #endif

@@ -26,14 +26,15 @@ using namespace std;
 const std::string UNK_SYMBOL = "*";
 const int TWO = 2;
 const int THREE = 3;
-
+bool CaptionGeneration::isStreamInit = false;
+std::mutex CaptionGeneration::mutex_;
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
-
 APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::string &inputFontSize,
-                                  const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId)
+                                  const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId, MxBase::AscendStream &stream)
 {
+    const int device0 = 0;
     APP_ERROR ret = MxBase::DeviceManager::GetInstance()->CheckDeviceId(deviceId);
     if (ret != APP_ERR_OK) {
         LogError << "Device id is out of range, current deviceId is " << deviceId << ".";
@@ -56,9 +57,13 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
     font2_ = inputFont2;
     fontSizeMap_[inputFont] = inputFontSize;
     fontSizeMap_[inputFont2] = inputFontSize2;
-    vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone();
-    vocabImage_.ToDevice(deviceId_);
-    vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize2).Clone();
+	MxBase::DeviceContext context;
+	context.devId = device0;
+	MxBase::DeviceManager::GetInstance()->SetDevice(context);
+    vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone(CaptionGeneration::getAscendStream());
+    vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize2).Clone(CaptionGeneration::getAscendStream());
+	CaptionGeneration::getAscendStream().Synchronize();
+	vocabImage_.ToDevice(deviceId_);
     vocabImage2_.ToDevice(deviceId_);
     startX_ = 0;
     startY_ = 0;
@@ -274,9 +279,8 @@ APP_ERROR CaptionGeneration::captionGen(MxBase::Tensor& caption, MxBase::Tensor&
     }
     // Step4: 调整字体大小
     if (isResize == false) {
-        stream.Synchronize();
-        mask = captionComp_.Clone();
-        caption = captionColored_.Clone();
+        mask = captionComp_.Clone(stream);
+        caption = captionColored_.Clone(stream);
         return APP_ERR_OK;
     }
     ret = MxBase::Resize(captionColored_, caption, MxBase::Size{static_cast<std::uint32_t>(caption.GetShape()[1]),

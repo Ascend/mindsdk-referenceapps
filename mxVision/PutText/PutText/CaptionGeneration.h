@@ -35,7 +35,7 @@ public:
      * @return 初始化是否成功完成
      * */
     APP_ERROR init(const std::string &inputFont, const std::string &inputFontSize,
-                   const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId);
+                   const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId, MxBase::AscendStream &stream);
 
     /**
      * 初始化矩形框
@@ -65,6 +65,22 @@ public:
     * */
     std::vector<std::pair<int, int>> SentenceToTokensId(const std::string &sentence, std::vector<uint32_t> &tokenChrNum);
 
+	static MxBase::AscendStream& getAscendStream()
+	{
+		static MxBase::AscendStream streamOnDeviceZero(0);
+		mutex_.lock();
+		if (!isStreamInit) {
+			APP_ERROR ret = streamOnDeviceZero.CreateAscendStream();
+			if (ret != APP_ERR_OK) {
+			    LogError << "Fail to create streamOnDeviceZero instance.";
+			    throw std::runtime_error("Fail to create streamOnDeviceZero instance.");
+			}
+			isStreamInit = true;
+		}
+		mutex_.unlock();
+		return streamOnDeviceZero;
+	}
+
 private:
     unsigned int textSize_;
     unsigned int srcTextSize_;
@@ -84,7 +100,8 @@ private:
     MxBase::Tensor captionNormalized_; // 3. 归一化到[0, 1]区间的三通道字幕
     MxBase::Tensor captionColored_; // 4. 上色后的字幕
     int32_t deviceId_;
-
+	static std::mutex mutex_;
+	static bool isStreamInit;
     APP_ERROR getCaptionImage(MxBase::Tensor &_blackboard, const std::vector<std::pair<int, int>> &sentenceTokens,
                               uint32_t startX, uint32_t startY, MxBase::AscendStream &stream,
                               const std::vector<uint32_t> &returnChrIndex = {}, uint32_t startToken = 0);

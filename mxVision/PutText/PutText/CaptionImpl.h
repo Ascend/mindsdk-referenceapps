@@ -21,6 +21,7 @@
 
 class CaptionImpl {
 public:
+	~CaptionImpl();
     /**
     * 初始化字体
     * @param inputFont: 中文字体
@@ -83,7 +84,7 @@ private:
     MxBase::Tensor mask_;
     std::string formerText1 = "";
     std::string formerText2 = "";
-    MxBase::AscendStream ascendStream_;
+	std::shared_ptr<MxBase::AscendStream> ascendStream_;
     uint32_t formerImageHeight_;
     uint32_t formerImageWidth_;
     cv::Point formerPoint_;

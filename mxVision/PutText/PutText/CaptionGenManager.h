@@ -34,14 +34,13 @@ struct FontInfo {
 
 class CaptionGenManager {
 public:
-    static CaptionGenManager instance;
-public:
     int FindIndex(const std::string &font, const std::string &fontSize, const std::string &item);
     int FindWidth(const std::string &font, const std::string &fontSize, const int index);
     MxBase::Tensor getVocabImage(const std::string &font, const std::string &fontSize);
     bool isFontValid(const std::string &font, const std::string &fontSize);
     static CaptionGenManager& getInstance()
     {
+		static CaptionGenManager instance;
         return instance;
     }
     bool Init();

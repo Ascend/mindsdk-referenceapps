@@ -40,11 +40,12 @@ public:
     bool isFontValid(const std::string &font, const std::string &fontSize);
     static CaptionGenManager& getInstance()
     {
-		static CaptionGenManager instance;
+        static CaptionGenManager instance;
         return instance;
     }
     bool Init();
     int FindHeight(const std::string &font, const std::string &fontSize);
+    void DeInit();
     virtual ~CaptionGenManager() {};
 
 private:

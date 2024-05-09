@@ -14,26 +14,38 @@
  * limitations under the License.
  */
 
-#include "CaptionImpl.h"
+#include <cmath>
 #include "MxBase/MxBase.h"
 #include "MxBase/Log/Log.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
+#include "CaptionImpl.h"
 
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
 const int LINE_NUMBER = 2;
+const int RED_INDEX = 2;
+const int GREEN_INDEX = 1;
+const int BLUE_INDEX = 0;
+const int COLOR_MIN = 0;
+const int COLOR_MAX = 255;
+const int FONT_SCALE_MIN = 0.5;
+const int FONT_SCALE_MAX = 2;
+const int FONT_SCALE_ONE = 1;
+const int WIDTH_MAX = 4096;
+const int WIDTH_MIN = 1;
+const float EPSILON = 1e-6;
 
 CaptionImpl::~CaptionImpl() {
-	MxBase::DeviceContext context;
-	context.devId = deviceId_;
-	MxBase::DeviceManager::GetInstance()->SetDevice(context);
-	ascendStream_->Synchronize();
-	auto ret = ascendStream_->DestroyAscendStream();
-	if (ret != 0) {
-		LogError <<"DestroyAscendStream fail";
-	}
-	ascendStream_ = nullptr;
+    MxBase::DeviceContext context;
+    context.devId = deviceId_;
+    MxBase::DeviceManager::GetInstance()->SetDevice(context);
+    ascendStream_->Synchronize();
+    auto ret = ascendStream_->DestroyAscendStream();
+    if (ret != 0) {
+        LogError <<"DestroyAscendStream fail";
+    }
+    ascendStream_ = nullptr;
 }
 
 
@@ -45,10 +57,15 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
         return APP_ERR_COMM_FAILURE;
     }
     deviceId_ = deviceId;
+    // 校验fontSize是否相等
+    if (fontSize != fontSize2) {
+        LogError << "The fontSize of two input font must be the same. ";
+        return APP_ERR_COMM_FAILURE;
+    }
     // 初始化CaptionGenerator
-	ascendStream_ = std::make_shared<MxBase::AscendStream>(deviceId);
-	ascendStream_->CreateAscendStream();
-    ret = captionGenerator_.init(inputFont, fontSize, inputFont2, fontSize2, deviceId, *ascendStream_);
+    ascendStream_ = std::make_shared<MxBase::AscendStream>(deviceId);
+    ascendStream_->CreateAscendStream();
+    ret = captionGenerator_.init(inputFont, inputFont2, fontSize2, deviceId, *ascendStream_);
     if (ret != 0) {
         LogError << "Fail to init captionGenerator";
         return APP_ERR_COMM_FAILURE;
@@ -67,22 +84,92 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     return APP_ERR_OK;
 }
 
-APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgroundColor, double fontScale, int width) {
+bool CaptionImpl::isValidColor(const MxBase::Color& color)
+{
+    if(color.channel_zero < COLOR_MIN || color.channel_zero > COLOR_MAX) {
+        return false;
+    }
+    if(color.channel_one < COLOR_MIN || color.channel_one > COLOR_MAX) {
+        return false;
+    }
+    if(color.channel_two < COLOR_MIN || color.channel_two > COLOR_MAX) {
+        return false;
+    }
+    return true;
+}
+
+APP_ERROR CaptionImpl::geneBackGroundTensor(MxBase::Color backgroundColor)
+{
+    // 字幕背景生成
+    coloredTensor_ = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 3},
+                                    MxBase::TensorDType::UINT8, deviceId_);
+    MxBase::Tensor color_r = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
+                                            MxBase::TensorDType::UINT8, deviceId_);
+    MxBase::Tensor::TensorMalloc(color_r);
+
+    APP_ERROR ret = color_r.SetTensorValue(static_cast<uint8_t>(backgroundColor.channel_zero), *ascendStream_);
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to set the value of red color for caption background.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    MxBase::Tensor color_g = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
+                                            MxBase::TensorDType::UINT8, deviceId_);
+    MxBase::Tensor::TensorMalloc(color_g);
+    ret = color_g.SetTensorValue(static_cast<uint8_t>(backgroundColor.channel_one), *ascendStream_);
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to set the value of green color for caption background.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    MxBase::Tensor color_b = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
+                                            MxBase::TensorDType::UINT8, deviceId_);
+    MxBase::Tensor::TensorMalloc(color_b);
+    ret = color_b.SetTensorValue(static_cast<uint8_t>(backgroundColor.channel_two), *ascendStream_);
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to set the value of blue color for caption background.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    std::vector<MxBase::Tensor> color_vec{color_r, color_g, color_b};
+    ret = MxBase::Merge(color_vec, coloredTensor_, *ascendStream_);
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to merge RGB color for caption background.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    ascendStream_->Synchronize();
+    return APP_ERR_OK;
+}
+
+APP_ERROR CaptionImpl::initRectAndColor(const MxBase::Color &textColor, const MxBase::Color &backgroundColor,
+                                        float fontScale, int width) {
     const int EXTRA_MARGIN_SIZE = 64;
     const int WIDTH_MIN_VALUE = 20;
-    const int LINE_NUMBER = 2;
     if (width < WIDTH_MIN_VALUE) {
         LogError << "The width of backgroundSize or the height of backgroundSize should be >= 64.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (!isValidColor(textColor) || !isValidColor(backgroundColor)) {
+        LogError << "Color scalar must be in the range of [0, 255].";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (fontScale < FONT_SCALE_MIN || fontScale > FONT_SCALE_MAX) {
+        LogError << "The fontScale must be in the range of [0.5, 2].";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (width < WIDTH_MIN || width > WIDTH_MAX) {
+        LogError << "The width must be in the range of [1, 4096].";
+        return APP_ERR_COMM_FAILURE;
     }
     width_ = width;
     textColor_ = textColor;
     backgroundColor_ = backgroundColor;
     fontScale_ = fontScale;
+    if (std::fabs(fontScale - FONT_SCALE_ONE) <= EPSILON) {
+        isResize_ = false;
+    }
     dstBackgroundWidth_ = int(fontScale * (width_ + EXTRA_MARGIN_SIZE));
     dstBackgroundHeight_ = int(fontScale * (height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE));
 
     // 初始化captionGenerator
-    cv::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE);
+    MxBase::Size backgroundSize(width + EXTRA_MARGIN_SIZE, height_ * LINE_NUMBER + EXTRA_MARGIN_SIZE);
     APP_ERROR ret = captionGenerator_.initRectAndTextColor(backgroundSize, textColor, *ascendStream_);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init captionGenerator";
@@ -98,41 +185,10 @@ APP_ERROR CaptionImpl::initRectAndColor(cv::Scalar textColor, cv::Scalar backgro
         return APP_ERR_COMM_FAILURE;
     }
 
-    // 字幕背景生成
-    coloredTensor_ = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 3},
-                                    MxBase::TensorDType::UINT8, deviceId_);
-    MxBase::Tensor color_r = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, deviceId_);
-    MxBase::Tensor::TensorMalloc(color_r);
-
-    ret = color_r.SetTensorValue((uint8_t) backgroundColor[2], *ascendStream_);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to set the value of red color for caption background.";
+    if (geneBackGroundTensor(backgroundColor) != APP_ERR_OK) {
+        LogError << "Fail to malloc caption background tensor.";
         return APP_ERR_COMM_FAILURE;
     }
-    MxBase::Tensor color_g = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, deviceId_);
-    MxBase::Tensor::TensorMalloc(color_g);
-    ret = color_g.SetTensorValue((uint8_t) backgroundColor[1], *ascendStream_);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to set the value of green color for caption background.";
-        return APP_ERR_COMM_FAILURE;
-    }
-    MxBase::Tensor color_b = MxBase::Tensor(std::vector<uint32_t>{caption_.GetShape()[0], caption_.GetShape()[1], 1},
-                                            MxBase::TensorDType::UINT8, deviceId_);
-    MxBase::Tensor::TensorMalloc(color_b);
-    ret = color_b.SetTensorValue((uint8_t) backgroundColor[0], *ascendStream_);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to set the value of blue color for caption background.";
-        return APP_ERR_COMM_FAILURE;
-    }
-    std::vector<MxBase::Tensor> color_vec{color_r, color_g, color_b};
-    ret = MxBase::Merge(color_vec, coloredTensor_, *ascendStream_);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to merge RGB color for caption background.";
-        return APP_ERR_COMM_FAILURE;
-    }
-    ascendStream_->Synchronize();
     return APP_ERR_OK;
 }
 
@@ -159,7 +215,7 @@ APP_ERROR CaptionImpl::setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect src
     }
     return APP_ERR_OK;
 }
-APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point &org) {
+APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point &org) {
     if (img.GetDeviceId() != deviceId_) {
         LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
         return APP_ERR_COMM_FAILURE;
@@ -190,28 +246,9 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
     }
     return APP_ERR_OK;
 }
-APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
 
-    if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
-        text1 != formerText1_ || text2 != formerText2_ || org != formerPoint_) {
-        if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
-            LogError << "The requirements of putText are not met.";
-            return APP_ERR_COMM_FAILURE;
-        }
-    }
-    // Step1: 字幕生成
-    bool isResize = fontScale_ == 1? false: true;
-
-    if (text1 != formerText1_ || text2 != formerText2_) {
-        mask_ = MxBase::Tensor();
-        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize,
-                                                     *ascendStream_);
-        if (ret != APP_ERR_OK) {
-            LogError << "Fail to generate caption for putText function.";
-            return APP_ERR_COMM_FAILURE;
-        }
-    }
-    // step2: 图片+字幕+字幕背景叠加
+APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point org,
+                                   float opacity) {
     int roiHeight = height_ * fontScale_;
     if (text1 != "") {
         int roiLength = getLength(text1) * fontScale_;
@@ -237,6 +274,41 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
             return APP_ERR_COMM_FAILURE;
         }
         formerText2_ = text2;
+    }
+    return APP_ERR_OK;
+}
+
+APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point org, float opacity) {
+    if (opacity < 0 || opacity > 1) {
+        LogError << "The opacity must be in the range of [0 ,1]";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (img.GetDeviceId() != deviceId_) {
+        LogError << "The image is on device " << std::to_string(img.GetDeviceId()) << ", but the captionImpl"
+                 << "is initialized on device " << std::to_string(deviceId_);
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
+        text1 != formerText1_ || text2 != formerText2_ || org.x != formerPoint_.x || org.y != formerPoint_.y) {
+        if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
+            LogError << "The requirements of putText are not met.";
+            return APP_ERR_COMM_FAILURE;
+        }
+    }
+    // Step1: 字幕生成
+    if (text1 != formerText1_ || text2 != formerText2_) {
+        mask_ = MxBase::Tensor();
+        APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize_,
+                                                     *ascendStream_);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to generate caption for putText function.";
+            return APP_ERR_COMM_FAILURE;
+        }
+    }
+    // step2: 图片+字幕+字幕背景叠加
+    if (putTextCore(img, text1, text2, org, opacity) != APP_ERR_OK) {
+        LogError << "Fail to conduct putText core operation.";
+        return APP_ERR_COMM_FAILURE;
     }
 
     ascendStream_->Synchronize();

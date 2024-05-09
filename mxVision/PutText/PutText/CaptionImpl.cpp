@@ -22,6 +22,7 @@
 enum tokenType {
     CHINESE, ENGLISH, ALPHA
 };
+const int LINE_NUMBER = 2;
 
 CaptionImpl::~CaptionImpl() {
 	MxBase::DeviceContext context;
@@ -176,11 +177,11 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     int rightBottomX = org.x + maxLength;
-    int rightBottomY = org.y + height_ * fontScale_*2;
+    int rightBottomY = org.y + height_ * fontScale_ * LINE_NUMBER ;
     if (rightBottomY > img.GetShape()[0]) {
         LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
                 << img.GetShape()[0] << ". The text is automatically putted in the margin.";
-        org.y = img.GetShape()[0] - height_ * fontScale_ * 2;
+        org.y = img.GetShape()[0] - height_ * fontScale_ * LINE_NUMBER ;
     }
     if (rightBottomX > img.GetShape()[1]) {
         LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
@@ -190,7 +191,7 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
     return APP_ERR_OK;
 }
 APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, const std::string text2, cv::Point org, float opacity) {
-    const int LINE_NUMBER = 2;
+
     if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
         text1 != formerText1_ || text2 != formerText2_ || org != formerPoint_) {
         if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
@@ -199,10 +200,7 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         }
     }
     // Step1: 字幕生成
-    bool isResize = true;
-    if (fontScale_ == 1) {
-        isResize = false;
-    }
+    bool isResize = fontScale_ == 1? false: true;
 
     if (text1 != formerText1_ || text2 != formerText2_) {
         mask_ = MxBase::Tensor();

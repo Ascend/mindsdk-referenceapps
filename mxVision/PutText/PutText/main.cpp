@@ -6,6 +6,8 @@
 
 APP_ERROR DrawCaption(MxBase::Tensor img) {
     //Step1: 初始化CaptionImpl的字体资源
+    const float OPACITY_DEMO = 0.3;
+    const int LINE_NUMBER_THREE = 3;
     CaptionImpl captionImpl1;
     APP_ERROR ret = captionImpl1.init("simsun", "60px", "times", "60px", 0);
     if (ret != APP_ERR_OK) {
@@ -22,39 +24,40 @@ APP_ERROR DrawCaption(MxBase::Tensor img) {
 
     //Step2: 初始化CaptionImpl的中间变量资源
     float fontScale = 1;
-    auto length1 = captionImpl1.getLength("K56 350-5-上行-北            ");
-    auto length2 = captionImpl2.getLength("2023-08-20 15：21：06        ");
-    ret = captionImpl1.initRectAndColor(cv::Scalar(255, 255, 255), cv::Scalar(0, 0, 0), fontScale, length1);
+    auto length1 = captionImpl1.getLength("位置信息1    ");
+    auto length2 = captionImpl2.getLength("时间信息     ");
+    MxBase::Color textColor = MxBase::Color(255, 255, 255);
+    MxBase::Color backgroundColor = MxBase::Color(0, 0, 0);
+    ret = captionImpl1.initRectAndColor(textColor, backgroundColor, fontScale, length1);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init the intermediate tensor of captionImpl1.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = captionImpl2.initRectAndColor(cv::Scalar(255, 255, 255), cv::Scalar(0, 0, 0), fontScale, length2);
+    ret = captionImpl2.initRectAndColor(textColor, backgroundColor, fontScale, length2);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to init the intermediate tensor of captionImpl2.";
         return APP_ERR_COMM_FAILURE;
     }
 
     //Step3: 调用putText添加文本
-    int W = img.GetShape()[1];
-    int H = img.GetShape()[0];
     int textRealSize = int(textStandardSize * fontScale);
     // 在图片左上角添加位置信息
-    ret = captionImpl1.putText(img, "安徽-G5011合巢高速-ETC门架S", "K56 350-5-上行-北",
-                               cv::Point(textRealSize, textRealSize), 0.3);
+    ret = captionImpl1.putText(img, "位置信息1", "位置信息2",
+                               MxBase::Point(textRealSize, textRealSize), OPACITY_DEMO);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to put the address text in the top left corner.";
         return APP_ERR_COMM_FAILURE;
     }
     // 在图片右上角添加时间信息
-    ret = captionImpl2.putText(img, "2023-08-20 15：21：06", "",
-                               cv::Point(W - length2 * fontScale - textRealSize, textRealSize), 0.3);
+    ret = captionImpl2.putText(img, "时间信息", "",
+                               MxBase::Point(img.GetShape()[1] - length2 * fontScale - textRealSize, textRealSize), OPACITY_DEMO);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to put the time text in the top right corner.";
         return APP_ERR_COMM_FAILURE;
     }
     // 在图片右上角添加时间信息
-    ret = captionImpl2.putText(img, "", "预留信息：分辨率xxxx", cv::Point(textRealSize, H - 3 * textRealSize), 0.3);
+    ret = captionImpl2.putText(img, "", "预留信息", MxBase::Point(textRealSize, img.GetShape()[0] - LINE_NUMBER_THREE * textRealSize),
+                               OPACITY_DEMO);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to put the reserved text in the left bottom corner.";
         return APP_ERR_COMM_FAILURE;
@@ -99,6 +102,9 @@ int main() {
             LogError << "Fail to encode the image.";
             return -1;
         }
+        // 在MxDeInit前销毁NPU静态变量资源
+        CaptionGenManager::getInstance().DeInit();
+        CaptionGeneration::getAscendStream().DestroyAscendStream();
     }
     MxBase::MxDeInit();
     return 0;

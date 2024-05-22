@@ -36,8 +36,6 @@ static const FontFile simsun = {"simsun", "60px"};
 FontFile FONT_LIST[] = {timesNewRoman, simsun};
 int FONT_NUMBER = sizeof(FONT_LIST) / sizeof(FONT_LIST[0]);
 
-CaptionGenManager CaptionGenManager::instance = CaptionGenManager();
-
 CaptionGenManager::CaptionGenManager()
 {
     bool success = this->Init();
@@ -241,4 +239,9 @@ bool CaptionGenManager::_checkFileExists(const std::string &filePath)
 {
     struct stat buffer;
     return (stat(filePath.c_str(), &buffer) == 0);
+}
+
+void CaptionGenManager::DeInit()
+{
+    fontsInfo_.clear();
 }

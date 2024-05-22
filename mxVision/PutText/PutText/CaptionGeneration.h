@@ -30,20 +30,24 @@ public:
 
     /**
      * 初始化
-     * @param inputFont: 中文字体，初始化是校验字体，目前仅支持{“simhei”, "simli"}
+     * @param inputFont: 中文字体
      * @param inputFont2: 英文字体
+     * @param inputFontSize: 字体大小
+     * @param deviceId: 设备Id
+     * @param stream: 管理该接口NPU相关接口的调用
      * @return 初始化是否成功完成
      * */
-    APP_ERROR init(const std::string &inputFont, const std::string &inputFontSize,
-                   const std::string &inputFont2, const std::string &inputFontSize2, int32_t deviceId);
+    APP_ERROR init(const std::string &inputFont, const std::string &inputFont2, const std::string &inputFontSize,
+                   int32_t deviceId, MxBase::AscendStream &stream);
 
     /**
      * 初始化矩形框
      * @param bgSize: 矩形框大小
      * @param textColorComplete: 字幕颜色
+     * @param stream: 管理该接口NPU相关接口的调用
      * @return 初始化是否成功完成
      * */
-    APP_ERROR initRectAndTextColor(cv::Size bgSize, cv::Scalar textColorComplete);
+    APP_ERROR initRectAndTextColor(MxBase::Size bgSize, MxBase::Color textColorComplete, MxBase::AscendStream &stream);
 
      /**
      * 字幕合成接口
@@ -65,12 +69,28 @@ public:
     * */
     std::vector<std::pair<int, int>> SentenceToTokensId(const std::string &sentence, std::vector<uint32_t> &tokenChrNum);
 
+    static MxBase::AscendStream& getAscendStream()
+    {
+        static MxBase::AscendStream streamOnDeviceZero(0);
+        mutex_.lock();
+        if (!isStreamInit) {
+            APP_ERROR ret = streamOnDeviceZero.CreateAscendStream();
+            if (ret != APP_ERR_OK) {
+                LogError << "Fail to create streamOnDeviceZero instance.";
+                throw std::runtime_error("Fail to create streamOnDeviceZero instance.");
+            }
+            isStreamInit = true;
+        }
+        mutex_.unlock();
+        return streamOnDeviceZero;
+    }
+
 private:
     unsigned int textSize_;
     unsigned int srcTextSize_;
     MxBase::Tensor vocabImage_; // 字库图片、大图
     MxBase::Tensor vocabImage2_;
-    cv::Size backgroundSize_;
+    MxBase::Size backgroundSize_;
     std::string font_;
     std::string font2_;
     std::map<std::string, std::string> fontSizeMap_;
@@ -84,10 +104,13 @@ private:
     MxBase::Tensor captionNormalized_; // 3. 归一化到[0, 1]区间的三通道字幕
     MxBase::Tensor captionColored_; // 4. 上色后的字幕
     int32_t deviceId_;
-
+    static std::mutex mutex_;
+    static bool isStreamInit;
     APP_ERROR getCaptionImage(MxBase::Tensor &_blackboard, const std::vector<std::pair<int, int>> &sentenceTokens,
-                              uint32_t startX, uint32_t startY, const std::vector<uint32_t> &returnChrIndex = {},
-                              uint32_t startToken = 0);
+                              uint32_t startX, uint32_t startY, MxBase::AscendStream &stream,
+                              const std::vector<uint32_t> &returnChrIndex = {}, uint32_t startToken = 0);
+
+    APP_ERROR initTextColor(MxBase::Color textColorCompleted, MxBase::AscendStream &stream);
 };
 
 #endif

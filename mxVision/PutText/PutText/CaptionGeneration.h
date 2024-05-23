@@ -103,6 +103,7 @@ private:
     MxBase::Tensor captionNormalizer_; // 值为255的Tensor，用于归一化操作中作为除数
     MxBase::Tensor captionNormalized_; // 3. 归一化到[0, 1]区间的三通道字幕
     MxBase::Tensor captionColored_; // 4. 上色后的字幕
+    MxBase::Tensor captionZero_;
     int32_t deviceId_;
     static std::mutex mutex_;
     static bool isStreamInit;

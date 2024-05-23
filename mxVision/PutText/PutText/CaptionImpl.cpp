@@ -137,7 +137,7 @@ APP_ERROR CaptionImpl::geneBackGroundTensor(MxBase::Color backgroundColor)
         LogError << "Fail to merge RGB color for caption background.";
         return APP_ERR_COMM_FAILURE;
     }
-    APP_ERROR ret = ascendStream_->Synchronize();
+    ret = ascendStream_->Synchronize();
     if (ret != APP_ERR_OK) {
         LogError << "Fail to synchronize for geneBackGroundTensor.";
         return APP_ERR_COMM_FAILURE;
@@ -222,34 +222,37 @@ APP_ERROR CaptionImpl::setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect src
     }
     return APP_ERR_OK;
 }
-APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point &org) {
+APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2,
+                                    MxBase::Point &org, std::vector<uint32_t> &imgShape) {
     if (img.GetDeviceId() != deviceId_) {
         LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
         return APP_ERR_COMM_FAILURE;
     }
     // Step0: 校验字幕贴字位置
-    int roiLength1 = getLength(text1) * fontScale_;
-    int roiLength2 = getLength(text2) * fontScale_;
+    currentTextLength1_ = getLength(text1);
+    currentTextLength2_ = getLength(text2);
+    int roiLength1 = currentTextLength1_ * fontScale_;
+    int roiLength2 = currentTextLength2_ * fontScale_;
     if (roiLength1 > dstBackgroundWidth_ || roiLength2 > dstBackgroundWidth_) {
         LogError << "The text length exceeds the maximum length of initialized temp tensor. Please initialize again.";
         return APP_ERR_COMM_FAILURE;
     }
     int maxLength = (roiLength1 > roiLength2) ? roiLength1 : roiLength2;
-    if (maxLength > img.GetShape()[1]) {
+    if (maxLength > imgShape[1]) {
         LogError << "The text length exceeds the maximum length of image.";
         return APP_ERR_COMM_FAILURE;
     }
     int rightBottomX = org.x + maxLength;
     int rightBottomY = org.y + height_ * fontScale_ * LINE_NUMBER ;
-    if (rightBottomY > img.GetShape()[0]) {
+    if (rightBottomY > imgShape[0]) {
         LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
-                << img.GetShape()[0] << ". The text is automatically putted in the margin.";
-        org.y = img.GetShape()[0] - height_ * fontScale_ * LINE_NUMBER ;
+                << imgShape[0] << ". The text is automatically putted in the margin.";
+        org.y = imgShape[0] - height_ * fontScale_ * LINE_NUMBER ;
     }
-    if (rightBottomX > img.GetShape()[1]) {
+    if (rightBottomX > imgShape[1]) {
         LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
-                << img.GetShape()[1] << ". The text is automatically putted in the margin.";
-        org.x = img.GetShape()[1] - maxLength;
+                << imgShape[1] << ". The text is automatically putted in the margin.";
+        org.x = imgShape[1] - maxLength;
     }
     return APP_ERR_OK;
 }
@@ -257,8 +260,14 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
 APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point org,
                                    float opacity) {
     int roiHeight = height_ * fontScale_;
+    int roiLength;
     if (text1 != "") {
-        int roiLength = getLength(text1) * fontScale_;
+        if (text1 != formerText1_) {
+            roiLength = currentTextLength1_ * fontScale_;
+            formerRoiLength1_ = roiLength;
+        } else {
+            roiLength = formerRoiLength1_;
+        }
         MxBase::Rect dstRect(org.x, org.y, org.x + roiLength, org.y + roiHeight);
         MxBase::Rect srcRect(0, 0, roiLength, roiHeight);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -271,7 +280,12 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
     }
 
     if (text2 != "") {
-        int roiLength = getLength(text2) * fontScale_;
+        if (text2 != formerText2_) {
+            roiLength = currentTextLength2_ * fontScale_;
+            formerRoiLength2_ = roiLength;
+        } else {
+            roiLength = formerRoiLength2_;
+        }
         MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * LINE_NUMBER);
         MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * LINE_NUMBER);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -295,9 +309,10 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
                  << "is initialized on device " << std::to_string(deviceId_);
         return APP_ERR_COMM_FAILURE;
     }
-    if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
+    auto imgShape = img.GetShape();
+    if (imgShape[0] != formerImageHeight_ || imgShape[1] != formerImageWidth_ ||
         text1 != formerText1_ || text2 != formerText2_ || org.x != formerPoint_.x || org.y != formerPoint_.y) {
-        if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
+        if (checkPutText(img, text1, text2, org, imgShape) != APP_ERR_OK) {
             LogError << "The requirements of putText are not met.";
             return APP_ERR_COMM_FAILURE;
         }
@@ -318,13 +333,9 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         return APP_ERR_COMM_FAILURE;
     }
 
-    APP_ERROR ret = ascendStream_->Synchronize();
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to synchronize for putText.";
-        return APP_ERR_COMM_FAILURE;
-    }
-    formerImageHeight_ = img.GetShape()[0];
-    formerImageWidth_ = img.GetShape()[1];
+    ascendStream_->Synchronize();
+    formerImageHeight_ = imgShape[0];
+    formerImageWidth_ = imgShape[1];
     formerPoint_ = org;
     return APP_ERR_OK;
 }

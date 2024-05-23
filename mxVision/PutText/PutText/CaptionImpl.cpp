@@ -137,7 +137,7 @@ APP_ERROR CaptionImpl::geneBackGroundTensor(MxBase::Color backgroundColor)
         LogError << "Fail to merge RGB color for caption background.";
         return APP_ERR_COMM_FAILURE;
     }
-    APP_ERROR ret = ascendStream_->Synchronize();
+    ret = ascendStream_->Synchronize();
     if (ret != APP_ERR_OK) {
         LogError << "Fail to synchronize for geneBackGroundTensor.";
         return APP_ERR_COMM_FAILURE;
@@ -318,11 +318,7 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         return APP_ERR_COMM_FAILURE;
     }
 
-    APP_ERROR ret = ascendStream_->Synchronize();
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to synchronize for putText.";
-        return APP_ERR_COMM_FAILURE;
-    }
+    ascendStream_->Synchronize();
     formerImageHeight_ = img.GetShape()[0];
     formerImageWidth_ = img.GetShape()[1];
     formerPoint_ = org;

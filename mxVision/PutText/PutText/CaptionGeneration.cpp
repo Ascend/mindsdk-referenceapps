@@ -121,6 +121,8 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(MxBase::Size bgSize, MxBase::C
     // 为字幕生成操作分配字幕变量
     captionComp_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
                                   MxBase::TensorDType::UINT8, deviceId_};
+    captionZero_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 1},
+                                  MxBase::TensorDType::UINT8, deviceId_};
     captionCompBGR_ = MxBase::Tensor{std::vector<uint32_t>{(uint32_t)backgroundSize_.height, (uint32_t)backgroundSize_.width, 3},
                                      MxBase::TensorDType::UINT8, deviceId_};
     captionNormalized_ = MxBase::Tensor{captionCompBGR_.GetShape(), MxBase::TensorDType::UINT8, deviceId_};
@@ -129,9 +131,14 @@ APP_ERROR CaptionGeneration::initRectAndTextColor(MxBase::Size bgSize, MxBase::C
     MxBase::Tensor::TensorMalloc(captionCompBGR_);
     MxBase::Tensor::TensorMalloc(captionNormalized_);
     MxBase::Tensor::TensorMalloc(captionColored_);
-
+    MxBase::Tensor::TensorMalloc(captionZero_);
+    APP_ERROR ret = captionZero_.SetTensorValue(static_cast<uint8_t>(0), stream);
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to set the value of captionZero_.";
+        return APP_ERR_COMM_FAILURE;
+    }
     // 初始化字体颜色变量compTextColor_, 改变了用于为字幕上色
-    APP_ERROR ret = initTextColor(textColorCompleted, stream);
+    ret = initTextColor(textColorCompleted, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to set text color.";
         return APP_ERR_COMM_FAILURE;
@@ -249,14 +256,10 @@ APP_ERROR CaptionGeneration::captionGen(MxBase::Tensor& caption, MxBase::Tensor&
     std::vector<std::pair<int, int>> tokens2 = SentenceToTokensId(sentence2, compChrNum);
 
     // Step2: 得到字幕原始图片
-    APP_ERROR ret = captionComp_.SetTensorValue(static_cast<uint8_t>(0), stream);
-    if (ret != APP_ERR_OK) {
-        LogError << "Fail to set the value of captionComp_ tensor.";
-        return APP_ERR_COMM_FAILURE;
-    }
+    captionComp_ = captionZero_.Clone(stream);
     startX_ = 0;
     startY_ = 0;
-    ret = getCaptionImage(captionComp_, tokens1, 0, 0, stream);
+    APP_ERROR ret = getCaptionImage(captionComp_, tokens1, 0, 0, stream);
     if (ret != APP_ERR_OK) {
         LogError << "Fail to get the first line of caption.";
         return APP_ERR_COMM_FAILURE;

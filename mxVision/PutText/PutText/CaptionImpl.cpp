@@ -40,9 +40,12 @@ CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;
     context.devId = deviceId_;
     MxBase::DeviceManager::GetInstance()->SetDevice(context);
-    ascendStream_->Synchronize();
-    auto ret = ascendStream_->DestroyAscendStream();
-    if (ret != 0) {
+    APP_ERROR ret = ascendStream_->Synchronize();
+    if (ret != APP_ERR_OK) {
+        LogError <<"Fail to synchronize for ~CaptionImpl.";
+    }
+    ret = ascendStream_->DestroyAscendStream();
+    if (ret != APP_ERR_OK) {
         LogError <<"DestroyAscendStream fail";
     }
     ascendStream_ = nullptr;
@@ -134,7 +137,11 @@ APP_ERROR CaptionImpl::geneBackGroundTensor(MxBase::Color backgroundColor)
         LogError << "Fail to merge RGB color for caption background.";
         return APP_ERR_COMM_FAILURE;
     }
-    ascendStream_->Synchronize();
+    ret = ascendStream_->Synchronize();
+    if (ret != APP_ERR_OK) {
+        LogError << "Fail to synchronize for geneBackGroundTensor.";
+        return APP_ERR_COMM_FAILURE;
+    }
     return APP_ERR_OK;
 }
 

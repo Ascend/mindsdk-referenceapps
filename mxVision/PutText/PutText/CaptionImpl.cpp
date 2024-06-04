@@ -229,10 +229,8 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     // Step0: 校验字幕贴字位置
-    currentTextLength1_ = getLength(text1);
-    currentTextLength2_ = getLength(text2);
-    int roiLength1 = currentTextLength1_ * fontScale_;
-    int roiLength2 = currentTextLength2_ * fontScale_;
+    int roiLength1 = getLength(text1) * fontScale_;
+    int roiLength2 = getLength(text2) * fontScale_;
     if (roiLength1 > dstBackgroundWidth_ || roiLength2 > dstBackgroundWidth_) {
         LogError << "The text length exceeds the maximum length of initialized temp tensor. Please initialize again.";
         return APP_ERR_COMM_FAILURE;
@@ -263,7 +261,7 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
     int roiLength;
     if (text1 != "") {
         if (text1 != formerText1_) {
-            roiLength = currentTextLength1_ * fontScale_;
+            roiLength = getLength(text1) * fontScale_;
             formerRoiLength1_ = roiLength;
         } else {
             roiLength = formerRoiLength1_;
@@ -281,7 +279,7 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
 
     if (text2 != "") {
         if (text2 != formerText2_) {
-            roiLength = currentTextLength2_ * fontScale_;
+            roiLength = getLength(text2) * fontScale_;
             formerRoiLength2_ = roiLength;
         } else {
             roiLength = formerRoiLength2_;

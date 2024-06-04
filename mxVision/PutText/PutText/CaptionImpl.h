@@ -99,8 +99,6 @@ private:
     bool isResize_ = true;
     int formerRoiLength1_;
     int formerRoiLength2_;
-    int currentTextLength1_;
-    int currentTextLength2_;
 };
 
 #endif

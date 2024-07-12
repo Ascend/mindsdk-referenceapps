@@ -13,8 +13,6 @@
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
-| 6.0RC1   | 8.0.RC1 | 24.0.RC1 | 
-| 5.0.1     | 7.0.1  | 23.0.1  | 
 | 5.0.0 | 7.0.0   |  23.0.0  | 
 
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)

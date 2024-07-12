@@ -11,11 +11,11 @@
 ### 1.2 支持的版本
 
 本样例配套的CANN版本为[7.0.RC1](https://www.hiascend.com/software/cann)。支持的SDK版本为[5.0.RC3](https://www.hiascend.com/software/Mindx-sdk)。
-| MxVision版本  | CANN版本               |
-| --------- | ------------------ | 
-| 6.0RC1   | 8.0.RC1 |
-| 5.0.1     | 7.0.1  |
-| 5.0.0 | 7.0.0   | 
+| MxVision版本  | CANN版本  | driver/firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 6.0RC1   | 8.0.RC1 | 24.0.RC1 | 
+| 5.0.1     | 7.0.1  | 23.0.1  | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
 
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 

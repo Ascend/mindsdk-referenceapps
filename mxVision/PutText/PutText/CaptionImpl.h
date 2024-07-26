@@ -99,6 +99,7 @@ private:
     bool isResize_ = true;
     int formerRoiLength1_;
     int formerRoiLength2_;
+    CaptionPool captionPool_;
 };
 
 #endif

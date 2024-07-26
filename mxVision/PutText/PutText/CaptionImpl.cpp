@@ -339,6 +339,11 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
 }
 
 int CaptionImpl::getLength(const std::string text) {
+    if (captionPool_.isCaptionLengthExist(text)) {
+        int captionLength;
+        captionPool_.getCaptionLength(text, captionLength);
+        return captionLength;
+    }
     std::vector<uint32_t> compChrNum;
     std::vector<std::pair<int, int>> tokens = captionGenerator_.SentenceToTokensId(text, compChrNum);
     int totalWidth = 0;
@@ -351,5 +356,6 @@ int CaptionImpl::getLength(const std::string text) {
         }
         totalWidth += CaptionGenManager::getInstance().FindWidth(font, fontSizeMap_[font], token.first);
     }
+    captionPool_.putCaptionLength(text, totalWidth);
     return totalWidth;
 }

@@ -22,7 +22,7 @@ link_directories(
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(PutTextDemo main.cpp CaptionGenManager.h CaptionGenManager.cpp CaptionGeneration.cpp
-               CaptionGeneration.h CaptionImpl.cpp CaptionImpl.h)
+               CaptionGeneration.h CaptionImpl.cpp CaptionImpl.h CaptionPool.cpp CaptionPool.h)
 
 target_link_libraries(
         PutTextDemo

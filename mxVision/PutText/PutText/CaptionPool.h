@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef MINDX_SDK_SAMPLE_CAPTIONPOOL_H
-#define MINDX_SDK_SAMPLE_CAPTIONPOOL_H
+#ifndef CAPTIONPOOL_H
+#define CAPTIONPOOL_H
 
 #include <iostream>
 #include <list>
@@ -83,4 +83,4 @@ private:
     LimitedSizeMap<std::string, int> text2Lenghth_ = LimitedSizeMap<std::string, int>(10);
 };
 
-#endif //MINDX_SDK_SAMPLE_CAPTIONPOOL_H
+#endif

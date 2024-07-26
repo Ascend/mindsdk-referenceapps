@@ -260,12 +260,7 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
     int roiHeight = height_ * fontScale_;
     int roiLength;
     if (text1 != "") {
-        if (text1 != formerText1_) {
-            roiLength = getLength(text1) * fontScale_;
-            formerRoiLength1_ = roiLength;
-        } else {
-            roiLength = formerRoiLength1_;
-        }
+        roiLength = getLength(text1) * fontScale_;
         MxBase::Rect dstRect(org.x, org.y, org.x + roiLength, org.y + roiHeight);
         MxBase::Rect srcRect(0, 0, roiLength, roiHeight);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -274,16 +269,11 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
         }
-        formerText1_ = text1;
     }
 
     if (text2 != "") {
-        if (text2 != formerText2_) {
-            roiLength = getLength(text2) * fontScale_;
-            formerRoiLength2_ = roiLength;
-        } else {
-            roiLength = formerRoiLength2_;
-        }
+
+        roiLength = getLength(text2) * fontScale_;
         MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * LINE_NUMBER);
         MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * LINE_NUMBER);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -292,7 +282,6 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
         }
-        formerText2_ = text2;
     }
     return APP_ERR_OK;
 }
@@ -308,20 +297,28 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         return APP_ERR_COMM_FAILURE;
     }
     auto imgShape = img.GetShape();
-    if (imgShape[0] != formerImageHeight_ || imgShape[1] != formerImageWidth_ ||
-        text1 != formerText1_ || text2 != formerText2_ || org.x != formerPoint_.x || org.y != formerPoint_.y) {
-        if (checkPutText(img, text1, text2, org, imgShape) != APP_ERR_OK) {
+    if (checkPutText(img, text1, text2, org, imgShape) != APP_ERR_OK) {
             LogError << "The requirements of putText are not met.";
             return APP_ERR_COMM_FAILURE;
-        }
     }
     // Step1: 字幕生成
-    if (text1 != formerText1_ || text2 != formerText2_) {
+    if (captionPool_.isCaptionExist(text1, text2)) {
+        APP_ERROR ret = captionPool_.getCaptionAndMask(text1, text2, caption_, mask_);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to get caption and mask from captionPool.";
+            return APP_ERR_COMM_FAILURE;
+        }
+    } else {
         mask_ = MxBase::Tensor();
         APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize_,
                                                      *ascendStream_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to generate caption for putText function.";
+            return APP_ERR_COMM_FAILURE;
+        }
+        ret = captionPool_.putCaptionAndMask(text1, text2, caption_, mask_);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to put caption and mask into captionPool.";
             return APP_ERR_COMM_FAILURE;
         }
     }
@@ -330,11 +327,7 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "Fail to conduct putText core operation.";
         return APP_ERR_COMM_FAILURE;
     }
-
     ascendStream_->Synchronize();
-    formerImageHeight_ = imgShape[0];
-    formerImageWidth_ = imgShape[1];
-    formerPoint_ = org;
     return APP_ERR_OK;
 }
 

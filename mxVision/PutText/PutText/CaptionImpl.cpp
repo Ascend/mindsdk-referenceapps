@@ -84,6 +84,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     font2_ = inputFont2;
     fontSizeMap_[inputFont] = fontSize;
     fontSizeMap_[inputFont2] = fontSize2;
+    captionPool_ = CaptionPool(CAPTION_POOL_DEFAULT_SIZE);
     return APP_ERR_OK;
 }
 

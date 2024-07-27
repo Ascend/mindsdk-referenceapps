@@ -28,6 +28,7 @@ const int TWO = 2;
 const int THREE = 3;
 const uint8_t MAX_COLOR_VALUE = 255;
 
+static std::mutex g_caption_mutex;
 bool CaptionGeneration::isStreamInit = false;
 std::mutex CaptionGeneration::mutex_;
 enum tokenType {
@@ -55,10 +56,19 @@ APP_ERROR CaptionGeneration::init(const std::string &inputFont, const std::strin
     fontSizeMap_[inputFont2] = inputFontSize;
     MxBase::DeviceContext context;
     context.devId = device0;
+
     MxBase::DeviceManager::GetInstance()->SetDevice(context);
-    vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone(CaptionGeneration::getAscendStream());
-    vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize).Clone(CaptionGeneration::getAscendStream());
-    CaptionGeneration::getAscendStream().Synchronize();
+    {
+        std::lock_guard<std::mutex> guard(g_caption_mutex);
+        vocabImage_ = CaptionGenManager::getInstance().getVocabImage(inputFont, inputFontSize).Clone(CaptionGeneration::getAscendStream());
+        vocabImage2_ = CaptionGenManager::getInstance().getVocabImage(inputFont2, inputFontSize).Clone(CaptionGeneration::getAscendStream());
+        APP_ERROR ret = CaptionGeneration::getAscendStream().Synchronize();   
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to synchronize for clone in captionGeneration init";
+            return APP_ERR_COMM_FAILURE;
+        }
+    }
+    
     vocabImage_.ToDevice(deviceId_);
     vocabImage2_.ToDevice(deviceId_);
     startX_ = 0;

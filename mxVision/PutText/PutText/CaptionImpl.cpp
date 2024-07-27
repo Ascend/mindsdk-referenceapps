@@ -35,7 +35,6 @@ const int FONT_SCALE_ONE = 1;
 const int WIDTH_MAX = 4096;
 const int WIDTH_MIN = 1;
 const float EPSILON = 1e-6;
-const int CAPTION_POOL_DEFAULT_SIZE = 10;
 
 CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;

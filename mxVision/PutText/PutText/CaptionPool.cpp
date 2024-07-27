@@ -17,7 +17,6 @@
 
 APP_ERROR CaptionPool::putCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption,
                                          MxBase::Tensor mask) {
-//    LogError << "Put text into captionPool :" << text1 << "  " << text2;
     std::string textMark = text1 + "_" + text2;
     text2CaptionMap_.put(textMark, caption);
     text2MaskMap_.put(textMark, mask);
@@ -42,6 +41,7 @@ bool CaptionPool::isCaptionExist(std::string text1, std::string text2) {
 
 APP_ERROR CaptionPool::putCaptionLength(std::string text, int length) {
     text2Lenghth_.put(text, length);
+    return APP_ERR_OK;
 }
 
 

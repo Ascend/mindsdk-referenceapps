@@ -18,6 +18,7 @@
 #define CAPTIONIMPL_H
 #include "CaptionGenManager.h"
 #include "CaptionGeneration.h"
+#include "CaptionPool.h"
 
 class CaptionImpl {
 public:

@@ -21,14 +21,18 @@
 #include <unordered_map>
 #include "MxBase/MxBase.h"
 
+const int CAPTION_POOL_DEFAULT_SIZE = 10;
+
 template <typename K, typename V>
 class LimitedSizeMap {
 public:
-    LimitedSizeMap(size_t max_size) : max_size(max_size) {}
+    explicit LimitedSizeMap(size_t max_size) {
+        max_size_ = max_size;
+    }
 
     void put(const K& key, const V& value) {
         if (map.find(key) == map.end()) {
-            if (order.size() >= max_size) {
+            if (order.size() >= max_size_) {
                 K oldest = order.front();
                 order.pop_front();
                 map.erase(oldest);
@@ -57,17 +61,18 @@ public:
     }
 
 private:
-    size_t max_size;
+    size_t max_size_;
     std::list<K> order;
     std::unordered_map<K, V> map;
 };
 
 class CaptionPool {
 public:
+    explicit CaptionPool(size_t max_size = CAPTION_POOL_DEFAULT_SIZE);
+
     APP_ERROR putCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption, MxBase::Tensor mask);
 
     APP_ERROR getCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption, MxBase::Tensor& mask);
-    
 
     bool isCaptionExist(std::string text1, std::string text2);
 
@@ -78,9 +83,9 @@ public:
     bool isCaptionLengthExist(std::string text);
 
 private:
-    LimitedSizeMap<std::string, MxBase::Tensor> text2CaptionMap_ = LimitedSizeMap<std::string, MxBase::Tensor>(10);
-    LimitedSizeMap<std::string, MxBase::Tensor> text2MaskMap_ = LimitedSizeMap<std::string, MxBase::Tensor>(10);
-    LimitedSizeMap<std::string, int> text2Lenghth_ = LimitedSizeMap<std::string, int>(10);
+    std::shared_ptr<LimitedSizeMap<std::string, MxBase::Tensor>> text2CaptionMap_;
+    std::shared_ptr<LimitedSizeMap<std::string, MxBase::Tensor>> text2MaskMap_;
+    std::shared_ptr<LimitedSizeMap<std::string, int>> text2Lenghth_;
 };
 
-#endif
+#endif 

@@ -93,7 +93,6 @@ private:
     std::string formerText1_ = "";
     std::string formerText2_ = "";
     std::shared_ptr<MxBase::AscendStream> ascendStream_;
-    MxBase::Point formerPoint_;
     bool isResize_ = true;
     CaptionPool captionPool_;
 };

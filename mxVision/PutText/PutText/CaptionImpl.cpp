@@ -37,6 +37,9 @@ const int WIDTH_MIN = 1;
 const float EPSILON = 1e-6;
 const size_t MAX_SIZE = 4096;
 const size_t MIN_SIZE = 64;
+const size_t NHWC_SIZE = 4;
+const size_t HWC_SIZE = 3;
+const int CHN_OFFSET = 2;
 
 CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;
@@ -226,13 +229,26 @@ APP_ERROR CaptionImpl::setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect src
     return APP_ERR_OK;
 }
 APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2,
-                                    MxBase::Point &org, std::vector<uint32_t> &imgShape) {
-    if (img.GetDeviceId() != deviceId_) {
-        LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
+                                    MxBase::Point &org) {
+    auto temShape = img.GetShape();
+    size_t shapeSize = temShape.size();
+    if (shapeSize > NHWC_SIZE || shapeSize < HWC_SIZE) {
+        LogError << "Only image tensor of NHWC/HWC is valid in PutText. Please check.";
         return APP_ERR_COMM_FAILURE;
     }
-    if (imgShape[0] < MIN_SIZE || imgShape[0] > MAX_SIZE || imgShape[1] < MIN_SIZE || imgShape[1] > MAX_SIZE) {
-        LogError << "The height and width should be in [" << MIN_SIZE << ", " << MAX_SIZE << "].";
+    if (shapeSize == NHWC_SIZE && temShape[0] != 1) {
+        LogError << "Batch size of image tensor should be 1 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    size_t offset = shapeSize == NHWC_SIZE ? 1 : 0;
+    if (temShape[offset + 2] != 3 ) {
+        LogError << "Channel should be 3 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    auto height = temShape[offset];
+    auto width = temShape[offset + 1];
+    if (height < MIN_SIZE || height > MAX_SIZE || width < MIN_SIZE || width > MAX_SIZE) {
+        LogError << "The height and width of image tensor should be in [" << MIN_SIZE << ", " << MAX_SIZE << "].";
         return APP_ERR_COMM_FAILURE;
     }
     // Step0: 校验字幕贴字位置
@@ -243,21 +259,21 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     int maxLength = (roiLength1 > roiLength2) ? roiLength1 : roiLength2;
-    if (maxLength > imgShape[1]) {
+    if (maxLength > width) {
         LogError << "The text length exceeds the maximum length of image.";
         return APP_ERR_COMM_FAILURE;
     }
     int rightBottomX = org.x + maxLength;
     int rightBottomY = org.y + height_ * fontScale_ * LINE_NUMBER ;
-    if (rightBottomY > imgShape[0]) {
-        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
-                << imgShape[0] << ". The text is automatically putted in the margin.";
-        org.y = imgShape[0] - height_ * fontScale_ * LINE_NUMBER ;
+    if (rightBottomY > height) {
+        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image height ("
+                << height << ". The text is automatically putted in the margin.";
+        org.y = height - height_ * fontScale_ * LINE_NUMBER ;
     }
-    if (rightBottomX > imgShape[1]) {
-        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
-                << imgShape[1] << ". The text is automatically putted in the margin.";
-        org.x = imgShape[1] - maxLength;
+    if (rightBottomX > width) {
+        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image width ("
+                << width << ". The text is automatically putted in the margin.";
+        org.x = width - maxLength;
     }
     return APP_ERR_OK;
 }
@@ -298,13 +314,17 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "The opacity must be in the range of [0 ,1]";
         return APP_ERR_COMM_FAILURE;
     }
+    if (img.GetDataType() != MxBase::TensorDType::UINT8) {
+        LogError << "Image tensor should be uint8 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
     if (img.GetDeviceId() != deviceId_) {
         LogError << "The image is on device " << std::to_string(img.GetDeviceId()) << ", but the captionImpl"
                  << "is initialized on device " << std::to_string(deviceId_);
         return APP_ERR_COMM_FAILURE;
     }
     auto imgShape = img.GetShape();
-    if (checkPutText(img, text1, text2, org, imgShape) != APP_ERR_OK) {
+    if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
             LogError << "The requirements of putText are not met.";
             return APP_ERR_COMM_FAILURE;
     }

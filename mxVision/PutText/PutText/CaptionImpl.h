@@ -18,6 +18,7 @@
 #define CAPTIONIMPL_H
 #include "CaptionGenManager.h"
 #include "CaptionGeneration.h"
+#include "CaptionPool.h"
 
 class CaptionImpl {
 public:
@@ -92,10 +93,8 @@ private:
     std::string formerText1_ = "";
     std::string formerText2_ = "";
     std::shared_ptr<MxBase::AscendStream> ascendStream_;
-    uint32_t formerImageHeight_;
-    uint32_t formerImageWidth_;
-    MxBase::Point formerPoint_;
     bool isResize_ = true;
+    CaptionPool captionPool_;
 };
 
 #endif

@@ -35,6 +35,11 @@ const int FONT_SCALE_ONE = 1;
 const int WIDTH_MAX = 4096;
 const int WIDTH_MIN = 1;
 const float EPSILON = 1e-6;
+const size_t MAX_SIZE = 4096;
+const size_t MIN_SIZE = 64;
+const size_t NHWC_SIZE = 4;
+const size_t HWC_SIZE = 3;
+const int RGB_CHANNEL_NUMBER = 3;
 
 CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;
@@ -84,6 +89,7 @@ APP_ERROR CaptionImpl::init(const std::string &inputFont, const std::string &fon
     font2_ = inputFont2;
     fontSizeMap_[inputFont] = fontSize;
     fontSizeMap_[inputFont2] = fontSize2;
+    captionPool_ = CaptionPool(CAPTION_POOL_DEFAULT_SIZE);
     return APP_ERR_OK;
 }
 
@@ -222,9 +228,27 @@ APP_ERROR CaptionImpl::setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect src
     }
     return APP_ERR_OK;
 }
-APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point &org) {
-    if (img.GetDeviceId() != deviceId_) {
-        LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
+APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2,
+                                    MxBase::Point &org) {
+    auto temShape = img.GetShape();
+    size_t shapeSize = temShape.size();
+    if (shapeSize > NHWC_SIZE || shapeSize < HWC_SIZE) {
+        LogError << "Only image tensor of NHWC/HWC is valid in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (shapeSize == NHWC_SIZE && temShape[0] != 1) {
+        LogError << "Batch size of image tensor should be 1 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    size_t offset = shapeSize == NHWC_SIZE ? 1 : 0;
+    if (temShape[shapeSize - 1] != RGB_CHANNEL_NUMBER) {
+        LogError << "Channel should be 3 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    auto height = temShape[offset];
+    auto width = temShape[offset + 1];
+    if (height < MIN_SIZE || height > MAX_SIZE || width < MIN_SIZE || width > MAX_SIZE) {
+        LogError << "The height and width of image tensor should be in [" << MIN_SIZE << ", " << MAX_SIZE << "].";
         return APP_ERR_COMM_FAILURE;
     }
     // Step0: 校验字幕贴字位置
@@ -235,21 +259,21 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     int maxLength = (roiLength1 > roiLength2) ? roiLength1 : roiLength2;
-    if (maxLength > img.GetShape()[1]) {
+    if (maxLength > width) {
         LogError << "The text length exceeds the maximum length of image.";
         return APP_ERR_COMM_FAILURE;
     }
     int rightBottomX = org.x + maxLength;
     int rightBottomY = org.y + height_ * fontScale_ * LINE_NUMBER ;
-    if (rightBottomY > img.GetShape()[0]) {
-        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image width ("
-                << img.GetShape()[0] << ". The text is automatically putted in the margin.";
-        org.y = img.GetShape()[0] - height_ * fontScale_ * LINE_NUMBER ;
+    if (rightBottomY > height) {
+        LogWarn << "The y part of right bottom point (" << rightBottomY << ") exceed image height ("
+                << height << ". The text is automatically putted in the margin.";
+        org.y = height - height_ * fontScale_ * LINE_NUMBER ;
     }
-    if (rightBottomX > img.GetShape()[1]) {
-        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image height ("
-                << img.GetShape()[1] << ". The text is automatically putted in the margin.";
-        org.x = img.GetShape()[1] - maxLength;
+    if (rightBottomX > width) {
+        LogWarn << "The x part of right bottom point (" << rightBottomX << ") exceed image width ("
+                << width << ". The text is automatically putted in the margin.";
+        org.x = width - maxLength;
     }
     return APP_ERR_OK;
 }
@@ -257,8 +281,9 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
 APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point org,
                                    float opacity) {
     int roiHeight = height_ * fontScale_;
+    int roiLength;
     if (text1 != "") {
-        int roiLength = getLength(text1) * fontScale_;
+        roiLength = getLength(text1) * fontScale_;
         MxBase::Rect dstRect(org.x, org.y, org.x + roiLength, org.y + roiHeight);
         MxBase::Rect srcRect(0, 0, roiLength, roiHeight);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -267,11 +292,11 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
         }
-        formerText1_ = text1;
     }
 
     if (text2 != "") {
-        int roiLength = getLength(text2) * fontScale_;
+
+        roiLength = getLength(text2) * fontScale_;
         MxBase::Rect dstRect(org.x, org.y + roiHeight, org.x + roiLength, org.y + roiHeight * LINE_NUMBER);
         MxBase::Rect srcRect(0, roiHeight, roiLength, roiHeight * LINE_NUMBER);
         setTensorsReferRect(img, srcRect, dstRect);
@@ -280,7 +305,6 @@ APP_ERROR CaptionImpl::putTextCore(MxBase::Tensor &img, const std::string text1,
             LogError << "Fail to conduct blendImageCaption operator.";
             return APP_ERR_COMM_FAILURE;
         }
-        formerText2_ = text2;
     }
     return APP_ERR_OK;
 }
@@ -290,25 +314,38 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "The opacity must be in the range of [0 ,1]";
         return APP_ERR_COMM_FAILURE;
     }
+    if (img.GetDataType() != MxBase::TensorDType::UINT8) {
+        LogError << "Image tensor should be uint8 in PutText. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
     if (img.GetDeviceId() != deviceId_) {
         LogError << "The image is on device " << std::to_string(img.GetDeviceId()) << ", but the captionImpl"
                  << "is initialized on device " << std::to_string(deviceId_);
         return APP_ERR_COMM_FAILURE;
     }
-    if (img.GetShape()[0] != formerImageHeight_ || img.GetShape()[1] != formerImageWidth_ ||
-        text1 != formerText1_ || text2 != formerText2_ || org.x != formerPoint_.x || org.y != formerPoint_.y) {
-        if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
+    auto imgShape = img.GetShape();
+    if (checkPutText(img, text1, text2, org) != APP_ERR_OK) {
             LogError << "The requirements of putText are not met.";
             return APP_ERR_COMM_FAILURE;
-        }
     }
     // Step1: 字幕生成
-    if (text1 != formerText1_ || text2 != formerText2_) {
+    if (captionPool_.isCaptionExist(text1, text2)) {
+        APP_ERROR ret = captionPool_.getCaptionAndMask(text1, text2, caption_, mask_);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to get caption and mask from captionPool.";
+            return APP_ERR_COMM_FAILURE;
+        }
+    } else {
         mask_ = MxBase::Tensor();
         APP_ERROR ret = captionGenerator_.captionGen(caption_, coloredTensor_, text1, text2, mask_, isResize_,
                                                      *ascendStream_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to generate caption for putText function.";
+            return APP_ERR_COMM_FAILURE;
+        }
+        ret = captionPool_.putCaptionAndMask(text1, text2, caption_, mask_);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to put caption and mask into captionPool.";
             return APP_ERR_COMM_FAILURE;
         }
     }
@@ -317,15 +354,16 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
         LogError << "Fail to conduct putText core operation.";
         return APP_ERR_COMM_FAILURE;
     }
-
     ascendStream_->Synchronize();
-    formerImageHeight_ = img.GetShape()[0];
-    formerImageWidth_ = img.GetShape()[1];
-    formerPoint_ = org;
     return APP_ERR_OK;
 }
 
 int CaptionImpl::getLength(const std::string text) {
+    if (captionPool_.isCaptionLengthExist(text)) {
+        int captionLength;
+        captionPool_.getCaptionLength(text, captionLength);
+        return captionLength;
+    }
     std::vector<uint32_t> compChrNum;
     std::vector<std::pair<int, int>> tokens = captionGenerator_.SentenceToTokensId(text, compChrNum);
     int totalWidth = 0;
@@ -338,5 +376,6 @@ int CaptionImpl::getLength(const std::string text) {
         }
         totalWidth += CaptionGenManager::getInstance().FindWidth(font, fontSizeMap_[font], token.first);
     }
+    captionPool_.putCaptionLength(text, totalWidth);
     return totalWidth;
 }

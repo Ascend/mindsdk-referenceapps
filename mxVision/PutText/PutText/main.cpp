@@ -55,7 +55,7 @@ APP_ERROR DrawCaption(MxBase::Tensor img) {
         LogError << "Fail to put the time text in the top right corner.";
         return APP_ERR_COMM_FAILURE;
     }
-    // 在图片右上角添加时间信息
+    // 在图片左下角添加预留信息
     ret = captionImpl2.putText(img, "", "预留信息", MxBase::Point(textRealSize, img.GetShape()[0] - LINE_NUMBER_THREE * textRealSize),
                                OPACITY_DEMO);
     if (ret != APP_ERR_OK) {

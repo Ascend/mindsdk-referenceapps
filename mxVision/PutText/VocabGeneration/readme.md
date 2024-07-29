@@ -2,7 +2,7 @@
 
 * 字体文件： ttc. 可以从`C:\Windows\Fonts`中获取
 * 字符表：需要渲染的字符，格式为每行一个字符
-* 安装以来： `pip install -r requirements.txt`
+* 安装依赖： `pip install -r requirements.txt`
 
 ## 运行
 

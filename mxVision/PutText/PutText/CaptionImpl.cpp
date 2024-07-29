@@ -39,7 +39,7 @@ const size_t MAX_SIZE = 4096;
 const size_t MIN_SIZE = 64;
 const size_t NHWC_SIZE = 4;
 const size_t HWC_SIZE = 3;
-const int CHN_OFFSET = 2;
+const int RGB_CHANNEL_NUMBER = 3;
 
 CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;
@@ -241,7 +241,7 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     size_t offset = shapeSize == NHWC_SIZE ? 1 : 0;
-    if (temShape[shapeSize - 1] != 3 ) {
+    if (temShape[shapeSize - 1] != RGB_CHANNEL_NUMBER) {
         LogError << "Channel should be 3 in PutText. Please check.";
         return APP_ERR_COMM_FAILURE;
     }

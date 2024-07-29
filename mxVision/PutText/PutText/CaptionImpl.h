@@ -66,8 +66,7 @@ public:
 private:
     APP_ERROR setTensorsReferRect(MxBase::Tensor &img, MxBase::Rect srcRect, MxBase::Rect dstRect);
 
-    APP_ERROR checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point &org,
-                           std::vector<uint32_t> &imgShape);
+    APP_ERROR checkPutText(MxBase::Tensor &img, const std::string text1, const std::string text2, MxBase::Point &org);
 
     bool isValidColor(const MxBase::Color& color);
 

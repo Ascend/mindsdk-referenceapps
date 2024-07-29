@@ -35,6 +35,8 @@ const int FONT_SCALE_ONE = 1;
 const int WIDTH_MAX = 4096;
 const int WIDTH_MIN = 1;
 const float EPSILON = 1e-6;
+const size_t MAX_SIZE = 4096;
+const size_t MIN_SIZE = 64;
 
 CaptionImpl::~CaptionImpl() {
     MxBase::DeviceContext context;
@@ -227,6 +229,10 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
                                     MxBase::Point &org, std::vector<uint32_t> &imgShape) {
     if (img.GetDeviceId() != deviceId_) {
         LogError << "The deviceId of img is not equal to that of CaptionImpl. Please check.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (imgShape[0] < MIN_SIZE || imgShape[0] > MAX_SIZE || imgShape[1] < MIN_SIZE || imgShape[1] > MAX_SIZE) {
+        LogError << "The height and width should be in [" << MIN_SIZE << ", " << MAX_SIZE << "].";
         return APP_ERR_COMM_FAILURE;
     }
     // Step0: 校验字幕贴字位置

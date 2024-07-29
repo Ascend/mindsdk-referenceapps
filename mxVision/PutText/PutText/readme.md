@@ -13,11 +13,13 @@
 ## Step4: 调用CaptionImpl对象PutText接口（调用过程可以参考main.cpp示例代码）
 
 * 需注意：
+  * 由于底层接口限制，待贴字幕的Tensor宽、高需限制在[64, 4096]范围内。
   * 添加的字符超过初始化时指定的文本长度时，会自动截断 
   * 添加的字符位置超过图片边界时，会自动放置在图片边界
   * 考虑到真实使用场景和性能调优的需要，CaptionImpl类的initRectAndColor方法入参fontScale限制在[0.5, 2]范围内，width参数限制在[1, 4096]。
   * 为降低内存占用，CaptionGenManager类和CaptionGeneration中使用到了分配在NPU侧的静态变量。为了正确销毁资源、避免NPU侧内存泄露，
     用户需要在调用MxDeInit接口前调用CaptionGenManager::getInstance().DeInit()和CaptionGeneration::getAscendStream().DestroyAscendStream()显式销毁NPU侧的静态变量。
+ 
 
 
 | 软件名称 | 版本   |

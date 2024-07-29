@@ -18,5 +18,10 @@
   * 考虑到真实使用场景和性能调优的需要，CaptionImpl类的initRectAndColor方法入参fontScale限制在[0.5, 2]范围内，width参数限制在[1, 4096]。
   * 为降低内存占用，CaptionGenManager类和CaptionGeneration中使用到了分配在NPU侧的静态变量。为了正确销毁资源、避免NPU侧内存泄露，
     用户需要在调用MxDeInit接口前调用CaptionGenManager::getInstance().DeInit()和CaptionGeneration::getAscendStream().DestroyAscendStream()显式销毁NPU侧的静态变量。
+
+
+| 软件名称 | 版本   |
+| -------- | ------ |
+| mxVision | 6.0.RC2   |
             
         

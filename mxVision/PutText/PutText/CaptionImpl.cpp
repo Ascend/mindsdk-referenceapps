@@ -241,7 +241,7 @@ APP_ERROR CaptionImpl::checkPutText(MxBase::Tensor &img, const std::string text1
         return APP_ERR_COMM_FAILURE;
     }
     size_t offset = shapeSize == NHWC_SIZE ? 1 : 0;
-    if (temShape[offset + 2] != 3 ) {
+    if (temShape[shapeSize - 1] != 3 ) {
         LogError << "Channel should be 3 in PutText. Please check.";
         return APP_ERR_COMM_FAILURE;
     }

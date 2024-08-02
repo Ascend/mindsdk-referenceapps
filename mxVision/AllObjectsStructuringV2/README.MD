@@ -2,7 +2,7 @@
 
 ## 1 介绍
 
-全目标结构化V2样例基于mxVision SDK进行开发，以310P为主要的硬件平台，主要支持以下功能：
+全目标结构化V2样例基于mxVision SDK进行开发，以Atlas 300I pro、Atlas 300V pro为主要的硬件平台，主要支持以下功能：
 
 1. 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
 2. 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
@@ -11,17 +11,14 @@
 5. 车辆属性分类：能够对车辆的属性进行分类。(车辆属性，车辆特征以及车牌检测/识别)
 
 ### 1.1 支持的产品
-310P: Atlas 300I pro Atlas 300V pro
+Atlas 300I pro、Atlas 300V pro
 
 ### 1.2 支持的版本
-eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如下表：
-
-  | 软件名称 | 版本 |
-  | -------- | -----|
-  | cmake    | 3.10.2|
-  | mxVision | 5.0RC2|
-  | gcc      | 7.5.0 |
-  | ffmpeg   | 4.2.1 |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
 
 ### 1.3 代码目录结构与说明
 ```
@@ -65,9 +62,10 @@ eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如�
 |       |   ├── objectSelection.h
 |       |   └── CMakeLists.txt
 |       └── CMakeLists.txt
-├── main.cpp
+├── BlockingQueue.h
 ├── CMakeLists.txt
-└── README.zh.md
+├── README.MD
+└── main.cpp
 ```
 
 ### 1.4 约束
@@ -77,9 +75,11 @@ eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如�
 
 ## 2 模型下载与转换
 
-**步骤1：** 在项目根目录下 AllObjectStructuring2/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuringV2/AllObjectsStructuringV2_models.zip)，并放到项目根目录下 AllObjectStructuring2/models/ 目录下。
+**步骤1：** 在项目根目录AllObjectStructuringV2/下创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuringV2/AllObjectsStructuringV2_models.zip)，并放到AllObjectStructuringV2/models/ 目录下。
 
 **步骤2：** 执行以下命令使用atc命令进行模型转换
+
+运行ATC命令之前需要设置CANN的环境变量：`. /usr/local/Ascend/ascend-toolkit/set_env.sh`（CANN默认安装路径，根据实际安装路径修改）
 ```bash
 atc --model=./yolov4_improve/yolov4-tiny-customized.pb --framework=3 --input_shape="inputs:1,416,416,3" -output=./yolov4_improve/yolov4_detection_1batch --insert_op_conf=./yolov4_improve/aipp_yolov4.cfg --soc_version=Ascend310P3
 
@@ -103,12 +103,13 @@ atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/v
 ## 3 安装依赖
 **步骤1：** 安装ffmpeg，源码下载地址： https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz
 ```shell
+cd FFmpeg-n4.2.1/
 ./configure --prefix=/usr/local/ffmpeg --enable-shared
 make -j8
 make install
 ```
 
-**步骤2：** 安装[taskflow](https://github.com/taskflow/taskflow/releases), 在根目录下创建include目录，从github上下载taskflow的源码,解压后将taskflow目录复制到include目录中。
+**步骤2：** 安装[taskflow](https://github.com/taskflow/taskflow/releases), 在根目录下创建include目录，从github上下载taskflow的源码, 解压后将源码中的taskflow目录复制到AllObjectStructuringV2/include目录中。
 
 ## 4 修改模型路径和测试视频
 
@@ -167,8 +168,8 @@ const size_t numLines = 10;
 ## 5 编译与运行
 **步骤1：** 配置环境变量。
 ```
-. ${sdk_path}/set_env.sh
-. ${ascend_toolkit_path}/set_env.sh
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
 export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 ```
 
@@ -214,7 +215,7 @@ std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rts
 ```
 for (size_t i = 0; i < numChannel; i++) {
     int port = ${port} + i;
-    filePaths[i] = "rtsp://${ip_address}:" + std::to_string(port) + "/test.264"
+    filePaths[i] = "rtsp://${ip_address}:" + std::to_string(port) + "/test.264";
 }
 ```
 + port:起始端口
@@ -223,8 +224,8 @@ for (size_t i = 0; i < numChannel; i++) {
 ```
 # 如果是不同名称的264视频，则手动批量添加
 std::vector<std::string> filePaths(numChannel);
-filePaths[0] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264"
-filePaths[1] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264"
+filePaths[0] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264";
+filePaths[1] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264";
 ...
 
 ```
@@ -246,7 +247,7 @@ make -j
 
 请按照问题重要程度，详细列出可能要到的问题，和解决方法。
 
-### 3.1 模型路径错误问题
+### 6.1 模型路径错误问题
 
 **问题描述：**
 
@@ -255,7 +256,7 @@ Failed to get model, the model path is invalidate.
 **解决方案：**
 可执行文件main和模型相对路径不匹配，确认可执行文件和model目录相对路径，或者在main.cpp中直接使用模型全路径。
 
-### 3.2 拉2k/4k视频流时，显示decoded image is invalid
+### 6.2 拉2k/4k视频流时，显示decoded image is invalid
 
 **问题描述：**
 

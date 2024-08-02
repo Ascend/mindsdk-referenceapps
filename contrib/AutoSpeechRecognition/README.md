@@ -13,22 +13,21 @@
 
 ### 1.1 支持的产品
 
-支持昇腾310芯片
+本项目支持昇腾Atlas 300I pro、 Atlas300V pro
 
 ### 1.2 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
 
-支持21.0.4版本
 
-版本号查询方法，在Atlas产品环境下，运行命令：
-
-```
-npu-smi info
-```
-### 1.3 特性及适用场景
+### 1.2 特性及适用场景
 
 本项目适用于wav中文语音数据，每条语音3~5秒。
 
-### 1.4 代码目录结构与说明
+### 1.3 代码目录结构与说明
 
 本sample工程名称为AutoSpeechRecognition，工程目录如下图所示：
 ```
@@ -45,23 +44,21 @@ npu-smi info
 |-------- pipline
 |           |---- am_lm.pipeline               //声学模型-语言模型流水线配置文件
 |-------- main.py                              //推理及精度测试程序
+|-------- main_sig.py                          //执行单个的样例功能
 |-------- post_process.py                      //将推理的结果解码成文字
 |-------- pre_process.py                       //对语音数据进行特征提取和对齐
 |-------- run.sh                               //样例运行脚本
 |-------- README.md
 ```
 
-## 2 环境依赖
+## 2 依赖
 
-环境依赖软件和版本如下表：
+第三方依赖软件和版本如下表：
 
 |软件名称    | 版本     |
 |-----------|----------|
-| python    | 3.9.2    |
 | numpy     | 1.23.5   |
-| MindX SDK | 3.0.RC3  |
 | librosa   | 0.9.2    |
-| CANN      | 6.0.RC1  |
 | pypinyin  | 0.48.0   |
 
 1. 请确认环境已安装pip3后，使用pip3 install * 安装以上依赖
@@ -90,17 +87,20 @@ apt-get install liblzma-dev
 
 ### 3.2 模型转换
 由于原模型是tensorflow的模型，因此我们需要借助于ATC工具将tensorflow的pb模型转化为om模型。
-模型转换时应先按照 [准备动作](https://support.huaweicloud.com/atc-model-convert-cann202infer/atlasatc_16_0005.html) 配置好环境和设置环境变量，然后再分别执行以下命令
+模型转换时应先配置CANN环境变量，然后再分别执行以下命令
 
+```bash
+. {cann_install_path}/ascend-toolkit/set_env.sh
+```
 - 声学模型的转换
 
-`atc --model=./frozen_graph_conform.pb --framework=3 --output=./am_conform_batch_one --input_format=NHWC --input_shape="features:1,1001,80,1;length:1,1" --soc_version=Ascend310 --log=error`
+`atc --model=./frozen_graph_conform.pb --framework=3 --output=./am_conform_batch_one --input_format=NHWC --input_shape="features:1,1001,80,1;length:1,1" --soc_version=Ascend310P3 --log=error`
 
 > 声学模型的输入是经过预处理后的数据。除了要进行特征提取外，还要与模型的输入维度对齐。声学模型的输入有两个，第一个是经过预处理后的音频数据，第二个是一个表示语音数据识别出文字长度的一个整形数据。
 
 - 语言模型的转换
 
-`atc --model=./frozen_graph_transform.pb --framework=3 --output=./lm_transform_batch_one --input_format=ND --input_shape="inputs:1,251" --soc_version=Ascend310  --log=error`
+`atc --model=./frozen_graph_transform.pb --framework=3 --output=./lm_transform_batch_one --input_format=ND --input_shape="inputs:1,251" --soc_version=Ascend310P3  --log=error`
 
 > 为了简化推理过程，我们直接把声学模型的输出作为语言模型的输入，所以这里语言模型的输入要与声学模型的输出保持一致
 
@@ -110,16 +110,26 @@ apt-get install liblzma-dev
 
 ### 4.1 数据集准备
 
-此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data"目录下。<kbd>data/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
+此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data"目录下。<kbd>data/S0150_mic/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
 
-
-### 4.2 执行以下脚本
+### 4.2 设置环境变量
 ```bash
-bash run.sh
+. {cann_install_path}/ascend-toolkit/set_env.sh
+. {sdk_install_path}/mxVision/set_env.sh
+```
+
+### 4.3 执行以下脚本
+```bash
+python3 main.py
 ```
 运行样例数据集上的推理及精度、性能测试。
-
-或更改run.sh中python文件为main_sig.py以执行单个的样例功能
 ## 5 其它说明
 
 由于模型输入的限制，推理时wav语音的时长应控制在10s及其以下，超过10s的部分会被截断。
+
+## 6 常见问题
+### ImportError: {python_install_path}/scikit_learn.libs/libgomp-xxx.so.1.0.0:cannot allocate memory in static TLS block
+```bash
+# 显示声明环境变量LD_PRELOAD, 用户请修改为安装环境中的路径
+export LD_RPELOAD=$LD_REPLOAD:{python_install_path}/site-packages/scikit_learn.libs/libgomp-xxx.so.1.0.0
+```

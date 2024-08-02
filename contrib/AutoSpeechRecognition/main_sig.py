@@ -51,7 +51,7 @@ if __name__ == "__main__":
     if data_raw is True:
         # not needed if data is numpy file
         from pre_process import make_model_input
-        wav_file_path = os.path.join(cwd_path, "data/BAC009S0150W0087.wav")
+        wav_file_path = os.path.join(cwd_path, "data/S0150_mic/BAC009S0150W0087.wav")
         feat_data, len_data = make_model_input([wav_file_path])
     # if data is numpy file
     else:

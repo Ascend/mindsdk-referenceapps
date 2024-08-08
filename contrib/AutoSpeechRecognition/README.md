@@ -34,7 +34,7 @@
 .
 |-------- data
 |           |---- lm_tokens.txt                //字典文件
-|           |---- S0150_mic                       //样例数据集
+|           |---- S0150_mic                       //样例数据集，由用户创建
 |           |---- npy                          //样例数据集（执行时生成）
 |                  |---- feat_data             //语音文件转换的npy文件
 |                  |---- len_data              //语音文件转换的npy文件
@@ -47,7 +47,6 @@
 |-------- main_sig.py                          //执行单个的样例功能
 |-------- post_process.py                      //将推理的结果解码成文字
 |-------- pre_process.py                       //对语音数据进行特征提取和对齐
-|-------- run.sh                               //样例运行脚本
 |-------- README.md
 ```
 
@@ -73,9 +72,6 @@ apt-get install libsndfile1 -y
 apt-get install libasound2-dev libsndfile-dev
 apt-get install liblzma-dev
 ```
-3. run.sh脚本中LD_LIBRARY_PATH设置了ACL动态库链接路径为/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64，如果实际环境中路径不一致，需要替换为实际的目录。
-
-4. 如果环境变量中没有MX_SDK_HOME变量，则需要在run.sh脚本中设置MX_SDK_HOME变量为你实际的MX_SDK安装目录。
 
 ## 3 模型获取与转换
 
@@ -110,7 +106,7 @@ apt-get install liblzma-dev
 
 ### 4.1 数据集准备
 
-此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data"目录下。<kbd>data/S0150_mic/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
+此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data/S0150_mic"目录下。<kbd>data/S0150_mic/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
 
 ### 4.2 设置环境变量
 ```bash

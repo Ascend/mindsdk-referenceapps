@@ -11,6 +11,7 @@
 ### 1.2 支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
@@ -66,12 +67,6 @@
 
 环境依赖软件和版本如下表：
 
-| 软件                | 版本                                                         | 说明                          |
-| ------------------- | ------------------------------------------------------------ | ----------------------------- |
-| mxVision            | [mxVision 3.0.RC2](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) | mxVision软件包                |
-| Ascend-CANN-toolkit | [CANN 5.1.RC2](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial) | Ascend-cann-toolkit开发套件包 |
-| 操作系统            | [Ubuntu 18.04](https://gitee.com/link?target=https%3A%2F%2Fubuntu.com%2F) | Linux操作系统                 |
-| OpenCV              | 4.6.0                                                        | 用于结果可视化                |
 
 在编译运行项目前，需要设置环境变量：
 

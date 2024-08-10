@@ -67,6 +67,9 @@
 
 环境依赖软件和版本如下表：
 
+| 软件名称 | 版本  | 获取方式                                                     |
+| -------- | ----- | ------------------------------------------------------------ |
+| pytorch  | 1.7.0* | [pytorch官网](https://pytorch.org/get-started/previous-versions/) |
 
 在编译运行项目前，需要设置环境变量：
 
@@ -83,8 +86,6 @@ export install_path=${install_path}
 
  **${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
-*版本要求：*
-*Pytorch = 1.7.0*
 
 ###  3. 模型转换
 

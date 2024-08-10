@@ -84,9 +84,6 @@ export install_path=${install_path}
  **${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 *版本要求：*
-
-*Python = 3.9.2
-
 *Pytorch = 1.7.0*
 
 ###  3. 模型转换
@@ -102,14 +99,13 @@ git clone https://github.com/ruc-aimc-lab/superretina
 ```
 
 
-
-**步骤2** **pth转onnx** 将**pth2onnx.py**脚本放至原图像配准工程**本地**目录下，执行如下命令：
-
+**步骤2** **pth转onnx** 将**pth2onnx.py**脚本放至克隆下来的原*图像配准工程*目录下，执行如下命令：
+本项目也提供了转换好的onnx模型共开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
 ```bash
 python pth2onnx.py
 ```
 
-按照实际情况修改路径：
+按照实际情况修改脚本中的路径：
 
 ```python
 if __name__ == '__main__':
@@ -123,6 +119,10 @@ if __name__ == '__main__':
 
 ```bash
 bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
+```
+模型转换时可能会出现EOFError 可以执行以下命令后再执行上面的脚本
+```bash 
+export TE_PARALLEL_COMPILER=1
 ```
 
 ## 编译与运行
@@ -174,7 +174,3 @@ S: 0.949, P: 0.544, A: 0.780, mAUC: 0.758
 ```
 
 论文中精度，同时也是目标精度为mAUC=0.762，结果mAUC=0.758与目标精度误差在0.5%以内，因此精度达标。
-
-## 其他
-
-备份链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip

@@ -101,7 +101,7 @@ git clone https://github.com/ruc-aimc-lab/superretina
 
 
 **步骤2** **pth转onnx** 将**pth2onnx.py**脚本放至克隆下来的原*图像配准工程*目录下，执行如下命令：
-本项目也提供了转换好的onnx模型共开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
+本文也提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
 ```bash
 python pth2onnx.py
 ```

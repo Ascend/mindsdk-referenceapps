@@ -127,5 +127,5 @@ python3 main.py
 ### ImportError: {python_install_path}/scikit_learn.libs/libgomp-xxx.so.1.0.0:cannot allocate memory in static TLS block
 ```bash
 # 显示声明环境变量LD_PRELOAD, 用户请修改为安装环境中的路径
-export LD_RPELOAD=$LD_REPLOAD:{python_install_path}/site-packages/scikit_learn.libs/libgomp-xxx.so.1.0.0
+export LD_PRELOAD=$LD_PRELOAD:{python_install_path}/site-packages/scikit_learn.libs/libgomp-xxx.so.1.0.0
 ```

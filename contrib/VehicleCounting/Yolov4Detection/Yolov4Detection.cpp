@@ -63,7 +63,7 @@ APP_ERROR Yolov4Detection::LoadLabels(const std::string &labelPath, std::map<int
 
 // 设置配置参数
 void Yolov4Detection::SetYolov4PostProcessConfig(const InitParam &initParam, std::map<std::string,
-                                                std::shared_ptr<void>> &config)
+                                                std::string> &config)
 {
     MxBase::ConfigData configData;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
@@ -78,9 +78,14 @@ void Yolov4Detection::SetYolov4PostProcessConfig(const InitParam &initParam, std
     configData.SetJsonValue("INPUT_TYPE", std::to_string(initParam.inputType));
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
-    auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
-    config["labelPath"] = std::make_shared<std::string>(initParam.labelPath);
+    #ifdef MX_VERSION_5
+        auto jsonStr = configData.GetCfgJson().serialize();
+        config["postProcessConfigContent"] = jsonStr;
+    #else
+        auto jsonStr = configData.GetCfgJson();
+        config["postProcessConfigContent"] = jsonStr;
+    #endif
+    config["labelPath"] = initParam.labelPath;
 }
 
 APP_ERROR Yolov4Detection::FrameInit(const InitParam &initParam)
@@ -109,7 +114,7 @@ APP_ERROR Yolov4Detection::FrameInit(const InitParam &initParam)
         LogError << "ModelInferenceProcessor init failed, ret=" << ret << ".";
         return ret;
     }
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     SetYolov4PostProcessConfig(initParam, config);
     post = std::make_shared<MxBase::Yolov3PostProcess>();
     ret = post->Init(config);

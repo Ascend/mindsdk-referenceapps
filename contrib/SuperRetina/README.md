@@ -93,32 +93,10 @@ export install_path=${install_path}
 
 ###  3.1 基于深度学习的图像配准模型的转换
 
-**步骤1** **模型获取** 将[基于深度学习的图像配准模型](https://drive.google.com/drive/folders/1h-MH3wEiN7BoLyMRjF1OAwABKqq6gVFL?usp=sharing)下载到**本地**。克隆原图像配准工程到**本地**，执行如下命令：
+**步骤1** 获取.onnx模型
+本文提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
 
-```bash
-git clone https://github.com/ruc-aimc-lab/superretina
-```
-
-
-**步骤2** **pth转onnx。** 
-将**pth2onnx.py**脚本放至克隆下来的*原图像配准工程*本地目录下，执行如下命令：
-```bash
-python pth2onnx.py
-```
-
-执行前按照实际情况修改脚本中的路径：
-
-```python
-if __name__ == '__main__':
-    checkpoint = './SuperRetina.pth'
-    onnx_path = './SuperRetina.onnx'
-    input = torch.randn(2, 1, 768, 768)
-    pth_to_onnx(input, checkpoint, onnx_path)
-```
-本文也提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
-
-
-**步骤3** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
+**步骤2** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
 
 ```bash
 bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina

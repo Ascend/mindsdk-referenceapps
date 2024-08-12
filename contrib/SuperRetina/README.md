@@ -100,13 +100,13 @@ git clone https://github.com/ruc-aimc-lab/superretina
 ```
 
 
-**步骤2** **pth转onnx** 将**pth2onnx.py**脚本放至克隆下来的原*图像配准工程*目录下，执行如下命令：
-本文也提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
+**步骤2** **pth转onnx。** 
+将**pth2onnx.py**脚本放至克隆下来的*原图像配准工程*本地目录下，执行如下命令：
 ```bash
 python pth2onnx.py
 ```
 
-按照实际情况修改脚本中的路径：
+执行前按照实际情况修改脚本中的路径：
 
 ```python
 if __name__ == '__main__':
@@ -115,6 +115,8 @@ if __name__ == '__main__':
     input = torch.randn(2, 1, 768, 768)
     pth_to_onnx(input, checkpoint, onnx_path)
 ```
+本文也提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
+
 
 **步骤3** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
 

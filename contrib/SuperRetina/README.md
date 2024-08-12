@@ -37,7 +37,6 @@
 ```txt
 .
 │  README.mdn
-│  pth2onnx.py
 │  onnx2om.sh
 │
 └─python

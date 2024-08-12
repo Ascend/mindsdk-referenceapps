@@ -42,7 +42,6 @@ PoseEstNet
 |---- output_eval       
 |---- main.py
 |---- eval.py
-|---- pth2onnx.py
 |---- README.md   
 ```
 

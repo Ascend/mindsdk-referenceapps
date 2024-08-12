@@ -31,7 +31,7 @@ Atlas 300I Pro, Atlas 300V Pro和Atlas A500 A2
 |硬件缩放|√|√|√|
 
 ## 安装 CANN 版本包
-详情请参考: https://support.huawei.com/enterprise/zh/doc/EDOC1100234042/f1fad1e0
+[详情请参考CANN用户指南](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/80RC3alpha001/softwareinst/instg/instg_0001.html)
 
 ## FFmpeg-Ascend目录结构
 

@@ -3,6 +3,10 @@
 ## 1 简介
 本开发样例基于MindX SDK实现了姿态估计网络(PoseEstNet)，用于检测并预测车辆36个关键点坐标，包括4个wheel，16个Fender，4个Back，4个Front，4个WindshieldBack以及4个WindshieldFront。
 
+### 1.1 支持的产品
+
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
+
 ## 2 目录结构
 本工程名称为PoseEstNet，工程目录如下图所示：
 
@@ -44,14 +48,13 @@ PoseEstNet
 
 ## 3 依赖
 
-推荐系统为ubuntu 22.04，环境依赖软件和版本如下表：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| 软件名称 | 版本   |
-| :--------: | :------:    |
-|cmake       | 3.5+        | 
-|mxVision    | 5.0.RC     |
-|CANN        | 6.2.RC1   |
-|Python      | 3.9.12      |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+
 
 注：MindX SDK使用python版本为3.9.12，如出现无法找到python对应lib库请在root下安装python3.9开发库
 ```

@@ -146,13 +146,9 @@ ATC run success, welcome to the next use.
 
 
 ## 6 数据集
-### 6.1 原始VeRi数据集
-
- [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
- csv文件：[Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
-
 在工程根目录下新建data_eval/images、data_eval/labels和data文件夹
 目录结构如下
+
 ```
 PoseEstNet
 |---- data_eval
@@ -160,6 +156,12 @@ PoseEstNet
 |   |   |---- labels
 |---- data 
 ```
+
+### 6.1 原始VeRi数据集
+
+ [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
+ csv文件：[Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
+
 将数据集images文件夹下的图片复制到data_eval/images文件夹下面，将label_test.csv放到data_eval/labels文件夹下面，目录结构如下：
 ```
 ├── data_eval

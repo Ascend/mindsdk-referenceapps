@@ -44,16 +44,16 @@ PoseEstNet
 
 ## 3 依赖
 
-推荐系统为ubuntu 18.04，环境依赖软件和版本如下表：
+推荐系统为ubuntu 22.04，环境依赖软件和版本如下表：
 
 | 软件名称 | 版本   |
 | :--------: | :------:    |
 |cmake       | 3.5+        | 
-|mxVision    | 2.0.4       |
-|CANN        | 5.0.4       |
+|mxVision    | 5.0.RC     |
+|CANN        | 6.2.RC1   |
 |Python      | 3.9.12      |
 
-注：MindX SDK使用python版本为3.9.12，如出现无法找到python对应lib库请在root下安装python3.9开发库  
+注：MindX SDK使用python版本为3.9.12，如出现无法找到python对应lib库请在root下安装python3.9开发库
 ```
 apt-get install libpython3.9
 ```
@@ -75,20 +75,20 @@ apt-get install libpython3.9
 . /usr/local/Ascend/ascend-toolkit/set_env.sh
 ```
 
-### 5.1 yolov3的模型转换  
+### 5.1 yolov3的模型转换
 
 **步骤1** 获取yolov3的原始模型(.pb文件)和相应的配置文件(.cfg文件)  
 &ensp;&ensp;&ensp;&ensp;&ensp; [原始模型下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/yolov3_tensorflow_1.5.pb)
-&ensp;&ensp;&ensp;&ensp;&ensp; [配置文件下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/aipp_nv12.cfg)  
+&ensp;&ensp;&ensp;&ensp;&ensp; [配置文件下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/aipp_nv12.cfg)
 
-**步骤2** 将获取到的yolov3模型.pb文件和.cfg文件存放至：“项目所在目录/models”  
+**步骤2** 将获取到的yolov3模型.pb文件和.cfg文件存放至：“项目所在目录/models”
 
 **步骤3** .om模型转换  
-以下操作均在“项目所在目录/models”路径下进行：  
+以下操作均在“项目所在目录/models”路径下进行：
 
-***1*** 使用ATC将.pb文件转成为.om文件
+***1*** 使用ATC将.pb文件转成为.om文件。
 ```
-atc --model=yolov3_tensorflow_1.5.pb --framework=3 --output=yolov3 --output_type=FP32 --soc_version=Ascend310 --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0" --log=info --insert_op_conf=aipp_nv12.cfg
+atc --model=yolov3_tensorflow_1.5.pb --framework=3 --output=yolov3 --output_type=FP32 --soc_version=Ascend310B1 --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0" --log=info --insert_op_conf=aipp_nv12.cfg
 ```
 ***2*** 执行完模型转换脚本后，若提示如下信息说明模型转换成功，可以在该路径下找到名为yolov3.om模型文件。
 （可以通过修改output参数来重命名这个.om文件）
@@ -98,7 +98,7 @@ ATC run success, welcome to the next use.
 
 ### 5.2 PoseEstNet的模型转换
 
-#### 5.2.1 模型概述  
+#### 5.2.1 模型概述
 &ensp;&ensp;&ensp;&ensp;&ensp; [PoseEstNet论文地址](https://arxiv.org/pdf/2005.00673.pdf)
 &ensp;&ensp;&ensp;&ensp;&ensp; [PoseEstNet代码地址](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet)
 
@@ -120,7 +120,7 @@ rm models.zip
 ```
 python3 tools/pth2onnx.py --cfg experiments/veri/hrnet/w32_256x256_adam_lr1e-3.yaml TEST.MODEL_FILE models/veri/pose_hrnet/w32_256x256_adam_lr1e-3/model_best.pth
 ```
-> 注意目前ATC支持的onnx算子版本为11  
+> 注意目前ATC支持的onnx算子版本为11
 
 此时会得到PoseEstNet.onnx模型，到此步骤1已完成  
 如果在线环境中无法安装pytorch，你可以在本地环境中进行上述.pth模型转.onnx模型操作，然后将得到的.onnx模型放在“项目所在目录/models”即可
@@ -129,9 +129,9 @@ python3 tools/pth2onnx.py --cfg experiments/veri/hrnet/w32_256x256_adam_lr1e-3.y
 
 **步骤2** .onnx模型转.om模型
 
-***1*** 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）
+***1*** 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）。
 ```
-atc --framework=5 --model=PoseEstNet.onnx --output=PoseEstNet --input_format=NCHW --input_shape="image:1,3,256,256" --insert_op_conf=aipp_hrnet_256_256.aippconfig --log=debug --soc_version=Ascend310
+atc --framework=5 --model=PoseEstNet.onnx --output=PoseEstNet --input_format=NCHW --input_shape="image:1,3,256,256" --insert_op_conf=aipp_hrnet_256_256.aippconfig --log=debug --soc_version=Ascend310B1
 ```
 ***2*** 执行完模型转换脚本后，若提示如下信息说明模型转换成功（同样的，可以通过修改output参数来重命名这个.om文件）
 ```
@@ -145,13 +145,13 @@ ATC run success, welcome to the next use.
 
 
 
-## 6 数据集  
-### 6.1 原始VeRi数据集  
+## 6 数据集
+### 6.1 原始VeRi数据集
 
 &ensp;&ensp;&ensp;&ensp;&ensp; [Github官网链接](https://vehiclereid.github.io/VeRi/)
 &ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
 
-原数据集images文件夹下面分为images_train和images_test，需要自己将这两个文件夹里的图片复制到data_eval/images文件夹下面，目录结构如下：
+原数据集images文件夹下面分为images_train和images_test，需要自己将这两个文件夹里的图片复制到data_eval/images文件夹下面，将label_test.csv放到data_eval/labels文件夹下面，目录结构如下：
 ```
 ├── data_eval
     ├── images
@@ -173,7 +173,7 @@ ATC run success, welcome to the next use.
 ----------------------------------------------------
 ## 7 测试
 
-### 7.1 配置环境变量  
+### 7.1 配置环境变量
 
 运行cann和sdk的set_env.sh脚本
 
@@ -185,10 +185,8 @@ ATC run success, welcome to the next use.
 ```
 步骤详见5： 数据集
 ```
-### 7.4 安装插件编译所需要的NumCpp库
+### 7.4 安装插件编译所需要的NumCpp库，[Github官网链接](https://github.com/dpilger26/NumCpp)，注意下载[Version_2.8.0](https://github.com/dpilger26/NumCpp/releases/tag/Version_2.8.0)版本。下载后，进入plugins目录，将NumCpp解压至该目录。
 ```
-cd plugins
-git clone https://github.com/dpilger26/NumCpp
 mkdir include
 cp -r  NumCpp/include/NumCpp ./include/
 ```
@@ -197,7 +195,7 @@ cp -r  NumCpp/include/NumCpp ./include/
 bash build.sh
 ```
 
-### 7.6 配置pipeline  
+### 7.6 配置pipeline
 根据所需场景，配置pipeline文件，调整路径参数等。
 
 PoseEstNet.pipeline:
@@ -224,7 +222,7 @@ PoseEstNet.pipeline:
                 "factory": "mxpi_objectpostprocessor",
                 "next": "mxpi_imagecrop0"
         },
-    # 配置mxpi_tensorinfer插件的PoseEstNet.om模型加载路径（lines 68-75 以及 92-99）
+    # 配置mxpi_tensorinfer插件的PoseEstNet.om模型加载路径（lines 68-75）
     lines 68-75：
         "mxpi_tensorinfer2":{
             "props": {
@@ -252,11 +250,11 @@ eval_PoseEstNet.pipeline:
 
 ### 7.7 执行
 
-业务代码main.py结果在output文件夹，保证在执行前已创建好data文件夹并放入待检测图片
+业务代码main.py结果在*output*文件夹，保证在执行前已创建好data文件夹并放入待检测图片
 ```
 python3 main.py --inputPath data
 ```
-评估代码的具体结果在output_eval文件夹，保证在执行前已创建好data_eval文件夹并放入veri数据集图片
+评估代码的具体结果在*output_eval*文件夹，保证在执行前已创建好data_eval文件夹并放入veri数据集图片
 ```
 python3 eval.py --inputPath data_eval/images/ --labelPath data_eval/labels/label_test.csv 
 ```

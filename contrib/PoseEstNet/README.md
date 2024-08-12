@@ -45,7 +45,7 @@ PoseEstNet
 |---- README.md   
 ```
 
-## 3 依赖
+## 3 支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
@@ -54,11 +54,6 @@ PoseEstNet
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
 
-
-注：MindX SDK使用python版本为3.9.12，如出现无法找到python对应lib库请在root下安装python3.9开发库
-```
-apt-get install libpython3.9
-```
 
 ## 4 特性及适应场景
 车辆姿态过程主要存在两个阶段的模型检测：①yolov3车辆检测②PoseEstNet车辆姿态识别检测，因此检测效果也与这两个模型精度、检测结果密不可分。在经过不断测试与验证之后，模型在大部分情形下可以准确检测，但针对输入有以下限定：

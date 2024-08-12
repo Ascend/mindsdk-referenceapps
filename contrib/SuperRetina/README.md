@@ -45,7 +45,7 @@
     │  predictor.py
     │
     ├─config
-    │      test.yaml
+    │  test.yaml
 ```
 
 

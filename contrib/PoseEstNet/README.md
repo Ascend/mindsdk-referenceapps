@@ -107,31 +107,10 @@ ATC run success, welcome to the next use.
 
 #### 5.2.2 模型转换步骤
 
-**步骤1** .pth模型转.onnx模型
-
-***1*** 获取.pth权重文件
-```
-wget --no-check-certificate -r 'https://docs.google.com/uc?export=download&id=1vD08fh-za3mgTJ9UkK1ASCTJAqypW0RL' -O models.zip
-unzip models.zip
-rm models.zip
-```
-[Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/models.rar)
-
-***2*** 下载PoseEstNet源码并创建项目（源码地址详见5.2.1），将根目录切换为PAMTRI-master/PoseEstNet目录，将步骤1下载的models文件夹放进根目录
-
-***3*** 获取pth2onnx.py （该文件已上传在本项目工程里），将本项目工程里的pth2onnx.py下载下来放在tools目录下，执行下列命令，生成.onnx模型文件
-```
-python3 tools/pth2onnx.py --cfg experiments/veri/hrnet/w32_256x256_adam_lr1e-3.yaml TEST.MODEL_FILE models/veri/pose_hrnet/w32_256x256_adam_lr1e-3/model_best.pth
-```
-> 注意目前ATC支持的onnx算子版本为11
-
-此时会得到PoseEstNet.onnx模型，到此步骤1已完成  
-如果在线环境中无法安装pytorch，你可以在本地环境中进行上述.pth模型转.onnx模型操作，然后将得到的.onnx模型放在“项目所在目录/models”即可
-
+**步骤1** 获取.onnx模型
 本项目提供onnx模型：[Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/PoseEstNet.onnx)
 
-**步骤2** .onnx模型转.om模型
-
+**步骤2** onnx模型转.om模型
 ***1*** 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）。
 ```
 atc --framework=5 --model=PoseEstNet.onnx --output=PoseEstNet --input_format=NCHW --input_shape="image:1,3,256,256" --insert_op_conf=aipp_hrnet_256_256.aippconfig --log=debug --soc_version=Ascend310B1

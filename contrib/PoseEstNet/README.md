@@ -30,8 +30,8 @@ PoseEstNet
 |   |   |   |   |---- MxpiPNetPreprocess.h
 |   |   |   |   |---- build.sh
 |   |   |---- build.sh
-|---- data                              
-|---- data_eval 
+|---- data                              // 测试数据文件夹，需用户手工创建
+|---- data_eval                         // 数据集文件夹，需用户手工创建
 |   |   |---- images
 |   |   |---- labels
 |---- output                            // 结果保存文件夹                              
@@ -148,10 +148,19 @@ ATC run success, welcome to the next use.
 ## 6 数据集
 ### 6.1 原始VeRi数据集
 
-&ensp;&ensp;&ensp;&ensp;&ensp; [Github官网链接](https://vehiclereid.github.io/VeRi/)
-&ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
+ [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
+ csv文件：[Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
 
-原数据集images文件夹下面分为images_train和images_test，需要自己将这两个文件夹里的图片复制到data_eval/images文件夹下面，将label_test.csv放到data_eval/labels文件夹下面，目录结构如下：
+在工程根目录下新建data_eval/images、data_eval/labels和data文件夹
+目录结构如下
+```
+PoseEstNet
+|---- data_eval
+|   |   |---- images
+|   |   |---- labels
+|---- data 
+```
+将数据集images文件夹下的图片复制到data_eval/images文件夹下面，将label_test.csv放到data_eval/labels文件夹下面，目录结构如下：
 ```
 ├── data_eval
     ├── images
@@ -160,9 +169,8 @@ ATC run success, welcome to the next use.
     ├── labels
     |   ├── label_test.csv
 ```
-### 6.2 data_eval/labels中的csv文件：[Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
 
-### 6.3 创建data文件夹，里面放入自己准备的测试图片，目录结构如下：
+### 6.2 data中放入自己准备的测试图片，目录结构如下：
 ```
 ├── data
     ├── test_01.jpg

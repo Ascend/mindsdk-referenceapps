@@ -21,7 +21,6 @@
 ```
 
 ### 运行
-运行前需要将`${SDK_INSTALL_PATH}/mxVision/config/logging.conf`中console_level字段修改为0（将日志级别调整至info级别），参考链接：https://www.hiascend.com/document/detail/zh/mind-sdk/500/vision/mxvisionug/mxvisionug_1285.html 。
 ```bash
 ## 参数为1-7的数字。对应的含义可查看main.cpp, 不传参默认为1。
 python3 main.py 参数

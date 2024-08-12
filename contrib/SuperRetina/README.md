@@ -123,10 +123,6 @@ if __name__ == '__main__':
 ```bash
 bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
 ```
-模型转换时可能会出现EOFError 可以执行以下命令后再执行上面的脚本
-```bash 
-export TE_PARALLEL_COMPILER=1
-```
 
 ## 编译与运行
 

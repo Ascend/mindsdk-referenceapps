@@ -129,11 +129,13 @@ python predictor.py
 
 **步骤1**  在./python目录下创建./data文件夹，下载[FIRE数据集]( https://projects.ics.forth.gr/cvrl/fire/FIRE.7z)，解压后将./FIRE文件夹，放到./data文件夹。
 
-**步骤2**  按照第 2 小节 环境依赖 中的步骤设置环境变量。
+**步骤2**  在./pathon目录下执行resize脚本，将数据集图片缩放到模型的输入的大小，同时也对groudTruth做了缩放。缩放后的图片位于./data/FIRE/Images/resized文件夹下
 
-**步骤3**  按照第 3 小节 模型转换 中的步骤获得 om 模型文件,在./python目录下创建./model文件夹,将om文件移动到model文件夹中。
+**步骤3**  按照第 2 小节 环境依赖 中的步骤设置环境变量。
 
-**步骤4**  在./python目录下运行main.py函数，执行如下命令：
+**步骤4**  按照第 3 小节 模型转换 中的步骤获得 om 模型文件,在./python目录下创建./model文件夹,将om文件移动到model文件夹中。
+
+**步骤5**  在./python目录下运行main.py函数，执行如下命令：
 
 ```bash
 python main.py 

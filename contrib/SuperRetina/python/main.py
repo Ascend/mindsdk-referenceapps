@@ -383,8 +383,8 @@ if __name__ == '__main__':
         print("data path don't exit.")
         exit()
 
-    ground_dir = os.path.join(DATA_PATH, TESTSET, 'Ground Truth')
-    image_dir = os.path.join(DATA_PATH, TESTSET, 'Images')
+    ground_dir = os.path.join(DATA_PATH, TESTSET, 'Ground Truth/resized')
+    image_dir = os.path.join(DATA_PATH, TESTSET, 'Images/resized')
     OUT_PATH = '../result'
     matches_pair = [x for x in os.listdir(ground_dir) if x.endswith('.txt')
                 and not x.endswith('P37_1_2.txt')]

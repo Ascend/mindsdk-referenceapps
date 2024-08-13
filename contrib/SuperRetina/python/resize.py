@@ -1,6 +1,7 @@
 import cv2
 import os
 
+
 folder_path = './data/FIRE/Images/'
 output_folder = os.path.join(folder_path, 'resized')
 os.makedirs(output_folder, exist_ok=True)
@@ -14,7 +15,7 @@ for filename in os.listdir(folder_path):
             resized_img = cv2.resize(img, (768, 768))
             output_path = os.path.join(output_folder, filename)
             cv2.imwrite(output_path, resized_img)
-print("Resized images path:", output_folder)
+
 
 scale_factor = 768 / 2912
 ground_truth_folder = r'./data/FIRE/Ground Truth'
@@ -32,4 +33,3 @@ for filename in os.listdir(ground_truth_folder):
                 coords = line.strip().split()
                 scaled_coords = [str(float(coord) * scale_factor) for coord in coords]
                 f.write(' '.join(scaled_coords) + '\n')
-print("Resized ground truth path:", output_folder)

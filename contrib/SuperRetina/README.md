@@ -6,13 +6,16 @@
 
 ### 1.1 支持的产品
 
-本项目以昇腾Atlas310卡为主要的硬件平台。
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 ### 1.2 支持的版本
 
-本样例配套的CANN版本为[5.0.4](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial)，MindX SDK版本为[2.0.4](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk)。
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-MindX SDK安装前准备可参考[《用户指南》](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
 
 ### 1.3 软件方案介绍
 
@@ -34,7 +37,6 @@ MindX SDK安装前准备可参考[《用户指南》](https://gitee.com/ascend/m
 ```txt
 .
 │  README.mdn
-│  pth2onnx.py
 │  onnx2om.sh
 │
 └─python
@@ -43,7 +45,7 @@ MindX SDK安装前准备可参考[《用户指南》](https://gitee.com/ascend/m
     │  predictor.py
     │
     ├─config
-    │      test.yaml
+    │  test.yaml
 ```
 
 
@@ -64,12 +66,9 @@ MindX SDK安装前准备可参考[《用户指南》](https://gitee.com/ascend/m
 
 环境依赖软件和版本如下表：
 
-| 软件                | 版本                                                         | 说明                          |
-| ------------------- | ------------------------------------------------------------ | ----------------------------- |
-| mxVision            | [mxVision 3.0.RC2](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) | mxVision软件包                |
-| Ascend-CANN-toolkit | [CANN 5.1.RC2](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial) | Ascend-cann-toolkit开发套件包 |
-| 操作系统            | [Ubuntu 18.04](https://gitee.com/link?target=https%3A%2F%2Fubuntu.com%2F) | Linux操作系统                 |
-| OpenCV              | 4.6.0                                                        | 用于结果可视化                |
+| 软件名称 | 版本  | 获取方式                                                     |
+| -------- | ----- | ------------------------------------------------------------ |
+| pytorch  | 1.7.0* | [pytorch官网](https://pytorch.org/get-started/previous-versions/) |
 
 在编译运行项目前，需要设置环境变量：
 
@@ -86,11 +85,6 @@ export install_path=${install_path}
 
  **${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
-*版本要求：*
-
-*Python = 3.9.2
-
-*Pytorch = 1.7.0*
 
 ###  3. 模型转换
 
@@ -98,31 +92,10 @@ export install_path=${install_path}
 
 ###  3.1 基于深度学习的图像配准模型的转换
 
-**步骤1** **模型获取** 将[基于深度学习的图像配准模型](https://drive.google.com/drive/folders/1h-MH3wEiN7BoLyMRjF1OAwABKqq6gVFL?usp=sharing)下载到**本地**。克隆原图像配准工程到**本地**，执行如下命令：
+**步骤1** 获取.onnx模型
+本文提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
 
-```bash
-git clone https://github.com/ruc-aimc-lab/superretina
-```
-
-
-
-**步骤2** **pth转onnx** 将**pth2onnx.py**脚本放至原图像配准工程**本地**目录下，执行如下命令：
-
-```bash
-python pth2onnx.py
-```
-
-按照实际情况修改路径：
-
-```python
-if __name__ == '__main__':
-    checkpoint = './SuperRetina.pth'
-    onnx_path = './SuperRetina.onnx'
-    input = torch.randn(2, 1, 768, 768)
-    pth_to_onnx(input, checkpoint, onnx_path)
-```
-
-**步骤3** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
+**步骤2** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
 
 ```bash
 bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
@@ -177,7 +150,3 @@ S: 0.949, P: 0.544, A: 0.780, mAUC: 0.758
 ```
 
 论文中精度，同时也是目标精度为mAUC=0.762，结果mAUC=0.758与目标精度误差在0.5%以内，因此精度达标。
-
-## 其他
-
-备份链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip

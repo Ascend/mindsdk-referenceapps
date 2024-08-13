@@ -11,19 +11,15 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 ```
 
 ## 支持的产品
-Atlas 300I Pro和Atlas 300V Pro
+Atlas 300I Pro, Atlas 300V Pro和Atlas A500 A2
 
-## 支持的 ACL 版本
+### 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-```text
-5.1.RC2及以上
-注意：目前只支持 HiMpi 接口即 310P 昇腾 AI芯片。
-```
-
-查询 ACL 版本号的方法是，在 Atlas 产品环境下，运行以下命令：
-```bash
-npu-smi info
-```
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
 
 ## 支持的功能
 |功能|mpeg4|h264/h265|多路|
@@ -34,7 +30,7 @@ npu-smi info
 |硬件缩放|√|√|√|
 
 ## 安装 CANN
-[详情请参考CANN用户指南](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/700alpha001/quickstart/quickstart_18_0001.html)
+[详情请参考CANN用户指南](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/80RC3alpha001/softwareinst/instg/instg_0001.html)
 
 ## 下载开源FFmpeg代码
 [FFmpeg-n4.4.4 Source code](https://github.com/FFmpeg/FFmpeg/releases/tag/n4.4.4)
@@ -64,8 +60,6 @@ patch -p1 -f < {FFmpeg-Plugin-Dir}/AscendFFmpegPlugin/ascend_ffmpeg.patch
 ```
 
 ## 重新编译
-### 当前目录
-    {your_dir}/FFmpeg-n4.4.4, ex: /home/FFmpeg-n4.4.4
 
 ### 设置环境变量：
 * `ASCEND_HOME`     Ascend 安装的路径，一般为 `/usr/local/Ascend`
@@ -87,6 +81,7 @@ patch -p1 -f < {FFmpeg-Plugin-Dir}/AscendFFmpegPlugin/ascend_ffmpeg.patch
     enable-ascend : 允许使用 ascend 进行硬件加速
   ```
 * 编译命令
+在 /FFmpeg-n4.4.4 文件夹下执行以下命令
   ```bash
   ./configure \
       --prefix=./ascend \

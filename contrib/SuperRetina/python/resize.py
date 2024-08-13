@@ -1,8 +1,5 @@
 import cv2
 import os
-import logging
-
-logger = logging.getLogger(__name__)
 
 folder_path = './data/FIRE/Images/'
 output_folder = os.path.join(folder_path, 'resized')
@@ -16,7 +13,6 @@ for filename in os.listdir(folder_path):
             resized_img = cv2.resize(img, (768, 768))
             output_path = os.path.join(output_folder, filename)
             cv2.imwrite(output_path, resized_img)
-logger.warning('Resize images end.')
 
 scale_factor = 768 / 2912
 ground_truth_folder = r'./data/FIRE/Ground Truth'
@@ -36,4 +32,3 @@ for filename in os.listdir(ground_truth_folder):
                 coords = line.strip().split()
                 scaled_coords = [str(float(coord) * scale_factor) for coord in coords]
                 f.write(' '.join(scaled_coords) + '\n')
-logger.warning('Resize groud truth end.')

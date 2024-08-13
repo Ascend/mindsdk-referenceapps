@@ -42,7 +42,7 @@
 └─python
     │  main.py
     │  requirements.txt
-    │  predictor.py resize.py
+    │  predictor.py
     │  resize.py
     │
     ├─config

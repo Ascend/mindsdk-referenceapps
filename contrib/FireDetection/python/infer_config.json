@@ -1,0 +1,7 @@
+{
+    "rtsp_url": "xxxxxxx/fireDetection.264",
+    "model_path": "./firedetection.om",
+    "device_id": 0,
+    "skip_frame_number": 5,
+    "video_saved_path": "./save_data/output.h264"
+}

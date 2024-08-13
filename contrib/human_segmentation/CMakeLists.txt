@@ -19,13 +19,13 @@ link_directories(
 )
 
 add_executable(human_segmentation main.cpp)
+
 target_link_libraries(human_segmentation
         glog
         mxbase
         mxpidatatype
         plugintoolkit
         streammanager
-        cpprest
         mindxsdk_protobuf
         opencv_world
 )

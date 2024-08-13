@@ -42,7 +42,8 @@
 └─python
     │  main.py
     │  requirements.txt
-    │  predictor.py
+    │  predictor.py resize.py
+    │  resize.py
     │
     ├─config
     │  test.yaml

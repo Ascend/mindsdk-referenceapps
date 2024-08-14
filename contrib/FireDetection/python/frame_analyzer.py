@@ -135,7 +135,7 @@ class FrameAnalyzer:
         for bounding_box in analysis_info:
             left_top_point, right_button_point = (int(bounding_box[0]), int(bounding_box[1])),\
                                                   (int(bounding_box[2]), int(bounding_box[3]))
-            logger.warning("Frame {} detect {}! Confidence: {:.2f}, x0: {:.2f}, y0: {:.2f}, x1: {:.2f}, y1: {:.2f},"
+            logger.warning("Frame {} detect {}! Confidence: {:.2f}, x0: {:.2f}, y0: {:.2f}, x1: {:.2f}, y1: {:.2f}"
                            .format(frame_id, INDEX_TO_CLASS[bounding_box[5]], bounding_box[4], left_top_point[0],
                                    left_top_point[1], right_button_point[0], right_button_point[1]))
 

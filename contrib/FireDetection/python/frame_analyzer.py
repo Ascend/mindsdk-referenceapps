@@ -1,10 +1,8 @@
+import os
 import numpy as np
 from mindx.sdk import base
 from mindx.sdk.base import Tensor, Model, Size, Rect, log, ImageProcessor, post, Point
-from utils import file_base_check
-import os
-from utils import logger
-
+from utils import file_base_check, logger
 
 MODEL_INPUT_HEIGHT = 640
 MODEL_INPUT_WIDTH = 640
@@ -59,26 +57,8 @@ class FrameAnalyzeModel:
         self.model = Model(os.path.realpath(model_path), device_id)
         self.image_processor = ImageProcessor(device_id)
 
-    def infer(self, image):
-        height_ratio = image.original_height / MODEL_INPUT_HEIGHT
-        width_ratio = image.original_width / MODEL_INPUT_WIDTH
-        if image.height != MODEL_INPUT_HEIGHT or image.width != MODEL_INPUT_WIDTH:
-            image = self.image_processor.resize(image, MODEL_SHAPE, base.huaweiu_high_order_filter)
-        # model inference
-        image_tensor = [image.to_tensor()]
-        output_tensors = self.model.infer(image_tensor)
-        # decode output results
-        bounding_box_array = self.__decode_output(output_tensors)
-        # conduct non max suppression
-        if bounding_box_array.size != 0:
-            keep_idx = nms(bounding_box_array, NMS_THRESHOLD)
-            # correct bounding box bias due to resize operation
-            bounding_box_array = bounding_box_array[keep_idx, :]
-            bounding_box_array[:, [0, 2]] *= width_ratio
-            bounding_box_array[:, [1, 3]] *= height_ratio
-        return bounding_box_array
-
-    def __decode_output(self, output_tensors):
+    @staticmethod
+    def __decode_output(output_tensors):
         output_np_tensors = []
         for tensor in output_tensors:
             tensor.to_host()
@@ -126,20 +106,38 @@ class FrameAnalyzeModel:
                         bounding_box_array.append([x0, y0, x1, y1, temp_score, temp_class_id])
         return np.array(bounding_box_array)
 
+    def infer(self, image):
+        height_ratio = image.original_height / MODEL_INPUT_HEIGHT
+        width_ratio = image.original_width / MODEL_INPUT_WIDTH
+        if image.height != MODEL_INPUT_HEIGHT or image.width != MODEL_INPUT_WIDTH:
+            image = self.image_processor.resize(image, MODEL_SHAPE, base.huaweiu_high_order_filter)
+        # model inference
+        image_tensor = [image.to_tensor()]
+        output_tensors = self.model.infer(image_tensor)
+        # decode output results
+        bounding_box_array = self.__decode_output(output_tensors)
+        # conduct non max suppression
+        if bounding_box_array.size != 0:
+            keep_idx = nms(bounding_box_array, NMS_THRESHOLD)
+            # correct bounding box bias due to resize operation
+            bounding_box_array = bounding_box_array[keep_idx, :]
+            bounding_box_array[:, [0, 2]] *= width_ratio
+            bounding_box_array[:, [1, 3]] *= height_ratio
+        return bounding_box_array
+
 
 class FrameAnalyzer:
     def __init__(self, model_path, device_id):
         self.frame_analyze_model = FrameAnalyzeModel(model_path, device_id)
 
-    def analyze(self, image):
-        return self.frame_analyze_model.infer(image)
-
     @staticmethod
     def alarm(analysis_info, frame_id):
         for bounding_box in analysis_info:
             left_top_point, right_button_point = (int(bounding_box[0]), int(bounding_box[1])),\
-                                                 (int(bounding_box[2]), int(bounding_box[3]))
+                                                  (int(bounding_box[2]), int(bounding_box[3]))
             logger.warning("Frame {} detect {}! Confidence: {:.2f}, x0: {:.2f}, y0: {:.2f}, x1: {:.2f}, y1: {:.2f},"
                            .format(frame_id, INDEX_TO_CLASS[bounding_box[5]], bounding_box[4], left_top_point[0],
                                    left_top_point[1], right_button_point[0], right_button_point[1]))
 
+    def analyze(self, image):
+        return self.frame_analyze_model.infer(image)

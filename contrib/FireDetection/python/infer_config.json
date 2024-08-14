@@ -1,7 +1,9 @@
 {
-    "rtsp_url": "xxxxxxx/fireDetection.264",
+    "rtsp_url": "rtsp://10.169.68.79:10300/fireDetection.264",
     "model_path": "./firedetection.om",
     "device_id": 0,
     "skip_frame_number": 5,
-    "video_saved_path": "./save_data/output.h264"
+    "video_saved_path": "./save_data/output.h264",
+    "width": 1920,
+    "height": 1080
 }

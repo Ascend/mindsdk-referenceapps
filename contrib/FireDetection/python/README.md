@@ -53,9 +53,9 @@
 
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
-##  4 启动服务
+##  4 启动高速公路火灾识别服务
 
-### 4.1 启动服务
+### 4.1 启动高速公路火灾识别服务
 
 - **步骤1** 设置环境变量 
 
@@ -65,7 +65,7 @@
 - **步骤2** 设置高速公路车辆火灾识别服务配置（修改infer_config.json文件） ，支持的配置项如下所示 ：
 
 
-  |     配置项字段      | 配置项含义           |
+|     配置项字段      | 配置项含义           |
 |:--------------:|-----------------|
 |    rtsp_url    | rtsp流源地址        |
 |   model_path   | om模型的路径         |

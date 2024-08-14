@@ -54,8 +54,12 @@
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
 ##  4 启动高速公路火灾识别服务
+### 4.1 启动高速公路rtsp服务
+- **步骤1**
+使用live555启动rtsp推流服务。
 
-### 4.1 启动高速公路火灾识别服务
+实现视频转rstp进行推流，视频文件的宽、高需与步骤2中的配置项一致。live555下载和使用方式详见[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
+### 4.2 启动高速公路火灾识别服务
 
 - **步骤1** 设置环境变量 
 
@@ -78,13 +82,6 @@
 
 *device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为5；width和height的取值范围为[128, 4096]。
 
-
-- **步骤3** 启动rtsp服务
-
-
-使用live555启动rtsp服务，从而实现视频转rstp进行推流，视频文件的宽、高需与步骤2中的配置项一致。live555使用方式详见[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
-
-
-- **步骤4** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
+- **步骤3** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
 
       python main.py

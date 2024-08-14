@@ -38,7 +38,6 @@
 |-------- testSet
 |           |---- 91-images                         // 91-images验证集(含bmp图片)
 |           |---- 91-images-jpg                     // 91-images验证集转换后集(含jpg图片)
-|           |---- output                            // 验证集结果输出目录
 |           |---- bmp2jpg.py                        // bmp转jpg脚本
 |-------- evaluate.py                               // 模型精度验证
 |-------- README.md                                 // ReadMe

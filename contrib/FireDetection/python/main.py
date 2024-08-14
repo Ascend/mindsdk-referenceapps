@@ -10,9 +10,9 @@ decoded_data_queue = []
 decode_finished_flag = False
 
 
-def vdec_callback_func(decoded_image, channelId, frameId):
+def vdec_callback_func(decoded_image, channel_id, frame_id):
     logger.debug('Video decoder output decoded image (channelId:{}, frameId:{}, image.width:{},'
-                 ' image.height:{}, image.format:{})'.format(channelId, frameId, decoded_image.width,
+                 ' image.height:{}, image.format:{})'.format(channel_id, frame_id, decoded_image.width,
                                                              decoded_image.height, decoded_image.format))
     # 解码完成的Image类存入列表中
     decoded_data_queue.append(decoded_image)
@@ -29,8 +29,6 @@ def vdec_thread_func(vdec_config, vdec_callbacker, device_id, rtsp):
             logger.debug("send packet:{} ".format(count))
             video_decoder.decode(packet, count)
             count += 1
-            if count == 500:
-                break
         logger.info("There are {} frames in total.".format(count))
         decode_finished_flag = True
 

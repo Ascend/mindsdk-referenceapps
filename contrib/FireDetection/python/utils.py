@@ -12,14 +12,14 @@ import os
 import logging
 
 
-def file_base_check(file_path: str) -> None:
-    base_name = os.path.basename(file_path)
-    if not file_path or not os.path.isfile(file_path):
-        raise FileNotFoundError(f'the file:{base_name} does not exist!')
-    if os.path.islink(file_path):
-        raise Exception(f'the file:{base_name} is link. invalid file!')
-    if not os.access(file_path, mode=os.R_OK):
-        raise FileNotFoundError(f'the file:{base_name} is unreadable!')
+def file_base_check(path: str) -> None:
+    file_name = os.path.basename(path)
+    if not path or not os.path.isfile(path):
+        raise Exception('The file:{} does not exist!'.format(file_name))
+    if os.path.islink(path):
+        raise Exception('The file:{} is link. invalid file!'.format(file_name))
+    if not os.access(path, mode=os.R_OK):
+        raise Exception('The file:{} is unreadable!'.format(file_name))
 
 
 def read_json_config(json_path: str) -> dict:

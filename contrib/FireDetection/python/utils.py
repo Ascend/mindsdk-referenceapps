@@ -9,33 +9,13 @@ History: NA
 """
 import json
 import os
-import re
 import logging
 
 
-def verify_file_size(file_path, max_size=10) -> bool:
-    conf_file_size = os.path.getsize(file_path)
-    if conf_file_size > 0 and conf_file_size / 1024 / 1024 < max_size:
-        return True
-    return False
-
-
-def valid_characters(pattern: str, characters: str) -> bool:
-    if re.match(r".*[\s]+", characters):
-        return False
-    if not re.match(pattern, characters):
-        return False
-    return True
-
-
-def file_base_check(file_path: str, max_size=100) -> None:
+def file_base_check(file_path: str) -> None:
     base_name = os.path.basename(file_path)
     if not file_path or not os.path.isfile(file_path):
         raise FileNotFoundError(f'the file:{base_name} does not exist!')
-    if not valid_characters("^[A-Za-z0-9_+-/]+$", file_path):
-        raise Exception(f'file path:{os.path.relpath(file_path)} should only include characters \'A-Za-z0-9+-_/\'!')
-    if max_size and not verify_file_size(file_path, max_size):
-        raise Exception(f'{base_name}: the file size must between [1, %sM]!' % max_size)
     if os.path.islink(file_path):
         raise Exception(f'the file:{base_name} is link. invalid file!')
     if not os.access(file_path, mode=os.R_OK):

@@ -58,7 +58,7 @@
 - **步骤1**
 使用live555启动rtsp推流服务。
 
-实现视频转rstp进行推流，视频文件的宽、高需与步骤2中的配置项一致。live555下载和使用方式详见[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
+实现视频转rstp进行推流，推流视频的宽、高需与步骤2中的配置项一致。live555下载和使用方式详见[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
 ### 4.2 启动高速公路火灾识别服务
 
 - **步骤1** 设置环境变量 

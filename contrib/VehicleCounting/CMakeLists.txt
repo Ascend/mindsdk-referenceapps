@@ -28,6 +28,11 @@ link_directories(
 
 add_executable(${OUTPUT_NAME} main.cpp VideoProcess/VideoProcess.cpp VideoProcess/VideoProcess.h
         Yolov4Detection/Yolov4Detection.cpp Yolov4Detection/Yolov4Detection.h VideoProcess/KalmanTracker.h VideoProcess/KalmanTracker.cpp VideoProcess/Hungarian.h VideoProcess/Hungarian.cpp VideoProcess/MOTConnection.h VideoProcess/MOTConnection.cpp VideoProcess/DataType.h ReadConfig/GetConfig.h ReadConfig/GetConfig.cpp)
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(${OUTPUT_NAME} cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
 target_link_libraries(${OUTPUT_NAME}
         avcodec
         avdevice

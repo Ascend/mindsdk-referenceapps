@@ -60,3 +60,8 @@ function build() {
 }
 
 build
+if [ ! -f "${cur_path}/human_segmentation" ]; then
+  echo "human_segmentation not generated, build failed."
+else
+  echo "build successfully."
+fi

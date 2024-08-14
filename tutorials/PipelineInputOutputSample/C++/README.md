@@ -1,41 +1,39 @@
 ## SDK pipeline 输入输出样例运行
 
 ### 介绍
-提供的demo，实现 pipeline输入输出调用不同的输入插件的样例运行
+本样例基于mxVision SDK，实现pipeline不同方式的输入输出操作。
 
-### 准备工作
-样例获取链接(https://gitee.com/zhangdwe/mindxsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/C++)
+### 支持的产品
+本项目以昇腾Atlas 300I pro、Atlas 300V pro为主要的硬件平台。
 
-将项目目录从mindxsdk-referenceapps\tutorials\PipelineInputOutputSample\C++移动到运行样例的目录下
-
-### 配置SDK路径
-配置CMakeLists.txt 中的'MX_SDK_HOME'环境变量，配置为MindX SDK的安装路径； ${SDK安装路径}替换为用户环境SDK安装路径。
-set(MX_SDK_HOME /usr/local/Ascend/mxVision)
-/usr/local/Ascend/mxVision 需要替换为自己的SDK安装路径
-
-```
-set(MX_SDK_HOME ${SDK安装路径}/mxVision)
-```
+### 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
 
 ### 配置环境变量
 执行以下命令：
-
 ```
-export MX_SDK_HOME="${CUR_PATH}/../../.."
-
-export LD_LIBRARY_PATH="${MX_SDK_HOME}/lib":"${MX_SDK_HOME}/opensource/lib":"${MX_SDK_HOME}/opensource/lib64":"/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64":${LD_LIBRARY_PATH}
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
 ```
 
 ### 编译运行
-在当前路径下新建文件夹 build
-进入build 目录
-执行 cmake ..
-执行 make
-
-返回上级目录 cd ..
-
-执行 ./sample 或者执行 ./sample 参数
-其中参数为 0,1,2 参数对应的调用插件可以参考快速指导
+运行前需要将`${SDK_INSTALL_PATH}/mxVision/config/logging.conf`中console_level字段修改为0（将日志级别调整至info级别）。
+```bash
+## 创建build目录
+mkdir build
+cd build
+## 使用cmake命令进行编译
+cmake ..
+make -j
+## 编译运行
+cd ..
+## 参数为0,1,2。对应的含义可查看main.cpp, 不传参数默认为0。
+./IOsample 参数
+```
 
 ### 查看结果
-打印 result:hello 则执行成功
+执行成功后出现result相关打印。

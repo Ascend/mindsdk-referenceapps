@@ -6,11 +6,15 @@
 
 ### 1.1 支持的产品
 
-昇腾310(推理)
+本项目基于mxVision SDK进行开发，以Atlas 500 A2/Atlas 200I DK A2为主要的硬件平台。
 
 ### 1.2 支持的版本
 
-本样例配套的CANN版本为[5.0.4](https://www.hiascend.com/software/cann/commercial)，MindX SDK版本为[2.0.4](https://www.hiascend.com/software/Mindx-sdk)。
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+|--------------- | ---------------------------------- | ----------|
+| 5.0.0 | 7.0.0 | 23.0.0|
+|6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 
@@ -29,16 +33,13 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
   ├──Helmet_yolov5.cfg  #后处理配置文件
   ├──HelmetDetection.pipline # 安全帽识别推理流程pipline
   ├──imgclass.names  # 模型所有可识别类
-  ├──main-env.sh   # 环境变量设置脚本
   ├──main.py         # 推理运行程序
-  ├──modify_yolov5s_slice.py  #slice算子修改脚本
-  ├──dy_resize.py  # resize算子修改
   ├──utils.py  # 数据处理及可视化脚本
 ├── plugins  
   ├──MxpiSelectedFrame # 跳帧插件
 ├── Test  
   ├──performance_test_main.py # 性能测试脚本  
-  ├──select.py # 测试集筛选脚本  
+  ├──test_select.py # 测试集筛选脚本  
   ├──parse_voc.py # 测试数据集解析脚本  
   ├──testmain.py # 测试主程序  
   ├──map_calculate.py # 精度计算程序
@@ -58,37 +59,20 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 环境依赖软件和版本如下表：
 
 | 软件                | 版本         | 说明                          | 获取方式                                                     |
-| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |
-| mxVision            | 2.0.4       | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
-| Ascend-CANN-toolkit | 5.0.4     | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
-| 操作系统            | Ubuntu 18.04 | 操作系统                      | Ubuntu官网获取                                               |
-| opencv-python       | 4.5.2.54     | 用于识别结果画框              | python3 -m pip install opencv-python                       |
+| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |                    
+| opencv-python       | 4.10.0.54     | 用于识别结果画框              | python3 -m pip install opencv-python|
+| libgl1-mesa-glx |23.0.4-0ubuntu1~22.04.1 |GL库（opencv-python可能会依赖GL）|apt install libgl1-mesa-glx|
+| live555|1.10|实现视频转rstp进行推流|[live555使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)|
+|ffmpeg|2021-08-08-git-ac0408522a | 实现mp4格式视频转为264格式视频 |[ffmpeg使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
 
 
 
-在运行脚本main.py前（2.2章节），需要通过环境配置脚本main-env.sh设置环境变量,运行命令：
+在运行脚本main.py前（2.2章节），需要执行如下两个环境配置脚本设置环境变量,运行命令：
 
 ```shell
-source main-env.sh
+. /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
+. ${MX_SDK_HOME}/mxVision/set_env.sh   # ${MX_SDK_HOME}替换为用户的SDK安装路径
 ```
-- 环境变量介绍
-
-```bash
-export MX_SDK_HOME=${MX_SDK_HOME}
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/arm64-linux/atc/ccec_compiler/bin:${install_path}/arm64-linux/atc/bin:${install_path}/atc/bin
-export PYTHONPATH=/usr/local/python3.9.2/bin:${MX_SDK_HOME}/python
-export ${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:${install_path}/acllib/lib64:/usr/local/Ascend/driver/lib64:${MX_SDK_HOME}/include:${MX_SDK_HOME}/python
-
-export GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner
-export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins
-export ASCEND_OPP_PATH=${install_path}/opp
-export GST_DEBUG=3
-```
-
-注：其中SDK安装路径${MX_SDK_HOME}替换为用户的SDK安装路径;install_path替换为开发套件包所在路径。LD_LIBRARY_PATH用以加载开发套件包中llib库。GST_DEBUG用以mxpi_rtspsrc取流地址配置不正确时出现warning日志提示。
-
-
 
 ## 3.推理
 
@@ -96,63 +80,28 @@ export GST_DEBUG=3
 
 ##### 1.1模型与软件依赖
 
- 所用模型与软件依赖如下表所示。
+ 所用模型与软件依赖如下表所示。若使用A200I DK A2运行，推荐使用PC转换模型，具体方法可参考A200I DK A2资料。模型相关信息可参考[原项目链接](https://github.com/PeterH0323/Smart_Construction)
 
 | 软件名称                | 版本     | 获取方式                                                     |
 | ----------------------- | -------- | ------------------------------------------------------------ |
-| pytorch                 | 1.5.1    | [pytorch官网](https://pytorch.org/get-started/previous-versions/) |
-| ONNX                    | 1.7.0    | pip install onnx==1.7.0                                      |
-| helmet_head_person_s.pt | v2.0     | [原项目链接](https://github.com/PeterH0323/Smart_Construction)(选择项目中yolov5s权重文件，权重文件保存在README所述网盘中) |
 | YOLOv5_s.onnx           | YOLOv5_s | [链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/HelmetIdentification/model.zip) |
 
+##### 1.2 onnx文件转换为om文件
 
+1. 可直接获取已经转换好的YOLOv5_s.onnx文件，链接如1.1所示。此模型已经完成优化，可直接转换为om模型。
 
-##### 1.2 pt文件转换为onnx文件
-
-1. 可直接获取已经转换好的YOLOv5_s.onnx文件，链接如1.1所示。此模型已经完成优化，不再使用dy_resize.py、modify_yolov5s_slice.py进行优化。可直接转换为om模型。
-
-2. 若尝试pt文件转换为onnx文件，可获取[原项目](https://github.com/PeterH0323/Smart_Construction)代码，下载至本地。安装环境依赖**requirements.txt**在原项目中已给出（原项目使用pytorch 1.5.1框架），pt文件转换为onnx文件所需第三方库**ONNX**如1.1中方式安装。
-
-3. 通过上述1.1中链接获取模型文件helmet_head_person_s.pt，下载到本地后保存至原项目weights文件中。使用原项目中的export.py将pt文件转换为onnx格式文件。运行：
-
-```shell
-python3 ./models/export.py --weights ./weights/helmet_head_person_s.pt --img 640 --batch 1
-```
-
-其中onnx算子版本为opset_version=11。转换完成后权重文件helmet_head_person_s.onnx改名为YOLOv5_s.onnx上传至服务器任意目录下。
-
-
-
-##### 1.3 onnx文件转换为om文件
-
-  转换完成后onnx脚本上传至服务器任意目录后先进行优化。
-
-1. 利用附件脚本dy_resize.py修改模型resize算子。该模型含有动态Resize算子（上采样），通过计算维度变化，改为静态算子，不影响模型的精度，运行如下命令：
-
-```shell
-python3 modify_yolov5s_slice.py YOLOv5_s.onnx
-```
-
-2. 然后利用modify_yolov5s_slice.py脚本修改模型slice算子，运行如下命令：
-
-```bash
-python3 modify_yolov5s_slice.py YOLOv5_s.onnx
-```
-
-可以得到修改好后的YOLOv5_s.onnx模型
-
-3. 最后运行atc-env脚本将onnx转为om模型，运行命令如下：
+3. 修改atc-env脚本中的路径，运行atc-env脚本将onnx转为om模型，运行命令如下。
 
 ```shell
 sh atc-env.sh
 ```
 
-提示 **ATC run success** 说明转换成功
+提示 **ATC run success** 说明转换成功。
 
 脚本中包含atc命令:
 
 ```shell
---model=${Home}/YOLOv5_s.onnx --framework=5 --output=${Home}/YOLOv5_s  --insert_op_conf=./aipp_YOLOv5.config --input_format=NCHW --log=info --soc_version=Ascend310 --input_shape="images:1,3,640,640"
+--model=${Home}/YOLOv5_s.onnx --framework=5 --output=${Home}/YOLOv5_s  --insert_op_conf=./aipp_YOLOv5.config --input_format=NCHW --log=info --soc_version=Ascend310B1 --input_shape="images:1,3,640,640"
 ```
 
 其参数如下表所示
@@ -211,7 +160,7 @@ cmake ..
 make -j
 ```
 
-编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)
+编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440
 
  注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节
 
@@ -260,10 +209,10 @@ test.264可替换成任意上传至当前目录的[264格式文件](https://gite
 然后切换目录至main.py所在目录下，运行命令：
 
 ```shell
-python3.9.2 main.py
+python3.9 main.py
 ```
 
-即可得到输出结果，输出结果将原来的两路视频分为两个文件保存，utils.py中的oringe_imgfile用于设置图像输出路径,用户需手动建立输出文件output，文件路径可自定义设置。本项目文件放置规范如下：
+即可得到输出结果，输出结果将原来的两路视频分为两个文件保存，utils.py中的oringe_imgfile用于设置图像输出路径,用户需**手动建立**输出文件output，文件路径可自定义设置。本项目文件放置规范如下：
 
 ![image3](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image3.jpg)
 
@@ -282,7 +231,7 @@ python3.9.2 main.py
 
 ##### 3.1 性能测试
 
-性能测试使用脚本performance_test_main.py，该脚本与main.py大体相同，不同之处是在performance_test_main.py中添加了时间戳测试，测试数据为mxpi_rtspsrc拉取的视频流。两路视频尺寸分别取多组不同尺寸的视频做对比。推理三百帧图片后取平均时间值，设置如下环境变量：
+性能测试使用脚本Test/performance_test_main.py，该脚本与main.py大体相同，不同之处是在performance_test_main.py中添加了时间戳测试，测试数据为mxpi_rtspsrc拉取的视频流。两路视频尺寸分别取多组不同尺寸的视频做对比。推理三百帧图片后取平均时间值，设置如下环境变量：
 
 ```shell
 export PYTHONPATH=/usr/local/python3.9.2/bin:${MX_SDK_HOME}/python:{path}
@@ -293,7 +242,7 @@ export PYTHONPATH=/usr/local/python3.9.2/bin:${MX_SDK_HOME}/python:{path}
 运行如下命令得到结果：
 
 ```shell
-python3 performance_test_main.py
+python3.9 performance_test_main.py
 ```
 
 注：1.与运行main.py时相同，运行performance_test_main.py时要先使用live555进行推流。**测试视频**上传至[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/HelmetIdentification/test_video.zip)，该视频为不同尺寸不同帧率的同一视频。如test64036830_158s.264为尺寸640×640，帧率30，时长158s的视频。
@@ -316,13 +265,13 @@ python3 performance_test_main.py
     ├── JPEGImages                 # 数据集原图片
   ```
 
-注：将数据集中的三个文件放置于项目的根目录Test文件下，与**select.py**同目录。
+注：将数据集中的三个文件放置于项目的根目录Test文件下，与**test_select.py**同目录。
 
 ###### 3.2.2测试数据集筛选
 
-依据数据集中ImageSets文件夹中test.txt文件，从原始数据集中筛选出测试数据集，该程序**select.py**放在源码根目录Test中，在同目录下创建文件夹TestImages用来存储筛选的数据。在该目录下运行命令：
+依据数据集中ImageSets文件夹中test.txt文件，从原始数据集中筛选出测试数据集，该程序**test_select.py**放在源码根目录Test中，在同目录下创建文件夹TestImages用来存储筛选的数据。在该目录下运行命令：
 ```shell
-python3.9.2 select.py
+python3.9 test_select.py
 ```
 
 程序运行后在根目录Test中会存放筛选出的测试集图片共1517张。
@@ -334,7 +283,7 @@ python3.9.2 select.py
 运行命令：
 
 ```shell
-python3.9.2 parse_voc.py 
+python3.9 parse_voc.py 
 ```
 
 ###### 3.2.4 推理运行
@@ -352,7 +301,7 @@ cls conf x0 y0 x1 y1
 运行命令：
 
 ```shell
-python3.9.2 testmain.py
+python3.9 testmain.py
 ```
 
 注：testmain.py中直接写入了pipline，其中mxpi_modelinfer插件四个参数的配置与HelmetDetection.pipline完全相同。
@@ -366,29 +315,14 @@ python3.9.2 testmain.py
 运行命令：
 
 ```shell
-python3.9.2 map_calculate.py --label_path  ./ground-truth  --npu_txt_path ./detection-test-result/ -na -np
+python3.9 map_calculate.py --label_path  ./ground-truth  --npu_txt_path ./detection-test-result/ -na -np
 ```
 
 即可得到输出。其中precision、recall和map记录在**output/output.txt**文件中。
 
+## 4 常见问题
 
-
-## 5 软件依赖说明
-
-推理中涉及到第三方软件依赖如下表所示。
-
-| 依赖软件 | 版本                      | 说明                           |
-| -------- | ------------------------- | ------------------------------ |
-| live555  | 1.09                      | 实现视频转rstp进行推流         |
-| ffmpeg   | 2021-08-08-git-ac0408522a | 实现mp4格式视频转为264格式视频 |
-
-注：1.[live555使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)
-
-​        2.[ffmpeg使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
-
-## 6 常见问题
-
-### 6.1 图片格式问题
+### 4.1 图片格式问题
 
 **问题描述：**
 

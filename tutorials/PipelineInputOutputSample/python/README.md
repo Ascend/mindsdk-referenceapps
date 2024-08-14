@@ -1,33 +1,30 @@
 ## SDK pipeline 输入输出样例运行
 
 ### 介绍
-提供的demo，实现输入输出插件的样例运行
+本样例基于mxVision SDK，实现pipeline不同方式的输入输出操作。
 
-### 准备工作
-样例获取链接(https://gitee.com/zhangdwe/mindxsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/python)
+### 支持的产品
+本项目以昇腾Atlas 300I pro、Atlas 300V pro为主要的硬件平台。
 
-将样例目录python 从mxsdkreferenceapps/tutorials/pipelineInputOuputSample文件夹下 移动到${SDK安装路径}/mxVision/samples/mxVision/python/路径下
-
-可以使用mv 命令
-进入到移动后的工程路径下
+### 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
 
 ### 配置环境变量
-将${SDK安装路径}替换为自己的SDK安装路径; 将${MX_SDK_HOME}替换成对应路径
-
+执行以下命令：
 ```
-export MX_SDK_HOME=${SDK安装路径}/mxVision
-
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
 ```
 
 ### 运行
-
+```bash
+## 参数为1-7的数字。对应的含义可查看main.py, 不传参默认为1。
 python3 main.py 参数
-参数可以传入1-7 的数字 参数对应关系可以参考快速指导文档
-
-```
-python3 main.py 1
 ```
 
 ### 查看结果
-打印 result:Success
+执行成功后出现result相关打印。

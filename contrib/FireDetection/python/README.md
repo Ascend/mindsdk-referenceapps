@@ -23,7 +23,7 @@
 
 ### 1.4 代码目录结构与说明
 
-本 Sample 工程名称为 **FireDetection**，工程目录如下图所示：
+本项目目录如下图所示：
 
 ```
 ├── frame_analyzer.py  // 视频帧分析

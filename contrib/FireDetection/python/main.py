@@ -3,8 +3,8 @@ import av
 from mindx.sdk import base
 from mindx.sdk.base import VideoDecoder, VideoDecodeConfig,\
     VdecCallBacker, VideoEncoder, VideoEncodeConfig, VencCallBacker
-from frame_analyzer import FrameAnalyzer, logger
-from utils import infer_config
+from frame_analyzer import FrameAnalyzer
+from utils import infer_config, logger
 
 decoded_data_queue = []
 decode_finished_flag = False
@@ -61,15 +61,15 @@ def venc_thread_func(venc_config, venc_callbacker, device_id, model_path):
 
 
 if __name__ == '__main__':
-    # 初始化VdecCallBacker类并注册回调函数
+    base.mx_init()
     vdec_callbacker = VdecCallBacker()
     vdec_callbacker.registerVdecCallBack(vdec_callback_func)
     # # 初始化VideoDecodeConfig类并设置参数
     vdec_conf = VideoDecodeConfig()
     vdec_conf.inputVideoFormat = base.h264_main_level
     vdec_conf.outputImageFormat = base.nv12
-    vdec_conf.width = 1920
-    vdec_conf.height = 1080
+    vdec_conf.width = infer_config["width"]
+    vdec_conf.height = infer_config["height"]
     # 初始化VencCallBacker类并注册回调函数
     venc_callbacker = VencCallBacker()
     venc_callbacker.registerVencCallBack(venc_callback_func)

@@ -58,13 +58,13 @@ def read_json_config(json_path: str) -> dict:
 
 def _init():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger()
+    logger_instance = logging.getLogger()
     file_base_check("./infer_config.json")
-    infer_config = read_json_config("./infer_config.json")
-    directory = os.path.dirname(infer_config["video_saved_path"])
+    infer_config_instance = read_json_config("./infer_config.json")
+    directory = os.path.dirname(infer_config_instance ["video_saved_path"])
     if not os.path.exists(directory):
         os.makedirs(directory)
-    return logger, infer_config
+    return logger_instance, infer_config_instance
 
 
 logger, infer_config = _init()

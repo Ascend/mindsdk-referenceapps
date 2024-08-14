@@ -1,8 +1,8 @@
-import os.path
-import av
 import threading
+import av
 from mindx.sdk import base
-from mindx.sdk.base import VideoDecoder, VideoDecodeConfig, VdecCallBacker, VideoEncoder, VideoEncodeConfig, VencCallBacker
+from mindx.sdk.base import VideoDecoder, VideoDecodeConfig,\
+    VdecCallBacker, VideoEncoder, VideoEncodeConfig, VencCallBacker
 from frame_analyzer import FrameAnalyzer, logger
 from utils import infer_config
 
@@ -48,8 +48,8 @@ def venc_thread_func(venc_config, venc_callbacker, device_id, model_path):
     frame_analyzer = FrameAnalyzer(model_path, device_id)
     i = 0
     global decode_finished_flag
-    while not decode_finished_flag or not len(decoded_data_queue):
-        if not len(decoded_data_queue):
+    while not decode_finished_flag or not decoded_data_queue:
+        if not decoded_data_queue:
             continue
         frame_image = decoded_data_queue.pop(0)
         if i % infer_config["skip_frame_number"] == 0:
@@ -66,7 +66,6 @@ if __name__ == '__main__':
     vdec_callbacker.registerVdecCallBack(vdec_callback_func)
     # # 初始化VideoDecodeConfig类并设置参数
     vdec_conf = VideoDecodeConfig()
-    # vdec_conf.skipInterval = 0
     vdec_conf.inputVideoFormat = base.h264_main_level
     vdec_conf.outputImageFormat = base.nv12
     vdec_conf.width = 1920
@@ -98,8 +97,3 @@ if __name__ == '__main__':
     # 等待执行完毕
     vdec.join()
     venc.join()
-
-
-
-
-

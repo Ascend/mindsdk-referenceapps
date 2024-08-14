@@ -54,7 +54,7 @@
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
 ##  4 启动高速公路火灾识别服务
-### 4.1 启动高速公路rtsp服务
+### 4.1 启动高速公路rtsp推流服务
 - **步骤1**
 使用live555启动rtsp推流服务。
 

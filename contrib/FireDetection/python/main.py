@@ -62,8 +62,8 @@ def venc_thread_func(venc_config, venc_callbacker, device_id, model_path):
 
 if __name__ == '__main__':
     base.mx_init()
-    vdec_callbacker = VdecCallBacker()
-    vdec_callbacker.registerVdecCallBack(vdec_callback_func)
+    vdec_callbacker_instance = VdecCallBacker()
+    vdec_callbacker_instance.registerVdecCallBack(vdec_callback_func)
     # # 初始化VideoDecodeConfig类并设置参数
     vdec_conf = VideoDecodeConfig()
     vdec_conf.inputVideoFormat = base.h264_main_level
@@ -71,8 +71,8 @@ if __name__ == '__main__':
     vdec_conf.width = infer_config["width"]
     vdec_conf.height = infer_config["height"]
     # 初始化VencCallBacker类并注册回调函数
-    venc_callbacker = VencCallBacker()
-    venc_callbacker.registerVencCallBack(venc_callback_func)
+    venc_callbacker_instance = VencCallBacker()
+    venc_callbacker_instance.registerVencCallBack(venc_callback_func)
     # 初始化VideoEncodeConfig
     venc_conf = VideoEncodeConfig()
     venc_conf.keyFrameInterval = 50
@@ -82,12 +82,12 @@ if __name__ == '__main__':
 
     # 创建线程，并传递参数
     vdec = threading.Thread(target=vdec_thread_func, kwargs={'vdec_config': vdec_conf,
-                                                             'vdec_callbacker': vdec_callbacker,
+                                                             'vdec_callbacker': vdec_callbacker_instance,
                                                              "device_id": infer_config["device_id"],
                                                              "rtsp": infer_config["rtsp_url"]})
 
     venc = threading.Thread(target=venc_thread_func, kwargs={'venc_config': venc_conf,
-                                                             'venc_callbacker': venc_callbacker,
+                                                             'venc_callbacker': venc_callbacker_instance,
                                                              "device_id": infer_config["device_id"],
                                                              "model_path": infer_config["model_path"]})
     # 启动线程

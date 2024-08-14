@@ -27,3 +27,9 @@ link_directories(/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64)
 
 add_executable(${TARGET_NAME} main.cpp)
 target_link_libraries(${TARGET_NAME} mxbase streammanager glog pthread)
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+    target_link_libraries(${TARGET_NAME} cpprest)
+    add_definitions(-DMX_VERSION_5)
+endif()

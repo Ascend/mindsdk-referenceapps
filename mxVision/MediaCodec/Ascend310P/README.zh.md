@@ -9,43 +9,27 @@
 | **D1**（height: 480 width: 720） | 10 |
 | **CIF**（height: 288 width: 352） | 16 |
 
-## 2.环境依赖
+## 2.支持的版本
 
-- 支持的硬件形态和操作系统版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| 硬件形态                             | 操作系统版本   |
-| ------------------------------------ | -------------- |
-| Atlas 300I Pro 推理卡 | Ubuntu 18.04 |
-| Atlas 300V Pro 推理卡 | CentOS 7.6     |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
 
-- 软件依赖
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.5.1+ |
-| mxVision | 3.0.RC2 |
-
-## 3.预准备
-
-脚本转换为unix格式以及添加脚本执行权限
+## 3.配置环境变量
 
 ```bash
-chmod +x run.sh
+. ${SDK安装路径}/mxVision/set_env.sh
 ```
 
-## 4.编译
+## 4.运行
 
-- 配置环境变量
-
-```bash
-export MX_SDK_HOME=${安装路径}/mxVision
-```
-
-## 5.运行
-
-### 5.1 运行前配置
+### 4.1 运行前配置
 
 - 构建rtsp视频流服务
+- 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
 
 配置文件配置项说明
 
@@ -92,8 +76,9 @@ stream.ch0 = rtsp://xxx.xxx.xxx.xxx:xxx/xxx.264
 global_level=0
 ```
 
-### 5.2 运行
+### 4.2 运行
 
 ```bash
+chmod +x run.sh
 bash run.sh
 ```

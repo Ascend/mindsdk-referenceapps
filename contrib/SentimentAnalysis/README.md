@@ -7,12 +7,15 @@
 
 ### 1.1 支持的产品
 
-本项目以昇腾Atlas310卡为主要的硬件平台。
+本项目以昇腾Atlas 500 A2/Atlas 200I DK A2为主要的硬件平台。
 
 ### 1.2 支持的版本
 
-支持的SDK版本为2.0.4。
-支持的CANN版本为5.0.4。
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+
 
 ### 1.3 软件方案介绍
 
@@ -94,57 +97,34 @@
 ![image](sdk/flowChart.jpg)
 
 ## 2 环境依赖
-
-推荐系统为ubantu 18.04，环境依赖软件和版本如下表：
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.10.2   |
-| mxVision | 2.0.4  |
-| python   | 3.9.2  |
-
 确保环境中正确安装mxVision SDK。
 
 在编译运行项目前，需要设置环境变量：
 
 ```
-export MX_SDK_HOME=${SDK安装路径}/mxVision
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/driver/lib64:${LD_LIBRARY_PATH}
-export PYTHONPATH=${MX_SDK_HOME}/python:${PYTHONPATH}
-
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-```
-
-- 环境变量介绍
-
-```
-MX_SDK_HOME：MindX SDK mxVision的根安装路径，用于包含MindX SDK提供的所有库和头文件。  
-LD_LIBRARY_PATH：提供了MindX SDK已开发的插件和相关的库信息。  
-install_path：ascend-toolkit的安装路径。  
-PATH：添加python的执行路径和atc转换工具的执行路径。  
-LD_LIBRARY_PATH：添加ascend-toolkit和MindX SDK提供的库目录路径。  
-ASCEND_OPP_PATH：atc转换工具需要的目录。 
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh  #sdk安装路径，根据实际安装路径修改
 ```
 
 ## 3 模型获取及转换
 
-**步骤1**  请参考https://github.com/percent4/keras_bert_text_classification 提供的源码，按照其README.md准备好自己的分类的数据完成模型的训练，数据参考https://gitee.com/ascend/samples/tree/master/python/contrib/SentimentAnalysis/data/coarse-big-corpus/coarse ，需转成csv格式，也可以直接使用https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip 解压后data目录下的train.csv,训练完成后的到h5模型。h5模型的获取还可以通过https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip ，解压获得
+> 若使用A200I DK A2运行，推荐使用PC转换模型，具体方法可参考A200I DK A2资料
 
-**步骤2** 请参考https://github.com/amir-abdi/keras_to_tensorflow 提供的源码，将h5模型转成pb模型。pb模型也可以通过https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip 获得。
+**步骤1**  
+本项目使用的h5和pb模型已打包至[model.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip) ，下载后解压获得。
+也可以参考[源码](https://github.com/percent4/keras_bert_text_classification)，按照其README.md准备好自己的分类的数据完成模型的训练。分类数据可以参考[coarse](https://gitee.com/ascend/samples/tree/master/python/contrib/SentimentAnalysis/data/coarse-big-corpus/coarse)，需转成csv格式。
+本项目使用的数据为[data.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip) 解压后data目录下的train.csv。
+h5模型转pb可以参考[源码](https://github.com/amir-abdi/keras_to_tensorflow) ，将自己训练好的h5模型转成pb模型。
 
-**步骤3** 将得到的pb文件，存放到开发环境普通用户下的任意目录，例如：$HOME/models/sentiment_analysis。
+**步骤2** 将得到的pb文件，存放到开发环境普通用户下的任意目录，例如：$HOME/models/sentiment_analysis。
 
-执行模型转换命令
+**步骤3** 执行以下命令使用atc命令进行模型转换：
 
-**步骤2** 执行以下命令使用atc命令进行模型转换：
-
+```bash
+# 进入模型文件所在目录
 cd $HOME/models/sentiment_analysis
-
-```
-atc --model=./sentiment_analysis.pb --framework=3 --input_format=ND --output=./sentiment_analysis --input_shape="Input-Token:1,500;Input-Segment:1,500" --out_nodes="dense_1/Softmax:0" --soc_version=Ascend310 --op_select_implmode="high_precision"
+# 执行模型转换命令
+atc --model=./sentiment_analysis.pb --framework=3 --input_format=ND --output=./sentiment_analysis --input_shape="Input-Token:1,500;Input-Segment:1,500" --out_nodes="dense_1/Softmax:0" --soc_version=Ascend310B1 --op_select_implmode="high_precision"
 ```
 
 执行成功后终端输出为：
@@ -154,26 +134,20 @@ ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-**步骤4** 执行以下命令将转换好的模型复制到项目中model文件夹中：
-cp ./sentiment_analysis.om $HOME/sdk/model/
-cp ./sentiment_analysis.om $HOME/mxbase/model/
-
+**步骤4** 执行以下命令将转换好的模型复制到项目中的model文件夹中：
+``` bash
+cp ./sentiment_analysis.om /SentimentAnalysis/sdk/model/
+cp ./sentiment_analysis.om /SentimentAnalysis/mxbase/model/
+```
 ## 4 编译与运行
 
-**步骤1** 从https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip 下载测试数据并解压，解压后的sample.txt和test.csv文件放在项目的data目录下。
+**步骤1** 从https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip 下载测试数据并解压，解压后的sample.txt和test.csv文件放在项目的/SentimentAnalysis/mxBase/data和/SentimentAnalysis/sdk/data目录下。
 
 **步骤2** 按照第 2 小节 环境依赖 中的步骤设置环境变量。
 
 **步骤3** 按照第 3 小节 模型获取及转换 中的步骤获得 om 模型文件。
 
-**步骤4** 将本项目代码的文件路径中出现的 ${SDK目录} 替换成自己SDK的存放目录，下面是需要替换的代码。
-
-```
-mxBase目录下的CMakeList.txt中的第13行代码 set(MX_SDK_HOME ${SDK目录})
-sdk/pipeline目录下sentiment_analysis.pipeline文件中的第26行 "postProcessLibPath": "${SDK目录}/lib/modelpostprocessors/libresnet50postprocess.so"
-```
-
-**步骤5** pipeline项目运行在sdk目录下执行命令：
+**步骤4** pipeline项目运行在sdk目录下执行命令：
 
 ```
 python3 main.py
@@ -181,18 +155,10 @@ python3 main.py
 
 命令执行成功后在out目录下生成分类结果文件 prediction_label.txt，查看结果文件验证分类结果。
 
-**步骤6** mxBase项目在mxBase目录中，执行以下代码进行编译。
+**步骤5** mxBase项目在mxBase目录中，执行以下命令进行编译运行。
 
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-
-编译完成后，将可执行文件 mxBase_sentiment_analysis 移动到mxBase目录下，执行下面代码运行
-
-```
+```bash
+bash build.sh
 ./mxBase_sentiment_analysis ./data/sample.txt
 ```
 
@@ -202,7 +168,7 @@ make
 
 **步骤1** 按照第 4 小节 编译与运行 的步骤将样例运行成功。
 
-**步骤2** 从网址https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/data.zip下载后解压，将解压后的test.csv文件分别放在sdk/data目录和mxBase/data目录。
+**步骤2** 从网址 https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip  下载后解压，将解压后的test.csv文件分别放在sdk/data目录和mxBase/data目录。
 
 **步骤3** pipeline项目中的精度测试文件为sdk/test目录下的test.py，将test.py移到sdk目录下，执行下面代码，得到pipeline的精度测试结果。
 
@@ -210,13 +176,23 @@ make
 python3 test.py
 ```
 
-**步骤4** mxBase项目中，将mxBase目录下main.cpp中main方法的代码注释，添加下面代码，然后在Clion中执行，得到mxBase的精度测试结果。
-
+**步骤4** mxBase项目中，将mxBase目录下main.cpp中main函数替换为以下的代码，然后执行编译脚本，再次运行可得到mxBase的精度测试结果，具体执行命令如下。
+替换代码：
 ```
-Test::test_accuracy();
+int main(int argc, char* argv[]) {
+    Test::test_accuracy();
+}
+```
+编译运行命令
+```bash
+bash build.sh
+./mxBase_sentiment_analysis
 ```
 
-## 5 其他问题
+## 6 其他问题
+
 1.本项目的设计限制输入样例为文本文件，其他文件如图片、音频不能进行推理。
+
 2.本项目的模型对中性数据进行分类时预测结果较差，可能有以下几个方面，一是对中性数据的分类本身有一定的难度；二是在训练模型时提供数据集中的中性数据较少，模型对于中性数据的分类效果并不好；三是在模型转换的过程中可能会存在精度的缺失。
 
+3.若使用者是采用的先将代码下载至本地，再上传至服务器的步骤运行代码，词表文件data/vocab.txt可能会编码异常，造成mxbase代码读取词表有误，精度下降的问题；建议使用者直接下载项目文件至服务器运行，避免该问题。

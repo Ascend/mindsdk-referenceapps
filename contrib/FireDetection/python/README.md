@@ -38,13 +38,13 @@
 
 ## 3 模型下载和转换
 ### 3.1 下载模型相关文件
-- **步骤1**  根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件和aipp_yolov5.cfg文件。
+- **步骤1**  根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件。
 
 ###  3.2 转换模型格式
 - **步骤1** 设置环境变量 
 
        . /usr/local/Ascend/ascend-toolkit/set_env.sh # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
-- **步骤2** 将onnx格式模型转换为om格式模型
+- **步骤2** 将onnx格式模型转换为om格式模型(--soc_version的参数需根据实际NPU型号设置，Atlas 300V和Atlas 300V Pro设备下该参数为Ascend310P3)
 
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
@@ -70,7 +70,7 @@
 |      height       | 用于火灾识别的视频文件的高度  |
 
 
-*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number需要大于等于1，建议根据实际业务需求设置，推荐设置为3；width和height的取值范围为[128, 4096]，请用户根据实际的视频帧数据进行适当设置，需大于或等于实际的视频帧数据高，否则会无解码输出，设置过大将会产生多余的内存资源开销。；video_path所指定的视频文件需为H264编码；video_saved_path所指定的文件每次服务启动时会被覆盖重写。
+*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为3；width和height的取值范围为[128, 4096]；video_path所指定的视频文件需为H264编码；video_saved_path所指定的文件每次服务启动时会被覆盖重写。
 
 - **步骤3** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
 

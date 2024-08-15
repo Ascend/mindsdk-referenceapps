@@ -136,4 +136,4 @@ if __name__ == '__main__':
     venc.join()
     analyze.join()
 
-    logger.info("Fire detection task ended successfully.")
+    logger.info("Fire detection task ended.")

@@ -1,0 +1,9 @@
+{
+    "video_path": "./fireDetection.264",
+    "model_path": "./firedetection.om",
+    "device_id": 0,
+    "skip_frame_number": 3,
+    "video_saved_path": "./output.h264",
+    "width": 1920,
+    "height": 1080
+}

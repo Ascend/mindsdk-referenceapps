@@ -1,5 +1,5 @@
 {
-    "video_path": "/home/kx/live555/videoPath/fireDetection.264",
+    "video_path": "./fireDetection.264",
     "model_path": "./firedetection.om",
     "device_id": 0,
     "skip_frame_number": 7,

@@ -53,7 +53,7 @@
 
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
-##  4 启动高速公路火灾识别服务
+##  4 启动和停止高速公路火灾识别服务
 ### 4.1 启动高速公路火灾识别服务
 
 - **步骤1** 设置环境变量 
@@ -80,6 +80,7 @@
 - **步骤3** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
 
       python3 main.py
-- **步骤4** 停止火灾检测服务。停止服务有如下两种方式：
+### 4.2 停止高速公路火灾识别服务
+- 停止服务有如下两种方式：
 
     1.视频文件分析完毕可自动停止服务。 2.命令行输入Ctrl+C组合键可手动停止服务。

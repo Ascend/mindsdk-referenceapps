@@ -41,9 +41,12 @@ def _init():
     logger_instance = logging.getLogger()
     file_base_check("./infer_config.json")
     infer_config_instance = read_json_config("./infer_config.json")
+    file_base_check(infer_config_instance["video_path"])
     directory = os.path.dirname(infer_config_instance ["video_saved_path"])
     if not os.path.exists(directory):
         os.makedirs(directory)
+    if os.path.exists(infer_config_instance["video_saved_path"]):
+        os.remove(infer_config_instance["video_saved_path"])
     return logger_instance, infer_config_instance
 
 

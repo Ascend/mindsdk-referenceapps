@@ -219,7 +219,6 @@ for (size_t i = 0; i < numChannel; i++) {
 }
 ```
 + port:起始端口
-+ nums:端口数量
 + ip_address:ip地址
 ```
 # 如果是不同名称的264视频，则手动批量添加

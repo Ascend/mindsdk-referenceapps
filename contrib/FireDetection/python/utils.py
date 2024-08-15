@@ -42,12 +42,15 @@ def _init():
     file_base_check("./infer_config.json")
     infer_config_instance = read_json_config("./infer_config.json")
     file_base_check(infer_config_instance["video_path"])
+    file_base_check(infer_config_instance["model_path"])
     file_path = infer_config_instance["video_saved_path"]
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
     if os.path.exists(file_path):
         os.remove(file_path)
+    if infer_config_instance["skip_frame_number"] < 1:
+        raise Exception('skip_frame_number must >= 1.')
     return logger_instance, infer_config_instance
 
 

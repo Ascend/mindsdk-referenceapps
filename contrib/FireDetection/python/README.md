@@ -65,10 +65,10 @@
 |    video_path     | 用于火灾识别的视频文件路径   |
 |    model_path     | om模型的路径         |
 |     device_id     | 运行服务时使用的NPU设备编号 |
-| skip_frame_number | 指定两次推理间隔的帧个数    |
+| skip_frame_number | 指定两次推理的帧间隔数量    |
 | video_saved_path  | 指定编码后视频保存的文件路径  |
-|       width       | 用于火灾识别的视频文件的宽度         |
-|      height       | 用于火灾识别的视频文件的高度      |
+|       width       | 用于火灾识别的视频文件的宽度  |
+|      height       | 用于火灾识别的视频文件的高度  |
 
 
 *device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为7；width和height的取值范围为[128, 4096]；video_path所指定的视频文件需为H264编码；video_saved_path所指定的文件每次服务启动时会被覆盖重写。

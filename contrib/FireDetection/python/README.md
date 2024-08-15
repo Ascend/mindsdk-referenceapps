@@ -2,7 +2,7 @@
 
 ## 1 介绍
 
-高速公路车辆火灾识别基于 MindX Vision 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过 live555 服务器进行拉流输入视频，然后进行视频解码，解码结果经过模型推理进行火焰和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。
+高速公路车辆火灾识别基于 MindX Vision 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过av模块打开本地视频文件、模拟视频流，然后进行视频解码，解码结果经过模型推理进行火焰和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。解码后的视频图像会再次编码保存至指定位置。
 
 ### 1.1 支持的硬件形态
 
@@ -19,7 +19,7 @@
 
 ### 1.3 软件方案介绍
 
-基于 MindX SDK 的mxBase架构的高速公路车辆火灾识别业务流程为：将待检测的视频放在 live555 服务器上经python的av库实现拉流——>将视频解码成图片——>将图像缩放至满足检测模型要求的大小——>将缩放后的图像输入模型进行车辆火灾识别，如果发生检测到火焰或者烟雾则在日志层面进行告警——>将解码后的视频图像编码保存至指定文件路径。
+基于MindX Vision的mxBase架构的高速公路车辆火灾识别业务流程为：经av库打开本地视频文件、模拟视频流——>将视频解码成图片——>将图像缩放至满足检测模型要求的大小——>将缩放后的图像输入模型进行车辆火灾识别，如果发生检测到火焰或者烟雾则在日志层面进行告警——>将解码后的视频图像编码保存至指定文件路径。
 
 ### 1.4 代码目录结构与说明
 
@@ -54,12 +54,7 @@
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
 ##  4 启动高速公路火灾识别服务
-### 4.1 启动高速公路rtsp推流服务
-- **步骤1**
-使用live555启动rtsp推流服务。
-
-实现视频转rstp进行推流，推流视频的宽、高需与步骤2中的配置项一致。live555下载和使用方式详见[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
-### 4.2 启动高速公路火灾识别服务
+### 4.1 启动高速公路火灾识别服务
 
 - **步骤1** 设置环境变量 
 
@@ -69,19 +64,22 @@
 - **步骤2** 设置高速公路车辆火灾识别服务配置（修改infer_config.json文件） ，支持的配置项如下所示 ：
 
 
-|     配置项字段      | 配置项含义           |
-|:--------------:|-----------------|
-|    rtsp_url    | rtsp流源地址        |
-|   model_path   | om模型的路径         |
-|   device_id    | 运行服务时使用的NPU设备编号 |
+|       配置项字段       | 配置项含义           |
+|:-----------------:|-----------------|
+|    video_path     | 用于火灾识别的视频文件路径   |
+|    model_path     | om模型的路径         |
+|     device_id     | 运行服务时使用的NPU设备编号 |
 | skip_frame_number | 指定两次推理间隔的帧个数    |
-| video_saved_path | 指定编码后视频保存的文件路径  |
-|     width      | rtsp视频帧的宽度      |
-|     height     | rtsp视频帧的高度      |
+| video_saved_path  | 指定编码后视频保存的文件路径  |
+|       width       | 用于火灾识别的视频文件的宽度         |
+|      height       | 用于火灾识别的视频文件的高度      |
 
 
-*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为5；width和height的取值范围为[128, 4096]。
+*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为7；width和height的取值范围为[128, 4096]；video_path所指定的视频文件需为H264编码。
 
 - **步骤3** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
 
       python3 main.py
+- **步骤4** 停止火灾检测服务。停止服务有如下两种方式：
+
+    1.视频文件分析完毕可自动停止服务。 2.命令行输入Ctrl+C组合键可手动停止服务。

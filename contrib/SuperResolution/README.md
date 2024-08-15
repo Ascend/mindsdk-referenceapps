@@ -2,7 +2,7 @@
 
 ## 介绍
 
-基于MindX SDK mxVision开发图像超分辨率程序。本程序采用python开发，通过预处理操作对输入的图片数据解码为YUV格式图片，并将解码后的图片缩放到模型推理要求的尺寸。然后利用图像超分辨率模型VDSR获取得到图片超分辨率重建结果。最后，利用python的第三方图像处理库PIL将低分辨率的输入图像和超分辨率重建的结果一同可视化。其次，针对两个图片集91-images和General-100进行PSNR（峰值信噪比）验证。
+基于MindX SDK mxVision开发图像超分辨率程序。本程序采用python开发，通过预处理操作对输入的图片数据解码为YUV420SP格式图片，并将解码后的图片缩放到模型推理要求的尺寸。然后利用图像超分辨率模型VDSR获取得到图片超分辨率重建结果。最后，利用python的第三方图像处理库PIL将低分辨率的输入图像和超分辨率重建的结果一同可视化。其次，针对两个图片集91-images和General-100进行PSNR（峰值信噪比）验证。
 
 程序输入：任意jpg图片
 程序输出：输出得到低分辨率图片（256 x 256px）和超分辨率重建图片（768 x 768px）组合的可视化大图
@@ -33,7 +33,6 @@
 |-------- result                                    // 测试图片程序输出存放处
 |-------- model
 |           |---- YUV420SP_U8_GRAY.cfg              // 模型转换配置文件(灰度图)
-|           |---- model_conversion.sh               // 模型转换脚本
 |           |---- VDSR_768_768.om                   // 转换后OM模型存放在此处(需自行上传)
 |-------- testSet
 |           |---- 91-images                         // 91-images验证集(含bmp图片)
@@ -52,14 +51,20 @@
 
 ### 软件版本
 
-| 软件              | 版本           |
-| ----------------- |--------------|
-| Protobuf      | 3.19.0       | 
-| Pillow | 10.4.0       |
+| 软件              | 版本     |
+| ----------------- |--------|
+| Protobuf      | 3.13.0 | 
+| Pillow | 10.4.0 |
 
-### 准备工作
+### 配置环境变量
 
-> 模型转换
+```bash
+# 设置环境变量（请确认install_path路径是否正确）
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh
+```
+
+### 模型转换
 
 **步骤1** 获取原始模型网络及权重, [权重下载 和 网络下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperResolution/model.zip)
 
@@ -92,21 +97,11 @@ aipp_op {
 
 **步骤4** 使用ATC模型转换工具进行模型转换
 
-运行模型转换脚本 `model_conversion.sh` 或在 `model` 目录下执行以下命令
+在 `model` 目录下执行以下命令
 
 ```
-# 设置环境变量（请确认install_path路径是否正确）
-# Set environment PATH (Please confirm that the install_path is correct).
-
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-
 # 执行，转换VDSR模型成om格式
 # Execute, transform VDSR model.
-
 atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_format=NCHW --input_shape="data: 1, 1, 768, 768" --output=./VDSR_768_768 --soc_version=Ascend310B1 --output_type=FP32 --insert_op_conf=YUV420SP_U8_GRAY.cfg
 ```
 
@@ -129,13 +124,7 @@ atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_for
 }
 ```
 
-### 配置环境变量
 
-```bash
-# 设置环境变量（请确认install_path路径是否正确）
-. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
-. ${SDK_INSTALL_PATH}/mxVision/set_env.sh
-```
 
 ## 运行
 

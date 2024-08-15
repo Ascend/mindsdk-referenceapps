@@ -39,7 +39,7 @@
 
 ## 3 模型下载和转换
 ### 3.1 下载模型相关文件
-- **步骤1**  根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件和aipp_yolov5.cfg文件。
+- **步骤1**  根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件。
 
 ###  3.2 转换模型格式
 - **步骤1** 设置环境变量 

@@ -43,6 +43,7 @@ def _init():
     infer_config_instance = read_json_config("./infer_config.json")
     file_base_check(infer_config_instance["video_path"])
     file_path = infer_config_instance["video_saved_path"]
+    file_path = infer_config_instance["model_path"]
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)

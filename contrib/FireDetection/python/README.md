@@ -70,7 +70,7 @@
 |      height       | 用于火灾识别的视频文件的高度  |
 
 
-*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为7；width和height的取值范围为[128, 4096]；video_path所指定的视频文件需为H264编码；video_saved_path所指定的文件每次服务启动时会被覆盖重写。
+*device_id取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skip_frame_number建议根据实际业务需求设置，推荐设置为3；width和height的取值范围为[128, 4096]；video_path所指定的视频文件需为H264编码；video_saved_path所指定的文件每次服务启动时会被覆盖重写。
 
 - **步骤3** 启动火灾检测服务。火灾检测结果在warning级别日志中体现；编码视频文件保存在配置文件指定的路径下。
 

@@ -148,8 +148,8 @@ std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rts
 如果是不同名称的264视频，则手动批量添加
 ```
 std::vector<std::string> filePaths(numChannel);
-filePaths[0] = "../xxx/xxx.264"
-filePaths[1] = "../xxx/xxx.264"
+filePaths[0] = "../xxx/xxx.264";
+filePaths[1] = "../xxx/xxx.264";
 ...
 ```
 

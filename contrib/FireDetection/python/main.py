@@ -40,6 +40,18 @@ def vdec_thread_func(vdec_config, vdec_callbacker, device_id, rtsp):
         count = 0
         # 初始化VideoDecoder
         video_decoder = VideoDecoder(vdec_config, vdec_callbacker, device_id, 0)
+        # 校验视频宽高是否符合编码器要求
+        video_stream = next(s for s in container.streams if s.type == 'video')
+        if video_stream.height > infer_config["height"]:
+            logger.error("Video height {} exceeds the configuration height {} in config file. Please adjust config."
+                         .format(video_stream.height, infer_config["height"]))
+            SIGNAL_RECEIVED = True
+            return
+        if video_stream.width > infer_config["width"]:
+            logger.error("Video width {} exceeds the configuration width {} in config file. Please adjust config."
+                         .format(video_stream.width, infer_config["width"]))
+            SIGNAL_RECEIVED = True
+            return
         # 循环取帧解码
         for packet in container.demux():
             if SIGNAL_RECEIVED:
@@ -136,4 +148,4 @@ if __name__ == '__main__':
     venc.join()
     analyze.join()
 
-    logger.info("Fire detection task ended successfully.")
+    logger.info("Fire detection task ended.")

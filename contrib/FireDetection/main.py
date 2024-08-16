@@ -1,114 +1,151 @@
-# Copyright 2021 Huawei Technologies Co., Ltd
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+import threading
+import signal
+import time
+import av
+from mindx.sdk import base
+from mindx.sdk.base import VideoDecoder, VideoDecodeConfig,\
+    VdecCallBacker, VideoEncoder, VideoEncodeConfig, VencCallBacker
+from frame_analyzer import FrameAnalyzer
+from utils import infer_config, logger
 
-# http://www.apache.org/licenses/LICENSE-2.0
+decoded_data_queue = []
+analyzed_data_queue = []
+decode_finished_flag = False
+SIGNAL_RECEIVED = False
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-import json
-import os
-import cv2
-import numpy as np
+class Frame:
+    def __init__(self, image, frame_id):
+        self.image = image
+        self.frame_id = frame_id
 
-from StreamManagerApi import StreamManagerApi, MxDataInput, StringVector
-import MxpiDataType_pb2 as MxpiDataType
 
-# The following belongs to the SDK Process
-streamManagerApi = StreamManagerApi()
-# init stream manager
-ret = streamManagerApi.InitManager()
-if ret != 0:
-    print("Failed to init Stream manager, ret=%s" % str(ret))
-    exit()
+def stop_handler(signum, frame):
+    global SIGNAL_RECEIVED
+    SIGNAL_RECEIVED = True
 
-# create streams by pipeline config file
-# load pipline
-with open("./pipeline/fire_v.pipeline", 'rb') as f:
-    pipelineStr = f.read()
-ret = streamManagerApi.CreateMultipleStreams(pipelineStr)
-# Print error message
-if ret != 0:
-    print("Failed to create Stream, ret=%s" % str(ret))
 
-# Stream name
-streamName = b'detection'
-# Obtain the inference result by specifying streamName and keyVec
-# The data that needs to be obtained is searched by the plug-in name
-keys = [b"ReservedFrameInfo", b"mxpi_modelinfer0", b"mxpi_videodecoder0"]
-keyVec = StringVector()
-for key in keys:
-    keyVec.push_back(key)
+def vdec_callback_func(decoded_image, channel_id, frame_id):
+    logger.debug('Video decoder output decoded image (channelId:{}, frameId:{}, image.width:{},'
+                 ' image.height:{}, image.format:{})'.format(channel_id, frame_id, decoded_image.width,
+                                                             decoded_image.height, decoded_image.format))
+    # 解码完成的Image类存入列表中
+    decoded_data_queue.append(decoded_image)
 
-while True:
-    # Get data through GetResult
-    infer_result = streamManagerApi.GetResult(streamName, b'appsink0', keyVec)
 
-    # Determine whether the output is empty
-    if infer_result.metadataVec.size() == 0:
-        print("infer_result is null")
-        continue
+def vdec_thread_func(vdec_config, vdec_callbacker, device_id, rtsp):
+    global decode_finished_flag
+    global SIGNAL_RECEIVED
+    with av.open(rtsp) as container:
+        count = 0
+        # 初始化VideoDecoder
+        video_decoder = VideoDecoder(vdec_config, vdec_callbacker, device_id, 0)
+        # 校验视频宽高是否符合编码器要求
+        video_stream = next(s for s in container.streams if s.type == 'video')
+        if video_stream.height > infer_config["height"]:
+            logger.error("Video height {} exceeds the configuration height {} in config file. Please adjust config."
+                         .format(video_stream.height, infer_config["height"]))
+            SIGNAL_RECEIVED = True
+            return
+        if video_stream.width > infer_config["width"]:
+            logger.error("Video width {} exceeds the configuration width {} in config file. Please adjust config."
+                         .format(video_stream.width, infer_config["width"]))
+            SIGNAL_RECEIVED = True
+            return
+        # 循环取帧解码
+        for packet in container.demux():
+            if SIGNAL_RECEIVED:
+                break
+            if packet.size == 0:
+                logger.info("Finish to pull rtsp stream.")
+                SIGNAL_RECEIVED = True
+                break
+            logger.debug("send packet:{} ".format(count))
+            video_decoder.decode(packet, count)
+            time.sleep(0.02)
+            count += 1
+        logger.info("There are {} frames in total.".format(count))
 
-    # Frame information structure
-    frameList = MxpiDataType.MxpiFrameInfo()
-    frameList.ParseFromString(infer_result.metadataVec[0].serializedMetadata)
 
-    # Objectpostprocessor information
-    objectList = MxpiDataType.MxpiObjectList()
-    objectList.ParseFromString(infer_result.metadataVec[1].serializedMetadata)
+# 视频编码回调函数
+def venc_callback_func(output, output_datasize, channel_id, frame_id):
+    logger.debug('Video encoder output encoded_stream. (type:{}, outDataSize:{}, channelId:{}, frameId:{})'
+                 .format(type(output), output_datasize, channel_id, frame_id))
+    with open(infer_config["video_saved_path"], 'ab') as file:
+        file.write(output)
 
-    # Videodecoder information
-    visionList = MxpiDataType.MxpiVisionList()
-    visionList.ParseFromString(infer_result.metadataVec[2].serializedMetadata)
 
-    vision_data = visionList.visionVec[0].visionData.dataStr
-    visionInfo = visionList.visionVec[0].visionInfo
+def venc_thread_func(venc_config, venc_callbacker, device_id):
+    video_encoder = VideoEncoder(venc_config, venc_callbacker, device_id)
+    i = 0
+    global SIGNAL_RECEIVED
+    while not (SIGNAL_RECEIVED and not decoded_data_queue):
+        if not decoded_data_queue:
+            continue
+        frame_image = decoded_data_queue.pop(0)
+        if i % infer_config["skip_frame_number"] == 0:
+            analyzed_data_queue.append(Frame(frame_image, i))
+        video_encoder.encode(frame_image, i)
+        time.sleep(0.02)
+        i += 1
+    logger.info("Venc thread ended.")
 
-    # cv2 func YUV to BGR
-    YUV_BYTES_NU = 3
-    YUV_BYTES_DE = 2
-    img_yuv = np.frombuffer(vision_data, np.uint8)
-    # reshape
-    img_bgr = img_yuv.reshape(visionInfo.heightAligned * YUV_BYTES_NU // YUV_BYTES_DE, visionInfo.widthAligned)
-    # Color gamut conversion
-    img = cv2.cvtColor(img_bgr, getattr(cv2, "COLOR_YUV2BGR_NV12"))
 
-    bboxes = []
-    # fire or not
-    if len(objectList.objectVec) == 0:
-        continue
-    for i in range(len(objectList.objectVec)):
-        # get ObjectList
-        results = objectList.objectVec[i]
-        bboxes = {'x0': int(results.x0),
-                 'x1': int(results.x1),
-                 'y0': int(results.y0),
-                 'y1': int(results.y1),
-                 'confidence': round(results.classVec[0].confidence, 4),
-                 'text': results.classVec[0].className}
+def analyze_thread_func(model_path, device_id):
+    frame_analyzer = FrameAnalyzer(model_path, device_id)
+    global SIGNAL_RECEIVED
+    while not (SIGNAL_RECEIVED and not analyzed_data_queue):
+        if not analyzed_data_queue:
+            continue
+        frame = analyzed_data_queue.pop(0)
+        results = frame_analyzer.analyze(frame.image)
+        if results.size != 0:
+            frame_analyzer.alarm(results, frame.frame_id)
+    logger.info("Analyze thread ended.")
 
-        text = "{}{}".format(str(bboxes['confidence']), " ")
 
-        # Draw rectangle
-        for item in bboxes['text']:
-            text += item
-        cv2.putText(img, text, (bboxes['x0'] + 10, bboxes['y0'] + 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 1)
-        cv2.rectangle(img, (bboxes['x0'], bboxes['y0']), (bboxes['x1'], bboxes['y1']), (255, 0, 0), 2)
+signal.signal(signal.SIGINT, stop_handler)
+if __name__ == '__main__':
+    base.mx_init()
+    vdec_callbacker_instance = VdecCallBacker()
+    vdec_callbacker_instance.registerVdecCallBack(vdec_callback_func)
+    # # 初始化VideoDecodeConfig类并设置参数
+    vdec_conf = VideoDecodeConfig()
+    vdec_conf.inputVideoFormat = base.h264_main_level
+    vdec_conf.outputImageFormat = base.nv12
+    vdec_conf.width = infer_config["width"]
+    vdec_conf.height = infer_config["height"]
+    # 初始化VencCallBacker类并注册回调函数
+    venc_callbacker_instance = VencCallBacker()
+    venc_callbacker_instance.registerVencCallBack(venc_callback_func)
+    # 初始化VideoEncodeConfig
+    venc_conf = VideoEncodeConfig()
+    venc_conf.keyFrameInterval = 50
+    venc_conf.srcRate = 30
+    venc_conf.maxBitRate = 6000
+    venc_conf.ipProp = 30
 
-    # save picture
-    Id = frameList.frameId
-    result_path = "./result/"
-    if os.path.exists(result_path) != 1:
-        os.makedirs("./result/")
-    oringe_imgfile = './result/image' + '-' + str(Id) + '.jpg'
-    print("Warning! Fire or smoke detected")
-    print("Result save in ",oringe_imgfile)
-    cv2.imwrite(oringe_imgfile, img)
+    # 创建线程，并传递参数
+    vdec = threading.Thread(target=vdec_thread_func, kwargs={'vdec_config': vdec_conf,
+                                                             'vdec_callbacker': vdec_callbacker_instance,
+                                                             "device_id": infer_config["device_id"],
+                                                             "rtsp": infer_config["video_path"]})
 
-# Destroy All Streams
-streamManagerApi.DestroyAllStreams()
+    venc = threading.Thread(target=venc_thread_func, kwargs={'venc_config': venc_conf,
+                                                             'venc_callbacker': venc_callbacker_instance,
+                                                             "device_id": infer_config["device_id"]})
+
+    analyze = threading.Thread(target=analyze_thread_func, kwargs={"model_path": infer_config["model_path"],
+                                                                   "device_id": infer_config["device_id"]})
+
+    # 启动线程
+    vdec.start()
+    venc.start()
+    analyze.start()
+
+    # 等待执行完毕
+    vdec.join()
+    venc.join()
+    analyze.join()
+
+    logger.info("Fire detection task ended.")

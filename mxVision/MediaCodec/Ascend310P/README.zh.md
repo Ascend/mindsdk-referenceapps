@@ -9,7 +9,11 @@
 | **D1**（height: 480 width: 720） | 10 |
 | **CIF**（height: 288 width: 352） | 16 |
 
-## 2.支持的版本
+## 2.支持的产品
+
+本项目以昇腾Atlas 300I Pro和Atlas 300V Pro为主要的硬件平台。
+
+## 3.支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
@@ -18,15 +22,15 @@
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
 
-## 3.配置环境变量
+## 4.配置环境变量
 
 ```bash
 . ${SDK安装路径}/mxVision/set_env.sh
 ```
 
-## 4.运行
+## 5.运行
 
-### 4.1 运行前配置
+### 5.1 运行前配置
 
 - 构建rtsp视频流服务
 - 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
@@ -76,7 +80,7 @@ stream.ch0 = rtsp://xxx.xxx.xxx.xxx:xxx/xxx.264
 global_level=0
 ```
 
-### 4.2 运行
+### 5.2 运行
 
 ```bash
 chmod +x run.sh

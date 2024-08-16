@@ -25,7 +25,8 @@
 ## 4.配置环境变量
 
 ```bash
-. ${SDK安装路径}/mxVision/set_env.sh
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK安装路径}/mxVision/set_env.sh #sdk安装路径，根据实际安装路径修改
 ```
 
 ## 5.运行

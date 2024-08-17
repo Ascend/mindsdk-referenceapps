@@ -233,7 +233,7 @@ bash stop.sh
 ### 5.2.2 运行命令没有输入输出路径
 **问题描述：**
 ```
-提示：please input output path, such as ../out/out_test.h264.
+提示：please input output image path, such as ../out/out_test.h264.
 ```
 
 **解决方案：**

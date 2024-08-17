@@ -9,10 +9,16 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 数据集来源：https://www.kaggle.com/c/global-wheat-detection/data
 
 ### 1.1 支持的产品
+支持Atlas 500 A2、 A200I DK A2
 
-支持昇腾310芯片
+### 1.2 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
 
-### 1.2 软件方案介绍
+### 1.3 软件方案介绍
 
 请先总体介绍项目的方案架构。如果项目设计方案中涉及子系统，请详细描述各子系统功能。如果设计了不同的功能模块，则请详细描述各模块功能。
 
@@ -30,7 +36,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 
 
-### 1.3 代码目录结构与说明
+### 1.4 代码目录结构与说明
 
 本sample工程名称为**mxBase_wheatDetection**，工程目录如下图所示：
 ```
@@ -56,16 +62,6 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 ![image-2021092301](image-2021092301.jpg)
 
 
-## 2 环境依赖
-
-推荐系统为ubantu 18.04，环境依赖软件和版本如下表：
-
-| 软件名称 | 版本   |
-| :--------: | :------: |
-|Ubantu|18.04|
-|MindX SDK|5.0.0|
-|Python|3.9.2|
-
 ## 模型转换
 
 **步骤1** 模型获取
@@ -76,14 +72,10 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 这里提供了已经转好的416*416尺寸的onnx和om模型，以及上述两个下载链接的模型和文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/mxBase_wheatDetection/model.zip)
 
-将下载的YOLOv5模型pt文件通过YOLOv5自带的export模型转换函数转换为onnx格式的文件（onnx模型已提供）
-```
-python export.py --weights best_v3.pt --img 416 --batch 1 --simplify
-```
 
 **步骤2** 模型存放
 
-将获取到的YOLOv5模型onnx文件放至上一级的model文件夹中
+将获取到的模型文件存放至："样例项目所在目录/model/"。
 
 **步骤3** 执行模型转换命令
 
@@ -97,8 +89,9 @@ python export.py --weights best_v3.pt --img 416 --batch 1 --simplify
 (2) 转换模型
 
 ```
-atc --model=./best_v3_t.onnx --framework=5 --output=./onnx_best_v3 --soc_version=Ascend310 --insert_op_conf=./aipp.aippconfig --input_shape="images:1,3,416,416" --output_type="Conv_1228:0:FP32;Conv_1276:0:FP32;Conv_1324:0:FP32" --out_nodes="Conv_1228:0;Conv_1276:0;Conv_1324:0"
+atc --model=./416_best_v3.onnx --framework=5 --output=./onnx_best_v3 --soc_version=Ascend310B1 --insert_op_conf=./aipp.aippconfig --input_shape="images:1,3,416,416" --output_type="Conv_1228:0:FP32;Conv_1276:0:FP32;Conv_1324:0:FP32" --out_nodes="Conv_1228:0;Conv_1276:0;Conv_1324:0"
 ```
+使用npu-smi info命令查看设备的soc_version
 ## 使用场景概括
 
 ### 适用条件
@@ -155,7 +148,3 @@ cd 到mxBase_wheatDetection目录下
 ```
 ./mxBase_wheatDetection ./test/
 ```
-
-## 性能测试
-
-使用GWHD2020数据集训练集进行测试，性能为15FPS。

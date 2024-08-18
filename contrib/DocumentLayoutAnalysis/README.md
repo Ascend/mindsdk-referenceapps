@@ -13,16 +13,16 @@
 
 ### 1.2 支持的版本
 
-  | MxVision版本  | CANN版本  | Driver/Firmware版本 |
+| MxVision版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- | 
-  | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
-  | 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+| 5.0.0     | 7.0.0     |  23.0.0    |
 
 
 
 ### 1.3 软件方案介绍
 
-本方案中，通过将paddlepaddle的文档版面分析模型转成华为晟腾的om模型。将传入的图片做解码、resize、色域转换和归一化之后放入模型推理，推理结果再经过后处理和可视化之后，形成框出版面内容并标有版面类型与置信度的图片。
+本方案中，通过将onnx格式的文档版面分析模型转成华为晟腾的om模型。将传入的图片做解码、resize、色域转换和归一化之后放入模型推理，推理结果再经过后处理和可视化之后，形成框出版面内容并标有版面类型与置信度的图片。
 
 
 ### 1.4 代码目录结构与说明
@@ -48,7 +48,7 @@
 
 项目适用轮廓明显，且图片较清晰的文档测试图片
 
-**注**：由于paddle模型限制，仅支持识别['Text', 'Title', 'Figure', 'Figure caption', 'Table','Table caption', 'Header', 'Footer', 'Reference', 'Equation']列表里的 **10** 种版面类型。遇到深色背景色的文档，会识别成图片；遇到没有检测对象的空图会直接输出。
+**注**：由于模型限制，仅支持识别['Text', 'Title', 'Figure', 'Figure caption', 'Table','Table caption', 'Header', 'Footer', 'Reference', 'Equation']列表里的 **10** 种版面类型。遇到深色背景色的文档，会识别成图片；遇到没有检测对象的空图会直接输出。
 
 ## 2 环境依赖
 本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需依赖以下组件：
@@ -102,11 +102,12 @@ var_reci_chn_2 : 0.0174291938
 ```
 
 **步骤2** cd 到工程目录model目录下
-执行脚本
+执行以下命令：
 
 atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION}Ascend310 --insert_op_conf=./layout.aippconfig
 
-# SOC_VERSION: 当芯片是310是，SOC_VERSION为Ascend310，当芯片是310B时，Ascend310B1
+注：**SOC_VERSION: 当芯片是310是，SOC_VERSION为Ascend310，当芯片是310B时，Ascend310B1**
+
 **步骤3** 模型转换结果
 
 执行完模型转换脚本后，会生成相应的.om模型文件。 执行成功后终端会输出相关信息提示模型转换成功。
@@ -114,7 +115,7 @@ atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --outp
 
 模型转换使用了ATC工具，如需更多信息请参考:
 
- https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
+https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
 
 
 ## 4 编译与运行

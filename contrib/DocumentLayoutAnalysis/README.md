@@ -32,7 +32,7 @@
 ├── evaluate.py             #精度测试
 ├── infer.py                #推理文件
 ├── model
-│   ├── layout.aippconfig   #aipp配置文件
+│   ├── layout.aippconfig   #aipp配置文件，用于模型转换
 ├── postprocess.py          #后处理文件
 ├── README.md
 └── utils.py                #推理用到的一些工具函数
@@ -81,39 +81,16 @@ env
 
 ### 3.2 onnx模型转换成om模型
 
-**步骤1** AIPP配置
-由于该模型的输入为rgb格式，图像解码后的图像为bgr格式，且图片需要做归一化处理步骤，需要在atc转换模型时使用aipp预处理，aipp配置文件命名为layout.aippconfig，aipp配置内容如下：
-
-```bash
-aipp_op {
-aipp_mode : static
-crop : false
-input_format : RGB888_U8
-csc_switch : false
-rbuv_swap_switch : true
-min_chn_0 : 123.675
-min_chn_1 : 116.28
-min_chn_2 : 103.53
-var_reci_chn_0 : 0.0171247538
-var_reci_chn_1 : 0.0175070028
-var_reci_chn_2 : 0.0174291938
-}
-
-```
-
-**步骤2** cd 到工程目录model目录下
+**步骤1** cd 到工程目录model目录下
 执行以下命令：
 
 atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION}Ascend310 --insert_op_conf=./layout.aippconfig
 
-注：**SOC_VERSION: 当芯片是310时，SOC_VERSION为Ascend310，当芯片是310B时，SOC_VERSION为Ascend310B1**
+注：1.**SOC_VERSION: 当芯片是310时，SOC_VERSION为Ascend310，当芯片是310B时，SOC_VERSION为Ascend310B1**
 
-**步骤3** 模型转换结果
+2.执行成功后终端会输出相关信息提示模型转换成功。
 
-执行完模型转换脚本后，会生成相应的.om模型文件。 执行成功后终端会输出相关信息提示模型转换成功。
-转成的模型命名为layout.om可以在推理中使用了
-
-模型转换使用了ATC工具，如需更多信息请参考:
+3.模型转换使用了ATC工具，如需更多信息请参考:
 
 https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
 

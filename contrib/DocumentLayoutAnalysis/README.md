@@ -106,7 +106,7 @@ var_reci_chn_2 : 0.0174291938
 
 atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION}Ascend310 --insert_op_conf=./layout.aippconfig
 
-注：**SOC_VERSION: 当芯片是310是，SOC_VERSION为Ascend310，当芯片是310B时，Ascend310B1**
+注：**SOC_VERSION: 当芯片是310时，SOC_VERSION为Ascend310，当芯片是310B时，SOC_VERSION为Ascend310B1**
 
 **步骤3** 模型转换结果
 

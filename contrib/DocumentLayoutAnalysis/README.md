@@ -84,7 +84,7 @@ env
 **步骤1** cd 到工程目录model目录下
 执行以下命令：
 
-atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION}Ascend310 --insert_op_conf=./layout.aippconfig
+     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION} --insert_op_conf=./layout.aippconfig
 
 注：1.**SOC_VERSION: 当芯片是310时，SOC_VERSION为Ascend310，当芯片是310B时，SOC_VERSION为Ascend310B1**
 

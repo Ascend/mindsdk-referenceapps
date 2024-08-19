@@ -18,9 +18,19 @@ https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/MediaCodec/
 
 ### 1.2 支持的产品
 
-昇腾310(推理)
+x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型号3000）
 
-### 1.3 目录结构
+### 1.3 支持的版本
+
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
+
+### 1.4 三方依赖
+
+[FFmpeg4.2.1](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)
+
+### 1.5 目录结构
 
 ```
 .
@@ -44,30 +54,25 @@ https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/MediaCodec/
 
 ```
 
-### 1.4 特性及适用场景
+### 1.6 特性及适用场景
 
 MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码。在帧率为25fps的视频上，MediaCodecV2的性能和精度可以达到和v1接口一致，但是在其他的情况下的效果不够理想。
 视频每秒的转码帧率只能达到25fps，当视频帧率不满足25fps，结果不能达到。
 
 ## 2 环境依赖 
 
-### 2.1 软件版本
+### 2.1 安装FFmpeg
 
-| 软件                | 版本           | 说明                          | 获取方式                                                     |
-| ------------------- |--------------| ----------------------------- | ------------------------------------------------------------ |
-| mxVision            | 5.0.0        | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
-| Ascend-CANN-toolkit | 7.0.0        | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
-| FFmpeg            | FFmpeg 4.2.1 | 视频音频处理工具包           | [链接](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)     |
-
-### 2.2 安装FFmpeg
-
-下载完解压，按以下命令编译即可
+下载FFmpeg后解压，按以下命令编译即可
 ```
 ./configure --prefix=/usr/local/ffmpeg --enable-shared
 make -j
 make install
 
 ```
+
+### 2.2 头文件下载
+下载[BlockingQueue.h](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue)头文件，并将其添加到`mxbase`目录下。
 
 ### 2.3 配置环境变量
 
@@ -103,10 +108,6 @@ env
 bash build.sh
 ```
 代码编译成功会在`mxbase`目录下，生成可执行文件`mediacodecV2`
-
-注意：代码中使用的BlockingQueue类是使用的开源代码，需自行添加
-
-代码所在位置：https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue
 
 4) 输入执行指令，发起视频转码性能测试：
 ```c++

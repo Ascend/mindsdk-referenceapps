@@ -86,7 +86,7 @@ void get_files(std::string path, std::vector<std::string> &files)
 int main(int argc, char* argv[])
 {
     if (argc <= 1) {
-        LogWarn << "Please input folder path, such as './mxBase ./test'.";
+        LogWarn << "Please input folder path, such as './mxBase_wheatDetection ./test'.";
         return APP_ERR_OK;
     }
     LogInfo << "Project begin!!!!";

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(Test)
+project(MediaCodec310P)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -10,8 +10,8 @@ else()
     message("MX_SDK_HOME=$ENV{MX_SDK_HOME}")
 endif()
 
-add_definitions(-D _GLIBCXX_USE_CXX11_ABI=0)
-set(TARGET_NAME mxVisionMediaCodec)
+add_definitions(-D _GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
+set(TARGET_NAME mediaCodec310P)
 
 include_directories(${MX_SDK_HOME}/include)
 include_directories(${MX_SDK_HOME}/opensource/include)
@@ -26,4 +26,9 @@ link_directories(${MX_SDK_HOME}/opensource/lib)
 link_directories(/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64)
 
 add_executable(${TARGET_NAME} main.cpp)
-target_link_libraries(${TARGET_NAME} streammanager)
+target_link_libraries(${TARGET_NAME} mxbase streammanager glog pthread)
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+    target_link_libraries(${TARGET_NAME} cpprest)
+endif()

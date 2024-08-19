@@ -43,6 +43,7 @@
     │  main.py
     │  requirements.txt
     │  predictor.py
+    │  resize.py
     │
     ├─config
     │  test.yaml

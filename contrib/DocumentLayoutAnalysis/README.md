@@ -9,7 +9,7 @@
 
 ### 1.1 支持的硬件形态
 
-支持昇腾310，310B芯片
+支持昇腾310B芯片
 
 ### 1.2 支持的版本
 
@@ -84,13 +84,11 @@ env
 **步骤1** cd 到工程目录model目录下
 执行以下命令：
 
-     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION} --insert_op_conf=./layout.aippconfig
+     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=Ascend310B1 --insert_op_conf=./layout.aippconfig
 
-注：1.**SOC_VERSION: 当芯片是310时，SOC_VERSION为Ascend310，当芯片是310B时，SOC_VERSION为Ascend310B1**
+注：1.执行成功后终端会输出相关信息提示模型转换成功。
 
-2.执行成功后终端会输出相关信息提示模型转换成功。
-
-3.模型转换使用了ATC工具，如需更多信息请参考:
+2.模型转换使用了ATC工具，如需更多信息请参考:
 
 https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
 

@@ -108,7 +108,7 @@
 
 ## 3 模型获取及转换
 
-> 若使用A200I DK A2运行，推荐使用PC转换模型，具体方法可参考A200I DK A2资料
+> 若使用Atlas200I DK A2运行，推荐使用PC转换模型，具体方法可参考A200I DK A2资料
 
 **步骤1**  
 本项目使用的h5和pb模型已打包至[model.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip) ，下载后解压获得。
@@ -168,7 +168,7 @@ bash build.sh
 
 **步骤1** 按照第 4 小节 编译与运行 的步骤将样例运行成功。
 
-**步骤2** 从网址 https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip  下载后解压，将解压后的test.csv文件分别放在sdk/data目录和mxBase/data目录。
+**步骤2** 从网址 https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/data.zip  下载后解压，将解压后的test.csv文件分别放在sdk/data目录和mxBase/data目录。
 
 **步骤3** pipeline项目中的精度测试文件为sdk/test目录下的test.py，将test.py移到sdk目录下，执行下面代码，得到pipeline的精度测试结果。
 

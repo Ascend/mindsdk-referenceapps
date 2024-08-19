@@ -36,5 +36,4 @@ target_link_libraries(mxBase_sentiment_analysis
 set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
 if(EXISTS ${cpprest_DIR})
         target_link_libraries(mxBase_sentiment_analysis cpprest)
-        add_definitions(-DMX_VERSION_5)
 endif()

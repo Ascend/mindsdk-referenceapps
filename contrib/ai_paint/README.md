@@ -70,8 +70,3 @@ python3 main.py
 ```
 
 默认输出的矢量图layoutMap.jpg和结果图像resultImg.jpg位于result目录下
-
-3. 性能测试：默认已包含单次生成的时间计算并在命令行输出
-```shell
-Time cost = 'xxx'ms
-```

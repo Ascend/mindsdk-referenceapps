@@ -9,8 +9,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 数据集来源：https://www.kaggle.com/c/global-wheat-detection/data
 
 ### 1.1 支持的产品
-支持Atlas 500 A2、 A200I DK A2
-
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
 ### 1.2 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
@@ -52,7 +51,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 |           |---- Yolov5Detection.cpp       
 |-------- build.sh                            // 编译文件
 |-------- main.cpp                            // 主程序  
-|-------- CMakeLists.txt                      // 编译配置文件   
+|-------- CMakeLists.txt                      // 编译配置文件 
 |-------- README.md   
 ```
 
@@ -70,12 +69,12 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 在Github上下载YOLOv5的各个文件。[下载地址](https://github.com/ultralytics/yolov5)
 
-这里提供了已经转好的416*416尺寸的onnx和om模型，以及上述两个下载链接的模型和文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/mxBase_wheatDetection/model.zip)
+这里提供了已经转好的416*416尺寸的onnx模型，以及上述两个下载链接的模型和文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/mxBase_wheatDetection/model.zip)
 
 
 **步骤2** 模型存放
 
-将获取到的模型文件存放至："样例项目所在目录/model/"。
+将获取到的onnx模型文件存放至："样例项目所在目录/model/"。
 
 **步骤3** 执行模型转换命令
 
@@ -91,7 +90,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 ```
 atc --model=./416_best_v3.onnx --framework=5 --output=./onnx_best_v3 --soc_version=Ascend310B1 --insert_op_conf=./aipp.aippconfig --input_shape="images:1,3,416,416" --output_type="Conv_1228:0:FP32;Conv_1276:0:FP32;Conv_1324:0:FP32" --out_nodes="Conv_1228:0;Conv_1276:0;Conv_1324:0"
 ```
-使用npu-smi info命令查看设备的soc_version
+
 ## 使用场景概括
 
 ### 适用条件
@@ -143,8 +142,8 @@ bash build.sh
 
 **步骤4** 
 
-制定jpg图片进行推理，将需要进行推理的图片放入mxBase_wheatDetection目录下的新文件夹中，例如mxBase_wheatDetection/test。 eg:推理图片为xxx.jpg
-cd 到mxBase_wheatDetection目录下
+制定jpg图片进行推理，将需要进行推理的图片放入mxBase_wheatDetection目录下的新文件夹中，例如mxBase_wheatDetection/test，
+cd 到mxBase_wheatDetection目录下，并执行如下命令：
 ```
 ./mxBase_wheatDetection ./test/
 ```

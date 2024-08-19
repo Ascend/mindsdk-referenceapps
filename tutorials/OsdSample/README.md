@@ -30,7 +30,7 @@
   . /${Ascend_toolkit_path}/set_env.sh
   ```
 
-## 3、OSD模型转换
+## 3、准备模型
 使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行mxVision安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件。
 
 ##  4 编译与运行
@@ -45,4 +45,5 @@ bash build.sh
 ./main test.jpg
 ```
 
-**步骤3**：查看结果：运行目录下会生成testout.jpg，图像中存在"Hello, world!"字样
+**步骤3**：查看结果
+> 运行目录下会生成testout.jpg，图像中存在"Hello, world!"字样

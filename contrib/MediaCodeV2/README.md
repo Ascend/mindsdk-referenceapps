@@ -46,9 +46,8 @@ https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/MediaCodec/
 
 ### 1.4 特性及适用场景
 
-MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码，
-在帧率为25fps的视频上，MediaCodecV2的性能和精度可以达到和v1接口一致，但是在其他的情况下的效果不够理想。
-视频每秒的转码帧率只能达到25fps,当视频帧率不满足25fps,结果不能达到。
+MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码。在帧率为25fps的视频上，MediaCodecV2的性能和精度可以达到和v1接口一致，但是在其他的情况下的效果不够理想。
+视频每秒的转码帧率只能达到25fps，当视频帧率不满足25fps，结果不能达到。
 
 ## 2 环境依赖 
 

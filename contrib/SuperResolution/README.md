@@ -1,6 +1,6 @@
 # 基于MxVision的VDSR图像超分辨率
 
-## 1、介绍
+## 1 介绍
 
 基于MindX SDK mxVision开发图像超分辨率程序。本程序采用python开发，通过预处理操作对输入的图片数据解码为YUV420SP格式图片，并将解码后的图片缩放到模型推理要求的尺寸。然后利用图像超分辨率模型VDSR获取得到图片超分辨率重建结果。最后，利用python的第三方图像处理库PIL将低分辨率的输入图像和超分辨率重建的结果一同可视化。其次，针对两个图片集91-images和General-100进行PSNR（峰值信噪比）验证。
 
@@ -53,7 +53,7 @@
 
 
 
-## 2、设置环境变量
+## 2 设置环境变量
 
 
 ```bash
@@ -62,7 +62,7 @@
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
 ```
 
-## 3、准备模型
+## 3 准备模型
 
 **步骤1**：获取原始模型网络及权重, [权重下载 和 网络下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperResolution/model.zip)
 
@@ -124,7 +124,7 @@ atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_for
 
 
 
-## 4、编译与运行
+## 4 编译与运行
 
 **步骤1**：准备一张测试图片，置于 image 文件夹中（仅支持jpg格式）
 
@@ -176,4 +176,6 @@ test_image_set_path = './${验证图片集路径}'
 ```
 
 **步骤4**：结果查看
->执行完毕后，会在控制台输出该验证图片集的平均峰值信噪比
+```
+执行完毕后，会在控制台输出该验证图片集的平均峰值信噪比
+```

@@ -42,6 +42,8 @@
 │   ├── layout.aippconfig   #aipp配置文件，用于模型转换
 ├── postprocess.py          #后处理文件
 ├── README.md
+├── image
+│   ├── process.png         #流程图
 └── utils.py                #推理用到的一些工具函数
 ```
 
@@ -72,10 +74,10 @@
 
 根据[**下载地址**](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DocumentLayoutAnalysis/%E6%96%87%E6%A1%A3%E7%89%88%E9%9D%A2%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B%E5%A4%87%E4%BB%BD.zip)下载并解压得到picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx文件。
 
-  注：**下载后请将模型请放置于model的对应目录下**
+注：**下载后请将模型请放置于model的对应目录下**
 
 
-**步骤2**：onnx模型转换成om模型 
+**步骤2**：onnx模型转换成om模型
 
 cd 到工程目录model目录下
 执行以下命令：
@@ -83,7 +85,7 @@ cd 到工程目录model目录下
      atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=Ascend310B1 --insert_op_conf=./layout.aippconfig
 
 注：1.执行成功后终端会输出相关信息提示模型转换成功。
-2.模型转换使用了ATC工具，如需更多信息请参考: https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
+2.模型转换使用了ATC工具，如在模型转换过程中出现异常请参考昇腾官网相关资料。
 
 
 ## 4 运行

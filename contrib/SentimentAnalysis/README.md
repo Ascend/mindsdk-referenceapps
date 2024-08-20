@@ -119,7 +119,7 @@ h5模型转pb可以参考[源码](https://github.com/amir-abdi/keras_to_tensorfl
 **步骤2** 将得到的pb文件，存放到开发环境普通用户下的任意目录，例如：$HOME/models/sentiment_analysis。
 
 **步骤3** 执行以下命令使用atc命令进行模型转换：
-
+注意：模型转换时`--soc_version`参数的值需根据命令`npu-smi info`执行结果获取到的芯片名进行修改
 ```bash
 # 进入模型文件所在目录
 cd $HOME/models/sentiment_analysis

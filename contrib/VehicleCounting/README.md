@@ -138,16 +138,16 @@ video_width: 1280
 video_height: 720
 # 输出视频的帧率
 frame_rate: 15
-# 是否只计数单车道，1和0表示是或否
+# 1表示只计数单车道，0表示计数双车道
 is_singlelane: 0
-# 如果单车道，选择一个车道1和0表示line_down或line_up
+# 如果计数单车道，1表示统计朝向摄像头行驶的车流数量，0表示统计远离摄像头行驶的车流数量
 lane_num: 1
 # 计数标志位两个端点坐标
 line_s_x: 0
 line_s_y: 100
 line_e_x: 1280
 line_e_y: 100
-# 计数标志位是否为垂直或接近垂直，1和0表示是或否
+# 计数标志位1表示为垂直或接近垂直，0表示为非垂直
 is_vertical: 0
 # 三个计数参数的显示位置
 point_x: 0
@@ -162,9 +162,9 @@ det_threshold: 0.55
 nms_iouthreshold: 0.6
 
 # 计数参数显示在视频的左上角，使用样例视频双车道计数，后台共3个参数：counter_up、counter_down、counter
-  视频结果中分别显示为lane_up、lane_down、total。lane_up表示朝向摄像头行驶的车流统计数量，lane_down表示原理摄像头
-  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置位1，lane_num设置位0或1
-  表示只计数line_up或line_down。
+  视频结果中分别显示为lane_up、lane_down、total。lane_up表示朝向摄像头行驶的车流统计数量，lane_down表示远离摄像头
+  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置位1，lane_num设置位0
+  表示只计数line_up，设为1表示计数line_down。
 
 # 如果计数标志位是垂直方向或接近垂直，is_vertical设置为1，因为此时车流方向为东西方向，用x坐标计算更为准确
 

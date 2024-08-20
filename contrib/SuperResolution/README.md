@@ -123,7 +123,7 @@ atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_for
 
 
 
-## 4 编译与运行
+## 4 运行
 
 **步骤1**：准备一张测试图片，置于 image 文件夹中（仅支持jpg格式）
 

@@ -100,7 +100,7 @@ cd 到工程目录model目录下
 
 **步骤2** cd 到该项目目录DocumentLayoutAnalysis下，然后执行
 ```bash
-python infer.py
+python3 infer.py
 ```
 **步骤3** 查看结果
 

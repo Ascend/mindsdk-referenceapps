@@ -70,7 +70,7 @@ MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格
 ## 2 设置环境变量
 
 ```
-# Mind SDK环境变量:
+# MindX SDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:

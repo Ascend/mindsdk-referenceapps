@@ -12,13 +12,9 @@
 
 视频转码是实现将视频解码、缩放、编码的流程。视频编码又称为视频压缩，伴随着用户对高清视频的需求量的增加，视频多媒体的视频数据量也在不断加大。如果未经压缩，这些视频很难应用于实际的存储和传输。而视频中是有很多冗余信息的，以记录数字视频的YUV分量格式为例，YUV分别代表亮度与两个色差信号。以4：2：2的采样频率为例，Y信号采用13.5MHz，色度信号U和V采用6.75MHz采样，采样信号以8bit量化，则可以计算出数字视频的码率为`13.5 * 8 + 6.75 * 8 + 6.75 * 8 = 216Mbit/s`。如此大的数据量如果直接进行存储或传输将会遇到很大困难，因此必须采用压缩技术以减少码率。
 
-参考地址：
-
-https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/MediaCodec/Ascend310
-
 ### 1.2 支持的产品
 
-x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型号3000）
+X86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型号3000）
 
 ### 1.3 支持的版本
 
@@ -30,7 +26,7 @@ x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型�
 
 [FFmpeg4.2.1](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)
 
-下载FFmpeg后解压，按以下命令编译即可
+下载完成后解压，进入解压后的ffmpeg目录，执行以下命令编译即可
 ```
 ./configure --prefix=/usr/local/ffmpeg --enable-shared
 make -j
@@ -82,6 +78,8 @@ export LD_LIBRARY_PATH=${FFmpeg安装路径}/lib:$LD_LIBRARY_PATH
 # 环境变量介绍
 SDK-path:SDK mxVision安装路径
 ascend-toolkit-path:CANN安装路径
+
+# 查看环境变量
 env
 
 ```

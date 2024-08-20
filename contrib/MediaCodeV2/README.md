@@ -30,6 +30,14 @@ x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型�
 
 [FFmpeg4.2.1](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)
 
+下载FFmpeg后解压，按以下命令编译即可
+```
+./configure --prefix=/usr/local/ffmpeg --enable-shared
+make -j
+make install
+
+```
+
 ### 1.5 代码目录结构说明
 
 ```
@@ -42,7 +50,7 @@ x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型�
 |           |---- MediaCodecV2.cpp                  // 视频转码的源文件
 |           |---- MediaCodecV2.h                    // 视频转码的头文件
 |           |---- build.sh                          // 编译脚本
-|           |---- mainV2.h             
+|           |---- mainV2.h
 |           |---- run.sh                            // 运行多路视频转码的脚本
 |           |---- show.sh                           // 运行显示log信息的脚本
 |           |---- stop.sh                           // 停止多路视频转码的脚本
@@ -59,22 +67,7 @@ x86_64+Atlas 300I 推理卡（型号3010）和 ARM+Atlas 300I 推理卡 （型�
 MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码。在帧率为25fps的视频上，MediaCodecV2的性能和精度可以达到和v1接口一致，但是在其他的情况下的效果不够理想。
 视频每秒的转码帧率只能达到25fps，当视频帧率不满足25fps，结果不能达到。
 
-## 2 设置环境变量 
-
-### 2.1 安装FFmpeg
-
-下载FFmpeg后解压，按以下命令编译即可
-```
-./configure --prefix=/usr/local/ffmpeg --enable-shared
-make -j
-make install
-
-```
-
-### 2.2 头文件下载
-下载[BlockingQueue.h](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue)头文件，并将其添加到`mxbase`目录下。
-
-### 2.3 配置环境变量
+## 2 设置环境变量
 
 ```
 # Mind SDK环境变量:
@@ -95,6 +88,9 @@ env
 `mxbase`文件夹中的`CMakeLists.txt`文件中涉及到上面相关的环境变量，也需要在文件中进行相应的配置。
 
 ## 3 编译与运行
+
+运行前需先下载[BlockingQueue.h](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue)头文件，并将其添加到`mxbase`目录下。
+
 
 ### 3.1 V2接口运行
 

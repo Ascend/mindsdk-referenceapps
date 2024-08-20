@@ -141,7 +141,7 @@ frame_rate: 15
 # 是否只计数单车道，1和0表示是或否
 is_singlelane: 0
 # 如果单车道，选择一个车道1和0表示line_down或line_up
-lane_num: 2
+lane_num: 1
 # 计数标志位两个端点坐标
 line_s_x: 0
 line_s_y: 100
@@ -163,7 +163,7 @@ nms_iouthreshold: 0.6
 
 # 计数参数显示在视频的左上角，使用样例视频双车道计数，后台共3个参数：counter_up、counter_down、counter
   视频结果中分别显示为lane_up、lane_down、total。lane_up表示朝向摄像头行驶的车流统计数量，lane_down表示原理摄像头
-  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置位1，lane_num设置位1或2
+  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置位1，lane_num设置位0或1
   表示只计数line_up或line_down。
 
 # 如果计数标志位是垂直方向或接近垂直，is_vertical设置为1，因为此时车流方向为东西方向，用x坐标计算更为准确

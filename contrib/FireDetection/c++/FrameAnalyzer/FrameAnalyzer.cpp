@@ -35,7 +35,7 @@ const float NMS_THRESHOLD = 0.6;
 const int CLASS_NUMBER = 2;
 const int MODEL_LENGTH = 640;
 const int DECODE_NUMBER = 2;
-MxBase::Size modelSize(MODEL_LENGTH, 640);
+MxBase::Size modelSize(MODEL_LENGTH, MODEL_LENGTH);
 std::vector<std::vector<std::vector<int>>> ANCHORS_SIZE =
         {{{10, 13}, {16, 30}, {33, 23}}, {{30, 61}, {62, 45}, {59, 119}}, {{116, 90}, {156, 198}, {373, 326}}};
 

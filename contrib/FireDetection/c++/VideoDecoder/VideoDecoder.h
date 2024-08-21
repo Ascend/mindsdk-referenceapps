@@ -17,6 +17,7 @@
 #ifndef MINDX_SDK_SAMPLE_VIDEODECODER_H
 #define MINDX_SDK_SAMPLE_VIDEODECODER_H
 
+#include <time.h>
 #include <memory>
 #include <stdint.h>
 #include "acl/acl.h"

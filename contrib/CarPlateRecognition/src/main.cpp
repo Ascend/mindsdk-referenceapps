@@ -26,8 +26,8 @@ void InitCarPlateRecognitionParam(InitParam &initParam)
 {  
     initParam.checkTensor = true;
     initParam.deviceId = 0;
-    initParam.DetecModelPath = "./model/car_plate_detection.om";    
-    initParam.RecogModelPath = "./model/car_plate_recognition.om";
+    initParam.DetecModelPath = "./model/car_plate_detection/car_plate_detection.om";    
+    initParam.RecogModelPath = "./model/car_plate_recognition/car_plate_recognition.om";
 }
 
 

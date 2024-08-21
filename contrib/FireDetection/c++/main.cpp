@@ -47,8 +47,6 @@ const int FRAME_WAIT_TIME = 10;
 static std::string g_videoSavedPath = "";
 const std::string CONFIG_FILE_NAME = "./setup.config";
 const int SIGNAL_CHECK_TIMESTEP = 10000;
-const uint32_t REF_MIN_VDEC_LENGTH = 128;
-const uint32_t REF_MAX_VDEC_LENGTH = 4096;
 const int DEFAULT_SRC_RATE = 60;
 const int DEFAULT_MAX_BIT_RATE = 6000;
 std::shared_ptr<BlockingQueue<std::shared_ptr<void>>> inputQueue = std::make_shared<BlockingQueue<std::shared_ptr<void>>>(QUEUE_SIZE);
@@ -251,6 +249,8 @@ APP_ERROR SetAnalyzeConfigValue(const ConfigParser &configParser, std::string &m
 APP_ERROR SetVideoConfigValue(const ConfigParser &configParser, int &width, int &height,
                               std::string &videoPath, std::string &videoSavedPath)
 {
+    static uint32_t REF_MIN_VDEC_LENGTH = 128;
+    static uint32_t REF_MAX_VDEC_LENGTH = 4096;
     // check the stream width and height
     std::string itemCfgStr = {};
     itemCfgStr = std::string("width");

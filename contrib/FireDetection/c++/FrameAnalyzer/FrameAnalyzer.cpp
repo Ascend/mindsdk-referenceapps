@@ -75,8 +75,8 @@ APP_ERROR FrameAnalyzeModel::DecodeBox(std::vector<MxBase::Tensor>& outputs, std
                         tempScore = classScore2;
                         tempClassId = 1;
                     }
-                    float x = (widthIndex + fastmath::sigmoid(tensor[bIdx]) * 2 - 0.5);
-                    float y = (heightIndex + fastmath::sigmoid(tensor[bIdx + 1]) * 2 - 0.5);
+                    float x = (widthIndex + fastmath::sigmoid(tensor[bIdx]) * DECODE_NUMBER - 0.5);
+                    float y = (heightIndex + fastmath::sigmoid(tensor[bIdx + 1]) * DECODE_NUMBER - 0.5);
                     auto widthTempValue = fastmath::sigmoid(tensor[bIdx + 2]);
                     float width = widthTempValue * widthTempValue * 4 * ANCHORS_SIZE[layer][anchorIndex][0];
                     auto heightTempValue = fastmath::sigmoid(tensor[bIdx + 3]);

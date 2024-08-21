@@ -150,14 +150,14 @@ void StreamPullerThread(const std::string filePath, AVFormatContext* pFormatCtx,
         if (inStream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
             streamHeight = inStream->codecpar->height;
             streamWidth = inStream->codecpar->width;
-            if (streamHeight > height) {
-                LogError << "Video height " << streamHeight << " exceeds the configuration height " << height << ".";
+            if (streamHeight != height) {
+                LogError << "Video height " << streamHeight << " is not equal to the configuration height " << height << ".";
                 g_sendSignial = true;
                 g_readVideoEnded = true;
                 return;
             }
-            if (streamWidth > width) {
-                LogError << "Video width " << streamWidth << " exceeds the configuration width " << width << ".";
+            if (streamWidth != width) {
+                LogError << "Video width " << streamWidth << " is not equal to the configuration width " << width << ".";
                 g_sendSignial = true;
                 g_readVideoEnded = true;
                 return;

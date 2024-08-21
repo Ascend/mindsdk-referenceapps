@@ -26,7 +26,7 @@
 |           |---- CMakeLists.txt                    // 编译所需文件
 |           |---- main.cpp                          // C++样例主文件
 |           |---- run.sh                            // 编译脚本
-|-------- image
+|-------- data
 |           |---- test.jpg                          // 测试图片(需自行准备)
 |-------- json
 |           |---- ExternalOsdInstances.json         // 绘图单元配置信息

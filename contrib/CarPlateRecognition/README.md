@@ -84,9 +84,9 @@ STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需�
 ```
 **步骤2：** 修改CMakeLists.txt文件：
 
-第**10**行 set(MX_SDK_HOME $ENV{MX_SDK_HOME}) 语句是设置MindX_SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX_SDK安装路径。
+第**10**行 set(MX_SDK_HOME \$ENV{MX\_SDK\_HOME}) 语句是设置MindX_SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX_SDK安装路径。
 
-第**12**行 set(FREETYPE_HOME $ENV{FREETYPE_HOME}) 语句是设置FreeType库的安装路径，若未设置FREETYPE_HOME环境变量，需将$ENV{FREETYPE_HOME}替换为用户实际的FreeType库安装路径。
+第**12**行 set(FREETYPE_HOME \$ENV{FREETYPE\_HOME}) 语句是设置FreeType库的安装路径，若未设置FREETYPE_HOME环境变量，需将$ENV{FREETYPE_HOME}替换为用户实际的FreeType库安装路径。
 
 第**39**行 freetype 语句是链接到FreeType库，该名称一般是不用修改的，若命名不同则看情况修改。
 

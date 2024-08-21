@@ -17,23 +17,25 @@
 #include <map>
 #include <iostream>
 #include <string>
-#include "FrameAnalyzer.h"
 #include <ctime>
 #include <chrono>
+#include "./FrameAnalyzer.h"
 using namespace std;
 using namespace MxBase;
 
-int ANCHOR_DIM = 3;
-std::vector<int> STRIDE_LIST = {80*80, 40*40, 20*20};
-std::vector<int> LAYER_SIZE_LIST = {80, 40, 20};
-std::map<int, std::string> INDEX_TO_CLASS = {{0, "Fire"}, {1, "Smoke"}};
-int INFO_NUMBER_PER_BOX = 7;
-int BBOX_INFO_NUMBER_PER_BOX = 4;
-float OBJECT_THRESHOLD = 0.1;
-float CLASS_THRESHOLD = 0.4;
-float NMS_THRESHOLD = 0.6;
-int CLASS_NUMBER = 2;
-MxBase::Size modelSize(640, 640);
+const int ANCHOR_DIM = 3;
+const std::vector<int> STRIDE_LIST = {80*80, 40*40, 20*20};
+const std::vector<int> LAYER_SIZE_LIST = {80, 40, 20};
+const std::map<int, std::string> INDEX_TO_CLASS = {{0, "Fire"}, {1, "Smoke"}};
+const int INFO_NUMBER_PER_BOX = 7;
+const int BBOX_INFO_NUMBER_PER_BOX = 4;
+const float OBJECT_THRESHOLD = 0.1;
+const float CLASS_THRESHOLD = 0.4;
+const float NMS_THRESHOLD = 0.6;
+const int CLASS_NUMBER = 2;
+const int MODEL_LENGTH = 640;
+const int DECODE_NUMBER = 2;
+MxBase::Size modelSize(MODEL_LENGTH, 640);
 std::vector<std::vector<std::vector<int>>> ANCHORS_SIZE =
         {{{10, 13}, {16, 30}, {33, 23}}, {{30, 61}, {62, 45}, {59, 119}}, {{116, 90}, {156, 198}, {373, 326}}};
 
@@ -45,19 +47,16 @@ FrameAnalyzeModel::FrameAnalyzeModel(std::string modelPath, int deviceId) {
 
 
 APP_ERROR FrameAnalyzeModel::DecodeBox(std::vector<MxBase::Tensor>& outputs, std::vector<MxBase::ObjectInfo>& detBoxes) {
-    static int i =0;
     for (int layer = 0; layer < outputs.size(); layer++) {
-        auto tensorShape = outputs[layer].GetShape();
-        int anchorNumber = tensorShape[1];
-        int tensorHeight = tensorShape[2];
-        int tensorWidth = tensorShape[3];
+        int anchorNumber = outputs[layer].GetShape()[1];
+        int tensorHeight = outputs[layer].GetShape()[2];
+        int tensorWidth = outputs[layer].GetShape()[3];
         float *tensor = static_cast<float *>(outputs[layer].GetData());
         for (int heightIndex = 0; heightIndex < tensorHeight; ++heightIndex) {
             for (int widthIndex = 0; widthIndex < tensorWidth; ++widthIndex) {
                 for (int anchorIndex = 0; anchorIndex < anchorNumber; ++anchorIndex) {
-                    int bIdx = anchorIndex * tensorWidth * tensorHeight * INFO_NUMBER_PER_BOX
-                               + heightIndex * tensorWidth * INFO_NUMBER_PER_BOX
-                               + widthIndex * INFO_NUMBER_PER_BOX;
+                    int bIdx = anchorIndex * tensorWidth * tensorHeight * INFO_NUMBER_PER_BOX + heightIndex *
+                            tensorWidth * INFO_NUMBER_PER_BOX + widthIndex * INFO_NUMBER_PER_BOX;
                     int oIdx = bIdx + BBOX_INFO_NUMBER_PER_BOX;
                     int cIdx = bIdx + BBOX_INFO_NUMBER_PER_BOX + 1;
                     // 取目标框得分和分类得分
@@ -83,10 +82,10 @@ APP_ERROR FrameAnalyzeModel::DecodeBox(std::vector<MxBase::Tensor>& outputs, std
                     auto heightTempValue = fastmath::sigmoid(tensor[bIdx + 3]);
                     float height = heightTempValue * heightTempValue * 4 * ANCHORS_SIZE[layer][anchorIndex][1];
                     MxBase::ObjectInfo objInfo;
-                    objInfo.x0 = max(x / LAYER_SIZE_LIST[layer] * modelSize.width - width / 2, 0.0f);
-                    objInfo.y0 = max(y / LAYER_SIZE_LIST[layer] * modelSize.height - height / 2, 0.0f);
-                    objInfo.x1 = min(x / LAYER_SIZE_LIST[layer] * modelSize.width + width / 2, static_cast<float>(modelSize.width));
-                    objInfo.y1 = min(y / LAYER_SIZE_LIST[layer] * modelSize.height + height / 2, static_cast<float>(modelSize.height));
+                    objInfo.x0 = max(x / LAYER_SIZE_LIST[layer] * modelSize.width - width / DECODE_NUMBER, 0.0f);
+                    objInfo.y0 = max(y / LAYER_SIZE_LIST[layer] * modelSize.height - height / DECODE_NUMBER, 0.0f);
+                    objInfo.x1 = min(x / LAYER_SIZE_LIST[layer] * modelSize.width + width /DECODE_NUMBER, static_cast<float>(modelSize.width));
+                    objInfo.y1 = min(y / LAYER_SIZE_LIST[layer] * modelSize.height + height / DECODE_NUMBER, static_cast<float>(modelSize.height));
                     objInfo.confidence = tempScore;
                     objInfo.classId = tempClassId;
                     objInfo.className = INDEX_TO_CLASS[tempClassId];

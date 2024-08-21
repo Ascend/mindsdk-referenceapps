@@ -34,6 +34,7 @@
 使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行mxVision安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件。
 
 ## 4 编译与运行
+### C++样例
 **步骤1**：编译
 
 ```
@@ -42,10 +43,20 @@ bash build.sh
 
 **步骤2**：运行
 ```
-./main test.jpg
+./main
 ```
 
 **步骤3**：查看结果
+```
+运行目录下会生成testout.jpg，图像中存在"Hello, world!"字样
+```
+### Python样例
+**步骤1**：运行
+```bash
+python3 main.py
+```
+
+**步骤2**：查看结果
 ```
 运行目录下会生成testout.jpg，图像中存在"Hello, world!"字样
 ```

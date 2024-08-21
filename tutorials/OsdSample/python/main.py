@@ -54,7 +54,7 @@ if __name__ == '__main__':
         exit()
 
     # Send osd instances protobuf.
-    with open("ExternalOsdInstances.json", "r") as f:
+    with open("../json/ExternalOsdInstances.json", "r") as f:
         message_json = json.load(f)
     print(message_json)
     in_plugin_id = 1

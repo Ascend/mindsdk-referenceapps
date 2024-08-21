@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2023. Huawei Technologies Co.,Ltd. All rights reserved.
+ * Copyright(C) 2024. Huawei Technologies Co.,Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public:
     ~CarPlateRecognitionPostProcess() = default;
 
     APP_ERROR Init();
-APP_ERROR DeInit();
+    APP_ERROR DeInit();
     APP_ERROR Process(std::vector<MxBase::TensorBase> &inferOutputs, MxBase::ObjectInfo &objectInfo);
 };
 

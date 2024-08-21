@@ -37,10 +37,10 @@
 #include "MxBase/Maths/FastMath.h"
 #include "MxBase/postprocess/include/ObjectPostProcessors/Yolov3PostProcess.h"
 #include "MxBase/E2eInfer/DataType.h"
-#include "ConfigParser/ConfigParser.h"
 #include "VideoDecoder/VideoDecoder.h"
+#include "ConfigParser/ConfigParser.h"
 #include "BlockingQueue/BlockingQueue.h"
-#include "FrameAnalyzer.h"
+#include "FrameAnalyzer/rameAnalyzer.h"
 
 extern "C" {
 #include <libavformat/avformat.h>
@@ -50,13 +50,14 @@ static bool g_sendSignial = false;
 static bool g_readVideoEnded = false;;
 const int QUEUE_SIZE = 1000;
 const int TIME_OUT = 3000;
+const int FRAME_WAIT_TIME = 10;
 static std::string g_videoSavedPath = "";
 const std::string CONFIG_FILE_NAME = "./config/setup.config";
 const int SIGNAL_CHECK_TIMESTEP = 10000;
-const uint32_t REF_MIN_VDEC_WIDTH = 128;
-const uint32_t REF_MIN_VDEC_HEIGHT = 128;
-const uint32_t REF_MAX_VDEC_WIDTH = 1920;
-const uint32_t REF_MAX_VDEC_HEIGHT = 1080;
+const uint32_t REF_MIN_VDEC_LENGTH = 128;
+const uint32_t REF_MAX_VDEC_LENGTH = 4096;
+const int DEFAULT_SRC_RATE = 60;
+const int DEFAULT_MAX_BIT_RATE = 6000;
 std::shared_ptr<BlockingQueue<std::shared_ptr<void>>> inputQueue = std::make_shared<BlockingQueue<std::shared_ptr<void>>>(QUEUE_SIZE);
 std::shared_ptr<BlockingQueue<std::shared_ptr<void>>> outputQueue = std::make_shared<BlockingQueue<std::shared_ptr<void>>>(QUEUE_SIZE);
 
@@ -116,7 +117,7 @@ void GetFrame(AVPacket& pkt, FrameImage& frameImage, AVFormatContext* pFormatCtx
             return;
         }
         // sent to the device
-        auto hostDeleter = [](void *dataPtr) -> void {aclrtFreeHost(dataPtr);};
+        const auto hostDeleter = [](void *dataPtr) -> void {aclrtFreeHost(dataPtr);};
         MemoryData data(pkt.size, MemoryData::MEMORY_HOST);
         MemoryData src((void *)(pkt.data), pkt.size, MemoryData::MEMORY_HOST_MALLOC);
         APP_ERROR ret = MemoryHelper::MxbsMallocAndCopy(data, src);
@@ -183,7 +184,7 @@ void StreamPullerThread(const std::string filePath, AVFormatContext* pFormatCtx,
         std::shared_ptr<FrameImage> Pframe = std::make_shared<FrameImage>(frame);
         inputQueue->Push(Pframe, true);
         frameId += 1;
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_WAIT_TIME));
     }
     std::cout << "There are " << (frameId + 1) << " frames in total." << std::endl;
 }
@@ -209,7 +210,7 @@ void VdecThread(const ConfigParser &configParser, const uint32_t width, const ui
         if (ret != APP_ERR_OK) {
             LogError << "VideoDecoder decode failed. Ret is: " << ret;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_WAIT_TIME));
     }
     ret = videoDecoder.DeInit();
     if (ret != APP_ERR_OK) {
@@ -272,9 +273,9 @@ APP_ERROR SetVideoConfigValue(const ConfigParser &configParser, int &width, int 
         LogError << "Fail to get config variable named " << itemCfgStr << ".";
         return APP_ERR_COMM_FAILURE;
     }
-    if (width > REF_MAX_VDEC_WIDTH || height > REF_MAX_VDEC_HEIGHT || width < REF_MIN_VDEC_WIDTH ||
-        height < REF_MIN_VDEC_HEIGHT) {
-        LogError << "Width or Height of config file is out of range [128, 1920], [128, 1080]. "
+    if (width > REF_MAX_VDEC_LENGTH || height > REF_MAX_VDEC_LENGTH || width < REF_MIN_VDEC_LENGTH ||
+        height < REF_MIN_VDEC_LENGTH) {
+        LogError << "Width or Height of config file is out of range [128, 4096], [128, 4096]. "
                  << "width: " << width << ". height:" << height << ".";
         return APP_ERR_COMM_FAILURE;
     }
@@ -352,7 +353,7 @@ void VencThread(VideoEncodeConfig vEncodeConfig, std::string modelPath, int devi
         if (ret != APP_ERR_OK) {
             LogError << "Encode failed.";
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_WAIT_TIME));
         frameId += 1;
     }
     std::cout << "Venc thread ended." << std::endl;
@@ -408,8 +409,8 @@ int main(int argc, char *argv[])
     vEncodeConfig.height = height;
     vEncodeConfig.width = width;
     vEncodeConfig.keyFrameInterval = 1;
-    vEncodeConfig.srcRate = 25;
-    vEncodeConfig.maxBitRate = 30000;
+    vEncodeConfig.srcRate = DEFAULT_SRC_RATE;
+    vEncodeConfig.maxBitRate = DEFAULT_MAX_BIT_RATE;
     std::thread threadStreamPuller = std::thread(StreamPullerThread, videoPath, pFormatCtxs, frameCount, width, height);
     std::thread threadVdec = std::thread(VdecThread, configParser, width, height);
     std::thread threadVenc = std::thread(VencThread, vEncodeConfig, modelPath, deviceId, skipFrameNumber, frameInfo);

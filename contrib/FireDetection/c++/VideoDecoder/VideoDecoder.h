@@ -18,7 +18,7 @@
 #define MINDX_SDK_SAMPLE_VIDEODECODER_H
 
 #include <memory>
-#include <stdint.h> /
+#include <stdint.h>
 #include "acl/acl.h"
 #include "MxBase/E2eInfer/VideoDecoder/VideoDecoder.h"
 #include "MxBase/E2eInfer/ImageProcessor/ImageProcessor.h"

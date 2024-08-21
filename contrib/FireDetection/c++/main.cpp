@@ -40,7 +40,7 @@
 #include "VideoDecoder/VideoDecoder.h"
 #include "ConfigParser/ConfigParser.h"
 #include "BlockingQueue/BlockingQueue.h"
-#include "FrameAnalyzer/rameAnalyzer.h"
+#include "FrameAnalyzer/FrameAnalyzer.h"
 
 extern "C" {
 #include <libavformat/avformat.h>

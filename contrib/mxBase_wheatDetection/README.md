@@ -10,6 +10,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 ### 1.1 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
+
 ### 1.2 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
@@ -18,8 +19,6 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
 
 ### 1.3 软件方案介绍
-
-请先总体介绍项目的方案架构。如果项目设计方案中涉及子系统，请详细描述各子系统功能。如果设计了不同的功能模块，则请详细描述各模块功能。
 
 表1.1 系统方案中各模块功能：
 

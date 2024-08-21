@@ -163,7 +163,7 @@ nms_iouthreshold: 0.6
 
 # 计数参数显示在视频的左上角，使用样例视频双车道计数，后台共3个参数：counter_up、counter_down、counter
   视频结果中分别显示为lane_up、lane_down、total。lane_up表示朝向摄像头行驶的车流统计数量，lane_down表示远离摄像头
-  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置位1，lane_num设置位0
+  行驶的车流统计数量，total表示总共的车流统计数量。若想计数单车道的车流，is_singlelane设置为1，lane_num设置为0
   表示只计数line_up，设为1表示计数line_down。
 
 # 如果计数标志位是垂直方向或接近垂直，is_vertical设置为1，因为此时车流方向为东西方向，用x坐标计算更为准确

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "VideoDecoder.h"
 #include <sys/time.h>
 #include <iostream>
 #include <sstream>
+#include "./VideoDecoder.h"
 
 using namespace std;
 using namespace MxBase;

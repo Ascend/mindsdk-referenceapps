@@ -26,7 +26,6 @@ using namespace MxBase;
 const int ANCHOR_DIM = 3;
 const std::vector<int> STRIDE_LIST = {80*80, 40*40, 20*20};
 const std::vector<int> LAYER_SIZE_LIST = {80, 40, 20};
-const std::map<int, std::string> INDEX_TO_CLASS = {{0, "Fire"}, {1, "Smoke"}};
 const int INFO_NUMBER_PER_BOX = 7;
 const int BBOX_INFO_NUMBER_PER_BOX = 4;
 const float OBJECT_THRESHOLD = 0.1;
@@ -35,6 +34,7 @@ const float NMS_THRESHOLD = 0.6;
 const int CLASS_NUMBER = 2;
 const int MODEL_LENGTH = 640;
 const int DECODE_NUMBER = 2;
+std::map<int, std::string> INDEX_TO_CLASS = {{0, "Fire"}, {1, "Smoke"}};
 MxBase::Size modelSize(MODEL_LENGTH, MODEL_LENGTH);
 std::vector<std::vector<std::vector<int>>> ANCHORS_SIZE =
         {{{10, 13}, {16, 30}, {33, 23}}, {{30, 61}, {62, 45}, {59, 119}}, {{116, 90}, {156, 198}, {373, 326}}};

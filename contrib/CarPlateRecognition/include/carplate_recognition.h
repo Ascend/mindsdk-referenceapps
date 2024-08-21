@@ -22,8 +22,8 @@
 #include "MxBase/Tensor/TensorContext/TensorContext.h"
 #include "MxBase/ConfigUtil/ConfigUtil.h"
 #include "MxBase/PostProcessBases/ObjectPostProcessBase.h"
-#include "retinaface_postprocess.h"
-#include "lpr_postprocess.h"
+#include "ssd_vgg_postprocess.h"
+#include "carplate_recognition_postprocess.h"
 #include "initparam.h"
 
 
@@ -33,23 +33,21 @@ public:
     APP_ERROR init(const InitParam &initParam); // 初始化函数
     APP_ERROR deinit(); // 解初始化函数
     APP_ERROR detection_inference(const std::vector<MxBase::TensorBase> inputs, std::vector<MxBase::TensorBase> &outputs); // 车牌检测推理函数
-    APP_ERROR detection_postprocess(const MxBase::TensorBase orign_Tensor, std::vector<MxBase::TensorBase> detect_outputs, std::vector<MxBase::ObjectInfo>& objectInfos); // 车牌检测后处理函数
+    APP_ERROR detection_postprocess(const MxBase::Image &origin_image,
+    std::vector<MxBase::TensorBase> detect_outputs, std::vector<MxBase::ObjectInfo> &objectInfos); // 车牌检测后处理函数
     APP_ERROR recognition_inference(const std::vector<MxBase::TensorBase> inputs, std::vector<std::vector<MxBase::TensorBase>> &outputs); // 车牌识别推理函数
     APP_ERROR recognition_postprocess(std::vector<std::vector<MxBase::TensorBase>> recog_outputs, std::vector<MxBase::ObjectInfo>& objectInfos); // 车牌识别后处理函数
     APP_ERROR process(const std::string &imgPath); // 整体流程处理函数
 protected:
-    APP_ERROR readimage(const std::string &imgPath, MxBase::TensorBase &tensor); // 读取图像函数
-    APP_ERROR resize(const MxBase::TensorBase &inputTensor, MxBase::TensorBase &outputTensor);  // 图像缩放函数
-    APP_ERROR resize1(const MxBase::TensorBase &inputTensor, MxBase::TensorBase &outputTensor); // 图像缩放函数，被Crop_Resize1函数调用
-    APP_ERROR crop(const MxBase::TensorBase &inputTensor, MxBase::TensorBase &outputTensor, MxBase::ObjectInfo objInfo); // 抠图函数，被Crop_Resize1函数调用
-    APP_ERROR crop_resize1(MxBase::TensorBase inputTensor, std::vector<MxBase::TensorBase> &cropresize_Tensors, std::vector<MxBase::ObjectInfo> objInfos); // 抠图缩放函数
-    APP_ERROR write_result(MxBase::TensorBase &tensor, std::vector<MxBase::ObjectInfo> objectInfos); // 结果可视化函数
+    APP_ERROR readimage(const std::string &imgPath, MxBase::TensorBase &tensor,MxBase::Image &decodedImage); // 读取图像函数
+    APP_ERROR resize(const MxBase::Image &decodedImage, MxBase::TensorBase &outputTensor);  // 图像缩放函数
+    APP_ERROR crop_resize(const MxBase::Image& inputImage, std::vector<MxBase::TensorBase> &cropresize_Tensors, std::vector<MxBase::ObjectInfo> objInfos); // 抠图缩放函数
+    APP_ERROR write_result(MxBase::Image &image, std::vector<MxBase::ObjectInfo> objectInfos); // 结果可视化函数
 private:
-    std::shared_ptr<MxBase::DvppWrapper> dvppWrapper_; // DvppWrapper对象，封装了图像解码、缩放、扣图等功能
     std::shared_ptr<MxBase::ModelInferenceProcessor> detection_model_;   // 车牌检测模型对象
     std::shared_ptr<MxBase::ModelInferenceProcessor> recognition_model_; // 车牌识别模型对象
-    std::shared_ptr<retinaface_postprocess> detection_post_; // 车牌检测模型后处理对象
-    std::shared_ptr<lpr_postprocess> recognition_post_;	 // 车牌识别模型后处理对象
+    std::shared_ptr<SsdVggPostProcess> detection_post_; // 车牌检测模型后处理对象
+    std::shared_ptr<CarPlateRecognitionPostProcess> recognition_post_;	 // 车牌识别模型后处理对象
     MxBase::ModelDesc detection_modelDesc_   = {}; // 车牌检测模型描述信息
     MxBase::ModelDesc recognition_modelDesc_ = {}; // 车牌识别模型描述信息
     uint32_t deviceId_ = 0; // 设备ID

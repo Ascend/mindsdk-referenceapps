@@ -107,7 +107,9 @@ void GetFrame(AVPacket& pkt, FrameImage& frameImage, AVFormatContext* pFormatCtx
             return;
         }
         // sent to the device
-        const auto hostDeleter = [](void *dataPtr) -> void {aclrtFreeHost(dataPtr);};
+        const auto hostDeleter = [](void *dataPtr) -> void {
+            void* aclDataPtr = const_cast<void*>(dataPtr);
+            aclrtFreeHost(aclDataPtr);};
         MemoryData data(pkt.size, MemoryData::MEMORY_HOST);
         MemoryData src((void *)(pkt.data), pkt.size, MemoryData::MEMORY_HOST_MALLOC);
         APP_ERROR ret = MemoryHelper::MxbsMallocAndCopy(data, src);

@@ -1,14 +1,15 @@
 # SampleOsd 样例说明
 
 ## 1 介绍
+### 1.1 简介
 * 本样例从ExternalOsdInstances.json构建一个绘图单元集合（MxpiOsdInstancesList）的元数据（metadata）并送入stream
 * 上传一张jpg格式图片并重命名为test.jpg，在运行目录下执行run.sh。请勿使用大分辨率图片
 * 如构建的proto数据正确则可在程序运行结束后在运行目录找到图片testout.jpg，此图片为test.jpg经过缩放后加上绘图单元集合后的输出结果。
 
-### 1.1 支持的产品
+### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2卡为主要硬件平台。
 
-### 1.2 支持的版本
+### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
 
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |

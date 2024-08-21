@@ -37,7 +37,7 @@ APP_ERROR ConfigParser::ParseConfig(const std::string &fileName)
     // Open the input file
     std::ifstream inFile(fileName);
     if (!inFile.is_open()) {
-        std::cout << "cannot read setup.config file!" << std::endl;
+        LogError << "cannot read setup.config file!";
         return APP_ERR_COMM_EXIST;
     }
     std::string line, newLine;

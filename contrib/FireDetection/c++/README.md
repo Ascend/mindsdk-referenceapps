@@ -38,6 +38,7 @@
 │   └── FrameAnalyzer.h
 ├── main.cpp
 ├── README.md
+├── CMakeLists.txt
 ├── setup.config
 └── VideoDecoder
     ├── VideoDecoder.cpp

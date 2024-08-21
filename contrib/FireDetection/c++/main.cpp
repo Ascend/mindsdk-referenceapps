@@ -28,14 +28,15 @@
 #include "boost/filesystem.hpp"
 #include "acl/acl.h"
 #include "acl/acl_rt.h"
-#include <libavformat/avformat.h>
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include "MxBase/MxBase.h"
 #include "VideoDecoder/VideoDecoder.h"
 #include "ConfigParser/ConfigParser.h"
 #include "BlockingQueue/BlockingQueue.h"
 #include "FrameAnalyzer/FrameAnalyzer.h"
-
+extern "C" {
+    #include <libavformat/avformat.h>
+}
 
 static bool g_sendSignial = false;
 static bool g_readVideoEnded = false;;

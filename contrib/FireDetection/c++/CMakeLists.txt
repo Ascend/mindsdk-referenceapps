@@ -57,7 +57,7 @@ link_directories(
 )
 
 add_executable(main main.cpp ConfigParser/ConfigParser.h ConfigParser/ConfigParser.cpp VideoDecoder/VideoDecoder.h
-               VideoDecoder/VideoDecoder.cpp FrameAnalyzer.h FrameAnalyzer.cpp )
+               VideoDecoder/VideoDecoder.cpp FrameAnalyzer/FrameAnalyzer.h FrameAnalyzer/FrameAnalyzer.cpp )
 
 #target_link_libraries(main glog mxbase gstrtp-1.0 -lpthread -lm avformat avcodec avdevice avutil swresample opencv_world ascendcl)
 target_link_libraries(main glog mxbase  -lpthread -lm avformat avcodec avdevice avutil ascendcl)

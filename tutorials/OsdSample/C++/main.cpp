@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 {
     // read image file and build stream input
     MxStream::MxstDataInput dataBuffer;
-    APP_ERROR ret = ReadFile("./test.jpg", dataBuffer);
+    APP_ERROR ret = ReadFile("../image/test.jpg", dataBuffer);
     if (ret != APP_ERR_OK) {
         LogError << GetError(ret) << "Failed to read image file.";
         return ret;

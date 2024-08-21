@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # Construct the input of the stream
     data_input = MxDataInput()
-    with open("test.jpg", 'rb') as f:
+    with open("../image/test.jpg", 'rb') as f:
         data_input.data = f.read()
 
     # Send image.

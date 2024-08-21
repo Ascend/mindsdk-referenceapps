@@ -422,10 +422,6 @@ APP_ERROR car_plate_recognition::process(const std::string &imgPath)
         LogError << "detection_postprocess failed, ret=" << ret << ".";
         return ret;
     }
-    if (objInfos.empty()) {
-        LogError << "No carplate detected.";
-        return APP_ERR_COMM_FAILURE;
-    }
     // STEP5:将检测到的车牌抠图，并缩放至72*272
     std::vector<MxBase::TensorBase> cropresize_Tensors = {};
     ret = crop_resize(orign_image, cropresize_Tensors, objInfos);
@@ -441,10 +437,6 @@ APP_ERROR car_plate_recognition::process(const std::string &imgPath)
     if (ret != APP_ERR_OK) {
         LogError << "recognition_inference failed, ret=" << ret << ".";
         return ret;
-    }
-    if (recog_outputs.empty()) {
-        LogError << "No carplate recognized.";
-        return APP_ERR_COMM_FAILURE;
     }
     // STEP7:车牌识别模型后处理
     ret = recognition_postprocess(recog_outputs, objInfos);

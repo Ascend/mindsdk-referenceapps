@@ -17,7 +17,7 @@ include_directories(
         ${MX_SDK_HOME}/opensource/include
         ${MX_SDK_HOME}/opensource/include/opencv4
         ${PROJECT_SOURCE_DIR}/include
-        ${FREETYPE_HOME}
+        ${FREETYPE_HOME}/include/freetype2
 )
 
 #添加lib的搜索路径
@@ -25,6 +25,7 @@ link_directories(
         ${MX_SDK_HOME}/lib
         ${MX_SDK_HOME}/opensource/lib
         ${MX_SDK_HOME}/lib/modelpostprocessors
+        ${FREETYPE_HOME}/lib
         )
 
 #生成可执行文件car_plate_recognition.exe
@@ -36,6 +37,7 @@ target_link_libraries(car_plate_recognition
         mxbase
         opencv_world
         freetype
+        cpprest
         )
 
 #指定exe文件的输出路径

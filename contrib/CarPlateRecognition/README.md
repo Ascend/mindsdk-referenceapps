@@ -103,5 +103,6 @@ bash build.sh
 ```shell
 ./bin/car_plate_recognition ./xxx.jpeg # 自行替换图片名称
 ```
+输出的图片为result.jpg（包含补边结果）
 ## 5 常见问题
 由于车牌识别模型的精度问题，识别结果误差较大时，建议使用蓝底、不包含中文字符、角度适中且分辨率高的图片做为推理的输入。

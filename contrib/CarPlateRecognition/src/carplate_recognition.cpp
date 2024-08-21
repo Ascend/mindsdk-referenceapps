@@ -15,6 +15,7 @@
  */
 
 #include "carplate_recognition.h"
+#include <iostream>
 #include "carplate_recognition_postprocess.h"
 #include "cvx_text.h"
 #include "opencv2/opencv.hpp"
@@ -23,7 +24,6 @@
 #include "MxBase/E2eInfer/ImageProcessor/ImageProcessor.h"
 #include "MxBase/E2eInfer/DataType.h"
 #include "MxBase/Tensor/TensorBase/TensorBase.h"
-#include <iostream>
 using namespace std;
 using namespace MxBase;
 // 以下3个参数用于YUV图像与BGR图像之间的宽高转换
@@ -36,6 +36,7 @@ constexpr uint32_t DETECTION_HEIGHT = 640;
 constexpr uint32_t RECOGNITION_WIDTH = 272;
 constexpr uint32_t RECOGNITION_HEIGHT = 72;
 constexpr uint32_t PUT_TEXT_OFFSET = 5;
+constexpr uint32_t MAX_COLOR_CODE = 255;
 }  // namespace
 
 /* @brief: 初始化各类资源
@@ -369,7 +370,7 @@ APP_ERROR car_plate_recognition::write_result(MxBase::Image &image, std::vector<
             cv::Point(objectInfos[j].x0 + (objectInfos[j].x1 - objectInfos[j].x0) / DIV_TWO -
                           text_size.width / DIV_TWO + PUT_TEXT_OFFSET,
                 objectInfos[j].y0 - PUT_TEXT_OFFSET),
-            cv::Scalar(0, 0, 255));
+            cv::Scalar(0, 0, MAX_COLOR_CODE));
         // 画目标框
         cv::Rect rect(objectInfos[j].x0,
             objectInfos[j].y0,

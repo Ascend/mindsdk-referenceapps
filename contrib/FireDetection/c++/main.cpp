@@ -107,7 +107,7 @@ void GetFrame(AVPacket& pkt, FrameImage& frameImage, AVFormatContext* pFormatCtx
             return;
         }
         // sent to the device
-        const auto hostDeleter = [](void *dataPtr) -> void {
+        const auto hostDeleter = [](const void *dataPtr) -> void {
             void* aclDataPtr = const_cast<void*>(dataPtr);
             aclrtFreeHost(aclDataPtr);};
         MemoryData data(pkt.size, MemoryData::MEMORY_HOST);

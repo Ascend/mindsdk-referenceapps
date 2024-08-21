@@ -53,10 +53,12 @@
 # 执行环境变量脚本使环境变量生效
 . ${ascent-tookit-path}/set_env.sh
 . ${SDK-path}/set_env.sh
+export FFMPEG_PATH=${ffmpeg-path}
 export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 # SDK-path: SDK mxVision安装路径
 # ascent-tookit-path: CANN安装路径
-# ffmpeg-lib-path: ffmpeg安装的lib库路径，常为/usr/local/ffmpeg/lib
+# ffmpeg-path: ffmpeg安装路径，常为/usr/local/ffmpeg
+# ffmpeg-lib-path: ffmpeg的lib库安装路径，常为/usr/local/ffmpeg/lib
 ```
 ## 3 准备模型
 ### 步骤1 下载模型相关文件

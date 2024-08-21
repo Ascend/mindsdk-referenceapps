@@ -7,14 +7,16 @@
 项目主要流程：将输入图片解码成YUV格式，经图片缩放后输入至模型中，得到结果mask，并将其与原图融合，最后编码输出可视化结果。
 
 ### 1.1 支持的产品
-昇腾310（推理）
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 
 ### 1.2 支持的版本
-CANN：7.0.RC1
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
-
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+|--------------- | ---------------------------------- | ----------|
+| 5.0.0 | 7.0.0 | 23.0.0|
+|6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 ### 1.3 软件方案介绍
 基于MindX SDK的路面分割业务流程：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的路面分割后处理插件处理推理结果，从中获取掩膜mask，然后与原始图片进行融合，之后通过图像编码插件mxpi_imageencoder将后处理插件的融合后的数据进行编码，最后使用输出插件appsink输出可视化的结果
 
@@ -69,34 +71,29 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 5.适用于单张图片的输入。<br>
 6.适应于形状规则且与周围环境色差较大的路面图片。<br>
 
-## 2 环境依赖
-推荐系统为ubuntu 18.04，环境依赖软件和版本如下表：
-
-| 软件名称            | 版本        | 说明                          | 获取方式                                                     |
-| ------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ |
-| cmake               | 3.14.1      |
-| MindX SDK           | 5.0.RC3       | mxVision软件包                | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) |
-| ubuntu              | 18.04.1 LTS | 操作系统                      | Ubuntu官网获取                                               |
-| Ascend-CANN-toolkit | 7.0.RC1       | Ascend-cann-toolkit开发套件包 | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial) |
-
+## 2 环境设置
 在编译运行项目前，需要设置环境变量：
 
-- MindSDK 环境变量介绍
+- MindX SDK 环境变量，其中${SDK-path}为MindX SDK安装路径
 ```
 . ${SDK-path}/set_env.sh
 ```
-- CANN 环境变量介绍
+- CANN 环境变量介绍，其中${ascend-toolkit-path}为CANN安装路径
 ```
 . ${ascend-toolkit-path}/set_env.sh
 ```
 
 ## 3 模型转换
 ### 3.1 导出onnx文件
-  获取[路面分割案例](https://github.com/tunafatih/Road-Free-Space-Segmentation-Internship-Project)，在本地使用pt2onnx.py文件，将pt权重文件转换成onnx文件，或可[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件。
+  获取[路面分割案例](https://github.com/tunafatih/Road-Free-Space-Segmentation-Internship-Project)，在本地文件pt2onnx.py放在model.pt同目录下，执行
+  ```
+  python3 pt2onnx.py
+  ```
+  将pt权重文件转换成onnx文件，或可[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件。
 ### 3.2 使用Ascend atc工具将onnx模型转换为om模型
-在使用[atc工具](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)之前**需按第2节环境依赖章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行
+在使用[atc工具](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行
 ```
-atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310  
+atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310B1  
 ```
 若出现以下信息，则转换成功
 ```
@@ -106,7 +103,7 @@ ATC run success
 
 示例步骤如下：
 **步骤1** 修改相应文件
-根据所需场景，配置pipeline文件，调整路径参数。
+根据所需场景，配置pipeline/road.pipeline文件，调整路径参数。
 ```
   #配置mxpi_tensorinfer插件的模型加载路径： modelPath
   "mxpi_tensorinfer0": {
@@ -128,7 +125,7 @@ ATC run success
 ```
 
 **步骤2** 设置环境变量
-按**第2节环境依赖**中设置环境变量
+按**第2节环境设置**中设置环境变量
 
 **步骤3** 执行编译的步骤
 在样例目录下，执行
@@ -140,14 +137,16 @@ bash build.sh
 ```
 python3.9 main.py test.jpg   #测试图片地址
 ```
-
+无报错提示执行成功，结果图片testout.jpg保存在当前目录下。
 
 ## 5 常见问题
 
 1.图片解码失败
+
 **问题描述：**  在使用解码插件时，提示如下错误
 ![解码失败](../RoadSegmentation/image/imagedecoder_error.png)
 
 **解决方案：** 更换图片，详情[imagedecoder插件介绍](https://www.hiascend.com/document/detail/zh/mind-sdk/204/vision/mxvisionug/mxvisionug_0115.html)
+
 
 

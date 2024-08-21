@@ -76,7 +76,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 ### 步骤1 编译
 
 - 在项目目录创建cmakeDir目录并进入该目录
-- 执行cmake.. && make编译项目
+- 执行cmake.. && make编译项目。编译的二进制文件main保存在项目根目录下。
 ### 步骤2 设置配置项
 在setup.config文件中设置配置项，配置项含义如下表所示：
 
@@ -95,9 +95,10 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 ###  步骤3 运行速公路火灾识别服务。
 
-火灾检测结果在标准输出中体现；编码视频文件保存在配置文件指定的路径下。
+进入项目根目录，执行如下指令：
 
       ./main
+火灾检测结果在标准输出中体现；编码视频文件保存在配置文件指定的路径下。
 ###  步骤4 停止高速公路火灾识别服务
 - 停止服务有如下两种方式：
 

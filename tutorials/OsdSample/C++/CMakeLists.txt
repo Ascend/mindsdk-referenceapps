@@ -43,4 +43,10 @@ add_executable(main main.cpp)
 
 target_link_libraries(main glog mxbase plugintoolkit mxpidatatype streammanager mindxsdk_protobuf)
 
+# deal with cpprest
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(main cpprest)
+endif()
+
 install(TARGETS main DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

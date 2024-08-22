@@ -67,9 +67,11 @@
 
 环境依赖软件和版本如下表：
 
-| 软件名称 | 版本  | 获取方式                                                     |
-| -------- | ----- | ------------------------------------------------------------ |
-| pytorch  | 1.7.0* | [pytorch官网](https://pytorch.org/get-started/previous-versions/) |
+| 软件名称    | 版本    | 
+|---------|-------| 
+| pytorch | 1.7.0 |
+| numpy   | 1.23.0 |
+| scipy   | 1.13.1 |
 
 在编译运行项目前，需要设置环境变量：
 
@@ -78,8 +80,8 @@
 ```bash
 export PYTHONPATH=${MX_SDK_HOME}/python/:$PYTHONPATH
 export install_path=${install_path}
-. ${MX_SDK_HOME}/set_env.sh
 . ${install_path}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 
 注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；

@@ -1,14 +1,14 @@
 # 安全帽识别
 
 ## 1 介绍
-
+### 1.1 简介
 安全帽作为工作中一样重要的安全防护用品，主要保护头部，防高空物体坠落，防物体打击、碰撞。通过识别每个人是否戴上安全帽，可以对没戴安全帽的人做出告警。本项目支持2路视频实时分析，其主要流程为:分两路接收外部调用接口的输入视频路径，将视频输入。通过视频解码将264格式视频解码为YUV格式图片。模型推理使用YOLOv5进行安全帽识别，识别结果经过后处理完成NMS得到识别框。对重复检测出的没戴安全帽的对象进行去重。最后将识别结果输出为两路，并对没佩戴安全帽的情况告警。
 
-### 1.1 支持的产品
+### 1.2 支持的产品
 
 本项目基于mxVision SDK进行开发，以Atlas 500 A2/Atlas 200I DK A2为主要的硬件平台。
 
-### 1.2 支持的版本
+### 1.3 支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  |  CANN版本 | Driver/Firmware版本  |
@@ -17,10 +17,17 @@
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 
 MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+### 1.4 三方依赖
+环境依赖软件和版本如下表：
 
+| 软件                | 版本         | 说明                          | 获取方式                                                     |
+| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |                    
+| opencv-python       | 4.10.0.54     | 用于识别结果画框              | python3 -m pip install opencv-python|
+| libgl1-mesa-glx |23.0.4-0ubuntu1~22.04.1 |GL库（opencv-python可能会依赖GL）|apt install libgl1-mesa-glx|
+| live555|1.10|实现视频转rstp进行推流|[live555使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)|
+|ffmpeg|4.4.4 | 实现mp4格式视频转为264格式视频 |[ffmpeg使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
 
-
-### 1.3 代码目录结构与说明
+### 1.5 代码目录结构与说明
 
 本sample工程名称为HelmetIdentification，工程目录如下图所示：
 
@@ -45,52 +52,33 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
   ├──map_calculate.py # 精度计算程序
 ├── build.sh    
 ```
-
-
-
-### 1.5 技术实现流程图
+### 1.6 技术实现流程图
 
 <img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image4.jpg" alt="image4" style="zoom: 80%;" />
 
-
-
-## 2 环境依赖
-
-环境依赖软件和版本如下表：
-
-| 软件                | 版本         | 说明                          | 获取方式                                                     |
-| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |                    
-| opencv-python       | 4.10.0.54     | 用于识别结果画框              | python3 -m pip install opencv-python|
-| libgl1-mesa-glx |23.0.4-0ubuntu1~22.04.1 |GL库（opencv-python可能会依赖GL）|apt install libgl1-mesa-glx|
-| live555|1.10|实现视频转rstp进行推流|[live555使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)|
-|ffmpeg|2021-08-08-git-ac0408522a | 实现mp4格式视频转为264格式视频 |[ffmpeg使用教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
-
-
-
-在运行脚本main.py前（2.2章节），需要执行如下两个环境配置脚本设置环境变量,运行命令：
+## 2 设置环境变量
+设置CANN及MindX SDK相关的环境变量
 
 ```shell
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
 . ${MX_SDK_HOME}/mxVision/set_env.sh   # ${MX_SDK_HOME}替换为用户的SDK安装路径
 ```
 
-## 3.推理
+## 3.准备模型
 
-#### 步骤1 模型转换
+**步骤1:** 模型下载
 
-##### 1.1模型与软件依赖
-
- 所用模型与软件依赖如下表所示。若使用A200I DK A2运行，推荐使用PC转换模型，具体方法可参考A200I DK A2资料。模型相关信息可参考[原项目链接](https://github.com/PeterH0323/Smart_Construction)
+ 所用模型如下表所示。模型相关信息可参考[原项目链接](https://github.com/PeterH0323/Smart_Construction)
 
 | 软件名称                | 版本     | 获取方式                                                     |
 | ----------------------- | -------- | ------------------------------------------------------------ |
 | YOLOv5_s.onnx           | YOLOv5_s | [链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/HelmetIdentification/model.zip) |
 
-##### 1.2 onnx文件转换为om文件
+**步骤2：** onnx文件转换为om文件
 
-1. 可直接获取已经转换好的YOLOv5_s.onnx文件，链接如1.1所示。此模型已经完成优化，可直接转换为om模型。
+将下载后的模型解压到Models路径下，并修改该路径下的atc-env.sh，将其中的`${Home}`改为Models所在路径，运行脚本
 
-3. 修改atc-env脚本中的路径，运行atc-env脚本将onnx转为om模型，运行命令如下。
+
 
 ```shell
 sh atc-env.sh
@@ -118,40 +106,11 @@ sh atc-env.sh
 
 其中--insert_op_conf参数为aipp预处理算子配置文件路径。该配置文件aipp_YOLOv5.config在输入图像进入模型前进行预处理。该配置文件保存在源码Models目录下。
 
-注：1. [ATC模型转换工具指南](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)
-   2.atc-env.sh脚本内 Home 为onnx文件所在路径。
+## 4.编译与运行
+### 4.1 编译mxpi_selectedframe插件
+pipline中mxpi_selectedframe插件完成视频跳帧。对于输入帧率为24fps输入视频进行每三帧抽一帧进行识别。实现8fps的帧率。
 
-
-#### 步骤2 模型推理 
-
-##### 2.1 pipline编写
-
-pipline根据1.5节中技术实现流程图编写，该文件**HelmetDetection.pipline**放在源码根目录Models。
-
- 注： 
-
-1.pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**。该后处理配置文件内容如下：              
-
-```python
-CLASS_NUM=3
-BIASES_NUM=18
-BIASES=10,13,16,30,33,23,30,61,62,45,59,119,116,90,156,198,373,326
-SCORE_THRESH=0.4
-OBJECTNESS_THRESH=0.3
-IOU_THRESH=0.5
-YOLO_TYPE=3
-ANCHOR_DIM=3
-MODEL_TYPE=1
-RESIZE_FLAG=0
-```
-
-注：pipline中以上四个参数要修改为相应文件所在绝对路径。
-
-2.pipline中mxpi_selectedframe插件完成视频跳帧。对于输入帧率为24fps输入视频进行每三帧抽一帧进行识别。实现8fps的帧率。
-
-将目录切换至./plugins/MxpiSelectedFrame
-
-输入如下命令编译生成mxpi_selectedframe.so：
+将目录切换至./plugins/MxpiSelectedFrame，输入如下命令编译生成mxpi_selectedframe.so：
 
 ```shell
 mkdir build
@@ -160,20 +119,10 @@ cmake ..
 make -j
 ```
 
-编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440
-
+编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440。
  注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节
 
-3.pipline中涉及到的**绝对路径**都要修改成用户安装sdk文件相应的路径
-
-##### 2.2 运行推理
-
-编写完pipline文件后即可运行推理流程进行识别，该程序**main.py**放在源码根目录Models。
-
-mian.py通过调用sdk接口创建多个流完成数据接收、处理以及输出，接口调用流程图如下所示：
-
-<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image1.jpg" alt="image1" style="zoom:80%;" />
-
+### 4.2 视频拉流
 本项目通过mxpi_rtspsrc拉流输入数据，通过两路GetResult接口输出数据，一路输出带有帧信息的图片数据，一路输出带有帧信息的目标检测框和检测框跟踪信息。推理过程如下：
 
 首先通过[live555](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
@@ -202,21 +151,50 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 ./live555MediaServer test.264
 ```
 
-test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)，如要修改相应的也要在pipline中修改mxpi_rtspsrc的拉流路径
+test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
+### 4.3 修改pipline文件
+
+pipline根据1.6节中技术实现流程图编写，**HelmetDetection.pipline**放在源码根目录Models。
+
+1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/lib下）。该后处理配置文件内容如下：              
+```python
+CLASS_NUM=3
+BIASES_NUM=18
+BIASES=10,13,16,30,33,23,30,61,62,45,59,119,116,90,156,198,373,326
+SCORE_THRESH=0.4
+OBJECTNESS_THRESH=0.3
+IOU_THRESH=0.5
+YOLO_TYPE=3
+ANCHOR_DIM=3
+MODEL_TYPE=1
+RESIZE_FLAG=0
+```
+**pipline中以上四个参数要修改为相应文件所在绝对路径**。
+2. 修改pipline中mxpi_rtspsrc的拉流路径
 
 ![image2](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image2.jpg)
+3. 根据使用的device修改deviceId
 
-然后切换目录至main.py所在目录下，运行命令：
+### 4.4 运行推理
+
+编写完pipline文件后即可运行推理流程进行识别，该程序**main.py**放在源码根目录Models。
+
+mian.py通过调用sdk接口创建多个流完成数据接收、处理以及输出，接口调用流程图如下所示：
+
+<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image1.jpg" alt="image1" style="zoom:80%;" />
+
+在Models目录下手动创建output/one,putput/two两个文件夹
+
+![image3](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image3.jpg)
+
+切换目录至main.py所在目录下，运行命令：
 
 ```shell
 python3.9 main.py
 ```
 
-即可得到输出结果，输出结果将原来的两路视频分为两个文件保存，utils.py中的oringe_imgfile用于设置图像输出路径,用户需**手动建立**输出文件output，文件路径可自定义设置。本项目文件放置规范如下：
-
-![image3](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image3.jpg)
-
-所有数据放置于output中，one 、two为两路视频输出文件。
+### 4.5 查看结果
+输出结果将原来的两路视频分为两个文件保存，utils.py中的oringe_imgfile用于设置图像输出路径。所有数据放置于output中，one 、two为两路视频输出文件。
 
 输出结果有如下几种情况：
 | 序号 | 输入                           | 输出                                                       |
@@ -226,18 +204,15 @@ python3.9 main.py
 | 3    | 输入视频有识别对象             | 打印每次推理的head的帧信息的尺寸与识别结果                       |
 | 4    | 识别对象未佩戴安全帽           | 打印：Warning:Not  wearing a helmet, InferenceId：FrameId: |
 
-#### 步骤3 测试性能与精度
+## 5. 性能验证
 
-
-##### 3.1 性能测试
-
-性能测试使用脚本Test/performance_test_main.py，该脚本与main.py大体相同，不同之处是在performance_test_main.py中添加了时间戳测试，测试数据为mxpi_rtspsrc拉取的视频流。两路视频尺寸分别取多组不同尺寸的视频做对比。推理三百帧图片后取平均时间值，设置如下环境变量：
+性能测试使用脚本Test/performance_test_main.py，该脚本与main.py大体相同，不同之处是在performance_test_main.py中添加了时间戳测试，测试数据为mxpi_rtspsrc拉取的视频流。两路视频尺寸分别取多组不同尺寸的视频做对比。推理三百帧图片后取平均时间值，平均时间值将在**终端上输出结果**。
+设置如下环境变量：
 
 ```shell
 export PYTHONPATH=/usr/local/python3.9.2/bin:${MX_SDK_HOME}/python:{path}
 ```
-
-注：{path}设置为根目录中Models所在路径
+其中{path}设置为根目录中Models所在路径
 
 运行如下命令得到结果：
 
@@ -250,9 +225,9 @@ python3.9 performance_test_main.py
 2.performance_test_main.py中加载pipline文件应写HelmetDetection.pipline的绝对路径
 
 
-#####  3.2 精度测试
+## 6.精度验证
 
-###### 3.2.1 数据集说明
+### 6.1 数据集说明
 
 - 数据集来源:  [Safety-Helmet-Wearing-Dataset](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/HelmetIdentification/data.zip)
 
@@ -267,7 +242,7 @@ python3.9 performance_test_main.py
 
 注：将数据集中的三个文件放置于项目的根目录Test文件下，与**test_select.py**同目录。
 
-###### 3.2.2测试数据集筛选
+### 6.2 测试数据集筛选
 
 依据数据集中ImageSets文件夹中test.txt文件，从原始数据集中筛选出测试数据集，该程序**test_select.py**放在源码根目录Test中，在同目录下创建文件夹TestImages用来存储筛选的数据。在该目录下运行命令：
 ```shell
@@ -276,7 +251,7 @@ python3.9 test_select.py
 
 程序运行后在根目录Test中会存放筛选出的测试集图片共1517张。
 
-###### 3.2.3 测试数据集解析
+### 6.3 测试数据集解析
 
 解析测试数据集，在同级目录下生成类别文件**voc.names**、图片信息文件**VOC2028.info**和真实标签文件夹**ground_truth**， 该程序**parse_voc.py**放在源码根目录Test中。
 
@@ -286,7 +261,7 @@ python3.9 test_select.py
 python3.9 parse_voc.py 
 ```
 
-###### 3.2.4 推理运行
+### 6.4 推理运行
 
 依据编写的pipline业务流，对测试数据集进行推理，输出结果保存在同级目录**detection-test-result**文件夹中，该文件需要手动建立。程序**testmain.py**文件放在源码根目录Test中。
 
@@ -306,7 +281,7 @@ python3.9 testmain.py
 
 注：testmain.py中直接写入了pipline，其中mxpi_modelinfer插件四个参数的配置与HelmetDetection.pipline完全相同。
 
-###### 3.2.5 精度计算
+### 6.5 精度计算
 
 推理完成后，依据图片真实标签和推理结果，计算精度。输出结果保存在同级目录**output**文件夹中，该文件需要手动建立。程序map_calculate.py文件放在源码根目录Test中。
 
@@ -318,11 +293,12 @@ python3.9 testmain.py
 python3.9 map_calculate.py --label_path  ./ground-truth  --npu_txt_path ./detection-test-result/ -na -np
 ```
 
-即可得到输出。其中precision、recall和map记录在**output/output.txt**文件中。
+### 6.6查看结果
+precision、recall和map记录在**output/output.txt**文件中。
 
-## 4 常见问题
+## 7 常见问题
 
-### 4.1 图片格式问题
+### 7.1 图片格式问题
 
 **问题描述：**
 

@@ -64,13 +64,13 @@ bash generate_osd_om.sh
 ```
 
 **步骤2**：编译与运行，C++样例需要先编译再执行，Python样例无编译过程，可以直接执行
-#### C++样例
+> C++样例
 ```bash
 # 于C++样例主文件所在目录执行以下命令
 bash build.sh  # 编译 
 ./main         # 执行
 ```
-#### Python样例
+> Python样例
 
 ```bash
 # 于python样例主文件所在目录执行以下命令

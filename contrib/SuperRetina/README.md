@@ -80,8 +80,8 @@
 ```bash
 export PYTHONPATH=${MX_SDK_HOME}/python/:$PYTHONPATH
 export install_path=${install_path}
-. ${MX_SDK_HOME}/set_env.sh
 . ${install_path}/set_env.sh
+. ${MX_SDK_HOME}/set_env.sh
 ```
 
 注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；

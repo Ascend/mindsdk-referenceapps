@@ -87,8 +87,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 # 设置环境变量（请确认install_path路径是否正确）
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
-
-
+```
 ## 3 模型转换
 
 ### 3.1 FairMOT模型转换

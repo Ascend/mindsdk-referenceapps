@@ -156,21 +156,6 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
 
 
-按照第3小节**软件依赖**安装live555和ffmpeg，按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)将mp4视频转换为h264格式。并将生成的264格式的视频上传到`live/mediaServer`目录下，然后修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
-
-```
-        "mxpi_rtspsrc0": {
-            "factory": "mxpi_rtspsrc",
-            "props": {
-                "rtspUrl":"rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264",      // 修改为自己所使用的服务器和文件名
-                "channelId": "0"
-            },
-            "next": "mxpi_videodecoder0"
-        },
-```
-
-
-
 ### 4.2 编译后处理插件
 
 进入 `FairMOT` 目录，在 `FairMOT` 目录下执行命令：

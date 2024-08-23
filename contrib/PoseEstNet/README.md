@@ -136,9 +136,9 @@ PoseEstNet
 |---- data 
 ```
 data_eval中放入原始VeRi数据集
-[Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)
-
+[Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)，
 [csv文件：Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
+
 将数据集images文件夹下的图片复制到data_eval/images文件夹下面，将label_test.csv放到data_eval/labels文件夹下面，目录结构如下：
 ```
 ├── data_eval
@@ -209,6 +209,7 @@ eval_PoseEstNet.pipeline:
         },
 ```
 **步骤5** 执行
+
 业务代码main.py结果在*output*文件夹，保证在执行前已创建好data文件夹并放入待检测图片
 ```
 python3 main.py --inputPath data

@@ -53,7 +53,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ├── simhei.ttf # 黑体字体文件
 ```
 
-### 1.4 技术实现流程图
+### 1.6 技术实现流程图
 
 ![技术流程图](https://gitee.com/zhong-wanfu/mindxsdk-referenceapps/raw/master/contrib/CarPlateRecognition/imgs/技术流程图.jpg))
 

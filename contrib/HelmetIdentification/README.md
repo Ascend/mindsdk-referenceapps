@@ -6,7 +6,7 @@
 
 ### 1.2 支持的产品
 
-本项目基于mxVision SDK进行开发，以Atlas 500 A2/Atlas 200I DK A2为主要的硬件平台。
+本项目基于mxVision SDK进行开发，以Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
@@ -76,7 +76,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 
 **步骤2：** onnx文件转换为om文件
 
-将下载后的模型解压到Models路径下，并修改该路径下的atc-env.sh，将其中的`${Home}`改为Models所在路径，运行脚本
+将下载后解压出来的onnx模型放到Models路径下，并修改该路径下的atc-env.sh，将其中的`${Home}`改为Models所在路径，运行脚本
 
 
 
@@ -122,7 +122,7 @@ make -j
 编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440。
  注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节
 
-### 4.2 视频拉流
+### 4.2 视频推流
 本项目通过mxpi_rtspsrc拉流输入数据，通过两路GetResult接口输出数据，一路输出带有帧信息的图片数据，一路输出带有帧信息的目标检测框和检测框跟踪信息。推理过程如下：
 
 首先通过[live555](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
@@ -156,7 +156,7 @@ test.264可替换成任意上传至当前目录的[264格式文件](https://gite
 
 pipline根据1.6节中技术实现流程图编写，**HelmetDetection.pipline**放在源码根目录Models。
 
-1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/lib下）。该后处理配置文件内容如下：              
+1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/mxVision/lib下）。该后处理配置文件内容如下：              
 ```python
 CLASS_NUM=3
 BIASES_NUM=18
@@ -170,9 +170,11 @@ MODEL_TYPE=1
 RESIZE_FLAG=0
 ```
 **pipline中以上四个参数要修改为相应文件所在绝对路径**。
+
 2. 修改pipline中mxpi_rtspsrc的拉流路径
 
 ![image2](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image2.jpg)
+
 3. 根据使用的device修改deviceId
 
 ### 4.4 运行推理
@@ -183,7 +185,7 @@ mian.py通过调用sdk接口创建多个流完成数据接收、处理以及输�
 
 <img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image1.jpg" alt="image1" style="zoom:80%;" />
 
-在Models目录下手动创建output/one,putput/two两个文件夹
+在Models目录下手动创建output/one,output/two两个文件夹
 
 ![image3](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image3.jpg)
 
@@ -294,7 +296,7 @@ python3.9 map_calculate.py --label_path  ./ground-truth  --npu_txt_path ./detect
 ```
 
 ### 6.6查看结果
-precision、recall和map记录在**output/output.txt**文件中。
+终端上打印平均精度mAP，precision、recall和map记录在**output/output.txt**文件中。
 
 ## 7 常见问题
 

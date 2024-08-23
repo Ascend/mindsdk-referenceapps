@@ -1,41 +1,29 @@
 # FairMOT目标跟踪
 
 ## 1 介绍
+## 1.1 简介
 
 FairMOT目标跟踪后处理插件基于MindXSDK开发，在晟腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
-### 1.1 支持的产品
+### 1.2 支持的产品
 
-昇腾310(推理)
+x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
-### 1.2 支持的版本
+### 1.3 支持的版本
 
-本样例配套的CANN版本为[7.0.RC1](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial)。支持的SDK版本为[5.0.RC3](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk)。
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
 
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 5.0.0 | 7.0.0   |  23.0.0  |
 
-### 1.3 软件方案介绍
+### 1.4 三方依赖
+| 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
+| -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
+| live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| ffmpeg   | 4.4.4 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
 
-基于MindX SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
-
-表1.1 系统方案各子系统功能描述：
-
-| 序号 | 子系统               | 功能描述                                                     |
-| ---- | -------------------- | :----------------------------------------------------------- |
-| 1    | 视频输入             | 接收外部调用接口的输入视频路径，对视频进行拉流，并将拉取的裸流存储到缓冲区（buffer）中，并发送到下游插件。 |
-| 2    | 视频解码             | 用于视频解码，当前只支持H264/H265格式。                      |
-| 3    | 数据分发             | 对单个输入数据分发多次。                                     |
-| 4    | 数据缓存             | 输出时为后续处理过程另创建一个线程，用于将输入数据与输出数据解耦，并创建缓存队列，存储尚未输出到下流插件的数据。 |
-| 5    | 图像处理             | 对解码后的YUV格式的图像进行指定宽高的缩放，暂时只支持YUV格式 的图像。 |
-| 6    | 模型推理插件         | 目标分类或检测，目前只支持单tensor输入（图像数据）的推理模型。 |
-| 7    | 模型后处理插件       | 实现对FairMOT模型输出的tensor解析，获取目标检测框以及对应的ReID向量，传输到跟踪模块。 |
-| 8    | 跟踪插件             | 实现多目标（包括机非人、目标）路径记录功能。                 |
-| 9    | 跟踪编号取代类名插件 | 用跟踪插件产生的编号信息取代后处理插件产生的类名信息，再将数据传入数据流中。 |
-| 10   | 目标框转绘插件       | 将流中传进的MxpiObjectList数据类型转换可用于OSD插件绘图所使用的 MxpiOsdInstancesList数据类型。 |
-| 11   | OSD可视化插件        | 主要实现对每帧图像标注跟踪结果。                             |
-| 12   | 视频编码插件         | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
-
-### 1.4 代码目录结构与说明
+### 1.5 代码目录结构与说明
 
 本工程名称为FairMOT，工程目录如下图所示：
 
@@ -60,57 +48,50 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 ├── CMakeLists.txt
 ├── build.sh
 ├── main.cpp
+├── test
+│   └── main.cpp
 └── run.sh
 ```
 
 
+### 1.6 软件方案介绍
 
-### 1.5 技术实现流程图
+基于MindX SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
+
+表1.1 系统方案各子系统功能描述：
+
+| 序号 | 子系统               | 功能描述                                                     |
+| ---- | -------------------- | :----------------------------------------------------------- |
+| 1    | 视频输入             | 接收外部调用接口的输入视频路径，对视频进行拉流，并将拉取的裸流存储到缓冲区（buffer）中，并发送到下游插件。 |
+| 2    | 视频解码             | 用于视频解码，当前只支持H264/H265格式。                      |
+| 3    | 数据分发             | 对单个输入数据分发多次。                                     |
+| 4    | 数据缓存             | 输出时为后续处理过程另创建一个线程，用于将输入数据与输出数据解耦，并创建缓存队列，存储尚未输出到下流插件的数据。 |
+| 5    | 图像处理             | 对解码后的YUV格式的图像进行指定宽高的缩放，暂时只支持YUV格式 的图像。 |
+| 6    | 模型推理插件         | 目标分类或检测，目前只支持单tensor输入（图像数据）的推理模型。 |
+| 7    | 模型后处理插件       | 实现对FairMOT模型输出的tensor解析，获取目标检测框以及对应的ReID向量，传输到跟踪模块。 |
+| 8    | 跟踪插件             | 实现多目标（包括机非人、目标）路径记录功能。                 |
+| 9    | 跟踪编号取代类名插件 | 用跟踪插件产生的编号信息取代后处理插件产生的类名信息，再将数据传入数据流中。 |
+| 10   | 目标框转绘插件       | 将流中传进的MxpiObjectList数据类型转换可用于OSD插件绘图所使用的 MxpiOsdInstancesList数据类型。 |
+| 11   | OSD可视化插件        | 主要实现对每帧图像标注跟踪结果。                             |
+| 12   | 视频编码插件         | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
+### 1.7 技术实现流程图
 
 ![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image1.png)
 
 
 
-## 2 环境依赖
-
-推荐系统为ubuntu 18.04，环境依赖软件和版本如下表：
-
-| 软件名称            | 版本        | 说明                          | 获取方式                                                     |
-| ------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ |
-| MindX SDK           | 5.0.RC3       | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
-| ubuntu              | 18.04.1 LTS | 操作系统                      | Ubuntu官网获取                                               |
-| Ascend-CANN-toolkit | 7.0.RC1       | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
-
-在编译运行项目前，需要设置环境变量：
-
-```
-export MX_SDK_HOME=${SDK安装路径}/mxVision
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-export ASCEND_AICPU_PATH=${install_path}
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:$LD_LIBRARY_PATH
-export GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner
-export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins
-```
-
-注：其中SDK安装路径${MX_SDK_HOME}替换为用户的SDK安装路径;install_path替换为开发套件包所在路径。LD_LIBRARY_PATH用以加载开发套件包中lib库。
+## 2 设置环境变量
 
 
-
-## 3 软件依赖
-
-推理中涉及到第三方软件依赖如下表所示。
-
-| 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
-| -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
-| ffmpeg   | 2021-07-21 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
+```bash
+# 设置环境变量（请确认install_path路径是否正确）
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh
 
 
+## 3 模型转换
 
-## 4 模型转换
-
+### 3.1 FairMOT模型转换
 本项目中适用的模型是FairMOT模型，onnx模型可以直接[下载](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FairMOT/mot_v2.onnx)。下载后使用模型转换工具 ATC 将 onnx 模型转换为 om 模型。
 原始ATC样例：https://gitee.com/ascend/samples/tree/master/python/contrib/object_tracking_video
 
@@ -132,9 +113,49 @@ ATC run success, welcome to the next use.
 
 表示命令执行成功。
 
+### 3.2 osd相关的模型转换
 
+请执行mxVision软件包安装目录下operators/opencvosd/generate_osd_om.sh脚本生成所需模型文件。执行后终端输出为：
 
-## 5 准备
+```
+ATC start working now, please wait for a moment.
+ATC run success, welcome to the next use.
+```
+
+表示命令执行成功。
+
+## 4 编译与运行
+### 4.1 视频推流
+本项目通过mxpi_rtspsrc拉流输入数据，推流过程如下：
+
+首先通过[live555](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
+
+转换命令如下：
+
+```shell
+ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.264
+```
+
+注：参数如下：
+
+| 参数    | 作用                                                   |
+| ------- | ------------------------------------------------------ |
+| -i      | 表示输入的音视频路径需要转换视频                       |
+| -f      | 强迫采用特定格式输出                                   |
+| -r      | 指定帧率输出                                           |
+| -an     | 关闭音频                                               |
+| -s      | 分辨率控制                                             |
+| -g      | 关键帧间隔控制                                         |
+| -vcodec | 设定视频编解码器，未设定时则使用与输入流相同的编解码器 |
+
+转换完成后上传视频至live555安装目录下mediaServer。输入命令进行推流：
+
+```shell
+./live555MediaServer test.264
+```
+
+test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
+
 
 按照第3小节**软件依赖**安装live555和ffmpeg，按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)将mp4视频转换为h264格式。并将生成的264格式的视频上传到`live/mediaServer`目录下，然后修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
 
@@ -151,23 +172,47 @@ ATC run success, welcome to the next use.
 
 
 
-## 6 编译与运行
+### 4.2 编译后处理插件
 
-**步骤1** 按照第2小节**环境依赖**中的步骤设置环境变量。
-
-**步骤2** 按照第 4 小节 **模型转换** 中的步骤获得 om 模型文件，放置在 `FairMOT/models` 目录下。
-
-**步骤3** 修改`FairMOT/plugins/FairmotPostProcess`和`FairMOT/plugins/mxpi_trackidreplaceclassname`文件夹下的CMakeLists.txt文件。将其中的"$ENV{MX_SDK_HOME}"修改成自己的SDK目录。
-
-**步骤4** 编译。进入 `FairMOT` 目录，在 `FairMOT` 目录下执行命令：
+进入 `FairMOT` 目录，在 `FairMOT` 目录下执行命令：
 
 ```
 bash build.sh
 ```
 
-命令执行成功后会在`FairMOT/plugins/FairmotPostProcess`和`FairMOT/plugins/MxpiTrackIdReplaceClassName`目录下分别生成build文件夹。将`FairMOT/plugins/MxpiTrackIdReplaceClassName/build`目录下生成的libmxpi_trackidreplaceclassname.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，同时将`FairMOT/plugins/FairmotPostProcess/build`目录下生成的libfairmotpostprocess.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下。
+命令执行成功后会在`FairMOT/plugins/FairmotPostProcess`和`FairMOT/plugins/MxpiTrackIdReplaceClassName`目录下分别生成build文件夹。将`FairMOT/plugins/MxpiTrackIdReplaceClassName/build`目录下生成的libmxpi_trackidreplaceclassname.so移动到`${SDK安装路径}/mxVision/lib/plugins`目录下，同时将`FairMOT/plugins/FairmotPostProcess/build`目录下生成的libfairmotpostprocess.so移动到`${SDK安装路径}/mxVision/lib/plugins`目录下。注意，**需要将生成的so的权限改为440**。
 
-**步骤5** 运行。回到FairMOT目录下，在FairMOT目录下执行命令：
+### 4.3 修改pipline文件
+
+1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容
+```
+        "mxpi_rtspsrc0": {
+            "factory": "mxpi_rtspsrc",
+            "props": {
+                "rtspUrl":"rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264",      // 修改为自己所使用的服务器和文件名
+                "channelId": "0"
+            },
+            "next": "mxpi_videodecoder0"
+        },
+```
+2. 根据使用的device修改deviceId
+3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置
+```
+        "mxpi_videoencoder0": {
+            "props": {
+                "inputFormat": "YUV420SP_NV12",
+                "outputFormat": "H264",
+                "fps": "1",
+                "iFrameInterval": "50",
+                "imageWidth":"1920", // 修改为自己所使用的视频宽度
+                "imageHeight":"1080" // 修改为自己所使用的视频高度
+            },
+            "factory": "mxpi_videoencoder",
+            "next": "queue7"
+        },
+```
+### 4.4 运行推理
+回到FairMOT目录下，在FairMOT目录下执行命令：
 
 ```
 bash run.sh
@@ -175,19 +220,18 @@ bash run.sh
 
 命令执行成功后会在当前目录下生成检测结果视频文件out.h264,查看文件验证目标跟踪结果。
 
-## 7 性能测试
+## 5 性能验证
 
 **测试帧率：**
 
-使用`FairMOT/test`目录下的main.cpp替换`FairMOT`目录下的main.cpp，然后按照第6小节编译与运行中的步骤进行编译运行，服务器会输出运行到该帧的平均帧率。
+使用`FairMOT/test`目录下的main.cpp替换`FairMOT`目录下的main.cpp，然后按照第4小节编译与运行中的步骤进行编译运行，服务器会输出运行到该帧的平均帧率。
+```
+I20240823 22:20:14.038271 52568 main.cpp:117] Dealing frame id:85
+fps: 12.7977
+```
+## 6 常见问题
 
-![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image2.png)
-
-注：输入视频帧率应高于25，否则无法发挥全部性能。
-
-## 8 常见问题
-
-7.1 视频编码参数配置错误
+6.1 视频编码参数配置错误
 
 **问题描述：**
 

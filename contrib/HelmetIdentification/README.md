@@ -156,7 +156,7 @@ test.264可替换成任意上传至当前目录的[264格式文件](https://gite
 
 pipline根据1.6节中技术实现流程图编写，**HelmetDetection.pipline**放在源码根目录Models。
 
-1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/lib下）。该后处理配置文件内容如下：              
+1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/mxVision/lib下）。该后处理配置文件内容如下：              
 ```python
 CLASS_NUM=3
 BIASES_NUM=18

@@ -41,7 +41,7 @@
 ## 2 设置环境变量
 
   ```
-# 设置环境变量（请确认install_path路径是否正确）
+# 设置环境变量（请确认SDK_INSTALL_PATH路径是否正确）
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
   ```

@@ -116,7 +116,9 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1**  安装插件编译所需要的NumCpp库，[Github官网链接](https://github.com/dpilger26/NumCpp)，注意下载[Version_2.8.0](https://github.com/dpilger26/NumCpp/releases/tag/Version_2.8.0)版本。下载后，进入plugins目录，将NumCpp解压至该目录。
+**步骤1**  安装插件编译所需要的NumCpp库
+
+[Github官网链接](https://github.com/dpilger26/NumCpp)，注意下载[Version_2.8.0](https://github.com/dpilger26/NumCpp/releases/tag/Version_2.8.0)版本。下载后，进入plugins目录，将NumCpp解压至该目录。
 ```
 mkdir include
 cp -r  NumCpp/include/NumCpp ./include/
@@ -126,6 +128,7 @@ cp -r  NumCpp/include/NumCpp ./include/
 bash build.sh
 ```
 **步骤3**  数据准备
+
 在工程根目录下新建data_eval/images、data_eval/labels和data文件夹
 目录结构如下
 ```

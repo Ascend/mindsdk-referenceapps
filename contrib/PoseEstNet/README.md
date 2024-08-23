@@ -105,6 +105,7 @@ PoseEstNet[代码地址](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet
 本项目提供onnx模型：[Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/PoseEstNet.onnx)
 
 **步骤2** onnx模型转.om模型
+
 ***1*** 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）。
 ```
 atc --framework=5 --model=PoseEstNet.onnx --output=PoseEstNet --input_format=NCHW --input_shape="image:1,3,256,256" --insert_op_conf=aipp_hrnet_256_256.aippconfig --log=debug --soc_version=Ascend310B1

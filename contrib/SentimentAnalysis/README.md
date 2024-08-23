@@ -19,7 +19,7 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2/Atlas 200I DK A2为主要的硬件平台。
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
@@ -105,8 +105,6 @@
 ```
 
 ## 3 准备模型
-
-> 若使用Atlas200I DK A2运行，推荐使用PC转换模型，具体方法可参考Atlas200I DK A2资料
 
 **步骤1**  
 本项目使用的h5和pb模型已打包至[model.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip) ，下载后解压获得。

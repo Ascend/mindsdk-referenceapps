@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 {
     // read image file and build stream input
     MxStream::MxstDataInput dataBuffer;
-    APP_ERROR ret = ReadFile("./test.jpg", dataBuffer);
+    APP_ERROR ret = ReadFile("../data/test.jpg", dataBuffer);
     if (ret != APP_ERR_OK) {
         LogError << GetError(ret) << "Failed to read image file.";
         return ret;
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     }
 
     // send osd instances protobuf.
-    std::string result = ReadFileContent("./ExternalOsdInstances.json");
+    std::string result = ReadFileContent("../json/ExternalOsdInstances.json");
     auto osdInstancesList = std::make_shared<MxTools::MxpiOsdInstancesList>();
     google::protobuf::util::JsonStringToMessage(result, osdInstancesList.get());
     MxStream::MxstProtobufIn protobuf;

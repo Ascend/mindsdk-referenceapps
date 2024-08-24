@@ -8213,7 +8213,7 @@
 +#include "imgutils.h"
 +#include "acl/acl.h"
 +#include "acl/dvpp/hi_dvpp.h"
-+#include #include "acl/acl_base.h"
++#include "acl/acl_base.h"
 +
 +static int init_flag = 0;
 +

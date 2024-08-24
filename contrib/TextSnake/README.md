@@ -33,15 +33,10 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 
 | 软件名称 | 版本     |
 | -------- |--------|
-| cv2   | 4.1.2  |
-| numpy   | 1.15.1 |
-| onnx   | 1.8.0  |
-| torch   | 1.5.0  |
-| torchvision   | 0.6.0  |
-| scikit_image   | 0.16.2 |
-| scipy   | 1.5.4  |
+| numpy   | 1.25.2 |
+| scikit_image   | 0.24.0 |
+| scipy   | 1.13.1 |
 | easydict   | 1.13   |
-| tdqm   | 4.62.3 |
 | shapely | 2.0.6  |
 
 ### 1.4 代码目录结构与说明
@@ -127,7 +122,7 @@ https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350
 ```
 python3 main.py
 ```
-
+注意：运行过程中可能会出现告警，不影响执行结果
 **步骤 4** 图片检测。运行结束输出result.jpg。
 
 
@@ -160,13 +155,14 @@ Groundtruth位于Groundtruth/Polygon/Test
 └──README.md           
 ```
 
-**步骤 2** 除先前下载的util文件夹之外，还需要从以下网址中下载Deteval.py与polygon_wrapper.py文件，放入util文件夹中
+**步骤 2** 除先前下载的util文件夹之外，还需要从以下网址中下载Deteval.py与polygon_wrapper.py文件，放入util文件夹中（本项目已提供在./TestSnake文件夹下）
 https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350d6b307dd1c31faa07/dataset/total_text/Evaluation_Protocol/Python_scripts
 
 **步骤 3**  在命令行输入 如下命令运行精度测试
 ```
 python3 evaluate.py
 ```
+注意：运行过程中会出现告警，不影响执行结果
 得到精度测试的结果：
 
 ![精度测试结果1](./精度1.png)

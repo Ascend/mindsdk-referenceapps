@@ -30,7 +30,6 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 
 ### 1.4 三方依赖
 
-
 | 软件名称 | 版本     |
 | -------- |--------|
 | numpy   | 1.25.2 |
@@ -39,7 +38,7 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 | easydict   | 1.13   |
 | shapely | 2.0.6  |
 
-### 1.4 代码目录结构与说明
+### 1.5 代码目录结构与说明
 
 本工程名称为TextSnake，工程目录如下图所示：
 
@@ -56,7 +55,7 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 └──README.md          
 ```
 
-### 1.5 技术实现流程图
+### 1.6 技术实现流程图
 
 实现流程图如下图所示：
 
@@ -94,15 +93,15 @@ https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/con
 该压缩文件中已存在om文件，需删除后重新进行模型转换
 具体步骤如下
 
-1. 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置 TextSnake/model 目录下。
+**步骤1** 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置 TextSnake/model 目录下。
 
-2. 进入TextSnake/model文件夹下执行命令
+**步骤2** 进入TextSnake/model文件夹下执行命令
 
 ```
 atc --model=TextSnake.onnx --framework=5 --output=TextSnake_bs1 --input_format=NCHW --input_shape="image:1,3,512,512" --log=info --soc_version=Ascend310B1
  ```
 
-3. 执行该命令会在当前目录下生成项目需要的模型文件TextSnake_bs1.om。执行后终端输出为
+**步骤3** 执行该命令会在当前目录下生成项目需要的模型文件TextSnake_bs1.om。执行后终端输出为
 
  ```
 ATC start working now, please wait for a moment.

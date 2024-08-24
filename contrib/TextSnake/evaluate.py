@@ -77,13 +77,13 @@ def write_to_file(contours_w, file_path):
 if __name__ == '__main__':
     try:
         steam_manager_api = StreamManagerApi()
-        
+
         ret = steam_manager_api.InitManager()
         if ret != 0:
             print("Failed to init Stream manager, ret=%s" % str(ret))
             exit()
-        
-        
+
+
         MODES = stat.S_IWUSR | stat.S_IRUSR
         with os.fdopen(os.open("./t.pipeline", os.O_RDONLY, MODES), 'rb') as f:
             pipeline_str = f.read()
@@ -92,7 +92,7 @@ if __name__ == '__main__':
             print("Failed to create Stream, ret=%s" % str(ret))
             exit()
 
-        
+
         means = (0.485, 0.456, 0.406)
         stds = (0.229, 0.224, 0.225)
         FILEPATH = "./data/total-text/"
@@ -143,8 +143,8 @@ if __name__ == '__main__':
             keyVec = StringVector()
             for key in keys:
                 keyVec.push_back(key)
-        
-        
+
+
             infer = steam_manager_api.GetResult(STEAMNAME, b'appsink0', keyVec)
             if(infer.metadataVec.size() == 0):
                 print("Get no data from stream !")
@@ -181,7 +181,7 @@ if __name__ == '__main__':
             mkdirs(cfg.output_dir+"/test")
             write_to_file(contours, os.path.join(cfg.output_dir+"/test", filename.replace('jpg', 'txt')))
             pred_vis = visualize_detection(img_show, contours)
-            
+
 
         steam_manager_api.DestroyAllStreams()
         print('Computing DetEval in {}/{}'.format(cfg.output_dir, "test"))

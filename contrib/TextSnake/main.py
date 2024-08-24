@@ -63,13 +63,13 @@ def resize(image_r , size):
 if __name__ == '__main__':
     try:
         steam_manager_api = StreamManagerApi()
-        
+
         ret = steam_manager_api.InitManager()
         if ret != 0:
             print("Failed to init Stream manager, ret=%s" % str(ret))
             exit()
-        
-        
+
+
         MODES = stat.S_IWUSR | stat.S_IRUSR
         with os.fdopen(os.open("./t.pipeline", os.O_RDONLY, MODES), 'rb') as f:
             pipeline_str = f.read()
@@ -81,14 +81,14 @@ if __name__ == '__main__':
         means = (0.485, 0.456, 0.406)
         stds = (0.229, 0.224, 0.225)
         IMAGE_PATH = './test.jpg'
-        
+
         image = Image.open(IMAGE_PATH)
         image = np.array(image)
         H, W, _ = image.shape
-        
+
         image = resize(image, cfg.input_size)
         image = norm(image, np.array(means), np.array(stds))
-    
+
         image = image.transpose(2, 0, 1)
         visionList = MxpiDataType.MxpiVisionList()
         visionVec = visionList.visionVec.add()
@@ -154,13 +154,12 @@ if __name__ == '__main__':
         }
 
         tr_pred, tcl_pred = output['tr'], output['tcl']
-        
+
         img_show = image.transpose(1, 2, 0)
         img_show = ((img_show * stds + means) * 255).astype(np.uint8)
         img_show, contours = rescale_result(img_show, contours, H, W)
         VIS_DIR = "result.jpg"
         pred_vis = visualize_detection(img_show, contours)
-        mkdirs(VIS_DIR)
         cv2.imwrite(VIS_DIR, pred_vis)
         steam_manager_api.DestroyAllStreams()
 

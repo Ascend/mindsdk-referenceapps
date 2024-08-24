@@ -49,6 +49,10 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 ├── t.pipeline      //pipeline
 ├── sdk.png      //流程图
 ├── pipeline.png      //pipeline流程图
+├── detection.py
+├── misc.py
+├── polygon_wrapper.py
+├── Deteval.py
 └──README.md          
 ```
 

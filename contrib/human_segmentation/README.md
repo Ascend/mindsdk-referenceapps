@@ -67,7 +67,7 @@ https://www.hiascend.com/document/detail/zh/canncommercial/700/inferapplicationd
 
 **步骤1** 获取om模型   
 ```
-见4： 模型转换
+见3： 准备模型
 ```
 **步骤2** 配置pipeline  
 根据所需场景，配置pipeline文件，调整路径参数等。

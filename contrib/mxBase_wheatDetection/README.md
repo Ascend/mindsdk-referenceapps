@@ -84,20 +84,17 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 ## 2. 设置环境变量
 
-#### 设置CANN环境变量（请确认install_path路径是否正确）
-#### Set environment PATH (Please confirm that the install_path is correct), ascend-toolkit-path为CANN安装路径
 ```c
+#设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
-```
 
-#### 设置MindXSDK 环境变量，SDK-path为mxVision SDK 安装路径
-```
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 
-## 3. 模型转换
+## 3. 准备模型
 
-**步骤1** 模型获取
+### 3.1 模型获取
 
 在Kaggle上下载YOLOv5模型 。[下载地址](https://www.kaggle.com/yunyung/yolov5-wheat)
 
@@ -106,11 +103,11 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 这里提供了已经转好的416*416尺寸的onnx模型，以及上述两个下载链接的模型和文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/mxBase_wheatDetection/model.zip)
 
 
-**步骤2** 模型存放
+### 3.2 模型存放
 
 将获取到的onnx模型文件存放至："样例项目所在目录/model/"。
 
-**步骤3** 执行模型转换命令
+### 3.3 执行模型转换命令
 
 ```
 atc --model=./416_best_v3.onnx --framework=5 --output=./onnx_best_v3 --soc_version=Ascend310B1 --insert_op_conf=./aipp.aippconfig --input_shape="images:1,3,416,416" --output_type="Conv_1228:0:FP32;Conv_1276:0:FP32;Conv_1324:0:FP32" --out_nodes="Conv_1228:0;Conv_1276:0;Conv_1324:0"
@@ -129,19 +126,19 @@ atc --model=./416_best_v3.onnx --framework=5 --output=./onnx_best_v3 --soc_versi
 
 **步骤2** 
 
-
-**步骤3** 
-
 cd到mxBase_wheatDetection目录下，执行如下编译命令：
 
 ```
 bash build.sh
 ```
 
-**步骤4** 
+**步骤3** 
 
 制定jpg图片进行推理，将需要进行推理的图片放入mxBase_wheatDetection目录下的新文件夹中，例如mxBase_wheatDetection/test，
 cd 到mxBase_wheatDetection目录下，并执行如下命令：
 ```
 ./mxBase_wheatDetection ./test/
 ```
+
+**步骤4** 查看结果
+执行完毕后，图片可视化结果会被保存在工程目录下result文件夹中。

@@ -63,7 +63,7 @@ ATC run success
 
 https://www.hiascend.com/document/detail/zh/canncommercial/700/inferapplicationdev/atctool/atlasatc_16_0005.html
 
-## 5 编译运行
+## 4 编译运行
 
 **步骤1** 获取om模型   
 ```

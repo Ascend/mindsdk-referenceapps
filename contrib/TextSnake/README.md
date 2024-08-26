@@ -48,10 +48,8 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 ├── t.pipeline      //pipeline
 ├── sdk.png      //流程图
 ├── pipeline.png      //pipeline流程图
-├── detection.py
-├── misc.py
-├── polygon_wrapper.py
-├── Deteval.py
+├── 精度1.png
+├── 精度1.png
 └──README.md          
 ```
 
@@ -116,7 +114,71 @@ ATC run success, welcome to the next use.
 
 **步骤 1**  将任意一张jpg格式的图片存到当前目录下（./TextSnake），命名为test.jpg。如果 pipeline 文件（或测试图片）不在当前目录下（./TestSnake），需要修改 main.py 的pipeline（或测试图片）路径指向到所在目录。此外，需要从
 https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350d6b307dd1c31faa07
-下载util文件夹至当前目录（./TextSnake），并将其中的detection.py和misc.py文件替换为./TestSnake文件夹下的detection.py和misc.py文件。
+下载util文件夹至当前目录（./TextSnake），并对其中的detection.py和misc.py文件做如下修改(以下行数均为原代码行数)。
+1.detection.py文件中第12行的init函数
+```
+def __init__(self, model, tr_thresh=0.4, tcl_thresh=0.6):
+    self.model = model
+    self.tr_thresh = tr_thresh
+
+
+    self.tcl_thresh = tcl_thresh
+
+    # evaluation mode
+    model.eval()
+```
+修改为：
+```
+def __init__(self, tr_thresh=0.4, tcl_thresh=0.6):
+    self.tr_thresh = tr_thresh
+    self.tcl_thresh = tcl_thresh
+```
+2.detection.py文件中第38行
+```
+in_poly = cv2.pointPolygonTest(cont, (xmean, i), False)
+```
+修改为：
+```
+in_poly = cv2.pointPolygonTest(cont, (int(xmean), int(i)), False)
+```
+3.detection.py文件中第56行
+```
+if cv2.pointPolygonTest(cont, (test_pt[0], test_pt[1]), False) > 0:
+```
+修改为：
+```
+if cv2.pointPolygonTest(cont, (int(test_pt[0]), int(test_pt[1])), False) > 0:
+```
+4.detection.py文件中第67行
+```
+return cv2.pointPolygonTest(cont, (x, y), False) > 0
+```
+修改为：
+```
+return cv2.pointPolygonTest(cont, (int(x), int(y)), False) > 0
+```
+5.将314至316行：
+```
+if len(conts) > 1:
+    conts.sort(key=lambda x: cv2.contourArea(x), reverse=True)
+elif not conts:
+```
+修改为：
+```
+if len(conts) > 1:
+    conts = list(conts)
+    conts.sort(key=lambda x: cv2.contourArea(x), reverse=True)
+    conts = tuple(conts)
+elif not conts:
+```
+6.因numpy版本兼容性问题，需根据情况将misc.py中第45行代码
+```
+canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool)
+```
+修改为
+```
+canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool_)
+```
 
 **步骤 2**  按照模型转换获取om模型，放置在 TextSnake/model 路径下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型，则无需修改相关文件，否则修改 main.py 中pipeline的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名。
 
@@ -158,7 +220,7 @@ Groundtruth位于Groundtruth/Polygon/Test
 └──README.md           
 ```
 
-**步骤 2** 除先前下载的util文件夹之外，还需要从以下网址中下载Deteval.py与polygon_wrapper.py文件，放入util文件夹中（本项目已提供在./TestSnake文件夹下）
+**步骤 2** 除先前下载的util文件夹之外，还需要从以下网址中下载Deteval.py与polygon_wrapper.py文件，放入util文件夹中。
 https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350d6b307dd1c31faa07/dataset/total_text/Evaluation_Protocol/Python_scripts
 
 **步骤 3**  在命令行输入 如下命令运行精度测试
@@ -174,7 +236,7 @@ python3 evaluate.py
 
 与pytorch实现版本的精度结果相对比，其精度相差在1%以下，精度达标。
 
-## 常见问题
+## 6 常见问题
 本案例中的TextSnake模型适用于图像中弯曲形状文字的检测。
 本模型在以下几种情况下检测弯曲形状文字的效果良好：含有目标数量少、目标面积占比图像较大、各目标边界清晰。
 在以下情况检测弯曲形状文字效果不太好：图片中的弯曲形状文字数目较多且大小较小，此时会出现缺漏的情况。

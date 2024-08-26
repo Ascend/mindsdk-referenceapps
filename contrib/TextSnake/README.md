@@ -228,6 +228,7 @@ https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350
 python3 evaluate.py
 ```
 注意：运行过程中会出现告警，不影响执行结果。
+
 得到精度测试的结果：
 
 ![精度测试结果1](./精度1.png)

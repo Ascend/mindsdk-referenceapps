@@ -1,22 +1,37 @@
 # 人体关键点检测
 ## 1. 介绍
+### 1.1 简介
 人体关键点检测插件基于 MindXSDK 开发，在晟腾芯片上进行人体关键点和骨架检测，将检测结果可视化并保存。输入一幅图像，可以检测得到图像中所有行人的关键点并连接成人体骨架。
 
 人体关键点检测是指在输入图像上对指定的 18 类人体骨骼关键点位置进行检测，包括包括鼻子、左眼、右眼、左耳、右耳、左肩、右肩、左肘、右肘、左手腕、右手腕、左髋、右髋、左膝、右膝、左踝、右踝。然后将关键点正确配对组成相应的人体骨架，展示人体姿态，共 19 类人体骨架，如左肩和左肘两个关键点连接组成左上臂，右膝和右踝两个关键点连接组成右小腿等。
 本方案采取OpenPose模型，将待检测图片输入模型进行推理，推理得到包含人体关键点信息和关键点之间关联度信息的两个特征图，首先从关键点特征图中提取得到所有候选人体关键点，然后结合关联度信息特征图将不同的关键点组合连接成为人体骨架，再将所有人体骨架连接组成不同的人体，最后将关键点和骨架信息标注在输入图像上，描绘人体姿态。本方案可以对遮挡人体、小人体、密集分布人体等进行检测，还适用于不同姿态（蹲坐、俯卧等）、不同方向（正面、侧面、背面等）以及模糊人体关键点检测等多种复杂场景。
 
+基于MindX SDK的人体关键点检测业务流程为：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的 OpenPose 人体关键点检测插件处理推理结果，从中提取关键点，确定关键点和关键点之间的连接关系，输出关键点连接形成的人体，最后通过序列化插件mxpi_dataserialize 和输出插件 appsink 获取人体关键点检测插件输出结果，并在外部进行人体姿态可视化描绘。本系统的各模块及功能描述如表1所示：
+
+表1 系统方案各模块功能描述：
+
+| 序号 | 子系统 | 功能描述     |
+| ---- | ------ | ------------ |
+| 1    | 图片输入    | 获取 jpg 格式输入图片 |
+| 2    | 图片解码    | 解码图片 |
+| 3    | 图片缩放    | 将输入图片放缩到模型指定输入的尺寸大小 |
+| 4    | 模型推理    | 对输入张量进行推理 |
+| 5    | 人体关键点检测    | 从模型推理结果检测人体关键点，并连接成人体骨架 |
+| 6    | 序列化    | 将检测结果组装成json字符串 |
+| 7    | 结果输出    | 将序列化结果输出|
+| 8    | 结果可视化    | 将检测得到的关键点和人体骨架标注在输入图片上|
+
+
 
 ### 1.1 支持的产品
 
-本项目以昇腾Atlas310，Atlas310B卡为主要的硬件平台。
-
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 
 ### 1.2 支持的版本
 
-mxVision 5.0.RC1
-Ascend-CANN-toolkit (310使用6.3.RC1, 310B使用6.2.RC1)
-
+mxVision 5.0.RC3
+Ascend-CANN-toolkit 7.0.RC1
 
 
 ### 1.3 软件方案介绍
@@ -106,18 +121,16 @@ Ascend-CANN-toolkit (310使用6.3.RC1, 310B使用6.2.RC1)
 | 软件名称 | 版本   |
 | -------- | ------ |
 | cmake    | 3.5+   |
-| mxVision | 2.0.4  |
 | python   | 3.9.2  |
 
 确保环境中正确安装mxVision SDK。
 
-在编译运行项目前，需要执行如下两个环境配置脚本设置环境变量：
-
-```shell
-. /usr/local/Ascend/ascend-toolkit/set_envv.sh # Ascend-cann-toolkit开发套件包默认安全路径，根据实际安装路径修改
-. ${MX_SDK_HOME}/mxVision/set_env.sh # ${MX_SDK_HOME}替换为用户的SDK安装路径
-
+在编译运行项目前，需要设置环境变量：
 ```
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh
+```
+
 
 ## 3. 模型转换
 
@@ -165,9 +178,7 @@ python scripts/convert_to_onnx.onnx --checkpoint-path=checkpoints/checkpoint_ite
 - 进入 ``python/models`` 目录；
 - 编辑 ``insert_op.cfg`` 文件，将 ``src_image_size_w`` 和 ``src_image_size_h`` 分别设置为上述转换 onnx 模型时指定的模型输入宽度和高度；
 - 编辑 ``model_conversion.sh`` 文件，将
-```
-atc --model=./simplified_560_openpose_pytorch.onnx --framework=5 --output=openpose_pytorch_560 --soc_version=Ascend310B1 --input_shape="data:1, 3, 560, 560" --input_format=NCHW --insert_op_conf=./insert_op.cfg
-```
+
 命令中的 ``--model`` 属性改为上述转换得到的 onnx 模型文件名，将 ``--output`` 属性设置为输出 om 模型的名称，将 ``--input_shape`` 属性设置为指定的模型输入宽、高；
 
 - 执行命令：
@@ -175,8 +186,10 @@ atc --model=./simplified_560_openpose_pytorch.onnx --framework=5 --output=openpo
 bash model_convertion.sh
 ```
 该命令执行成功后会在当前文件夹下生成指定名称的 om 模型文件。
-注意：若推理芯片为310B，需将atc-env脚本中模型转换atc命令中的soc_version参数设置为Ascend310B1。
 
+```
+atc --model=./simplified_560_openpose_pytorch.onnx --framework=5 --output=openpose_pytorch_560 --soc_version=Ascend310B1 --input_shape="data:1, 3, 560, 560" --input_format=NCHW --insert_op_conf=./insert_op.cfg
+```
 
 ## 4. 编译与运行
 
@@ -184,10 +197,10 @@ bash model_convertion.sh
 
 **步骤2** 按照第 3 小节 **模型转换** 中的步骤获得 om 模型文件，放置在 ``python/models`` 目录下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型或者 om 模型，则无需修改相关文件，否则修改 ``python/pipeline/Openpose.pipeline`` 中的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名；将 mxpi_imageresize0 插件中的 resizeWidth 和 resizeHeight 属性改成转换模型过程中设置的模型输入尺寸值；将 mxpi_openposepostprocess0 插件中的 inputWidth 和 inputHeight 属性改成转换模型过程中设置的模型输入尺寸值。
 
-**步骤3** 编译。在项目目录下执行命令：
+**步骤3** 编译。在项目目录下执行命令：**运行前修改插件权限为640**
 ```
 bash build.sh
-cp plugins/build/libmxpi_openposepostprocess.so ~/MindX_SDK/mxVision/lib/plugins/
+cp plugins/build/libmxpi_openposepostprocess.so ${SDK_INSTALL_PATH}/mxVision/lib/plugins/
 ```
 
 **步骤4** 图片检测。将一张包含人体的图片放在项目目录下，命名为 test.jpg。在该图片上进行检测，执行命令：
@@ -204,7 +217,7 @@ python3 main.py
 pip3.9 install pycocotools
 ```
 
-2. 下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip，在 ``python`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``python/dataset`` 目录下。下载 COCO VAL 2017 标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip ，将标注文件压缩文件解压至 ``python/dataset`` 目录下。确保下载完数据集和标注文件后的 python 目录结构为：
+2. 下载 COCO keypoint VAL 2017 数据集与标注文件，下载链接：https://cocodataset.org/，在 ``python`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``python/dataset`` 目录下确保下载完数据集和标注文件后的 python 目录结构为：
 ```
 .
 ├── dataset

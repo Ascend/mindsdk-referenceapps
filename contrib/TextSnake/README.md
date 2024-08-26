@@ -67,7 +67,7 @@ pipeline流程如下图所示：
 
 ## 2 设置环境变量
 
-在编译运行项目前，需要执行一下命令设置环境变量：
+在编译运行项目前，需要执行以下命令设置环境变量：
 
 ```bash
 export PYTHONPATH=${MX_SDK_HOME}/python/:$PYTHONPATH

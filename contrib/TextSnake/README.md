@@ -158,7 +158,7 @@ return cv2.pointPolygonTest(cont, (x, y), False) > 0
 ```
 return cv2.pointPolygonTest(cont, (int(x), int(y)), False) > 0
 ```
-5.将314至316行：
+5.detection.py文件中314至316行：
 ```
 if len(conts) > 1:
     conts.sort(key=lambda x: cv2.contourArea(x), reverse=True)
@@ -172,7 +172,7 @@ if len(conts) > 1:
     conts = tuple(conts)
 elif not conts:
 ```
-6.因numpy版本兼容性问题，需根据情况将misc.py中第45行代码
+6.因numpy版本兼容性问题，需根据情况将misc.py中第45行
 ```
 canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool)
 ```

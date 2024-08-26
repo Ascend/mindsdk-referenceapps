@@ -77,7 +77,7 @@ export install_path=${install_path}
 ```
 注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
 
-**${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
+**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 
 ## 3 准备模型
@@ -88,8 +88,7 @@ export install_path=${install_path}
 pth 权重文件和 onnx 文件的下载链接
 https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TextSnake/ATC%20TextSnake%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip
 
-该压缩文件中已存在om文件，需删除后重新进行模型转换
-具体步骤如下
+该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下
 
 **步骤1** 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置 TextSnake/model 目录下。
 

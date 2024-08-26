@@ -182,9 +182,9 @@ python3 main.py
 **步骤 1** 安装数据集用以测试精度。数据集 TotalText和GroundTruth文件 需要自行下载:[下载地址](https://drive.google.com/file/d/1bC68CzsSVTusZVvOkk7imSZSbgD1MqK2/view?usp=sharing),
 groundTruth的[下载地址](https://drive.google.com/file/d/19quCaJGePvTc3yPZ7MAGNijjKfy77-ke/view?usp=sharing)。
 
-将下载好的数据集和groundTruth文件调整成以下路径的形式（需手动创建相关文件夹）
-测试图片位于total-text/Images/Test
-Groundtruth位于Groundtruth/Polygon/Test
+将下载好的数据集和groundTruth文件调整成以下路径的形式（需手动创建相关文件夹），
+测试图片位于total-text/Images/Test，
+Groundtruth位于Groundtruth/Polygon/Test，
 拷贝两个目录下的所有文件至对应目录。
 ```
 ├── main.py  //运行工程项目的主函数

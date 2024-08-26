@@ -1,18 +1,8 @@
 # C++ 基于MxBase的车流量统计开发
 ## 1 介绍
+### 1.1 简介
 车流量统计是指对视频中的车辆进行计数，实现对本地视频（H264）进行车辆动向并计数，最后生成可视化结果。车流统计分为五个步骤：车辆视频流读取、车辆检测、车辆动向、车辆计数以及结果可视化。本项目实现了对单双向车道，固定摄像头的交通视频进行车流量统计。
-### 1.1 支持的产品
-支持Atlas 500 A2
-### 1.2 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
-| --------- | ------------------ | -------------- | 
-| 5.0.0     | 7.0.0     |  23.0.0    |
-| 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
-### 1.3 软件方案介绍
 车流统计项目实现：输入类型是视频数据（需要将视频转换为.264的视频格式），ffmpeg打开视频流获取视频帧信息，图像经过尺寸大小变换，满足模型的输入尺寸要求；将尺寸变换后的图像数据依次输入Yolov4检测模型进行推理，模型输出经过后处理后，使用SORT算法进行车辆动向得到车辆动向，再设置标志对车辆进行计数，最后得到某时刻已经通过的车辆数。
-
-本流程的视频检测模块参考的是Ascend的[参考样例](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mxBaseVideoSample)
 
 表1.1 系统方案中各模块功能：
 | 序号 | 子系统            | 功能描述                                                     |
@@ -26,7 +16,30 @@
 | 7    | 保存结果         | 使用opencv进行结果可视化并保存为视频文件                      |
 | 8    | 资源释放         | 调用mxBase::DeviceManager接口完成推理卡设备的去初始化。      |
 
-### 1.4 代码目录结构与说明
+技术实现流程图
+
+![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
+
+### 1.2 支持的产品
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
+
+### 1.3 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
+
+### 1.4 三方依赖
+环境依赖软件和版本如下表：
+
+| 软件                | 版本         | 说明                          | 获取方式                                                     |
+| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |
+| ffmpeg             | 4.2.1        | 视频转码解码组件              | [安装教程](https://bbs.huaweicloud.com/forum/thread-142431-1-1.html)|                                               
+| pc端ffmpeg         | 2021-09-01   | 将视频文件格式转换为.264      | [安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)|
+
+
+### 1.5 代码目录结构说明
 
 本sample工程名称为VehicleCounting，工程目录如下图所示：
 ```
@@ -66,40 +79,37 @@
 └── README.md
 ```
 
+## 2 设置环境变量
 
+```
+#设置CANN环境变量（请确认install_path路径是否正确）
+. ${ascend-toolkit-path}/set_env.input_shape
 
-### 1.5 技术实现流程图
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
 
-![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
+#设置FFMPEG环境变量，FFMPEG_HOME为ffmpeg安装的路径
+export FFMPEG_HOME=${FFMPEG安装路径}
 
-## 2 环境依赖
-环境依赖软件和版本如下表：
+#LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径
+export LD_LIBRARY_PATH=${FFMPEG_HOME}/lib:${LD_LIBRARY_PATH}
 
-| 软件                | 版本         | 说明                          | 获取方式                                                     |
-| ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |
-| ffmpeg             | 4.2.1        | 视频转码解码组件              | [安装教程](https://bbs.huaweicloud.com/forum/thread-142431-1-1.html)|                                               
-| pc端ffmpeg         | 2021-09-01   | 将视频文件格式转换为.264      | [安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)|
+#查看环境变量
+env
+```
 
+## 3 准备模型
 
-
-## 3 模型转换
-
-**步骤1** 模型获取
+**步骤1** 模型获取。
 下载[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VehicleCounting/VehicleCountingModels.zip), 并解压。
 
-**步骤2** 模型存放
+**步骤2** 模型存放。
 将获取到的模型文件存放至："样例项目所在目录/model/"。
 
-**步骤3** 模型转换
+**步骤3** 模型转换。
 在模型文件所在目录下执行以下命令
 
 ```
-# 设置环境变量（请确认install_path路径是否正确）
-# Set environment PATH (Please confirm that the install_path is correct).
-
-. /usr/local/Ascend/ascend-toolkit/set_env.sh # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
-. ${MX_SDK_HOME}/mxVision/set_env.sh # ${MX_SDK_HOME}替换为用户的SDK安装路径
-
 #执行，转换YOLOv4/YOLOv3模型
 #Execute, transform YOLOv4/YOLOv3 model.
 
@@ -170,17 +180,8 @@ nms_iouthreshold: 0.6
 
 # 阈值修改，可通过修改检测置信度阈值det_threshold和非最大值抑制阈值nms_iouthreshold来调整检测效果。
 ```
-**步骤4** 设置环境变量，
-FFMPEG_HOME为ffmpeg安装的路径
-LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径
-```
-export FFMPEG_HOME=${FFMPEG安装路径} 
-export LD_LIBRARY_PATH=${FFMPEG_HOME}/lib:${LD_LIBRARY_PATH}
 
-#查看环境变量
-env
-```
-**步骤5** 编译项目文件
+**步骤4** 编译项目文件
 
 新建立build目录，进入build执行cmake ..（..代表包含CMakeLists.txt的源文件父目录），在build目录下生成了编译需要的Makefile和中间文件。执行make构建工程，构建成功后就会生成可执行文件。
 
@@ -202,18 +203,18 @@ Scanning dependencies of target stream_pull_test
 # stream_pull_test就是CMakeLists文件中指定生成的可执行文件。
 ```
 
-**步骤6** 运行
+**步骤5** 运行
 将**步骤1**转换的视频文件test.264放到data/目录下，执行如下命令运行
 ```
 ./stream_pull_test
 ```
-**步骤7** 查看结果
+**步骤6** 查看结果
 
 使用[样例视频](https://github.com/jjw-DL/YOLOV3-SORT/tree/master/input)，执行完毕后，图片可视化结果会被保存在工程目录下result文件夹中，视频可视化结果会被保存在工程目录下result1文件夹中
 
 
 ## 5 常见问题
-### 模型更换问题
+### 5.1 模型更换问题
 **问题描述** 在用YOLOv3模型替换YOLOv4模型的时候，由于模型的输入的图片resize大小不一样以及模型输出的通道顺序也不一样，会导致模型无法正常推理和后处理
 
 **解决方案** 修改代码中相应的模型参数，YOLOv3模型输入图片大小为416x416，modelType为0，YOLOv4模型输入图片大小为608x608，modelType为1。
@@ -226,7 +227,7 @@ const uint32_t resizeWidth = 416;
 initParam.modelType = 0;
 ```
 
-### config文件读取异常
+### 5.2 config文件读取异常
 **问题描述** 未提及修改main.cpp中的configUtil.LoadConfiguration的路径，运行程序会报error
 ```
 WARNING: Logging before InitGoogleLogging() is written to STDERR

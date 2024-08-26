@@ -1,33 +1,48 @@
 # Auto Speech Recognition
 
 ## 1 介绍
+### 1.1 简介
   本开发样例基于MindX SDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
   ASR主要分为两个步骤：<br/>
 
-  **一、 将语音转换成对应的拼音** <br/>
-  **二、 将拼音转换成对应的文字** <br/>
+  **步骤1**  将语音转换成对应的拼音 <br/>
+  **步骤2**  将拼音转换成对应的文字 <br/>
 
-  对于第一步将语音转换为对应的拼音的声学模型我们采用的模型是Google在2020年提出的Conformer模型：[Convolution-augmented Transformer for Speech Recognition](https://arxiv.org/abs/2005.08100)；<br/>
+  对于第一步将语音转换为对应的拼音的声学模型我们采用的模型是Google在2020年提出的Conformer模型：[Convolution-augmented Transformer for Speech Recognition](https://arxiv.org/abs/2005.08100)。<br/>
   对于第二步语言模型我们采用的是transformer模型。<br/>
   这两个模型的主要参考代码： [https://github.com/Z-yq/TensorflowASR](https://github.com/Z-yq/TensorflowASR)
 
-### 1.1 支持的产品
+### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas300V pro
 
-### 1.2 支持的版本
+### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
 
+### 1.4 三方依赖
 
-### 1.2 特性及适用场景
+第三方依赖软件和版本如下表。请确认环境已安装pip3后，使用pip3 install * 安装以下依赖。
 
-本项目适用于wav中文语音数据，每条语音3~5秒。
+|软件名称    | 版本     |
+|-----------|----------|
+| numpy     | 1.23.5   |
+| librosa   | 0.9.2    |
+| pypinyin  | 0.48.0   |
 
-### 1.3 代码目录结构与说明
+-  librosa安装若无法编译相关依赖，可参考下述指令在root用户下安装对应的库
+```shell
+apt-get install llvm-10 -y
+LLVM_CONFIG=/usr/lib/llvm-10/bin/llvm-config pip install librosa
+apt-get install libsndfile1 -y
+apt-get install libasound2-dev libsndfile-dev
+apt-get install liblzma-dev
+```
+
+### 1.5 代码目录结构说明
 
 本sample工程名称为AutoSpeechRecognition，工程目录如下图所示：
 ```
@@ -50,30 +65,22 @@
 |-------- README.md
 ```
 
-## 2 依赖
+### 1.6 相关约束
 
-第三方依赖软件和版本如下表：
+本项目适用于wav中文语音数据，每条语音3~5秒。
+由于模型输入的限制，推理时wav语音的时长应控制在10s及其以下，超过10s的部分会被截断。
 
-|软件名称    | 版本     |
-|-----------|----------|
-| numpy     | 1.23.5   |
-| librosa   | 0.9.2    |
-| pypinyin  | 0.48.0   |
+## 2. 设置环境变量
 
-1. 请确认环境已安装pip3后，使用pip3 install * 安装以上依赖
+```bash
+#设置CANN环境变量（请确认install_path路径是否正确）
+. ${ascend-toolkit-path}/set_env.sh
 
-2. 请注意MindX SDK使用python版本为3.9.2，如出现无法找到python对应lib库请在root下安装python3.9开发库  
-`apt-get install libpython3.9`  
-librosa安装若无法编译相关依赖，可参考下述指令在root用户下安装对应的库
-```shell
-apt-get install llvm-10 -y
-LLVM_CONFIG=/usr/lib/llvm-10/bin/llvm-config pip install librosa
-apt-get install libsndfile1 -y
-apt-get install libasound2-dev libsndfile-dev
-apt-get install liblzma-dev
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
 ```
 
-## 3 模型获取与转换
+## 3 准备模型
 
 ### 3.1 模型获取
 
@@ -85,9 +92,7 @@ apt-get install liblzma-dev
 由于原模型是tensorflow的模型，因此我们需要借助于ATC工具将tensorflow的pb模型转化为om模型。
 模型转换时应先配置CANN环境变量，然后再分别执行以下命令
 
-```bash
-. {cann_install_path}/ascend-toolkit/set_env.sh
-```
+
 - 声学模型的转换
 
 `atc --model=./frozen_graph_conform.pb --framework=3 --output=./am_conform_batch_one --input_format=NHWC --input_shape="features:1,1001,80,1;length:1,1" --soc_version=Ascend310P3 --log=error`
@@ -98,33 +103,30 @@ apt-get install liblzma-dev
 
 `atc --model=./frozen_graph_transform.pb --framework=3 --output=./lm_transform_batch_one --input_format=ND --input_shape="inputs:1,251" --soc_version=Ascend310P3  --log=error`
 
-> 为了简化推理过程，我们直接把声学模型的输出作为语言模型的输入，所以这里语言模型的输入要与声学模型的输出保持一致
+> 为了简化推理过程，我们直接把声学模型的输出作为语言模型的输入，所以这里语言模型的输入要与声学模型的输出保持一致。
 
 
 
 ## 4 运行
 
-### 4.1 数据集准备
+**步骤1** 数据集准备
 
 此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data/S0150_mic"目录下。<kbd>data/S0150_mic/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
 
-### 4.2 设置环境变量
-```bash
-. {cann_install_path}/ascend-toolkit/set_env.sh
-. {sdk_install_path}/mxVision/set_env.sh
-```
-
-### 4.3 执行以下脚本
+**步骤2**  执行以下脚本
 ```bash
 python3 main.py
 ```
-运行样例数据集上的推理及精度、性能测试。
-## 5 其它说明
 
-由于模型输入的限制，推理时wav语音的时长应控制在10s及其以下，超过10s的部分会被截断。
+**步骤3**  查看运行结果
+执行完毕后，语音识别的结果会被保存在工程data目录的prediction.txt文件中。
 
-## 6 常见问题
-### ImportError: {python_install_path}/scikit_learn.libs/libgomp-xxx.so.1.0.0:cannot allocate memory in static TLS block
+## 5 常见问题
+
+### 5.1 scikit_learn import失败
+**问题描述** ImportError: {python_install_path}/scikit_learn.libs/libgomp-xxx.so.1.0.0:cannot allocate memory in static TLS block
+
+**解决方案**
 ```bash
 # 显示声明环境变量LD_PRELOAD, 用户请修改为安装环境中的路径
 export LD_PRELOAD=$LD_PRELOAD:{python_install_path}/site-packages/scikit_learn.libs/libgomp-xxx.so.1.0.0

@@ -115,6 +115,7 @@ ATC run success, welcome to the next use.
 **步骤 1**  将任意一张jpg格式的图片存到当前目录下（./TextSnake），命名为test.jpg。如果 pipeline 文件（或测试图片）不在当前目录下（./TestSnake），需要修改 main.py 的pipeline（或测试图片）路径指向到所在目录。此外，需要从
 https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350d6b307dd1c31faa07
 下载util文件夹至当前目录（./TextSnake），并对其中的detection.py和misc.py文件做如下修改(以下行数均为原代码行数)。
+
 1.detection.py文件中第12行的init函数
 ```
 def __init__(self, model, tr_thresh=0.4, tcl_thresh=0.6):

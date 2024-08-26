@@ -129,7 +129,7 @@ bash build.sh
 ```
 **步骤3**  数据准备
 
-在工程根目录下新建data_eval/images、data_eval/labels和data文件夹， 目录结构如下
+在工程根目录下新建data_eval/images、data_eval/labels和data文件夹，目录结构如下：
 ```
 PoseEstNet
 |---- data_eval

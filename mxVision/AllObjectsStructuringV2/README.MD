@@ -98,7 +98,7 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 
 **步骤1：** 在项目根目录AllObjectStructuringV2/下创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuringV2/AllObjectsStructuringV2_models.zip)，并放到AllObjectStructuringV2/models/ 目录下。
 
-**步骤2：** 执行以下命令使用atc命令进行模型转换
+**步骤2：** 执行以下命令使用atc命令进行模型转换。
 ```bash
 atc --model=./yolov4_improve/yolov4-tiny-customized.pb --framework=3 --input_shape="inputs:1,416,416,3" -output=./yolov4_improve/yolov4_detection_1batch --insert_op_conf=./yolov4_improve/aipp_yolov4.cfg --soc_version=Ascend310P3
 
@@ -152,7 +152,7 @@ std::string faceFeatureModelPath = "../models/facefeature/face_feature_batch_1.o
 在main.cpp中修改视频路数以及并行度。
 + numChannel 视频路数
 + numWorker woker数量
-+ numLines 并行度，数值为numChannel/numWorker:单个worker能够处理视频的路数。
++ numLines 并行度，数值为numChannel/numWorker:单个worker能够处理视频的路数
 ```
 const size_t numChannel = 70;
 const size_t numWorker = 7;
@@ -162,11 +162,11 @@ const size_t numLines = 10;
 
 ### 4.1 使用本地的文件作为视频流输入
 
-**步骤1：** 在main.cpp中修改测试视频路径，当前使用本地的文件作为视频流输入。
+**步骤1：** 在main.cpp中修改测试视频路径，当前使用本地的文件作为视频流输入：
 ```
 std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rtsp获取视频流，请将其注释。
 ```
-如果是不同名称的264视频，则手动批量添加
+如果是不同名称的264视频，则手动批量添加：
 ```
 std::vector<std::string> filePaths(numChannel);
 filePaths[0] = "../xxx/xxx.264";
@@ -198,10 +198,10 @@ std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rts
 ```
 
 
-**步骤2：** 根据下面的文档，[创建网络视频流](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+**步骤2：** 根据下面的文档，[创建网络视频流](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
 
 
-**步骤3：** 在main.cpp中添加拉流代码
+**步骤3：** 在main.cpp中添加拉流代码。
 ```
     std::vector<std::string> filePaths(numChannel);
     std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rtsp获取视频流，请将其注释。
@@ -232,7 +232,7 @@ filePaths[1] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264";
 
 ```
 
-**步骤4**：编译运行
+**步骤4**：编译运行：
 
 ```bash
 ## 创建build目录
@@ -244,7 +244,9 @@ make -j
 ## 运行
 ./main
 ```
-**步骤5**：查看结果：执行成功后会出现行人、人脸、车俩检测或分类信息相关打印。
+**步骤5**：查看结果：
+
+执行成功后会出现行人、人脸、车俩检测或分类信息相关打印。
 
 ## 5 常见问题
 
@@ -264,4 +266,5 @@ Failed to get model, the model path is invalidate.
 decoded image is invalid.
 
 **解决方案：**
+
 根据实际视频流宽高信息修改allobjectStructure.h中FRAME_WIDTH和FRAME_HEIGHT。

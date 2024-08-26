@@ -98,14 +98,13 @@ https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/con
 atc --model=TextSnake.onnx --framework=5 --output=TextSnake_bs1 --input_format=NCHW --input_shape="image:1,3,512,512" --log=info --soc_version=Ascend310B1
  ```
 
-**步骤3** 执行该命令会在当前目录下生成项目需要的模型文件TextSnake_bs1.om。执行后终端输出为
+**步骤3** 执行该命令会在当前目录下生成项目需要的模型文件TextSnake_bs1.om。执行后终端输出以下信息，表示执行成功。
 
  ```
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-表示命令执行成功。
 
 
 

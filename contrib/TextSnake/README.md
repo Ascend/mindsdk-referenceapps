@@ -46,8 +46,6 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 ├── main.py  //运行工程项目的主函数
 ├── evaluate.py   //精度计算
 ├── t.pipeline      //pipeline
-├── sdk.png      //流程图
-├── pipeline.png      //pipeline流程图
 ├── 精度1.png
 ├── 精度1.png
 └──README.md          
@@ -195,8 +193,6 @@ Groundtruth位于Groundtruth/Polygon/Test
 ├── model   //存放模型文件
 ├── test.jpg          //测试图像
 ├── result.jpg          //输出结果
-├── sdk.png          //流程图
-├── pipeline.png          //pipeline流程图
 ├── data
     ├── total-text
         ├── gt

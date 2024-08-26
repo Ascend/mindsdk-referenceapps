@@ -223,7 +223,7 @@ Groundtruth位于Groundtruth/Polygon/Test
 **步骤 2** 除先前下载的util文件夹之外，还需要从以下网址中下载Deteval.py与polygon_wrapper.py文件，放入util文件夹中。
 https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350d6b307dd1c31faa07/dataset/total_text/Evaluation_Protocol/Python_scripts
 
-**步骤 3**  在命令行输入 如下命令运行精度测试
+**步骤 3**  在命令行输入 如下命令运行精度测试。
 ```
 python3 evaluate.py
 ```

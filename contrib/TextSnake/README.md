@@ -86,7 +86,7 @@ export install_path=${install_path}
 
 本项目提供已从pytorch模型转换好的onnx 模型，需要进一步转换为om模型
 pth 权重文件和 onnx 文件的下载链接
-https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TextSnake/ATC%20TextSnake%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip
+https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TextSnake/ATC%20TextSnake%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip 。
 
 该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下
 
@@ -181,12 +181,12 @@ canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool_)
 
 **步骤 2**  按照模型转换获取om模型，放置在 TextSnake/model 路径下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型，则无需修改相关文件，否则修改 main.py 中pipeline的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名。
 
-**步骤 3**  在命令行输入 如下命令运行整个工程
+**步骤 3**  在命令行输入 如下命令运行整个工程。
 
 ```
 python3 main.py
 ```
-注意：运行过程中可能会出现告警，不影响执行结果
+注意：运行过程中可能会出现告警，不影响执行结果。
 
 **步骤 4** 图片检测。运行结束输出result.jpg。
 
@@ -199,7 +199,7 @@ groundTruth的[下载地址](https://drive.google.com/file/d/19quCaJGePvTc3yPZ7M
 将下载好的数据集和groundTruth文件调整成以下路径的形式（需手动创建相关文件夹）
 测试图片位于total-text/Images/Test
 Groundtruth位于Groundtruth/Polygon/Test
-拷贝两个目录下的所有文件至对应目录
+拷贝两个目录下的所有文件至对应目录。
 ```
 ├── main.py  //运行工程项目的主函数
 ├── evaluate.py   //精度计算
@@ -227,7 +227,7 @@ https://github.com/princewang1994/TextSnake.pytorch/tree/b4ee996d5a4d214ed825350
 ```
 python3 evaluate.py
 ```
-注意：运行过程中会出现告警，不影响执行结果
+注意：运行过程中会出现告警，不影响执行结果。
 得到精度测试的结果：
 
 ![精度测试结果1](./精度1.png)

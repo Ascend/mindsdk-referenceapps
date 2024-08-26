@@ -4,8 +4,6 @@
 车流量统计是指对视频中的车辆进行计数，实现对本地视频（H264）进行车辆动向并计数，最后生成可视化结果。车流统计分为五个步骤：车辆视频流读取、车辆检测、车辆动向、车辆计数以及结果可视化。本项目实现了对单双向车道，固定摄像头的交通视频进行车流量统计。
 车流统计项目实现：输入类型是视频数据（需要将视频转换为.264的视频格式），ffmpeg打开视频流获取视频帧信息，图像经过尺寸大小变换，满足模型的输入尺寸要求；将尺寸变换后的图像数据依次输入Yolov4检测模型进行推理，模型输出经过后处理后，使用SORT算法进行车辆动向得到车辆动向，再设置标志对车辆进行计数，最后得到某时刻已经通过的车辆数。
 
-本流程的视频检测模块参考的是Ascend的[参考样例](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mxBaseVideoSample)
-
 表1.1 系统方案中各模块功能：
 | 序号 | 子系统            | 功能描述                                                     |
 | ---- | ----------------- | ------------------------------------------------------------ |
@@ -17,6 +15,10 @@
 | 6    | 车辆计数         | 设置标志对通过的车辆进行计数                                |
 | 7    | 保存结果         | 使用opencv进行结果可视化并保存为视频文件                      |
 | 8    | 资源释放         | 调用mxBase::DeviceManager接口完成推理卡设备的去初始化。      |
+
+技术实现流程图
+
+![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
 
 ### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
@@ -37,7 +39,7 @@
 | pc端ffmpeg         | 2021-09-01   | 将视频文件格式转换为.264      | [安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)|
 
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本sample工程名称为VehicleCounting，工程目录如下图所示：
 ```
@@ -76,11 +78,6 @@
 ├── params.config
 └── README.md
 ```
-
-### 1.6 技术实现流程图
-
-![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
-
 
 ## 2 设置环境变量
 

@@ -3,10 +3,9 @@
 ## 1 介绍
 ### 1.1 简介
   本开发样例基于MindX SDK实现了从结构化描述生成对应风景照片的功能。
-  参考以下链接说明：
-  - https://www.hiascend.com/zh/developer/mindx-sdk/landscape?fromPage=1
-  - https://gitee.com/ascend/samples/tree/master/cplusplus/contrib/AI_painting
-
+  参考以下链接说明： <br/>
+  参考设计来源 - https://www.hiascend.com/zh/developer/mindx-sdk/landscape?fromPage=1 <br/>
+  相关代码 - https://gitee.com/ascend/samples/tree/master/cplusplus/contrib/AI_painting <br/>
 
 ### 1.2 支持的产品
 
@@ -15,7 +14,7 @@
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
-| --------- | ------------------ | -------------- | 
+| --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
 
@@ -41,11 +40,11 @@
 ```
 
 ## 3 准备模型
-  获取原模型PB模型，通过atc工具可转换为对应OM模型。
+**步骤1** 获取原模型PB模型。
 
   - https://modelzoo-train-atc.obs.cn-north-4.myhuaweicloud.com/003_Atc_Models/AE/ATC%20Model/painting/AIPainting_v2.pb
 
-转换命令
+**步骤2** 通过atc工具可转换为对应OM模型，转换命令
 
 ```
 atc --output_type=FP32 --input_shape="objs:9;coarse_layout:1,256,256,17"  --input_format=NHWC --output="AIPainting_v2" --soc_version=Ascend310B1 --framework=3  --model="AIPainting_v2.pb"
@@ -54,10 +53,9 @@ atc --output_type=FP32 --input_shape="objs:9;coarse_layout:1,256,256,17"  --inpu
 ## 4 运行
 
 **步骤1**  执行样例
-进入python目录， 修改net_config.ini文件中对应的网络参数，随后执行
+进入python目录，修改net_config.ini文件中对应的网络参数，随后执行
 ```
 python3 main.py
 ```
 **步骤2**  查看结果
-执行完毕后
-默认输出的矢量图layoutMap.jpg和结果图像resultImg.jpg位于result目录下
+执行完毕后，默认输出的矢量图layoutMap.jpg和结果图像resultImg.jpg位于result目录下

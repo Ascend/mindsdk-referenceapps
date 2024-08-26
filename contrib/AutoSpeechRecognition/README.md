@@ -5,10 +5,10 @@
   本开发样例基于MindX SDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
   ASR主要分为两个步骤：<br/>
 
-  **一、 将语音转换成对应的拼音** <br/>
-  **二、 将拼音转换成对应的文字** <br/>
+  **步骤1**  将语音转换成对应的拼音 <br/>
+  **步骤2**  将拼音转换成对应的文字 <br/>
 
-  对于第一步将语音转换为对应的拼音的声学模型我们采用的模型是Google在2020年提出的Conformer模型：[Convolution-augmented Transformer for Speech Recognition](https://arxiv.org/abs/2005.08100)；<br/>
+  对于第一步将语音转换为对应的拼音的声学模型我们采用的模型是Google在2020年提出的Conformer模型：[Convolution-augmented Transformer for Speech Recognition](https://arxiv.org/abs/2005.08100)。<br/>
   对于第二步语言模型我们采用的是transformer模型。<br/>
   这两个模型的主要参考代码： [https://github.com/Z-yq/TensorflowASR](https://github.com/Z-yq/TensorflowASR)
 
@@ -25,7 +25,7 @@
 
 ### 1.4 三方依赖
 
-第三方依赖软件和版本如下表：
+第三方依赖软件和版本如下表。请确认环境已安装pip3后，使用pip3 install * 安装以下依赖。
 
 |软件名称    | 版本     |
 |-----------|----------|
@@ -33,11 +33,7 @@
 | librosa   | 0.9.2    |
 | pypinyin  | 0.48.0   |
 
-1. 请确认环境已安装pip3后，使用pip3 install * 安装以上依赖
-
-2. 请注意MindX SDK使用python版本为3.9.2，如出现无法找到python对应lib库请在root下安装python3.9开发库  
-`apt-get install libpython3.9`  
-librosa安装若无法编译相关依赖，可参考下述指令在root用户下安装对应的库
+-  librosa安装若无法编译相关依赖，可参考下述指令在root用户下安装对应的库
 ```shell
 apt-get install llvm-10 -y
 LLVM_CONFIG=/usr/lib/llvm-10/bin/llvm-config pip install librosa
@@ -46,7 +42,7 @@ apt-get install libasound2-dev libsndfile-dev
 apt-get install liblzma-dev
 ```
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本sample工程名称为AutoSpeechRecognition，工程目录如下图所示：
 ```
@@ -76,7 +72,7 @@ apt-get install liblzma-dev
 
 ## 2. 设置环境变量
 
-```c
+```bash
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
@@ -107,7 +103,7 @@ apt-get install liblzma-dev
 
 `atc --model=./frozen_graph_transform.pb --framework=3 --output=./lm_transform_batch_one --input_format=ND --input_shape="inputs:1,251" --soc_version=Ascend310P3  --log=error`
 
-> 为了简化推理过程，我们直接把声学模型的输出作为语言模型的输入，所以这里语言模型的输入要与声学模型的输出保持一致
+> 为了简化推理过程，我们直接把声学模型的输出作为语言模型的输入，所以这里语言模型的输入要与声学模型的输出保持一致。
 
 
 

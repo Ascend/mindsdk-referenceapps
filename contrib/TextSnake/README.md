@@ -189,6 +189,7 @@ canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool_)
 python3 main.py
 ```
 注意：运行过程中可能会出现告警，不影响执行结果
+
 **步骤 4** 图片检测。运行结束输出result.jpg。
 
 

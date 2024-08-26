@@ -148,7 +148,7 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 转换完成后上传视频至live555安装目录下mediaServer。输入命令进行推流：
 
 ```shell
-./live555MediaServer test.264
+./live555MediaServer port-id  //port-id为用户推流的端口号
 ```
 
 test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)

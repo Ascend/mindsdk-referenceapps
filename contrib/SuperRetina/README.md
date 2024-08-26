@@ -5,7 +5,7 @@
 ### 1.1 简介
 
 基于深度学习的图像配准基于 MindXSDK 开发，在晟腾芯片上进行图像配准。输入两幅图片，可以匹配两幅图像中的特征点。
-图像配准的业务流程为：将输入的两幅图片进行归一化等预处理操作后，输入到模型中进行推理，对输出的关键点，进行极大值抑制去除相近的关键点，再进一步去除靠近边界的关键点，最后利用knn聚类算法得到可能性最大的关键点。本系统的各模块及功能描述如下
+图像配准的业务流程为：将输入的两幅图片进行归一化等预处理操作后，输入到模型中进行推理，对输出的关键点，进行极大值抑制去除相近的关键点，再进一步去除靠近边界的关键点，最后利用knn聚类算法得到可能性最大的关键点。本系统的各模块及功能描述如下：
 
 | 序号 | 子系统   | 功能描述                   |
 | ---- | -------- | -------------------------- |
@@ -13,6 +13,7 @@
 | 2    | 预处理   | 对图像进行预处理           |
 | 3    | 模型推理 | 对输入进行推理并输出结果   |
 | 4    | 后处理   | 从模型推理结果中解出关键点 |
+
 
 ### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
@@ -48,11 +49,6 @@
     │  test.yaml
 ```
 
-### 1.6 流程图
-<center>
-    <img src="./images/pipeline.png" width="75" height="320">
-    <br>
-</center>
 
 ## 2 设置环境变量
 ```bash
@@ -62,14 +58,12 @@ export install_path=${install_path}
 . ${MX_SDK_HOME}/set_env.sh
 ```
 
-注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
-
-**${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
+注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 
 ## 3 准备模型
 
-模型转换使用的是ATC工具，具体使用教程可参考[《ATC工具使用指南》](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)。
+模型转换使用的是ATC工具，具体使用教程可参考[《ATC工具使用指南》](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/80RC2alpha003/devaids/auxiliarydevtool/atlasatc_16_0001.html)。
 
 **步骤1** 获取.onnx模型
 本文提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
@@ -86,7 +80,7 @@ bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
 
 **步骤2**  按照第 2 小节 环境依赖 中的步骤设置环境变量。
 
-**步骤3**  按照第 3 小节 模型转换 中的步骤获得 om 模型文件,在./python目录下创建./model文件夹,将om文件移动到model文件夹中。
+**步骤3**  按照第 3 小节 模型转换 中的步骤获得 om 模型文件,在./python目录下创建./model文件夹，将om文件移动到model文件夹中。
 
 **步骤4**  在./python目录下运行predictor.py，首先按需求修改路径：
 
@@ -101,7 +95,7 @@ bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
 ```bash
 python predictor.py
 ```
-输出两幅图像，分别命名为match_result.jpg和result.jpg
+输出两幅图像，分别命名为match_result.jpg和result.jpg。
 
 
 
@@ -109,7 +103,7 @@ python predictor.py
 
 **步骤1**  在./python目录下创建./data文件夹，下载[FIRE数据集]( https://projects.ics.forth.gr/cvrl/fire/FIRE.7z)，解压后将./FIRE文件夹，放到./data文件夹。
 
-**步骤2**  在./pathon目录下执行resize脚本，将数据集图片缩放到模型的输入的大小，同时也对groudTruth做了缩放。缩放后的图片位于./data/FIRE/Images/resized文件夹下
+**步骤2**  在./python目录下执行resize脚本，将数据集图片缩放到模型的输入的大小，同时也对groudTruth做了缩放。缩放后的图片位于./data/FIRE/Images/resized文件夹下。
 
 **步骤3**  按照第 2 小节 环境依赖 中的步骤设置环境变量。
 

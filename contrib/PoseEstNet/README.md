@@ -9,9 +9,9 @@
 
 1、针对MindX SDK固有插件的输入限制，输入图片应为JPEG编码格式，后缀为(.jpg)且宽高均在[32, 8192]区间内。当输入图片为空、输入图片格式不正确、图片尺寸不符合要求时，系统能够输出相应的错误信息。
 
-2、由于输入图片可能存在特征表现不明显，例如非标准规格的卡车或车辆俯视图等情况导致yolov3模型检测不到车辆从而无法进行车辆姿态识别；
+2、由于输入图片可能存在特征表现不明显，例如非标准规格的卡车或车辆俯视图等情况导致yolov3模型检测不到车辆从而无法进行车辆姿态识别。
 
-3、由于Dvpp的crop插件对图片尺寸有限制，所以图片中的车辆不应过小；
+3、由于Dvpp的crop插件对图片尺寸有限制，所以图片中的车辆不应过小。
 
 ### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
@@ -68,9 +68,7 @@ export install_path=${install_path}
 . ${MX_SDK_HOME}/set_env.sh
 ```
 
-注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
-
-**${install_path}** 替换为开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
+注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 
 ## 3 准备模型
@@ -87,11 +85,11 @@ export install_path=${install_path}
 **步骤3** .om模型转换  
 以下操作均在“项目所在目录/models”路径下进行：
 
-***1*** 使用ATC将.pb文件转成为.om文件。
+1. 使用ATC将.pb文件转成为.om文件。
 ```
 atc --model=yolov3_tensorflow_1.5.pb --framework=3 --output=yolov3 --output_type=FP32 --soc_version=Ascend310B1 --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0" --log=info --insert_op_conf=aipp_nv12.cfg
 ```
-***2*** 执行完模型转换脚本后，若提示如下信息说明模型转换成功，可以在该路径下找到名为yolov3.om模型文件。
+2. 执行完模型转换脚本后，若提示如下信息说明模型转换成功，可以在该路径下找到名为yolov3.om模型文件。
 （可以通过修改output参数来重命名这个.om文件）
 ```
 ATC run success, welcome to the next use.
@@ -106,15 +104,15 @@ PoseEstNet[代码地址](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet
 
 **步骤2** onnx模型转.om模型
 
-***1*** 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）。
+1. 进入.onnx文件所在目录，使用ATC将.onnx文件转成为.om文件(aipp_hrnet_256_256.aippconfig在本项目models目录下，需要自行复制到转模型环境的目录，注意文件路径）。
 ```
 atc --framework=5 --model=PoseEstNet.onnx --output=PoseEstNet --input_format=NCHW --input_shape="image:1,3,256,256" --insert_op_conf=aipp_hrnet_256_256.aippconfig --log=debug --soc_version=Ascend310B1
 ```
-***2*** 执行完模型转换脚本后，若提示如下信息说明模型转换成功（同样的，可以通过修改output参数来重命名这个.om文件）
+2. 执行完模型转换脚本后，若提示如下信息说明模型转换成功（同样的，可以通过修改output参数来重命名这个.om文件）。
 ```
 ATC run success, welcome to the next use.
 ```  
-经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和PoseEstNet.om模型，模型转换操作已全部完成
+经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和PoseEstNet.om模型，模型转换操作已全部完成。
 
 ## 4 编译与运行
 
@@ -131,8 +129,7 @@ bash build.sh
 ```
 **步骤3**  数据准备
 
-在工程根目录下新建data_eval/images、data_eval/labels和data文件夹
-目录结构如下
+在工程根目录下新建data_eval/images、data_eval/labels和data文件夹，目录结构如下：
 ```
 PoseEstNet
 |---- data_eval
@@ -140,7 +137,7 @@ PoseEstNet
 |   |   |---- labels
 |---- data 
 ```
-data_eval中放入原始VeRi数据集
+data_eval中放入原始VeRi数据集。
 [Huawei Cloud下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PoseEstNet/images.zip)，
 [csv文件：Github下载链接](https://github.com/NVlabs/PAMTRI/tree/master/PoseEstNet/data/veri/annot)
 
@@ -215,18 +212,18 @@ eval_PoseEstNet.pipeline:
 ```
 **步骤5** 执行
 
-业务代码main.py结果在*output*文件夹，保证在执行前已创建好data文件夹并放入待检测图片
+业务代码main.py结果在*output*文件夹，保证在执行前已创建好data文件夹并放入待检测图片。
 ```
 python3 main.py --inputPath data
 ```
-评估代码的具体结果在*output_eval*文件夹，保证在执行前已创建好data_eval文件夹并放入veri数据集图片
+评估代码的具体结果在*output_eval*文件夹，保证在执行前已创建好data_eval文件夹并放入veri数据集图片。
 ```
 python3 eval.py --inputPath data_eval/images/ --labelPath data_eval/labels/label_test.csv 
 ```
 
 
 ## 5 精度验证
-由下面两个图表可以看出，本项目的精度与源码精度相差在1%以内
+由下面两个图表可以看出，本项目的精度与源码精度相差在1%以内。
 
 项目精度：
 ![项目精度](image/output_eval.png)

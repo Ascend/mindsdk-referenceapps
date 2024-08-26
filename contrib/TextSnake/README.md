@@ -53,17 +53,6 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 └──README.md          
 ```
 
-### 1.6 技术实现流程图
-
-实现流程图如下图所示：
-
-![流程](./sdk.png)
-
-
-pipeline流程如下图所示：
-
-![pipeline](./pipeline.png)
-
 
 ## 2 设置环境变量
 

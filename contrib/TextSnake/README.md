@@ -74,11 +74,11 @@ export install_path=${install_path}
 pth 权重文件和 onnx 文件的下载链接
 https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TextSnake/ATC%20TextSnake%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip 。
 
-该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下
+该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下：
 
 **步骤1** 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置 TextSnake/model 目录下。
 
-**步骤2** 进入TextSnake/model文件夹下执行命令
+**步骤2** 进入TextSnake/model文件夹下执行命令。
 
 ```
 atc --model=TextSnake.onnx --framework=5 --output=TextSnake_bs1 --input_format=NCHW --input_shape="image:1,3,512,512" --log=info --soc_version=Ascend310B1

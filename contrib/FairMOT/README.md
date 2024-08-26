@@ -23,6 +23,8 @@ FairMOT目标跟踪后处理插件基于MindXSDK开发，在晟腾芯片上进�
 | 10   | 目标框转绘插件       | 将流中传进的MxpiObjectList数据类型转换可用于OSD插件绘图所使用的 MxpiOsdInstancesList数据类型。 |
 | 11   | OSD可视化插件        | 主要实现对每帧图像标注跟踪结果。                             |
 | 12   | 视频编码插件         | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
+
+流程图如下：
 ![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image1.png)
 
 ### 1.2 支持的产品

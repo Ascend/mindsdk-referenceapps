@@ -91,6 +91,9 @@ static int ascend_device_create(AVHWDeviceContext *device_ctx, const char *devic
 
     if (!init_flag) {
         ret = aclInit(NULL);
+        if (ret == ACL_ERROR_REPEAT_INITIALIZE) {
+            av_log(device_ctx, AV_LOG_WARNING, "Repeat Initialize, ret = %d.\n", ret);
+        }
         if (ret != 0 && ret != ACL_ERROR_REPEAT_INITIALIZE) {
             av_log(device_ctx, AV_LOG_ERROR, "InitDevices failed, ret = %d.\n", ret);
             goto error;

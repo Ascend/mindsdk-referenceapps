@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-FairMOT目标跟踪后处理插件基于MindXSDK开发，在昇腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
+FairMOT目标跟踪后处理插件基于MindX SDK开发，在昇腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
 基于MindX SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
 
@@ -46,7 +46,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 | ffmpeg   | 4.4.4 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本工程名称为FairMOT，工程目录如下图所示：
 
@@ -166,7 +166,7 @@ bash build.sh
 
 ### 4.3 修改pipline文件
 
-1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
+步骤1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
 ```
         "mxpi_rtspsrc0": {
             "factory": "mxpi_rtspsrc",
@@ -177,8 +177,8 @@ bash build.sh
             "next": "mxpi_videodecoder0"
         },
 ```
-2. 根据使用的device修改deviceId。
-3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
+步骤2. 根据使用的device修改deviceId。
+步骤3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
 ```
         "mxpi_videoencoder0": {
             "props": {
@@ -200,7 +200,7 @@ bash build.sh
 bash run.sh
 ```
 ### 4.5 查看结果
-命令执行成功后会在当前目录下生成检测结果视频文件out.h264,查看文件验证目标跟踪结果。
+命令执行成功后会在当前目录下生成检测结果的视频文件out.h264，查看文件验证目标跟踪结果。
 
 ## 5 性能验证
 
@@ -218,7 +218,7 @@ fps: 12.7977
 **问题描述：**
 
 `FairMOT/pipeline/fairmot.pipeline`中视频编码分辨率参数目前配置为1280*720。  
-该参数通过imageHeight 和 imageWidth 属性配置，且需要和视频输入分配率相同，否则会包如下类型的错：
+该参数通过imageHeight 和 imageWidth 属性配置，且需要和视频输入分配率相同，否则会报如下类型的错：
 
 ![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image3.png)
 

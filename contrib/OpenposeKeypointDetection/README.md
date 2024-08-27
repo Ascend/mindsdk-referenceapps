@@ -28,7 +28,7 @@
 
 
 <center>
-    图1. 候选关键点选择示意图 </div>
+    图1. 候选关键点选择示意图  </div>
     <img src="./images/KeypointNms.jpg">
     <br>
     <div style="color:orange;
@@ -231,7 +231,9 @@ python3 evaluate.py
     padding: 2px;">
 </center>
 
+
 **解决方案：**
+
 
 下载完数据集和标注文件后，确保 ``python/dataset`` 目录结构为：
 ```

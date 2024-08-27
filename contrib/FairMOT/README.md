@@ -166,7 +166,8 @@ bash build.sh
 
 ### 4.3 修改pipline文件
 
-步骤1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
+**步骤1**. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
+
 ```
         "mxpi_rtspsrc0": {
             "factory": "mxpi_rtspsrc",
@@ -177,8 +178,11 @@ bash build.sh
             "next": "mxpi_videodecoder0"
         },
 ```
-步骤2. 根据使用的device修改deviceId。
-步骤3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
+
+**步骤2**. 根据使用的device修改deviceId。
+
+**步骤3**. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
+
 ```
         "mxpi_videoencoder0": {
             "props": {

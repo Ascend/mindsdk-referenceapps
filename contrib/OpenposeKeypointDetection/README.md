@@ -124,40 +124,44 @@ ATC run success, welcome to the next use.
 
 ## 4. 编译与运行
 
-**步骤1** 按照第 2 小节 **环境依赖** 中的步骤设置环境变量。
+### 4.1 编译后处理插件
 
-**步骤2** 按照第 3 小节 **模型转换** 中的步骤获得 om 模型文件，放置在 ``python/models`` 目录下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型或者 om 模型，则无需修改相关文件，否则修改 ``python/pipeline/Openpose.pipeline`` 中的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名；将 mxpi_imageresize0 插件中的 resizeWidth 和 resizeHeight 属性改成转换模型过程中设置的模型输入尺寸值；将 mxpi_openposepostprocess0 插件中的 inputWidth 和 inputHeight 属性改成转换模型过程中设置的模型输入尺寸值。
-
-**步骤3** 编译。在项目目录下执行命令：**运行前修改插件权限为640**
+在项目根目录下执行命令：
 ```
 bash build.sh
+chmod 440 plugins/build/libmxpi_openposepostprocess.so
 cp plugins/build/libmxpi_openposepostprocess.so ${SDK_INSTALL_PATH}/mxVision/lib/plugins/
 ```
+注意需要将生成的so权限改为440。
 
-**步骤4** 图片检测。将一张包含人体的图片放在项目目录下，命名为 test.jpg。在该图片上进行检测，执行命令：
+### 4.2 运行
+将一张包含人体的图片放在项目目录下，命名为 test.jpg。在该图片上进行检测，执行命令：
 ```
 cd python
 python3 main.py
 ```
+### 4.3 查看结果
+
 命令执行成功后在当前目录下生成检测结果文件 test_detect_result.jpg，查看结果文件验证检测结果。
 
-**步骤5** 精度测试。
-
-1. 安装 python COCO 评测工具。执行命令：
+## 5. 精度验证
+### 5.1 获取数据集
+执行下述命令下载 COCO keypoint VAL 2017 数据集与标注文件
 ```
-pip3.9 install pycocotools
+wget http://images.cocodataset.org/zips/val2017.zip
+wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
 ```
-
-2. 下载 COCO keypoint VAL 2017 数据集与标注文件，下载链接：https://cocodataset.org/，在 ``python`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``python/dataset`` 目录下确保下载完数据集和标注文件后的 python 目录结构为：
+在 ``python`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``python/dataset`` 目录下确保下载完数据集和标注文件后的 python 目录结构为：
 ```
 .
 ├── dataset
 │   ├── annotations
-│   │   └── person_keypoints_val2017.json
+│   │   ├── person_keypoints_val2017.json
+│   │   └── ...
 │   └── val2017
 │       ├── 000000581615.jpg
 │       ├── 000000581781.jpg
-│       └── other-images
+│       └── ...
 ├── evaluate.py
 ├── main.py
 ├── models
@@ -167,12 +171,13 @@ pip3.9 install pycocotools
 └── pipeline
     └── Openpose.pipeline
 ```
-
-3. 执行命令：
+### 5.2 执行验证
 ```
 cd python
 python3 evaluate.py
 ```
+
+### 5.3 查看结果
 命令执行结束后输出 COCO 格式的评测结果，并生成 val2017_keypoint_detect_result.json 检测结果文件。输出结果如下图所示：
 <center>
     <img src="./images/EvaluateInfo.png">
@@ -184,10 +189,10 @@ python3 evaluate.py
 </center>
 其中圈出来的部分为模型在 COCO VAL 2017 数据集上，IOU 阈值为 0.50:0.05:0.95 时的精度值。
 
-## 5 常见问题
+## 6 常见问题
 
 
-### 5.1 模型参数配置问题
+### 6.1 模型参数配置问题
 
 **问题描述：**
 
@@ -207,7 +212,7 @@ python3 evaluate.py
 确保 ``python/pipeline/Openpose.pipeline`` 中 mxpi_imageresize0 插件的 resizeWidth 和 resizeHeight 属性值是转换模型过程中设置的模型输入尺寸值；mxpi_openposepostprocess0 插件中的 inputWidth 和 inputHeight 属性值是转换模型过程中设置的模型输入尺寸值。
 
 
-### 5.1 评测过程中的文件路径问题
+### 6.2 评测过程中的文件路径问题
 
 **问题描述：**
 
@@ -227,7 +232,8 @@ python3 evaluate.py
 ```
 .
 ├── annotations
-│   └── person_keypoints_val2017.json
+│   ├── person_keypoints_val2017.json
+│   └── ...
 └── val2017
     ├── 000000581615.jpg
     ├── 000000581781.jpg

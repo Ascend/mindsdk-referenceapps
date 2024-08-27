@@ -1,31 +1,33 @@
 # 模型Tensor数据处理&插件后处理
 
-本章节将指导模型Tensor数据解析和封装相关操作。
-配套样例描述如何自定义一个插件进行后处理操作。
+## 1 介绍
+
+本章节将指导模型Tensor数据解析和封装相关操作，并配套样例描述如何自定义一个插件进行后处理操作。
 ****
 **注意！**  
 本样例中后处理指使用模型输出的原始metadata，自行开发插件来进行后处理。  
 当类型为4-2中相关的内置类型时，效率不如后处理so库方式
 ****
 
-## medadata结构说明
+### 1.1 简介
+
+#### 1.1.1 metadata结构说明
+
 该结构为模型推理插件mxpi_tensorinfer输出的原始数据，按以下层级封装。
 
-1. MxpiTensorPackageList
-模型tensor组合列表。
+· MxpiTensorPackageList 模型tensor组合列表。
+
 ```protobuf
 repeated MxpiTensorPackage tensorPackageVec;
 ```
-2. MxpiTensorPackage
+· MxpiTensorPackage 模型tensor组合数据结。
 
-模型tensor组合数据结。
 ```protobuf
 repeated MxpiMetaHeader headerVec;
 repeated MxpiTensor tensorVec;
 ```
-3. MxpiTensor
+· MxpiTensor 模型tensor数据结构。
 
-模型tensor数据结构。
 ```protobuf
 uint64 tensorDataPtr; // 内存指针数值
 int32 tensorDataSize; // 内存大小，需要和实际内存大小一致，否则可能会导致coredump
@@ -36,11 +38,8 @@ repeated int32 tensorShape; // 张量形状
 bytes dataStr; // 内存中的数据
 int32 tensorDataType; //内存中张量的数据类型
 ```
-
-## C++结构体说明
-该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件。  
-（位于%SDK%/include/MxBase/Tensor/TensorBase/）  
-本处仅摘抄部分关键信息
+#### 1.1.2 C++结构体说明
+该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件（位于%SDK%/include/MxBase/Tensor/TensorBase/），本处仅摘抄部分关键信息。
 ```c++
 enum TensorDataType {
     TENSOR_DTYPE_UNDEFINED = -1,
@@ -94,29 +93,185 @@ enum TensorDataType {
     // 检查错误
     APP_ERROR CheckTensorValid() const;
 ```
-## 样例说明
-参考[4-1插件开发调试指导](4-1插件开发调试指导.md)部署自定义插件样例，示例使用samplePluginPostProc作为工程名，远程目录名同样为samplePluginPostProc。  
-- 更改mxVision/C++/main.cpp中94行所使用的pipeline为样例中的SamplePluginPost.pipeline
-- 更改mxVision/python/main.py中32行使用的pipeline为样例中的SamplePluginPost.pipeline
-- 相比4-1样例中的SamplePlugin.pipeline，本样例中pipeline使用新后处理框架下的模型推理插件mxpi_tensorinfer输出原始Tensor至自定义插件并完成后处理示例。
->该文件位于样例根目录，但代码中实际指向mxVision/pipeline文件夹下，这是为了与使用原有Sample.pipeline的样例统一目录。实际使用时复制pipeline文件或更改代码中的路径均可  
 
-****
-本样例部署测试同4-1，不再重复。
-****
-**运行结果**
-1. C++样例  
+### 1.2 支持的产品
 
->使用菜单项Build/Rebuild All ....后运行该程序，如果无错误可在输出中看到类似的以下字段  其中MxpiSamplePlugin.cpp文件中的日志输出为插件内部结果，main.cpp日志输出为stream结果。此处tensor[0]相关值应该相同
-```shell
-I0730 10:36:55.459653 11981 MxpiSamplePlugin.cpp:118] MxpiSamplePlugin::Process start
-W0730 10:36:55.459954 11981 MxpiSamplePlugin.cpp:98] source Tensor number:3
-W0730 10:36:55.460223 11981 MxpiSamplePlugin.cpp:99] Tensor[0] ByteSize in .cpp:172380
-I0730 10:36:55.462554 11981 MxpiSamplePlugin.cpp:174] MxpiSamplePlugin::Process end
-I0730 10:36:55.462568 11935 main.cpp:129] Results:{"MxpiClass":[{"classId":42,"className":"The shape of tensor[0] in metadata is 172380, Don’t panic!","confidence":0.314}]}
+Atlas 300I pro、Atlas 300V pro
+
+### 1.3 支持的版本
+
+| MxVision版本 | CANN版本  | Driver/Firmware版本 |
+|------------|---------|-------------------|
+| 6.0.RC2    | 8.0.RC2 | 24.1.RC2          |
+
+### 1.4 三方依赖
+cmake>=3.6, python=3.9.2
+
+### 1.5 代码目录结构说明
+
 ```
-2. Python样例  
->修改python样例目录下的run.sh脚本（该脚本用于配置环境变量），确认MX_SDK_HOME环境变量指向正确的位置，自定义插件路径已位于GST_PLUGIN_PATH中，或手动修改环境变量，然后执行程序。正常情况下输出以下类似字段
-```shell
-{"MxpiClass":[{"classId":42,"className":"The shape of tensor[0] in metadata is 172380, Don’t panic!","confidence":0.314}]}
+├── samplePluginPostProc
+|   ├── mindx_sdk_plugin    // 插件样例
+|   |   ├── src
+|   |   |   ├── mxpi_sampleplugin
+|   |   |   |   ├── MxpiSamplePlugin.cpp
+|   |   |   |   ├── MxpiSamplePlugin.h
+|   |   |   |   └── CMakeLists.txt
+|   |   ├── CMakeLists.txt
+|   ├── mxVision            // 图像分类识别样例
+|   |   ├── C++
+|   |   |   ├── main.cpp
+|   |   |   ├── run.sh
+|   |   |   ├── README.MD
+|   |   |   ├── CMakeLists.txt
+|   |   |   └── test.jpg    // 自行准备测试图片
+|   |   ├── models
+|   |   |   ├── yolov3      // 自行准备转换模型
+|   |   |   |   ├── yolov3_tf_bs1_fp16.cfg
+|   |   |   |   ├── yolov3_tf_bs1_fp16.om
+|   |   |   |   └── yolov3.names
+|   |   ├── pipeline
+|   |   |   └── Sample.pipeline
+|   |   ├── python
+|   |   |   ├── main.py
+|   |   |   ├── run.sh
+|   |   |   ├── README.MD
+|   |   |   └── test.jpg    // 自行准备测试图片
+|   ├── SamplePluginPost.pipeline
+|   └── CMakeLists.txt
 ```
+上述目录中`samplePluginPostProc`为工程根目录，`mindx_sdk_plugin`为[插件工程目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mindx_sdk_plugin)，`mxVision`为图像分类识别样例工程目录(直接从SDK中/samples/mxVision获取)。
+
+## 2 设置环境变量
+
+```
+# MindX SDK环境变量:
+.${SDK-path}/set_env.sh
+
+# CANN环境变量:
+.${ascend-toolkit-path}/set_env.sh
+
+# 环境变量介绍
+SDK-path:SDK mxVision安装路径
+ascend-toolkit-path:CANN安装路径
+```
+`./mxVision/C++/`和`./mxVision/python/`目录下的run.sh脚本也需要按照对应的环境变量进行修改。
+
+## 3 准备模型
+
+**步骤1** 下载[YOLOv3模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)YOLOv3模型。
+
+**步骤2** 将获取到的zip文件解压，并将YOLOV3模型pb文件存放至`./mxVision/models/yolov3/`目录下。
+
+**步骤3** YOLOV3模型转换。
+
+在`./mxVision/models/yolov3/`目录下执行如下命令
+
+```
+# 设置环境变量
+export install_path=/usr/local/Ascend/ascend-toolkit/latest
+export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
+export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
+export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
+export ASCEND_OPP_PATH=${install_path}/opp
+
+# 模型转换
+atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
+# 说明：out_nodes制定了输出节点的顺序，需要与模型后处理适配。
+```
+
+执行完模型转换脚本后，会生成相应的.om模型文件。 执行后终端输出为：
+```
+ATC start working now, please wait for a moment.
+ATC run success, welcome to the next use.
+```
+
+## 4 编译与运行
+
+**步骤1** CmakeLists文件配置。
+
+将主目录下的`samplePluginPostProc`、`mindx_sdk_plugin`和`mxVision/C++/`目录下`CMakeLists.txt`文件中`MX_SDK_HOME`设置为上述SDK安装路径。
+
+**步骤2** 配置pipeline。
+
+将`SamplePluginPost.pipeline`复制到`/mxVision/pipeline/`目录下并重命名为`Sample.pipeline`。
+
+**步骤3** 对主工程进行编译。
+```
+# 创建build目录
+cd samplePluginPostProc
+mkdir build
+cd build
+
+# cmake编译
+cmake ..
+make
+```
+编译完成后在`mindx_sdk_plugin/lib/plugins/`下会生成自定义插件*.so文件，在mxVision/C++/目录下会生成可执行文件`main`。
+
+**步骤4** 将插件复制到`${SDK-path}/lib/plugins/`目录下。
+
+**步骤5** 基于自定义插件运行样例。
+```
+## C++编译运行
+cd mxVision/C++/
+bash run.sh
+
+# python运行
+cd mxVision/python/
+bash run.sh
+```
+**步骤6** 查看结果。
+
+正确运行时会输出类似如下字段结果。其中MxpiSamplePlugin.cpp文件中的日志输出为插件内部结果，main.cpp日志输出为stream结果。此处tensor[0]相关值应该相同
+`
+```
+I20240827 14:57:11.715646 4148982 MxpiSamplePlugin.cpp:117] MxpiSamplePlugin::Process start
+W20240827 14:57:11.715947 4148982 MxpiSamplePlugin.cpp:97] source Tensor number:3
+W20240827 14:57:11.715998 4148982 MxpiSamplePlugin.cpp:98] Tensor[0] ByteSize in .cpp:172380
+Results:{"MxpiClass":[{"classId":42,"className":"The shape of tensor[0] in metadata is 172380, Don’t panic!","confidence":0.314}]}
+I20240827 14:57:11.717183 4148982 MxpiSamplePlugin.cpp:173] MxpiSamplePlugin::Process end
+```
+
+## 5 常见问题
+
+### 5.1 权限问题
+
+**问题描述：**
+```
+提示：Check Owner permission failed: Current permission is 7, but required no greater than 6.
+```
+
+**解决方案：**
+
+生成的插件*.so文件权限问题，执行`chmod 440 *.so`修改文件权限。
+
+
+### 5.2 找不到插件
+
+**问题描述：**
+
+```
+# 错误1
+GStreamer-WARNING **: Failed to load plugin '*/lib/plugins/*.so': libpython3.9.so.1.0: cannot open shared object file: No such file or directory.
+
+# 错误2
+E20240827 13:21:49.997465 3987495 MxsmElement.cpp:487] Feature is NULL, can not find the element factory: mxpi_sampleplugin (Code = 6014, Message = "element invalid factory")
+E20240827 13:21:49.997692 3987495 MxsmElement.cpp:890] Invalid element factory. (Code = 6014, Message = "element invalid factory")
+E20240827 13:21:49.997721 3987495 MxsmDescription.cpp:434] mxpi_sampleplugin0 is an invalid element of "mxpi_sampleplugin". (Code = 6011, Message = "stream element invalid")
+E20240827 13:21:49.997758 3987495 MxsmStream.cpp:919] Creates classification+detection Stream failed. (Code = 6014, Message = "element invalid factory")
+E20240827 13:21:49.997790 3987495 MxStreamManagerDptr.cpp:555] Create stream(classification+detection) failed. (Code = 6014, Message = "element invalid factory")
+```
+
+**解决方案：**
+
+**步骤1** 将Python 3.9.2安装目录下的“libpython3.9.so.1.0”拷贝至“/usr/lib64/”路径下，清除Gstreamer缓存，并将该路径加入到LD_LIBRARYPATH
+```
+mkdir /usr/lib64
+cp /usr/local/Python-3.9.2/libpython3.9.so.1.0 /usr/lib64/
+rm ~/.cache/gstreamer-1.0/registry.{arch}.bin
+export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
+```
+此时一般错误1可以解决。
+
+**步骤2** 如果错误2未解决，尝试将对应插件复制到`${SDK-path}/lib/plugins/`目录下。

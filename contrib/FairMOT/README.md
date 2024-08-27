@@ -93,6 +93,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 模型转换，步骤如下：
 
 **步骤1**. 从上述 onnx 模型下载链接中下载 onnx 模型至 `FairMOT/models` 文件夹下，文件名为：mot_v2.onnx 。
+
 **步骤2**. 进入 `FairMOT/models` 文件夹下执行命令：
 
 ```

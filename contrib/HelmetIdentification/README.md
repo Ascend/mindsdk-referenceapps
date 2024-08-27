@@ -4,6 +4,10 @@
 ### 1.1 简介
 安全帽作为工作中一样重要的安全防护用品，主要保护头部，防高空物体坠落，防物体打击、碰撞。通过识别每个人是否戴上安全帽，可以对没戴安全帽的人做出告警。本项目支持2路视频实时分析，其主要流程为:分两路接收外部调用接口的输入视频路径，将视频输入。通过视频解码将264格式视频解码为YUV格式图片。模型推理使用YOLOv5进行安全帽识别，识别结果经过后处理完成NMS得到识别框。对重复检测出的没戴安全帽的对象进行去重。最后将识别结果输出为两路，并对没佩戴安全帽的情况告警。
 
+技术实现流程图如下：
+
+<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image4.jpg" alt="image4" style="zoom: 80%;" />
+
 ### 1.2 支持的产品
 
 本项目基于mxVision SDK进行开发，以Atlas 500 A2为主要的硬件平台。
@@ -16,7 +20,7 @@
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
 ### 1.4 三方依赖
 环境依赖软件和版本如下表：
 
@@ -52,12 +56,9 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
   ├──map_calculate.py # 精度计算程序
 ├── build.sh    
 ```
-### 1.6 技术实现流程图
-
-<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image4.jpg" alt="image4" style="zoom: 80%;" />
 
 ## 2 设置环境变量
-设置CANN及MindX SDK相关的环境变量
+设置CANN及MindX SDK相关的环境变量：
 
 ```shell
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
@@ -68,7 +69,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 
 **步骤1:** 模型下载
 
- 所用模型如下表所示。模型相关信息可参考[原项目链接](https://github.com/PeterH0323/Smart_Construction)
+ 所用模型如下表所示，模型相关信息可参考[原项目链接](https://github.com/PeterH0323/Smart_Construction)。
 
 | 软件名称                | 版本     | 获取方式                                                     |
 | ----------------------- | -------- | ------------------------------------------------------------ |
@@ -120,7 +121,7 @@ make -j
 ```
 
 编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440。
- 注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节
+ 注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节。
 
 ### 4.2 视频推流
 本项目通过mxpi_rtspsrc拉流输入数据，通过两路GetResult接口输出数据，一路输出带有帧信息的图片数据，一路输出带有帧信息的目标检测框和检测框跟踪信息。推理过程如下：
@@ -148,10 +149,10 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 转换完成后上传视频至live555安装目录下mediaServer。输入命令进行推流：
 
 ```shell
-./live555MediaServer test.264
+./live555MediaServer port-id  //port-id为用户推流的端口号
 ```
 
-test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
+test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)。
 ### 4.3 修改pipline文件
 
 pipline根据1.6节中技术实现流程图编写，**HelmetDetection.pipline**放在源码根目录Models。
@@ -175,7 +176,7 @@ RESIZE_FLAG=0
 
 ![image2](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image2.jpg)
 
-3. 根据使用的device修改deviceId
+3. 根据使用的device修改deviceId。
 
 ### 4.4 运行推理
 
@@ -224,7 +225,7 @@ python3.9 performance_test_main.py
 
 注：1.与运行main.py时相同，运行performance_test_main.py时要先使用live555进行推流。**测试视频**上传至[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/HelmetIdentification/test_video.zip)，该视频为不同尺寸不同帧率的同一视频。如test64036830_158s.264为尺寸640×640，帧率30，时长158s的视频。
 
-2.performance_test_main.py中加载pipline文件应写HelmetDetection.pipline的绝对路径
+2.performance_test_main.py中加载pipline文件应写HelmetDetection.pipline的绝对路径。
 
 
 ## 6.精度验证
@@ -287,7 +288,7 @@ python3.9 testmain.py
 
 推理完成后，依据图片真实标签和推理结果，计算精度。输出结果保存在同级目录**output**文件夹中，该文件需要手动建立。程序map_calculate.py文件放在源码根目录Test中。
 
-注：测试数据集中图片有两类标签"person"(负样本，未佩戴安全帽)和"hat"(正样本，佩戴安全帽)。模型输出标签有三类"person"、"head"、"helmet"，其中"head"与真实标签"person"对应，"helmet"与真实标签"hat"对应。在**map_calculate.py**文件中做了对应转换处理。  
+注：测试数据集中图片有两类标签"person"（负样本，未佩戴安全帽）和"hat"（正样本，佩戴安全帽）。模型输出标签有三类"person"、"head"、"helmet"，其中"head"与真实标签"person"对应，"helmet"与真实标签"hat"对应。在**map_calculate.py**文件中做了对应转换处理。  
 
 运行命令：
 
@@ -308,5 +309,5 @@ E0628 10:14:48.309166 8155  DvppImageDecoder.cpp:152] [mxpi_imagedecoder0] [2006
 
 **解决方案：**
 
-本项目只支持jpg图片输入 如输入其他格式会报如上错误
+本项目只支持jpg图片输入，如输入其他格式会报如上错误。
 

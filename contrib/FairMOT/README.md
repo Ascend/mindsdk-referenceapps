@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-FairMOT目标跟踪后处理插件基于MindXSDK开发，在晟腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
+FairMOT目标跟踪后处理插件基于MindXSDK开发，在昇腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
 基于MindX SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
 
@@ -25,6 +25,7 @@ FairMOT目标跟踪后处理插件基于MindXSDK开发，在晟腾芯片上进�
 | 12   | 视频编码插件         | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
 
 流程图如下：
+
 ![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image1.png)
 
 ### 1.2 支持的产品
@@ -83,7 +84,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
 ```
-## 3 模型转换
+## 3 准备模型
 
 ### 3.1 FairMOT模型转换
 本项目中适用的模型是FairMOT模型，onnx模型可以直接[下载](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FairMOT/mot_v2.onnx)。下载后使用模型转换工具 ATC 将 onnx 模型转换为 om 模型。
@@ -91,8 +92,8 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 模型转换，步骤如下：
 
-1. 从上述 onnx 模型下载链接中下载 onnx 模型至 `FairMOT/models` 文件夹下，文件名为：mot_v2.onnx 。
-2. 进入 `FairMOT/models` 文件夹下执行命令：
+**步骤1**. 从上述 onnx 模型下载链接中下载 onnx 模型至 `FairMOT/models` 文件夹下，文件名为：mot_v2.onnx 。
+**步骤2**. 进入 `FairMOT/models` 文件夹下执行命令：
 
 ```
 atc --input_shape="input.1:1,3,608,1088" --check_report=./network_analysis.report --input_format=NCHW --output=./mot_v2 --soc_version=Ascend310 --insert_op_conf=./aipp_FairMOT.config --framework=5 --model=./mot_v2.onnx
@@ -120,6 +121,7 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 ### 4.1 视频推流
+
 本项目通过mxpi_rtspsrc拉流输入数据，推流过程如下：
 
 首先通过[live555](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
@@ -148,7 +150,7 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 ./live555MediaServer port-id  //port-id为用户推流的端口号
 ```
 
-test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)
+test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)。
 
 
 ### 4.2 编译后处理插件
@@ -163,7 +165,7 @@ bash build.sh
 
 ### 4.3 修改pipline文件
 
-1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容
+1. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
 ```
         "mxpi_rtspsrc0": {
             "factory": "mxpi_rtspsrc",
@@ -174,8 +176,8 @@ bash build.sh
             "next": "mxpi_videodecoder0"
         },
 ```
-2. 根据使用的device修改deviceId
-3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置
+2. 根据使用的device修改deviceId。
+3. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
 ```
         "mxpi_videoencoder0": {
             "props": {

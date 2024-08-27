@@ -3,14 +3,14 @@
 ## 1 介绍
 
 ### 1.1 简介
-基于MindX SDK mxVision开发图像超分辨率程序。本程序采用python开发，通过预处理操作对输入的图片数据解码为YUV420SP格式图片，并将解码后的图片缩放到模型推理要求的尺寸。然后利用图像超分辨率模型VDSR获取得到图片超分辨率重建结果。最后，利用python的第三方图像处理库PIL将低分辨率的输入图像和超分辨率重建的结果一同可视化。其次，针对两个图片集91-images和General-100进行PSNR（峰值信噪比）验证。
+基于MindX SDK mxVision开发图像超分辨率程序。本程序采用python开发，通过预处理操作对输入的图片数据解码为YUV420SP格式图片，并将解码后的图片缩放到模型推理要求的尺寸。然后利用图像超分辨率模型VDSR获取得到图片超分辨率重建结果。最后，利用python的第三方图像处理库PIL将低分辨率的输入图像和超分辨率重建的结果一同可视化。其次，针对两个图片集91-images和General-100进行PSNR（峰值信噪比）验证
 
 程序输入：任意jpg图片
 程序输出：输出得到低分辨率图片（256 x 256px）和超分辨率重建图片（768 x 768px）组合的可视化大图
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 500 A2为主要的硬件平台
 
 ### 1.3 支持的版本
 
@@ -90,7 +90,7 @@ aipp_op {
 }
 ```
 
-色域转换，用于将输入的图片格式，转换为模型需要的图片格式，这里将YUV420SP_U8转GRAY，详细色域转换配置说明请参考 [这里](https://support.huawei.com/enterprise/zh/doc/EDOC1100191944/3e66a3c#ZH-CN_TOPIC_0000001095142890)
+色域转换，用于将输入的图片格式，转换为模型需要的图片格式，这里将YUV420SP_U8转GRAY，详细色域转换配置说明请参考 [这里](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0021.html)
 
 **步骤3**：将下载得到模型网络及权重(`VDSR.prototxt`、`VDSR.caffemodel`)、AIPP配置文件(`YUV420SP_U8_GRAY.cfg`)放在 `model` 目录下
 
@@ -104,9 +104,9 @@ aipp_op {
 atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_format=NCHW --input_shape="data: 1, 1, 768, 768" --output=./VDSR_768_768 --soc_version=Ascend310B1 --output_type=FP32 --insert_op_conf=YUV420SP_U8_GRAY.cfg
 ```
 
-执行完模型转换脚本后，会在model目录下生成相应的VDSR_768_768.om模型文件。
+执行完模型转换脚本后，会在model目录下生成相应的VDSR_768_768.om模型文件
 
-模型转换使用了ATC工具，如需更多信息请参考 [这里](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)
+模型转换使用了ATC工具，如需更多信息请参考 [这里](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html)
 
 在`main.py`中配置 `VDSR_768_768.om` 模型路径
 
@@ -146,7 +146,7 @@ input_image_path = 'image/${测试图片文件名}'   # 仅支持jpg格式
 
 ## 5 精度验证
 
-PSNR（峰值信噪比）经常用作图像压缩等领域中信号重建质量的测量方法。
+PSNR（峰值信噪比）经常用作图像压缩等领域中信号重建质量的测量方法
 
 **步骤1**：准备测试集：下载验证图片集，[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperResolution/testImageSet.zip)，从zip文件中取出两个图片集91-images和General-100放置到testSet目录下，其中91-images包含91张t\*.bmp图片，General-100包含100张im_\*.bmp图片
 

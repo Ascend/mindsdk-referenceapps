@@ -39,7 +39,8 @@ bytes dataStr; // 内存中的数据
 int32 tensorDataType; //内存中张量的数据类型
 ```
 #### 1.1.2 C++结构体说明
-该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件（位于%SDK%/include/MxBase/Tensor/TensorBase/），本处仅摘抄部分关键信息。
+该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件（位于${SDK_INSTALL_PATH}/include/MxBase/Tensor/TensorBase/），本处仅摘抄部分关键信息。
+SDK_INSTALL_PATH表示SDK安装路径。
 ```c++
 enum TensorDataType {
     TENSOR_DTYPE_UNDEFINED = -1,
@@ -104,10 +105,7 @@ Atlas 300I pro、Atlas 300V pro
 |------------|---------|-------------------|
 | 6.0.RC2    | 8.0.RC2 | 24.1.RC2          |
 
-### 1.4 三方依赖
-cmake>=3.6, python=3.9.2
-
-### 1.5 代码目录结构说明
+### 1.4 代码目录结构说明
 
 ```
 ├── samplePluginPostProc
@@ -151,6 +149,9 @@ cmake>=3.6, python=3.9.2
 # CANN环境变量:
 .${ascend-toolkit-path}/set_env.sh
 
+# Python环境变量
+export LD_LIBRARY_PATH=usr/lib64:$LD_LIBRARY_PATH
+
 # 环境变量介绍
 SDK-path:SDK mxVision安装路径
 ascend-toolkit-path:CANN安装路径
@@ -168,13 +169,6 @@ ascend-toolkit-path:CANN安装路径
 在`./mxVision/models/yolov3/`目录下执行如下命令
 
 ```
-# 设置环境变量
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-
 # 模型转换
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 # 说明：out_nodes制定了输出节点的顺序，需要与模型后处理适配。

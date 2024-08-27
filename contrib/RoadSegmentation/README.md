@@ -86,6 +86,7 @@
 
 ## 3 准备模型
 ### 3.1 导出onnx文件
+
   获取[路面分割案例](https://github.com/tunafatih/Road-Free-Space-Segmentation-Internship-Project)，将本地文件pt2onnx.py放在获取的案例中model.pt同目录下，执行
   ```
   python3 pt2onnx.py
@@ -93,18 +94,19 @@
   将pt权重文件转换成onnx文件，或可[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件。
 
 ### 3.2 使用Ascend atc工具将onnx模型转换为om模型
+
 在使用[atc工具](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行
 ```
 atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310B1  
 ```
-若出现以下信息，则转换成功
+若出现以下信息，则转换成功。
 ```
 ATC run success
 ```
 ## 4 编译与运行
 
-示例步骤如下：
-**步骤1** 修改相应文件
+**步骤1** 修改pipeline文件。
+
 根据所需场景，配置pipeline/road.pipeline文件，调整路径参数。
 ```
   #配置mxpi_tensorinfer插件的模型加载路径： modelPath
@@ -126,19 +128,25 @@ ATC run success
         }
 ```
 
-**步骤2** 设置环境变量
-按**第2节环境设置**中设置环境变量
+**步骤2** 设置环境变量。
 
-**步骤3** 执行编译的步骤
+按**第2节环境设置**中设置环境变量。
+
+**步骤3** 执行编译。
+
 在样例目录下，执行
 ```
 bash build.sh
 ```
-**步骤4** 运行及输出结果
+**步骤4** 运行
+
 在样例目录下，执行
 ```
 python3.9 main.py test.jpg   #测试图片地址
 ```
+
+**步骤4** 查看结果
+
 无报错提示执行成功，结果图片testout.jpg保存在当前目录下。
 
 ## 5 常见问题

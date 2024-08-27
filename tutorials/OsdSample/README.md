@@ -4,10 +4,10 @@
 ### 1.1 简介
 * 本样例从ExternalOsdInstances.json构建一个绘图单元集合（MxpiOsdInstancesList）的元数据（metadata）并送入stream
 
-* 如构建的proto数据正确则可在程序运行结束后在运行目录找到图片testout.jpg，此图片为输入图像经过缩放后加上绘图单元集合后的输出结果。
+* 如构建的proto数据正确则可在程序运行结束后在运行目录找到图片testout.jpg，此图片为输入图像经过缩放后加上绘图单元集合后的输出结果
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2卡为主要硬件平台。
+本项目以昇腾Atlas 500 A2卡为主要硬件平台
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
@@ -47,7 +47,7 @@
   ```
 
 ## 3 准备模型
-使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行mxVision安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件。
+使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行mxVision安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件
 ```bash
 # 执行脚本之前需要进入到运行目录下
 cd ${SDK_INSTALL_PATH}/mxVision/operators/opencvosd

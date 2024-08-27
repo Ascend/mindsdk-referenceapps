@@ -3,7 +3,7 @@
 ## 1 介绍
 
 ### 1.1 简介
-本项目是一个面向酒店服务领域的句子级情感极性分类系统。分类插件基于 MindXSDK 开发，在晟腾芯片上进行句子情感极性分类，将分类结果保存。输入一段句子，可以判断该句子属于哪个情感极性。
+本项目是一个面向酒店服务领域的句子级情感极性分类系统。分类插件基于MindX SDK开发，在昇腾芯片上进行句子情感极性分类，将分类结果保存。输入一段句子，可以判断该句子属于哪个情感极性。
 该模型支持3个类别：消极，积极，中性。
 基于MindX SDK的句子情感分类分类业务流程为：待分类文本通过预处理，将文本根据字典vocab.txt进行编码，组成numpy形式的向量，将向量通过 appsrc 插件输入，然后由模型推理插件mxpi_tensorinfer得到每种类别的得分，再通过后处理插件mxpi_classpostprocessor将模型输出的结果处理，最后得到该文本的类别。本系统的各模块及功能描述如表1所示：
 
@@ -16,6 +16,13 @@
 | 3  | 模型推理    | 对文本编码后的张量进行推理 |
 | 4  | 后处理      | 从模型推理结果中寻找对应的分类标签 |
 | 5  | 保存结果    | 将分类结果保存文件|
+
+技术实现流程图
+
+<center>
+    <img src="./sdk/flowChart.jpg"width="75" height="320">
+    <br>
+</center>
 
 ### 1.2 支持的产品
 
@@ -31,7 +38,7 @@
 
 ### 1.4 代码目录结构与说明
 
-本工程名称为句子情感分类，工程目录如下图所示（tokenizer.py引用于https://gitee.com/ascend/samples/blob/master/python/level2_simple_inference/5_nlp/bert_text_classification/src/tokenizer.py）：
+本工程名称为句子情感分类，工程目录如下图所示（tokenizer.py引用于：[链接](https://gitee.com/ascend/samples/blob/master/python/level2_simple_inference/5_nlp/bert_text_classification/src/tokenizer.py)）
 
 ```
 .
@@ -89,12 +96,7 @@
             test.sh
             test_input.py
 ```
-### 1.5 技术实现流程图
 
-<center>
-    <img src="./sdk/flowChart.jpg"width="75" height="320">
-    <br>
-</center>
 
 ## 2 设置环境变量
 
@@ -106,8 +108,7 @@
 
 ## 3 准备模型
 
-**步骤1**  
-本项目使用的h5和pb模型已打包至[model.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip) ，下载后解压获得。
+**步骤1** 本项目使用的h5和pb模型已打包至[model.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/model.zip) ，下载后解压获得。
 也可以参考[源码](https://github.com/percent4/keras_bert_text_classification)，按照其README.md准备好自己的分类的数据完成模型的训练。分类数据可以参考[coarse](https://gitee.com/ascend/samples/tree/master/python/contrib/SentimentAnalysis/data/coarse-big-corpus/coarse)，需转成csv格式。
 本项目使用的数据为[data.zip](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SentimentAnalysis/data.zip) 解压后data目录下的train.csv。
 h5模型转pb可以参考[源码](https://github.com/amir-abdi/keras_to_tensorflow) ，将自己训练好的h5模型转成pb模型。

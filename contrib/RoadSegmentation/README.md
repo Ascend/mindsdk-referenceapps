@@ -21,11 +21,13 @@
 | 7   | 图像输出    | Gstreamer原生插件。配合GetResult接口与GetResultWithUniqueId接口使用，从stream中获取数据，当且仅当stream中存在appsink插件时，以上两个接口有效。 |
 
 技术实现流程图如下：
+
 ![SDK流程](../RoadSegmentation/image/SDK_process.png)
 
 注：红色字体为本项目开发的后处理插件，其他为SDK内置插件
 
-**特性及适应场景**
+**特性及适应场景**：
+
 本案例可以满足路面的语义分割内容，但同时对输入的图像有以下限制：<br>
 1.对于输入的图像是灰度图像时，会影响分割效果。<br>
 2.当路面上的障碍物（如车辆）较为密集时，会降低模型的分割效果。<br>
@@ -91,7 +93,7 @@
   将pt权重文件转换成onnx文件，或可[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件。
 
 ### 3.2 使用Ascend atc工具将onnx模型转换为om模型
-在使用[atc工具](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行
+在使用[atc工具](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行
 ```
 atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310B1  
 ```
@@ -141,12 +143,12 @@ python3.9 main.py test.jpg   #测试图片地址
 
 ## 5 常见问题
 
-1.图片解码失败
+### 5.1图片解码失败
 
 **问题描述：**  在使用解码插件时，提示如下错误
 ![解码失败](../RoadSegmentation/image/imagedecoder_error.png)
 
-**解决方案：** 更换图片，详情[imagedecoder插件介绍](https://www.hiascend.com/document/detail/zh/mind-sdk/204/vision/mxvisionug/mxvisionug_0115.html)
+**解决方案：** 更换符合输入格式要求的图片
 
 
 

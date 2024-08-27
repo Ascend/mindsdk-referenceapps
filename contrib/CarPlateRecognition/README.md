@@ -8,6 +8,8 @@
 
 本样例的主要处理流程为： Init > ReadImage > Resize > Detection_Inference > Detection_PostProcess > Crop_Resize > Recognition_Inference > Recognition_PostProcess > WriteResult > DeInit。
 
+<img src="./imgs/技术流程图.jpg" alt="Description" width="500" height="300">
+
 ### 1.2 支持的产品
 
 x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
@@ -25,7 +27,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | 软件                | 版本                                                         | 说明                                               |
 | ------------------- | ------------------------------------------------------------ | -------------------------------------------------- |
 | OpenCV              | 4.7.0                                                        | 用于结果可视化                                     |
-| FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文(opencv只支持在图片上写英文字符) |
+| FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
 **注**：OpenCv已在MxVision软件包中包含
 ###  1.5 代码目录结构与说明
@@ -53,10 +55,6 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ├── simhei.ttf # 黑体字体文件
 ```
 
-### 1.6 技术实现流程图
-
-![技术流程图](https://gitee.com/zhong-wanfu/mindxsdk-referenceapps/raw/master/contrib/CarPlateRecognition/imgs/技术流程图.jpg))
-
 ## 2 设置环境变量
 
 
@@ -68,6 +66,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ## 3 准备模型
 **步骤1：** 获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CarPlateRecognition/model.zip)，在项目目录创建model文件夹并解压到model目录下。
+
 **步骤2：** 进入model目录，执行以下命令使用atc命令进行车牌检测与车牌识别模型转换，转换后的模型文件生成在对应的文件夹下
 ```bash
 atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310
@@ -86,7 +85,7 @@ STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需�
 ```
 **步骤2：** 修改CMakeLists.txt文件：
 
-第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置MindX_SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX_SDK安装路径。
+第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置MindX SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
 
 第**12**行 `set(FREETYPE_HOME $ENV{FREETYPE_HOME})` 语句是设置FreeType库的安装路径，若未设置FREETYPE_HOME环境变量，需将$ENV{FREETYPE_HOME}替换为用户实际的FreeType库安装路径。
 

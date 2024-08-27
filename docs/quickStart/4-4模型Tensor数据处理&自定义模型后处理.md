@@ -224,7 +224,7 @@ bash run.sh
 **步骤6** 查看结果。
 
 正确运行时会输出类似如下字段结果。其中MxpiSamplePlugin.cpp文件中的日志输出为插件内部结果，main.cpp日志输出为stream结果。此处tensor[0]相关值应该相同
-`
+
 ```
 I20240827 14:57:11.715646 4148982 MxpiSamplePlugin.cpp:117] MxpiSamplePlugin::Process start
 W20240827 14:57:11.715947 4148982 MxpiSamplePlugin.cpp:97] source Tensor number:3

@@ -33,7 +33,7 @@ set(CMAKE_SKIP_RPATH TRUE)
 
 # Header path
 include_directories(
-        ${ASCEND_TOOLKIT_HOME}/aarch64-linux/include/
+        ${ASCEND_TOOLKIT_HOME}/include/
         ${MX_SDK_HOME}/include/
         ${MX_SDK_HOME}/opensource/include/
         ${MX_SDK_HOME}/opensource/include/opencv4
@@ -49,7 +49,7 @@ link_directories(${OPENSOURCE_DIR}/lib)
 
 # add host lib path
 link_directories(
-        ${ASCEND_TOOLKIT_HOME}/aarch64-linux/lib64/
+        ${ASCEND_TOOLKIT_HOME}/lib64/
         ${MX_SDK_HOME}/lib/
         ${MX_SDK_HOME}/opensource/lib/
         ${MX_SDK_HOME}/opensource/lib64/

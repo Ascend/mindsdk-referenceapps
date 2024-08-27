@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # Construct the input of the stream
     data_input = MxDataInput()
-    with open("test.jpg", 'rb') as f:
+    with open("../data/test.jpg", 'rb') as f:
         data_input.data = f.read()
 
     # Send image.
@@ -54,17 +54,17 @@ if __name__ == '__main__':
         exit()
 
     # Send osd instances protobuf.
-    with open("ExternalOsdInstances.json", "r") as f:
+    with open("../json/ExternalOsdInstances.json", "r") as f:
         message_json = json.load(f)
     print(message_json)
     in_plugin_id = 1
-    osd_instances_list = MxpiOSDType.Mxpiosd_instances_list()
+    osd_instances_list = MxpiOSDType.MxpiOsdInstancesList()
     osd_instances_list = ParseDict(message_json, osd_instances_list)
 
     protobuf_vec = InProtobufVector()
     protobuf = MxProtobufIn()
     protobuf.key = b'appsrc1'
-    protobuf.type = b'MxTools.Mxpiosd_instances_list'
+    protobuf.type = b'MxTools.MxpiOsdInstancesList'
     protobuf.protobuf = osd_instances_list.SerializeToString()
     protobuf_vec.push_back(protobuf)
     ret = stream_manager_api.SendProtobuf(stream_name, in_plugin_id, protobuf_vec)

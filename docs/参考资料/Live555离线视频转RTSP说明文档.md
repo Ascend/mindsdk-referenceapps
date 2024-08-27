@@ -23,7 +23,11 @@ cd live/
 
 make
 ```
-
+若编译过程中报错：struct std::atomic_flag has no member named 'test'
+修改config.linux文件：
+```
+CPLUSPLUS_FLAGS = (原有配置项) -std=c++2a
+```
 最后就会在当前目录下生成mediaServer 文件夹，有一个live555MediaServer可执行文件
 
 ## 4. 运行

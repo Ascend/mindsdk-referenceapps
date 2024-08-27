@@ -3,6 +3,13 @@
 ### 介绍
 提供的demo，实现图像检测样例运行并且输出检测结果写入图片result.jpg
 
+### 支持的版本
+
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+
 ### 准备工作
 将样例目录python 从mxsdkreferenceapps/utorials/ImageDetectionSample文件夹下 移动到${SDK安装路径}/mxVision/samples/mxVision/python/路径下
 

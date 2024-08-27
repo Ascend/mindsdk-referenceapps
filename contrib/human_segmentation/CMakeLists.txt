@@ -19,6 +19,7 @@ link_directories(
 )
 
 add_executable(human_segmentation main.cpp)
+
 target_link_libraries(human_segmentation
         glog
         mxbase

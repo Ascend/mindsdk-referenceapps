@@ -78,8 +78,13 @@ void Yolov5Detection::SetYolov5PostProcessConfig(const InitParam &initParam,
     g_config_data.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     g_config_data.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    auto jsonStr = g_config_data.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = jsonStr;
+    #ifdef MX_VERSION_5
+        auto jsonStr = g_config_data.GetCfgJson().serialize();
+        config["postProcessConfigContent"] = jsonStr;
+    #else
+        auto jsonStr = g_config_data.GetCfgJson();
+        config["postProcessConfigContent"] = jsonStr;
+    #endif
     config["labelPath"] = initParam.labelPath;
 }
 

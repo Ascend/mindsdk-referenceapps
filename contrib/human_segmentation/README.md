@@ -1,10 +1,27 @@
 # MindXSDK 人体语义分割
 
-## 1 简介
+## 1 介绍
+
+### 1.1 简介
+
   本开发样例基于MindX SDK实现了端到端的人体语义分割功能。其主要功能是使用human_segmentation模型对输入图片中的人像进行语义分割操作，然后输出mask掩膜图，将其与原图结合，生成标注出人体部分的人体语义分割图片。  
-样例输入：带有人体的jpg。  
-样例输出：对人体位置进行标注的新图片。<br/>
-## 2 目录结构
+样例输入：一张带有人体的图片。  
+样例输出：一张人体对应的mask掩码图，一张标注出人体部分的人体语义分割图片。<br/>
+
+### 1.2 支持的产品
+
+本项目以昇腾Atlas 500 A2为主要的硬件平台。
+
+### 1.3 支持的版本
+
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+
+
+### 1.4 代码目录结构说明
 本工程名称为human_segmentation，工程目录如下图所示：
 ```
 |-------- data                                // 存放测试图片
@@ -15,17 +32,15 @@
 |-------- test.pipeline                       //pipeline流水线配置文件    
 |-------- README.md   
 ```
-## 3 依赖
 
-| 软件名称 |     版本      |
-| :--------: |:-----------:|
-|ubantu 18.04| 18.04.1 LTS |
-|MindX SDK|    5.0.0    |
-|C++|    11.0     |
-|opencv2|             |
+## 2 设置环境变量
+```
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
+```
 
+## 3 准备模型
 
-## 4 模型转换
 人体语义分割采用提供的human_segmentation.pb模型。由于原模型是基于tensorflow的人体语义分割模型，因此我们需要借助于ATC工具将其转化为对应的om模型。  
 **步骤1**  [下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/human_segmentation/model.zip)  
 
@@ -35,15 +50,10 @@
 
 在pb文件所在目录下执行以下命令  
 ```
-# 设置CANN环境变量（请确认install_path路径是否正确）  
-# Set environment PATH (Please confirm that the install_path is correct).
-# ascend-toolkit-path: CANN 安装路径
-. ${ascend-toolkit-path}/set_env.sh
-
-# 执行，转换human_segmentation.pb模型
-# Execute, transform 转换human_segmentation.pb model.
+#执行，转换human_segmentation.pb模型
+#Execute, transform human_segmentation.pb model.
  
-atc --input_shape="input_rgb:1,512,512,3" --input_format=NHWC --output=human_segmentation --soc_version=Ascend310 --insert_op_conf=./insert_op.cfg --framework=3 --model=./human_segmentation.pb
+atc --input_shape="input_rgb:1,512,512,3" --input_format=NHWC --output=human_segmentation --soc_version=Ascend310B1 --insert_op_conf=./insert_op.cfg --framework=3 --model=./human_segmentation.pb
 ```
 执行完模型转换脚本后，若提示如下信息说明模型转换成功，会在output参数指定的路径下生成human_segmentation.om模型文件。  
 ```
@@ -51,31 +61,15 @@ ATC run success
 ```
 模型转换使用了ATC工具，如需更多信息请参考：  
 
-https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
+https://www.hiascend.com/document/detail/zh/canncommercial/700/inferapplicationdev/atctool/atlasatc_16_0005.html
 
-## 5 测试
+## 4 编译与运行
 
-1. 获取om模型   
+**步骤1** 获取om模型   
 ```
-见4： 模型转换
+见3： 准备模型
 ```
-2. 配置
-
-```
-# 设置MindXSDK环境变量
-# SDK-path: mxVision SDK 安装路径
-. ${SDK-path}/set_env.sh
-
-#查看环境变量
-env
-```
-3. 配置SDK路径
-
-配置CMakeLists.txt文件中的`MX_SDK_HOME`环境变量
-```
-set(MX_SDK_HOME ${SDK安装路径}/mxVision)
-```
-4. 配置pipeline  
+**步骤2** 配置pipeline  
 根据所需场景，配置pipeline文件，调整路径参数等。
 ```
   #配置mxpi_tensorinfer插件的模型加载路径： modelPath
@@ -88,27 +82,21 @@ set(MX_SDK_HOME ${SDK安装路径}/mxVision)
             "next": "appsink0"
         },
 ```
-5. 获取测试需要的测试图片
+**步骤3** 准备测试图片
 
-进入工程文件的data目录下，下载mp4格式的测试短视频，任意截取一张命名为test.jpg作为测试图片。
+将带有人体的jpg格式图片命名为test.jpg存放至：“项目所在目录/data”。
+
+**步骤4** 编译项目文件
+
+切换至工程主目录，执行以下命令执行编译
 ```
-wget https://c7xcode.obs.cn-north-4.myhuaweicloud.com/models/human_segmentation/person.mp4
+bash build.sh
 ```
-注：若想测试自己的.jpg图片可将其放如data目录下并修改main.cpp中int main函数的第一行std::string inputPicname = "test.jpg";将右边替换成自己图片的名称即可。
-编译项目文件
-
-    新建立build目录，进入build执行cmake ..（..代表包含CMakeLists.txt的源文件父目录），在build目录下生成了编译需要的Makefile和中间文件。执行make构建工程，构建成功后就会生成可执行文件。
-   再执行make命令生成的smple就是CMakeLists文件中指定生成的可执行文件
-
-
-
-5. 运行可执行文件
+**步骤5** 运行
+```
+bash run.sh
 ```
 
-切换至工程主目录，执行以下命令运行样例。
-执行run.sh文件
-```
-
-6. 查看结果  
-执行`run.sh`文件后，可在工程目录`result`中查看人体语义分割结果。
+**步骤6** 查看结果  
+执行`run.sh`文件后，可在工程目录`result`中查看人体语义分割结果。mask_test.jpg为人体的mask掩码图, result_test.jpg为标注出人体部分的人体语义分割图片。
 

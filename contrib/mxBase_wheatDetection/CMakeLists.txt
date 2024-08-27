@@ -28,6 +28,13 @@ link_directories(
 )
 
 add_executable(mxBase_wheatDetection main.cpp ${YOLOV5_DETECTION} ${YOLOV5_POSTPROCESS})
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(mxBase_wheatDetection cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
+
 target_link_libraries(mxBase_wheatDetection
         glog
         mxbase

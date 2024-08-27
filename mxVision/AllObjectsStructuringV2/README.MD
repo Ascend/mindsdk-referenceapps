@@ -2,7 +2,9 @@
 
 ## 1 介绍
 
-全目标结构化V2样例基于mxVision SDK进行开发，以310P为主要的硬件平台，主要支持以下功能：
+### 1.1 简介
+
+全目标结构化V2样例基于mxVision SDK进行开发，以Atlas 300I pro、Atlas 300V pro为主要的硬件平台，主要支持以下功能：
 
 1. 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
 2. 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
@@ -10,20 +12,29 @@
 4. 人脸属性分类+FaceReID：能够根据目标属性和FaceReID进行分类。(人脸属性，人脸特征)
 5. 车辆属性分类：能够对车辆的属性进行分类。(车辆属性，车辆特征以及车牌检测/识别)
 
-### 1.1 支持的产品
-310P: Atlas 300I pro Atlas 300V pro
+### 1.2 支持的产品
+Atlas 300I pro、Atlas 300V pro
 
-### 1.2 支持的版本
-eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如下表：
+### 1.3 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.0 | 7.0.0   |  23.0.0  | 
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
 
-  | 软件名称 | 版本 |
-  | -------- | -----|
-  | cmake    | 3.10.2|
-  | mxVision | 5.0RC2|
-  | gcc      | 7.5.0 |
-  | ffmpeg   | 4.2.1 |
+### 1.4 三方依赖
 
-### 1.3 代码目录结构与说明
+**步骤1：** 安装ffmpeg，源码下载地址： https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz
+```shell
+cd FFmpeg-n4.2.1/
+./configure --prefix=/usr/local/ffmpeg --enable-shared
+make -j8
+make install
+```
+
+**步骤2：** 安装[taskflow](https://github.com/taskflow/taskflow/releases), 在根目录下创建include目录，从github上下载taskflow的源码, 解压后将源码中的taskflow目录复制到AllObjectStructuringV2/include目录中。
+
+### 1.5 代码目录结构说明
 ```
 ├── AllObjectsStructuring
 |   ├── include
@@ -65,19 +76,27 @@ eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如�
 |       |   ├── objectSelection.h
 |       |   └── CMakeLists.txt
 |       └── CMakeLists.txt
-├── main.cpp
+├── BlockingQueue.h
 ├── CMakeLists.txt
-└── README.zh.md
+├── README.MD
+└── main.cpp
 ```
 
-### 1.4 约束
+### 1.6 相关约束
 视频约束
 - h264 
 - 1080P@25FPS
 
-## 2 模型下载与转换
+## 2 设置环境变量
+```
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
+export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
+```
 
-**步骤1：** 在项目根目录下 AllObjectStructuring2/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuringV2/AllObjectsStructuringV2_models.zip)，并放到项目根目录下 AllObjectStructuring2/models/ 目录下。
+## 3 准备模型
+
+**步骤1：** 在项目根目录AllObjectStructuringV2/下创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuringV2/AllObjectsStructuringV2_models.zip)，并放到AllObjectStructuringV2/models/ 目录下。
 
 **步骤2：** 执行以下命令使用atc命令进行模型转换
 ```bash
@@ -100,19 +119,7 @@ atc --model=./facefeature/face_feature_batch_1.prototxt --weight=./facefeature/f
 atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/vehicle_attribute --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310P3
 ```
 
-## 3 安装依赖
-**步骤1：** 安装ffmpeg，源码下载地址： https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz
-```shell
-./configure --prefix=/usr/local/ffmpeg --enable-shared
-make -j8
-make install
-```
-
-**步骤2：** 安装[taskflow](https://github.com/taskflow/taskflow/releases), 在根目录下创建include目录，从github上下载taskflow的源码,解压后将taskflow目录复制到include目录中。
-
-## 4 修改模型路径和测试视频
-
-**步骤1：** 在main.cpp中修改生成的对应模型以及配置路径。如yoloModelPath，yoloConfigPath，yoloLabelPath等。
+**步骤3：** 在main.cpp中修改生成的对应模型以及配置路径。如yoloModelPath，yoloConfigPath，yoloLabelPath等。
 ```shell
 std::string yoloModelPath = "../models/yolov4_improve/yolov4_detection_1batch.om";
 std::string yoloConfigPath = "../models/yolov4_improve/yolov4.cfg";
@@ -140,20 +147,9 @@ std::string faceFeatureModelPath = "../models/facefeature/face_feature_batch_1.o
 
 ```
 
-**步骤2：** 在main.cpp中修改测试视频路径，当前使用本地的文件作为视频流输入。
-```
-std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rtsp获取视频流，请将其注释。
-```
-如果是不同名称的264视频，则手动批量添加
-```
-std::vector<std::string> filePaths(numChannel);
-filePaths[0] = "../xxx/xxx.264"
-filePaths[1] = "../xxx/xxx.264"
-...
-```
+## 4 编译与运行
 
-
-**步骤3：** 在main.cpp中修改视频路数以及并行度。
+在main.cpp中修改视频路数以及并行度。
 + numChannel 视频路数
 + numWorker woker数量
 + numLines 并行度，数值为numChannel/numWorker:单个worker能够处理视频的路数。
@@ -164,12 +160,18 @@ const size_t numLines = 10;
 # 说明：通过查询npu-smi info，查询内存和AICore用量，根据实际情况调整worker和并行度
 ```
 
-## 5 编译与运行
-**步骤1：** 配置环境变量。
+### 4.1 使用本地的文件作为视频流输入
+
+**步骤1：** 在main.cpp中修改测试视频路径，当前使用本地的文件作为视频流输入。
 ```
-. ${sdk_path}/set_env.sh
-. ${ascend_toolkit_path}/set_env.sh
-export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
+std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rtsp获取视频流，请将其注释。
+```
+如果是不同名称的264视频，则手动批量添加
+```
+std::vector<std::string> filePaths(numChannel);
+filePaths[0] = "../xxx/xxx.264";
+filePaths[1] = "../xxx/xxx.264";
+...
 ```
 
 **步骤2**：在项目根目录下创建build文件夹，使用cmake命令进行编译，生成可执行文件：
@@ -181,11 +183,13 @@ cd build
 ## 使用cmake命令进行编译
 cmake ..
 make -j
-## 编译运行
+## 运行
 ./main
 ```
+**步骤3**：查看结果：执行成功后会出现行人、人脸、车俩检测或分类信息相关打印。
 
-## 6 通过网络拉流来获取视频输入
+
+### 4.2 通过网络拉流来获取视频输入
 **步骤1：** 将本地获取视频流的代码注释掉。
 
 ```
@@ -214,17 +218,16 @@ std::fill(filePaths.begin(), filePaths.end(), "../test.264"); // 如需通过rts
 ```
 for (size_t i = 0; i < numChannel; i++) {
     int port = ${port} + i;
-    filePaths[i] = "rtsp://${ip_address}:" + std::to_string(port) + "/test.264"
+    filePaths[i] = "rtsp://${ip_address}:" + std::to_string(port) + "/test.264";
 }
 ```
 + port:起始端口
-+ nums:端口数量
 + ip_address:ip地址
 ```
 # 如果是不同名称的264视频，则手动批量添加
 std::vector<std::string> filePaths(numChannel);
-filePaths[0] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264"
-filePaths[1] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264"
+filePaths[0] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264";
+filePaths[1] = "rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264";
 ...
 
 ```
@@ -238,15 +241,16 @@ cd build
 ## 使用cmake命令进行编译
 cmake ..
 make -j
-## 编译运行
+## 运行
 ./main
 ```
+**步骤5**：查看结果：执行成功后会出现行人、人脸、车俩检测或分类信息相关打印。
 
-## 6 常见问题
+## 5 常见问题
 
 请按照问题重要程度，详细列出可能要到的问题，和解决方法。
 
-### 3.1 模型路径错误问题
+### 5.1 模型路径错误问题
 
 **问题描述：**
 
@@ -255,11 +259,11 @@ Failed to get model, the model path is invalidate.
 **解决方案：**
 可执行文件main和模型相对路径不匹配，确认可执行文件和model目录相对路径，或者在main.cpp中直接使用模型全路径。
 
-### 3.2 拉2k/4k视频流时，显示decoded image is invalid
+### 5.2 拉2k/4k视频流时，显示decoded image is invalid
 
 **问题描述：**
 
-decoded image is invalid
+decoded image is invalid.
 
 **解决方案：**
 根据实际视频流宽高信息修改allobjectStructure.h中FRAME_WIDTH和FRAME_HEIGHT。

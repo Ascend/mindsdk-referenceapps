@@ -72,7 +72,7 @@ int main() {
     configUtil.LoadConfiguration("$ENV{MX_SDK_HOME}/config/logging.conf", configData, MxBase::ConfigMode::CONFIGFILE);
     configData.SetFileValue<int>("global_level", 1);
     MxBase::Log::SetLogParameters(configData);
-    std::string streamName = "./data/test1.264";
+    std::string streamName = "./data/test.264";
     // read config file and set params
     std::string m_sPath="./params.config";
     std::map<std::string,std::string> m_mapConfig;

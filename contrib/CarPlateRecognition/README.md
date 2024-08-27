@@ -8,7 +8,7 @@
 
 本样例的主要处理流程为： Init > ReadImage > Resize > Detection_Inference > Detection_PostProcess > Crop_Resize > Recognition_Inference > Recognition_PostProcess > WriteResult > DeInit。
 
-<img src="./imgs/技术流程图.jpg" alt="Description" width="500" height="300">
+<img src="./imgs/技术流程图.jpg" alt="Description" width="500" height="500">
 
 ### 1.2 支持的产品
 
@@ -29,7 +29,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | OpenCV              | 4.7.0                                                        | 用于结果可视化                                     |
 | FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
-**注**：OpenCv已在MxVision软件包中包含
+**注**：OpenCV已在MxVision软件包中包含
 ###  1.5 代码目录结构与说明
 
 本样例工程名称为CarPlateRecognition，工程目录如下图所示：
@@ -102,6 +102,6 @@ bash build.sh
 ```shell
 ./bin/car_plate_recognition ./xxx.jpeg # 自行替换图片名称
 ```
-输出的图片为result.jpg（包含补边结果）
+输出的图片为result.jpg（包含补边结果）。
 ## 5 常见问题
 由于车牌识别模型的精度问题，识别结果误差较大时，建议使用蓝底、不包含中文字符、角度适中且分辨率高的图片做为推理的输入。

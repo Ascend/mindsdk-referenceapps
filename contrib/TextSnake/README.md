@@ -71,7 +71,7 @@ export install_path=${install_path}
 本项目使用的模型是TextSnake模型。
 
 本项目提供已从pytorch模型转换好的onnx 模型，需要进一步转换为om模型
-pth 权重文件和 onnx 文件的下载链接
+pth 权重文件和 onnx 文件的下载链接：
 https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TextSnake/ATC%20TextSnake%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip 。
 
 该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下：

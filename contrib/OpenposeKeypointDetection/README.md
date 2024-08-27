@@ -112,7 +112,9 @@
 本项目中适用的模型是 OpenPose 模型，[原模型项目代码](https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch)。此处提供pytorch 模型和onnx 模型[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/model.zip) 。然后使用模型转换工具 ATC 将 onnx 模型转换为 om 模型，模型转换工具相关介绍[参考链接](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html) 。
 
 转换om模型步骤如下：
+
 **步骤1**  从上述模型下载链接中下载onnx模型，将解压出来的simplified_560_openpose_pytorch.onnx放至 ``python/models`` 文件夹下。
+
 **步骤2**  进入 ``python/models`` 文件夹下执行命令：
 ```
 bash model_convertion.sh

@@ -99,7 +99,7 @@
 ```
 
 ## 2 设置环境变量
-设置CANN及MindX SDK相关的环境变量
+设置CANN及MindX SDK相关的环境变量。
 
 ```shell
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
@@ -150,7 +150,7 @@ python3 main.py
 
 ## 5. 精度验证
 ### 5.1 获取数据集
-执行下述命令下载 COCO keypoint VAL 2017 数据集与标注文件
+执行下述命令下载 COCO keypoint VAL 2017 数据集与标注文件：
 ```
 wget http://images.cocodataset.org/zips/val2017.zip
 wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip

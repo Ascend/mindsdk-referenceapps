@@ -29,6 +29,7 @@
 
 <center>
     图1. 候选关键点选择示意图  </div>
+    <br>
     <img src="./images/KeypointNms.jpg">
     <br>
     <div style="color:orange;

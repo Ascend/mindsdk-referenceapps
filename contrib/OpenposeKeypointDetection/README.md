@@ -28,12 +28,13 @@
 
 
 <center>
+    图1. 候选关键点选择示意图 </div>
     <img src="./images/KeypointNms.jpg">
     <br>
     <div style="color:orange;
     display: inline-block;
     color: #999;
-    padding: 2px;">图1. 候选关键点选择示意图 </div>
+    padding: 2px;">
 </center>
 
 
@@ -63,36 +64,36 @@
 | pycocotools       | 2.0.8     | python COCO 评测工具            | pip3 install pycocotools|
 
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本工程名称为 OpenposeKeypointDetection，工程目录如下所示：
 ```
 .
 ├── build.sh
-├── images
+├── images   # readme中使用的图片
 │   ├── ATCSuccess.png
 │   ├── COCOAnnotations.png
 │   ├── KeypointNms.jpg
 │   ├── OverallProcess.jpg
 │   ├── PathError.png
 │   └── PipelineError.png
-├── plugins
+├── plugins  # 后处理插件源码
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   ├── MxpiOpenposePostProcess.cpp
 │   └── MxpiOpenposePostProcess.h
-├── proto
+├── proto    # 后处理插件protobuf定义
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   └── mxpiOpenposeProto.proto
 ├── python
-│   ├── evaluate.py
-│   ├── main.py
-│   ├── models
-│   │   ├── insert_op.cfg
-│   │   └── model_conversion.sh
-│   └── pipeline
-│       └── Openpose.pipeline
+│   ├── evaluate.py   # 精度验证脚本
+│   ├── main.py       # 推理脚本
+│   ├── models        # 模型文件
+│   │   ├── insert_op.cfg       # 模型转换配置文件
+│   │   └── model_conversion.sh # 模型转换脚本
+│   └── pipeline      # 
+│       └── Openpose.pipeline   # pipline文件
 └── README.md
 ```
 
@@ -105,13 +106,13 @@
 ```
 
 
-## 3. 模型转换
+## 3. 准备模型
 
 本项目中适用的模型是 OpenPose 模型，[原模型项目代码](https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch)。此处提供pytorch 模型和onnx 模型[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/model.zip) 。然后使用模型转换工具 ATC 将 onnx 模型转换为 om 模型，模型转换工具相关介绍[参考链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md) 。
 
 转换om模型步骤如下：
-1. 从上述模型下载链接中下载onnx模型，将解压出来的simplified_560_openpose_pytorch.onnx放至 ``python/models`` 文件夹下。
-2. 进入 ``python/models`` 文件夹下执行命令：
+**步骤1**  从上述模型下载链接中下载onnx模型，将解压出来的simplified_560_openpose_pytorch.onnx放至 ``python/models`` 文件夹下。
+**步骤2**  进入 ``python/models`` 文件夹下执行命令：
 ```
 bash model_convertion.sh
 ```
@@ -180,12 +181,13 @@ python3 evaluate.py
 ### 5.3 查看结果
 命令执行结束后输出 COCO 格式的评测结果，并生成 val2017_keypoint_detect_result.json 检测结果文件。输出结果如下图所示：
 <center>
+    图2. 模型精度测试输出结果 </div>
     <img src="./images/EvaluateInfo.png">
     <br>
     <div style="color:orange;
     display: inline-block;
     color: #999;
-    padding: 2px;">图2. 模型精度测试输出结果 </div>
+    padding: 2px;">
 </center>
 其中圈出来的部分为模型在 COCO VAL 2017 数据集上，IOU 阈值为 0.50:0.05:0.95 时的精度值。
 
@@ -199,12 +201,13 @@ python3 evaluate.py
 ``python/pipeline/Openpose.pipeline`` 中模型输入尺寸相关参数需要和使用的 om 模型相对应，否则会报如下类型的错：
 
 <center>
+    图3. 模型输入尺寸和 pipeline 中参数设置不匹配报错 </div>
     <img src="./images/PipelineError.png">
     <br>
     <div style="color:orange;
     display: inline-block;
     color: #999;
-    padding: 2px;">图3. 模型输入尺寸和 pipeline 中参数设置不匹配报错 </div>
+    padding: 2px;">
 </center>
 
 **解决方案：**
@@ -219,15 +222,17 @@ python3 evaluate.py
 精度评测过程中，将 COCO VAL 2017 数据集文件夹和标注文件夹放在正确位置，否则执行评测程序时找不到文件，报如下类型的错：
 
 <center>
+    图4. 文件路径报错 </div>
     <img src="./images/PathError.png">
     <br>
     <div style="color:orange;
     display: inline-block;
     color: #999;
-    padding: 2px;">图4. 文件路径报错 </div>
+    padding: 2px;">
 </center>
 
 **解决方案：**
+
 下载完数据集和标注文件后，确保 ``python/dataset`` 目录结构为：
 ```
 .

@@ -49,27 +49,35 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 本工程名称为RTMHumanKeypointsDetection，工程目录如下图所示：
 
 ```
-├── eval
-│   ├── pipeline
-│   ├── plugin
-│   ├── proto
-│   └── eval.py
-├── image
-│   ├── pipeline.png
-├── models
-│   └── insert_op.cfg
-├── pipeline
-│   └── rtmOpenpose.pipeline     # pipeline文件
-├── plugins	                 # 实时人体关键点检测后处理库
-│   ├── build.sh
-│   ├── CMakeLists.txt
-│   ├── MxpiRTMOpenposePostProcess.cpp
-│   └── MxpiRTMOpenposePostProcess.h
+├── build.sh  # 编译
 ├── CMakeLists.txt
-├── README.md
-├── build.sh     # 编译
+├── eval
+│   ├── eval.py
+│   ├── pipeline
+│   │   └── rtmOpenposeEval.pipeline
+│   ├── plugin
+│   │   ├── build.sh
+│   │   ├── CMakeLists.txt
+│   │   ├── MxpiRTMOpenposePostProcessEval.cpp
+│   │   └── MxpiRTMOpenposePostProcessEval.h
+│   └── proto
+│       ├── build.sh
+│       ├── CMakeLists.txt
+│       └── MxpiRTMOpenposeProtoEval.proto
+├── image
+│   └── pipeline.png
 ├── main.cpp
-└── run.sh       # 运行
+├── models
+│   └── insert_op.cfg
+├── pipeline
+│   └── rtmOpenpose.pipeline
+├── plugins  # 实时人体关键点检测后处理库
+│   ├── build.sh
+│   ├── CMakeLists.txt
+│   ├── MxpiRTMOpenposePostProcess.cpp
+│   └── MxpiRTMOpenposePostProcess.h
+├── README.md
+└── run.sh   # 运行
 ```
 
 
@@ -172,9 +180,46 @@ bash run.sh
 
 命令执行成功后会在控制台输出检测的帧率，并在当前目录下生成结果视频文件`out.h264`。
 
-## 5 常见问题
+## 5 精度验证
+### 步骤1 安装 python COCO 评测工具
+执行命令：
+```
+pip3.9 install pycocotools
+```
+### 步骤2 下载 COCO VAL 2017 数据集
+下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip，在 ``eval`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``eval/dataset`` 目录下。下载 COCO VAL 2017 标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip ，将标注文件压缩文件解压至 ``eval/dataset`` 目录下。确保下载完数据集和标注文件后的 eval 目录结构为：
+```
+.
+├── dataset
+│   ├── annotations
+│   │   └── person_keypoints_val2017.json
+│   └── val2017
+│       ├── 000000581615.jpg
+│       ├── 000000581781.jpg
+│       └── other-images
+└── eval.py
 
-### 5.1 检测输出帧率过低问题
+```
+### 步骤3 编译proto
+在 eval/proto/ 目录中执行命令：
+```
+bash build.sh
+```
+
+### 步骤4 编译用于精度测试的后处理插件
+在 eval/plugins/ 目录中执行命令：
+```
+bash build.sh
+```
+
+### 步骤5 执行命令：
+```
+python3 eval.py
+```
+
+## 6 常见问题
+
+### 6.1 检测输出帧率过低问题
 
 问题描述：控制台输出检测的帧率低于25fps（如下10fps），如下所示：
 
@@ -184,7 +229,7 @@ I20220727 09:21:02.990229 32360 MxpiVideoEncoder.cpp:324] Plugin(mxpi_videoencod
 
 解决方案： 确保输入的视频帧率高于25fps。
 
-### 5.2 视频编码参数配置错误问题
+### 6.2 视频编码参数配置错误问题
 
 问题描述：运行过程中报错如下：
 

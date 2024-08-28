@@ -53,7 +53,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR Yolov3PostProcess::Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) {
+    APP_ERROR Yolov3PostProcess::Init(const std::map<std::string, std::string> &postConfig) {
         LogDebug << "Start to Init Yolov3PostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
         if (ret != APP_ERR_OK) {

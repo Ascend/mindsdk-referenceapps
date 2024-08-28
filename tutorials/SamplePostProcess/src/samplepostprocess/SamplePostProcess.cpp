@@ -30,7 +30,7 @@ namespace MxBase {
         return *this;
     }
 
-    APP_ERROR SamplePostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
+    APP_ERROR SamplePostProcess::Init(const std::map<std::string, std::string> &postConfig)
     {
         LogDebug << "Start to Init SamplePostProcess.";
         APP_ERROR ret = ClassPostProcessBase::Init(postConfig);

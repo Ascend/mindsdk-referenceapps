@@ -213,6 +213,7 @@ bash build.sh
 ```
 
 ### 步骤5 执行命令：
+在 eval/ 目录中执行命令：
 ```
 python3 eval.py
 ```

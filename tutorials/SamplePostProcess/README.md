@@ -6,7 +6,7 @@
 本应用基于SDK提供的后处理框架，实现自定义resnet50后处理类和yolov3后处理类，并编译生成得到对应so文件。
 
 ### 1.2 支持的产品
-本应用以昇腾 Atlas 300 卡为主要的硬件平台
+x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）.
 
 ### 1.3 支持的版本
 
@@ -30,19 +30,12 @@
 ```
 
 ##  3 编译
-### 步骤1 编译
+步骤1 编译
 
-- 在项目根目录创建cmakeDir目录并进入该目录
-- 执行cmake.. && make编译项目。
+1. 在项目根目录创建cmakeDir目录并进入该目录.
+2. 执行cmake.. && make编译项目。
 
-###  步骤2 查看结果
+步骤2 查看结果
 
 编译得到的so保存在项目根目录的lib目录下。其中，libsamplepostprocess.so用于resnet50的后处理；libyolov3postprocess.so用于yolov3的后处理。
 
-## 4 常见问题
-
-### 4.1 如何使用编译得到的后处理so
-
-问题描述：如何使用编译得到的后处理so？
-
-解决方案：请参考图像目标检测参考样例[链接]（https://www.hiascend.com/marketplace/mindx-sdk/case-studies/596c9426-439f-45cd-bd67-5265b41a9075)。

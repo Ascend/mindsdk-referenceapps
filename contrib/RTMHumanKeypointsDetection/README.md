@@ -106,7 +106,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 使用live555创建rtsp视频流，live555的使用方法可以参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
 ### 步骤2 配置pipeline文件中的rtsp视频流地址、模型文件路径和视频的宽高
 
-打开`RTMHumanKeypointsDetection/pipeline`目录下的rtmOpenpose.pipeline文件。根据步骤1创建的rtsp视频流地址，设置中mxpi_rtspsrc0的rtspUrl值，如下所示：
+打开`RTMHumanKeypointsDetection/pipeline`目录下的rtmOpenpose.pipeline文件。根据步骤1创建的rtsp视频流地址，设置mxpi_rtspsrc0的rtspUrl值，如下所示：
 
 ```
         "mxpi_rtspsrc0": {
@@ -120,7 +120,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ```
 
 
-根据om模型的文件路径，设置中mxpi_tensorinfer0的modelPath值，如下所示：
+根据om模型的文件路径，设置mxpi_tensorinfer0的modelPath值，如下所示：
 
 ```
         "mxpi_tensorinfer0":{
@@ -133,7 +133,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
         },
 ```
 
-根据rtsp视频流中视频的实际高和宽，设置中mxpi_videoencoder0的imageHeight和imageWidth值，如下所示：
+根据rtsp视频流中视频的实际高和宽，设置mxpi_videoencoder0的imageHeight和imageWidth值，如下所示：
 
 ```
         "mxpi_videoencoder0":{
@@ -176,7 +176,7 @@ bash run.sh
 
 ### 5.1 检测输出帧率过低问题
 
-问题描述：控制台输出检测的帧率严重低于25fps（如下10fps），如下所示：
+问题描述：控制台输出检测的帧率低于25fps（如下10fps），如下所示：
 
 ```bash
 I20220727 09:21:02.990229 32360 MxpiVideoEncoder.cpp:324] Plugin(mxpi_videoencoder0) fps (10).

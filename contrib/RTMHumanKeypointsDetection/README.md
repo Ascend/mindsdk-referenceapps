@@ -44,14 +44,14 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | -------- | ----- |
 | live555  | 1.09 |
 *精度验证需要额外的依赖，详见第5节（精度验证）。
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本工程名称为RTMHumanKeypointsDetection，工程目录如下图所示：
 
 ```
 ├── build.sh  # 编译
 ├── CMakeLists.txt
-├── eval
+├── eval  # 用于精度验证
 │   ├── eval.py
 │   ├── pipeline
 │   │   └── rtmOpenposeEval.pipeline
@@ -95,24 +95,26 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ## 3 准备模型
 
 本项目需要使用的模型包括用于人体姿态估计的模型和用于画图的osd模型，需要执行以下步骤得到：
-### 步骤1 下载模型相关文件
+
+步骤1 下载模型相关文件
 根据[链接](https://gitee.com/link?target=https%3A%2F%2Fmindx.sdk.obs.cn-north-4.myhuaweicloud.com%2Fmindxsdk-referenceapps%2520%2Fcontrib%2FRTMHumanKeypointsDetection%2Fhuman-pose-estimation512.onnx)下载得到human-pose-estimation512.onnx文件。
 
-###  步骤2 转换模型格式
+步骤2 转换模型格式
 
 将onnx模型拷贝至"${RTMHumanKeypointsDetection代码包目录}/models/"目录下，并在拷贝目标目录下执行以下命令将onnx模型转换成om模型：
 
        atc --model=./human-pose-estimation512.onnx --framework=5 --output=openpose_pytorch_512 --soc_version=Ascend310 --input_shape="data:1, 3, 512, 512" --input_format=NCHW --insert_op_conf=./insert_op.cfg
 
-### 步骤3 生成osd模型文件
+步骤3 生成osd模型文件
 
 本项目需要使用 `mxpi_opencvosd` 插件，使用前需要生成所需的模型文件。执行MindX SDK开发套件包安装目录下 `operators/opencvosd/generate_osd_om.sh` 脚本生成所需模型文件。
 
 ## 4 编译与运行
-### 步骤1 创建rtsp视频流
+步骤1 创建rtsp视频流
 
 使用live555创建rtsp视频流，live555的使用方法可以参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
-### 步骤2 配置pipeline文件中的rtsp视频流地址、模型文件路径和视频的宽高
+
+步骤2 配置pipeline文件中的rtsp视频流地址、模型文件路径和视频的宽高
 
 打开`RTMHumanKeypointsDetection/pipeline`目录下的rtmOpenpose.pipeline文件。根据步骤1创建的rtsp视频流地址，设置mxpi_rtspsrc0的rtspUrl值，如下所示：
 
@@ -155,7 +157,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
             },
 ```
 
-### 步骤3 编译插件
+步骤3 编译插件
 
 在`plugins/`目录里面执行命令：
 
@@ -164,7 +166,7 @@ bash build.sh
 ```
 
 
-### 步骤4 编译和运行主程序
+步骤4 编译和运行主程序
 
 回到项目主目录下执行命令：
 
@@ -172,22 +174,24 @@ bash build.sh
 bash run.sh
 ```
 
-###  步骤5 停止服务
+步骤5 停止服务
 
 命令行输入Ctrl+C组合键可停止服务。
 
-### 步骤6 查看结果
+步骤6 查看结果
 
 命令执行成功后会在控制台输出检测的帧率，并在当前目录下生成结果视频文件`out.h264`。
 
 ## 5 精度验证
-### 步骤1 安装 python COCO 评测工具
+步骤1 安装 python COCO 评测工具
 执行命令：
 ```
 pip3.9 install pycocotools
 ```
-### 步骤2 下载 COCO VAL 2017 数据集
-下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip，在 ``eval`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``eval/dataset`` 目录下。下载 COCO VAL 2017 标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip ，将标注文件压缩文件解压至 ``eval/dataset`` 目录下。确保下载完数据集和标注文件后的 eval 目录结构为：
+步骤2 下载 COCO VAL 2017 数据集
+下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip
+在 ``eval`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``eval/dataset`` 目录下。下载 COCO VAL 2017 标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip
+，将压缩文件解压至 ``eval/dataset`` 目录下。确保下载完数据集和标注文件后的 eval 目录结构为：
 ```
 .
 ├── dataset
@@ -200,19 +204,19 @@ pip3.9 install pycocotools
 └── eval.py
 
 ```
-### 步骤3 编译proto
+步骤3 编译proto
 在 eval/proto/ 目录中执行命令：
 ```
 bash build.sh
 ```
 
-### 步骤4 编译用于精度测试的后处理插件
+步骤4 编译用于精度测试的后处理插件
 在 eval/plugins/ 目录中执行命令：
 ```
 bash build.sh
 ```
 
-### 步骤5 执行命令：
+步骤5 执行命令：
 在 eval/ 目录中执行命令：
 ```
 python3 eval.py

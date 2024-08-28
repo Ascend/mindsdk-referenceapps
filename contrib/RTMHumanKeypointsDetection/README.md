@@ -8,7 +8,6 @@
 
 ![pipeline](image/pipeline.png)
 
-
 本系统设计了不同的功能模块。主要流程为：视频拉流传入业务流中，然后通过解码插件对视频进行解码，再对解码出来的YUV图像进行尺寸调整，然后利用OpenPose模型进行人体关键点检测，然后我们自己编写的后处理插件会把人体关键点信息传递给绘图插件，绘图完毕后进行视频编码，最后把结果输出。各模块功能描述如下表所示：
 
 
@@ -28,7 +27,7 @@
 使用测试视频应当人物清晰、光线充足、无环境背景干扰，而且人物在画面中占据范围不应太小、人物姿态不应过于扭曲、人物不应完全侧对镜头、背景不应太复杂；视频切勿有遮挡，不清晰等情况。
 ### 1.2 支持的产品
 
-昇腾310(推理)
+x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
@@ -61,17 +60,17 @@
 ├── models
 │   └── insert_op.cfg
 ├── pipeline
-│   └── rtmOpenpose.pipeline         	# pipeline文件
-├── plugins			        			# 实时人体关键点检测后处理库
+│   └── rtmOpenpose.pipeline     # pipeline文件
+├── plugins	                 # 实时人体关键点检测后处理库
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   ├── MxpiRTMOpenposePostProcess.cpp
 │   └── MxpiRTMOpenposePostProcess.h
 ├── CMakeLists.txt
 ├── README.md
-├── build.sh 							# 编译
+├── build.sh     # 编译
 ├── main.cpp
-└── run.sh								# 运行
+└── run.sh       # 运行
 ```
 
 
@@ -90,7 +89,7 @@
 
 本项目需要使用的模型包括用于人体姿态估计的模型和用于画图的osd模型，需要执行以下步骤得到：
 ### 步骤1 下载模型相关文件
-根据[链接](https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch)下载并解压得到human-pose-estimation512.onnx文件。
+根据[链接](https://gitee.com/link?target=https%3A%2F%2Fmindx.sdk.obs.cn-north-4.myhuaweicloud.com%2Fmindxsdk-referenceapps%2520%2Fcontrib%2FRTMHumanKeypointsDetection%2Fhuman-pose-estimation512.onnx)下载得到human-pose-estimation512.onnx文件。
 
 ###  步骤2 转换模型格式
 
@@ -135,7 +134,7 @@
         },
 ```
 
-根据视频的实际高和宽，设置中mxpi_videoencoder0的imageHeight和imageWidth值，如下所示：
+根据rtsp视频流中视频的实际高和宽，设置中mxpi_videoencoder0的imageHeight和imageWidth值，如下所示：
 
 ```
         "mxpi_videoencoder0":{
@@ -144,12 +143,12 @@
                 "outputFormat": "H264",
                 "fps": "1",
                 "iFrameInterval": "50",
-                "imageHeight": "720",		#上传视频的实际高
-                "imageWidth": "1280"		#上传视频的实际宽
+                "imageHeight": "720",		#rtsp视频流中视频的实际高
+                "imageWidth": "1280"		#rtsp视频流中视频的实际宽
             },
 ```
 
-### 步骤3 编译
+### 步骤3 编译插件
 
 在`plugins/`目录里面执行命令：
 
@@ -157,9 +156,8 @@
 bash build.sh
 ```
 
-注：其中SDK安装路径`${SDK安装路径}`需要替换为用户的SDK安装路径
 
-### 步骤4 运行
+### 步骤4 编译和运行主程序
 
 回到项目主目录下执行命令：
 
@@ -167,8 +165,13 @@ bash build.sh
 bash run.sh
 ```
 
-命令执行成功后会在当前目录下生成结果视频文件`out.h264`，查看文件验证检测结果。
+###  步骤5 停止服务
 
+命令行输入Ctrl+C组合键可停止服务。
+
+### 步骤6 查看结果
+
+命令执行成功后会在控制台输出检测的帧率，并在当前目录下生成结果视频文件`out.h264`。
 
 ## 5 常见问题
 
@@ -191,6 +194,6 @@ E20220728 17:05:59.947093 19710 DvppWrapper.cpp:573] input width(888) is not sam
 E20220728 17:05:59.947126 19710 MxpiVideoEncoder.cpp:310] [mxpi_videoencoder0][2010][DVPP: encode H264 or H265 fail] Encode fail.
 ```
 
-`pipeline/rtmOpenpose.pipeline`中视频编码插件分辨率参数指定错误。手动指定imageHeight 和 imageWidth 属性，需要和视频输入分配率相同。
+`pipeline/rtmOpenpose.pipeline`中视频编码插件分辨率参数指定错误。手动指定imageHeight 和 imageWidth 属性，需要和rtsp视频流中视频的分配率相同。
 
-解决方案：确保`pipeline/rtmOpenpose.pipeline`中 mxpi_videoencoder0 插件中的 imageHeight 和 imageWidth 为输入视频的实际高和宽。
+解决方案：确保`pipeline/rtmOpenpose.pipeline`中 mxpi_videoencoder0 插件中的 imageHeight 和 imageWidth 为rtsp视频流中视频的实际高和宽。

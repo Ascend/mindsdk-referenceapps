@@ -56,7 +56,7 @@ namespace MxBase {
 
         Yolov3PostProcess &operator=(const Yolov3PostProcess &other);
 
-        APP_ERROR Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) override;
+        APP_ERROR Init(const std::map<std::string, std::string> &postConfig) override;
 
         APP_ERROR DeInit() override;
 

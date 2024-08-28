@@ -191,8 +191,7 @@ pip3 install pycocotools
 ```
 步骤2 下载 COCO VAL 2017 数据集
 下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip
-在 ``eval`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``eval/dataset`` 目录下。下载 COCO VAL 2017 标注文件，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip
-，将压缩文件解压至 ``eval/dataset`` 目录下。确保下载完数据集和标注文件后的 eval 目录结构为：
+在 ``eval`` 目录下创建 ``dataset`` 目录，将数据集压缩文件解压至 ``eval/dataset`` 目录下。确保下载完数据集和标注文件后的 eval 目录结构为：
 ```
 .
 ├── dataset

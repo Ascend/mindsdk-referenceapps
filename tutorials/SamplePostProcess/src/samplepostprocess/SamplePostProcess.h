@@ -31,7 +31,7 @@ namespace MxBase {
         APP_ERROR DeInit() override;
 
         APP_ERROR Process(const std::vector<TensorBase> &tensors, std::vector<std::vector<ClassInfo>> &classInfos,
-                          const std::map<std::string, std::shared_ptr<void>> &configParamMap = {});
+                          const std::map<std::string, std::shared_ptr<void>> &configParamMap = {}) override;
 
         SamplePostProcess &operator=(const SamplePostProcess &other);
 

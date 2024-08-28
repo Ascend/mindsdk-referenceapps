@@ -37,7 +37,7 @@
 
 ###  步骤2 查看结果
 
-编译得到的so保存在项目根目录的lib目录下。其中，libsamplepostprocess.so用于restnet50的后处理；libyolov3postprocess.so用于yolov3的后处理。
+编译得到的so保存在项目根目录的lib目录下。其中，libsamplepostprocess.so用于resnet50的后处理；libyolov3postprocess.so用于yolov3的后处理。
 
 ## 4 常见问题
 
@@ -45,4 +45,4 @@
 
 问题描述：如何使用编译得到的后处理so？
 
-解决方案：使用方式请参考图像目标检测参考样例[链接]（https://www.hiascend.com/marketplace/mindx-sdk/case-studies/596c9426-439f-45cd-bd67-5265b41a9075)。
+解决方案：请参考图像目标检测参考样例[链接]（https://www.hiascend.com/marketplace/mindx-sdk/case-studies/596c9426-439f-45cd-bd67-5265b41a9075)。

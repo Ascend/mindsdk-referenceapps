@@ -31,22 +31,22 @@
 #include <chrono>
 
 namespace {
-    std::string ReadPipelineConfig(const std::string& pipelineConfigPath)
-    {
-        std::ifstream file(pipelineConfigPath.c_str(), std::ifstream::binary);
-        if (!file) {
-            LogError << pipelineConfigPath << " file dose not exist.";
-            return "";
-        }
-        file.seekg(0, std::ifstream::end);
-        uint32_t fileSize = file.tellg();
-        file.seekg(0);
-        std::unique_ptr<char[]> data(new char[fileSize]);
-        file.read(data.get(), fileSize);
-        file.close();
-        std::string pipelineConfig(data.get(), fileSize);
-        return pipelineConfig;
+std::string ReadPipelineConfig(const std::string& pipelineConfigPath)
+{
+    std::ifstream file(pipelineConfigPath.c_str(), std::ifstream::binary);
+    if (!file) {
+        LogError << pipelineConfigPath << " file dose not exist.";
+        return "";
     }
+    file.seekg(0, std::ifstream::end);
+    uint32_t fileSize = file.tellg();
+    file.seekg(0);
+    std::unique_ptr<char[]> data(new char[fileSize]);
+    file.read(data.get(), fileSize);
+    file.close();
+    std::string pipelineConfig(data.get(), fileSize);
+    return pipelineConfig;
+}
 }
 
 int main(int argc, char* argv[])

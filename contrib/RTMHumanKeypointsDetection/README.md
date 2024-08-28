@@ -187,7 +187,7 @@ bash run.sh
 步骤1 安装 python COCO 评测工具
 执行命令：
 ```
-pip3.9 install pycocotools
+pip3 install pycocotools
 ```
 步骤2 下载 COCO VAL 2017 数据集
 下载 COCO VAL 2017 数据集，下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/OpenposeKeypointDetection/data.zip

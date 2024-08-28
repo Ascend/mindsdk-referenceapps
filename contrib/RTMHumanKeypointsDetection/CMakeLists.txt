@@ -34,8 +34,7 @@ add_compile_options(-std=c++11 -fPIC -fstack-protector-all -Wall)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})       
 set(CMAKE_CXX_FLAGS_DEBUG "-g")                                      
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,relro,-z,now,-z,noexecstack -pie")
-
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,relro,-z,now,-z,noexecstack -pie --copy-dt-needed-entries")
 # Header path  
 include_directories(
     ${MX_SDK_HOME}/include/     
@@ -54,8 +53,3 @@ add_executable(main main.cpp)
 target_link_libraries(main glog mxbase plugintoolkit mxpidatatype streammanager mindxsdk_protobuf)
 
 install(TARGETS main DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-
-
-
-

@@ -42,7 +42,7 @@ STEP5:执行安装命令：make install # 该步骤需要root权限，否则会�
 STEP6:设置环境变量：export FREETYPE_HOME=/usr/local/freetype # 编译时需要该环境变量
 ```
 
-###  1.5 代码目录结构与说明
+###  1.5 代码目录结构说明
 
 本样例工程名称为CarPlateRecognition，工程目录如下图所示：
 
@@ -80,7 +80,7 @@ export FREETYPE_HOME=/usr/local/freetype    #freetype安装路径
 ## 3 准备模型
 **步骤1：** 获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CarPlateRecognition/model.zip)，在项目目录创建model文件夹并解压到model目录下。
 
-**步骤2：** 进入model目录，执行以下命令使用atc命令进行车牌检测与车牌识别模型转换，转换后的模型文件生成在对应的文件夹下
+**步骤2：** 进入model目录，执行以下命令使用atc命令进行车牌检测与车牌识别模型转换，转换后的模型文件生成在对应的文件夹下。
 ```bash
 atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310
 atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310

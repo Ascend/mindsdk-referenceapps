@@ -86,7 +86,7 @@ atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_pl
 atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310
 ```
 ## 4 编译与运行
-### 4.1 修改CMakeLists.txt文件：
+### 4.1 修改CMakeLists.txt文件
 
 第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置MindX SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
 
@@ -102,7 +102,7 @@ atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./ca
 bash build.sh
 ```
 
-### 4.3 推理
+### 4.3 运行
 请自行准备**jpg/jpeg**格式图像保存在工程目录下，执行如下命令：
 
 ```shell

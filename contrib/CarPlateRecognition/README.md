@@ -36,10 +36,10 @@ FreeType编译安装流程如下：
 ```
 STEP1:从上面的FreeType版本链接中获取安装包freetype-2.10.0.tar.gz，保存到服务器
 STEP2:进入freetype的安装目录：cd /home/xxx/freetype-2.10.0 # 该路径需用户根据实际情况自行替换
-STEP3:执行配置命令：./configure --without-zlib --prefix=path_to_install # path_to_install为用户想安装的路径
+STEP3:执行配置命令：./configure --without-zlib --prefix=/usr/local/freetype # /usr/local/freetype可改为其他安装路径
 STEP4:执行编译命令：make
 STEP5:执行安装命令：make install # 该步骤需要root权限，否则会提示安装失败
-STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需要该环境变量
+STEP6:设置环境变量：export FREETYPE_HOME=/usr/local/freetype # 编译时需要该环境变量
 ```
 
 ###  1.5 代码目录结构与说明
@@ -74,7 +74,7 @@ STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需�
 # 设置环境变量（请确认install_path路径是否正确）
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
-export FREETYPE_HOME=path_to_install    #freetype安装路径
+export FREETYPE_HOME=/usr/local/freetype    #freetype安装路径
 ```
 
 ## 3 准备模型

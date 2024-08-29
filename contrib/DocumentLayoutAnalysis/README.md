@@ -5,14 +5,12 @@
 在本系统中，目的是基于MindX Vision，在昇腾平台上，开发端到端文档版面分析的参考设计，实现对图像中的文档识别的功能，并把可视化结果保存到本地。具体来说，在本方案中，通过将onnx格式的文档版面分析模型转成华为晟腾的om模型。将传入的图片做解码、resize、色域转换和归一化之后放入模型推理，推理结果再经过后处理和可视化之后，形成框出版面内容并标有版面类型与置信度的图片。流程图如下所示：
 ![process](./image/process.png)
 
-图1 文档版面分析流程图
-
 
 其中，样例输入为包含文档版面的jpg图片或者png图片，样例输出为框出版面内容并标有版面类型与置信度的jpg或者png图片。
 
 ### 1.2 支持的产品
 
-支持Atlas 500 A2 推理产品
+支持Atlas 500 A2 推理产品。
 
 ### 1.3 支持的版本
 
@@ -52,7 +50,7 @@
 
 ### 1.6 相关约束
 
-项目适用轮廓明显，且图片较清晰的文档测试图片
+项目适用轮廓明显，且图片较清晰的文档测试图片。
 
 **注**：由于模型限制，仅支持识别['Text', 'Title', 'Figure', 'Figure caption', 'Table','Table caption', 'Header', 'Footer', 'Reference', 'Equation']列表里的 **10** 种版面类型。遇到深色背景色的文档，会识别成图片；遇到没有检测对象的空图会直接输出。
 
@@ -76,12 +74,12 @@
 
 根据[**下载地址**](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DocumentLayoutAnalysis/%E6%96%87%E6%A1%A3%E7%89%88%E9%9D%A2%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B%E5%A4%87%E4%BB%BD.zip)下载并解压得到picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx文件。
 
-注：**下载后请将模型请放置于model的对应目录下**
+注：**下载后请将模型请放置于model的对应目录下。**
 
 
 **步骤2**：onnx模型转换成om模型
 
-cd 到工程目录model目录下
+cd 到工程目录model目录下。
 执行以下命令：
 
      atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=Ascend310B1 --insert_op_conf=./layout.aippconfig
@@ -93,14 +91,14 @@ cd 到工程目录model目录下
 ## 4 运行
 
 
-**步骤1** 自行选择一张或多张图片文件，放入工程目录`./input`下。
+**步骤1** 自行选择一张或多张图片文件，放入工程目录`./input`下
 
-参考测试图片[**下载地址**](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.5/docs/images/layout.jpg)
+参考测试图片[**下载地址**](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.5/docs/images/layout.jpg)。
 
-注：**如果工程目录下没有input目录，需要自行建立**
+注：**如果工程目录下没有input目录，需要自行建立。**
 
 
-**步骤2** cd 到该项目目录DocumentLayoutAnalysis下，然后执行
+**步骤2** cd 到该项目目录DocumentLayoutAnalysis下，然后执行：
 ```bash
 python3 infer.py
 ```
@@ -108,5 +106,5 @@ python3 infer.py
 
 执行后会在终端按顺序输出文档的版面类别和置信度，并在`./output`目录下生成结果图片，可查看文档检测结果。
 
-注：**如果工程目录下没有output目录，需要自行建立**
+注：**如果工程目录下没有output目录，需要自行建立。**
 

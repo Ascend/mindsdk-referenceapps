@@ -29,17 +29,17 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | OpenCV              | 4.7.0                                                        | 用于结果可视化                                     |
 | FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
-**注**：OpenCV已在MxVision软件包中包含
+**注**：OpenCV已在MxVision软件包中包含。
 
 FreeType编译安装流程如下：
 
 ```
-STEP1:从上面的FreeType版本链接中获取安装包freetype-2.10.0.tar.gz，保存到服务器
-STEP2:进入freetype的安装目录：cd /home/xxx/freetype-2.10.0 # 该路径需用户根据实际情况自行替换
-STEP3:执行配置命令：./configure --without-zlib --prefix=/usr/local/freetype # /usr/local/freetype可改为其他安装路径
-STEP4:执行编译命令：make
-STEP5:执行安装命令：make install # 该步骤需要root权限，否则会提示安装失败
-STEP6:设置环境变量：export FREETYPE_HOME=/usr/local/freetype # 编译时需要该环境变量
+步骤1:从上面的FreeType版本链接中获取安装包freetype-2.10.0.tar.gz，保存到服务器
+步骤2:进入freetype的安装目录：cd /home/xxx/freetype-2.10.0 # 该路径需用户根据实际情况自行替换
+步骤3:执行配置命令：./configure --without-zlib --prefix=/usr/local/freetype # /usr/local/freetype可改为其他安装路径
+步骤4:执行编译命令：make
+步骤5:执行安装命令：make install # 该步骤需要root权限，否则会提示安装失败
+步骤6:设置环境变量：export FREETYPE_HOME=/usr/local/freetype # 编译时需要该环境变量
 ```
 
 ###  1.5 代码目录结构说明

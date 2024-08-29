@@ -74,7 +74,7 @@
 
 根据[**下载地址**](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DocumentLayoutAnalysis/%E6%96%87%E6%A1%A3%E7%89%88%E9%9D%A2%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B%E5%A4%87%E4%BB%BD.zip)下载并解压得到picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx文件。
 
-注：**下载后请将模型请放置于model的对应目录下**
+注：**下载后请将模型请放置于model的对应目录下。**
 
 
 **步骤2**：onnx模型转换成om模型
@@ -91,7 +91,7 @@ cd 到工程目录model目录下。
 ## 4 运行
 
 
-**步骤1** 自行选择一张或多张图片文件，放入工程目录`./input`下。
+**步骤1** 自行选择一张或多张图片文件，放入工程目录`./input`下
 
 参考测试图片[**下载地址**](https://github.com/PaddlePaddle/PaddleDetection/blob/release/2.5/docs/images/layout.jpg)。
 

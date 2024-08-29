@@ -3,10 +3,10 @@
 ## 1 介绍
 
 ### 1.1 简介
-高速公路车辆火灾识别基于 MindX Vision 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过av模块打开本地视频文件、模拟视频流，然后进行视频解码，解码结果经过模型推理进行火焰和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。解码后的视频图像会再次编码保存至指定位置。
+高速公路车辆火灾识别基于mxVision SDK 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过av模块打开本地视频文件、模拟视频流，然后进行视频解码，解码结果经过模型推理进行火灾和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。解码后的视频图像会再次编码保存至指定位置。
 
 ### 1.2 支持的产品
-支持Atlas 300V和Atlas 300V Pro
+支持Atlas 300V和Atlas 300V Pro。
 
 ### 1.3 支持的版本
 
@@ -15,14 +15,14 @@
   | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
 
 ### 1.4 三方依赖
-本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需额外依赖以下python软件：
+本项目除了依赖昇腾Driver、Firmware、CANN和mxVision及其要求的配套软件外，还需额外依赖以下python软件：
 
 | 软件名称 | 版本   |
 | -------- | ------ |
 | av | 10.0.0 |
 | numpy | 1.23.5 |
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本项目目录如下图所示：
 
@@ -52,7 +52,7 @@
 
 ###  步骤2 转换模型格式
 
-将onnx格式模型转换为om格式模型(--soc_version的参数需根据实际NPU型号设置，Atlas 300V和Atlas 300V Pro设备下该参数为Ascend310P3)
+将onnx格式模型转换为om格式模型(--soc_version的参数需根据实际NPU型号设置，Atlas 300V和Atlas 300V Pro设备下该参数为Ascend310P3)。
 
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
@@ -79,7 +79,8 @@
 ### 步骤3 停止高速公路火灾识别服务
 停止服务有如下两种方式：
 
-  1.视频文件分析完毕后可自动停止服务。 2.命令行输入Ctrl+C组合键可手动停止服务。
+- 视频文件分析完毕后可自动停止服务。 
+- 命令行输入Ctrl+C组合键可手动停止服务。
 
 ###  步骤4 查看结果
 

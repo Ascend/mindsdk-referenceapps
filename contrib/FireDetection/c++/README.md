@@ -3,10 +3,10 @@
 ## 1 介绍
 
 ### 1.1 简介
-高速公路车辆火灾识别基于 MindX Vision 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过ffmpeg打开本地视频文件、模拟视频流，然后进行视频解码，解码结果经过模型推理进行火灾和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。解码后的视频图像会编码保存至指定位置。
+高速公路车辆火灾识别基于 mxVision SDK 开发，在 Atlas 300V、Atlas 300V Pro 上进行目标检测。项目主要流程为：通过ffmpeg打开本地视频文件、模拟视频流，然后进行视频解码，解码结果经过模型推理进行火灾和烟雾检测，如果检测到烟雾和火灾则在日志中进行告警。解码后的视频图像会编码保存至指定位置。
 
 ### 1.2 支持的产品
-支持Atlas 300V和Atlas 300V Pro
+支持Atlas 300V和Atlas 300V Pro。
 
 ### 1.3 支持的版本
 
@@ -22,7 +22,7 @@
 |--------| ------ |
 | ffmpeg | 3.4.11 |
 
-### 1.5 代码目录结构与说明
+### 1.5 代码目录结构说明
 
 本项目目录如下图所示：
 
@@ -30,17 +30,17 @@
 ├── aipp_yolov5.cfg
 ├── BlockingQueue
 │  └── BlockingQueue.h
-├── ConfigParser
+├── ConfigParser    # 配置文件解析类
 │   ├── ConfigParser.cpp
 │   └── ConfigParser.h
-├── FrameAnalyzer
+├── FrameAnalyzer       # 视频帧分析类
 │   ├── FrameAnalyzer.cpp
 │   └── FrameAnalyzer.h
 ├── main.cpp
 ├── README.md
 ├── CMakeLists.txt
 ├── setup.config
-└── VideoDecoder
+└── VideoDecoder     # 视频解码类
     ├── VideoDecoder.cpp
     └── VideoDecoder.h
 ```
@@ -62,21 +62,23 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 # ffmpeg-lib-path: ffmpeg的lib库安装路径，通常为/usr/local/ffmpeg/lib
 ```
 ## 3 准备模型
-### 步骤1 下载模型相关文件 
+步骤1 下载模型相关文件 
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件，并放至在项目根目录下。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/FireDetection/models.zip)下载并解压得到firedetection.onnx文件，并放在项目根目录下。
 
-###  步骤2 转换模型格式
-将onnx格式模型转换为om格式模型(--soc_version的参数需根据实际NPU型号设置，Atlas 300V和Atlas 300V Pro设备下该参数为Ascend310P3)
+步骤2 转换模型格式
+进入到项目根目录下，将onnx格式模型转换为om格式模型(--soc_version的参数需根据实际NPU型号设置，Atlas 300V和Atlas 300V Pro设备下该参数为Ascend310P3)。
 
        atc --model=./firedetection.onnx --framework=5 --output=./firedetection --input_format=NCHW --input_shape="images:1,3,640,640"  --out_nodes="Transpose_217:0;Transpose_233:0;Transpose_249:0"  --enable_small_channel=1 --insert_op_conf=./aipp_yolov5.cfg --soc_version=Ascend310P3 --log=info
 
 ##  4 编译与运行
-### 步骤1 编译
+步骤1 编译
 
-- 在项目根目录创建cmakeDir目录并进入该目录
+- 在项目根目录创建cmakeDir目录并进入该目录。
 - 执行cmake.. && make编译项目。编译的二进制文件main保存在项目根目录下。
-### 步骤2 设置配置项
+
+步骤2 设置配置项
+
 在setup.config文件中设置配置项，配置项含义如下表所示：
 
 |      配置项字段      | 配置项含义           |
@@ -92,18 +94,20 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 *deviceId需为整数，取值范围为[0, NPU设备个数-1]，`npu-smi info` 命令可以查看NPU设备个数；skipFrameNumber需为整数，建议根据实际业务需求设置，推荐设置为3；width和height需为整数，取值范围为[128, 4096]；videoPath所指定的视频文件需为H264编码；videoSavedPath所指定的文件每次服务启动时会被覆盖重写。
 
-###  步骤3 运行高速公路火灾识别服务。
+步骤3 运行高速公路火灾识别服务
 
 进入项目根目录，执行如下指令：
 
       ./main
 火灾检测结果在标准输出中体现；编码视频文件保存在配置文件指定的路径下。
-###  步骤4 停止高速公路火灾识别服务
+
+步骤4 停止高速公路火灾识别服务
 停止服务有如下两种方式：
 
-1.视频文件分析完毕后可自动停止服务。 2.命令行输入Ctrl+C组合键可手动停止服务。
+- 视频文件分析完毕后可自动停止服务。
+- 命令行输入Ctrl+C组合键可手动停止服务。
 
-###  步骤5 查看结果
+步骤5 查看结果
 
 用户可在标准输出中查看火灾检测结果，在配置项videoSavedPath所指定的文件中查看视频编码结果。
 

@@ -30,6 +30,18 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
 **注**：OpenCV已在MxVision软件包中包含
+
+FreeType编译安装流程如下：
+
+```
+STEP1:从上面的FreeType版本链接中获取安装包freetype-2.10.0.tar.gz，保存到服务器
+STEP2:进入freetype的安装目录：cd /home/xxx/freetype-2.10.0 # 该路径需用户根据实际情况自行替换
+STEP3:执行配置命令：./configure --without-zlib --prefix=/usr/local/freetype # /usr/local/freetype可改为其他安装路径
+STEP4:执行编译命令：make
+STEP5:执行安装命令：make install # 该步骤需要root权限，否则会提示安装失败
+STEP6:设置环境变量：export FREETYPE_HOME=/usr/local/freetype # 编译时需要该环境变量
+```
+
 ###  1.5 代码目录结构与说明
 
 本样例工程名称为CarPlateRecognition，工程目录如下图所示：
@@ -62,6 +74,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 # 设置环境变量（请确认install_path路径是否正确）
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh
+export FREETYPE_HOME=/usr/local/freetype    #freetype安装路径
 ```
 
 ## 3 准备模型
@@ -73,17 +86,7 @@ atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_pl
 atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310
 ```
 ## 4 编译与运行
-**步骤1：** 获取[FreeType2.10.0](https://download.savannah.gnu.org/releases/freetype/)并安装:
-
-```
-STEP1:从上面的FreeType版本链接中获取安装包freetype-2.10.0.tar.gz，保存到服务器
-STEP2:进入freetype的安装目录：cd /home/xxx/freetype-2.10.0 # 该路径需用户根据实际情况自行替换
-STEP3:执行配置命令：./configure --without-zlib --prefix=path_to_install # path_to_install为用户想安装的路径
-STEP4:执行编译命令：make
-STEP5:执行安装命令：make install # 该步骤需要root权限，否则会提示安装失败
-STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需要该环境变量
-```
-**步骤2：** 修改CMakeLists.txt文件：
+### 4.1 修改CMakeLists.txt文件
 
 第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置MindX SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
 
@@ -91,17 +94,22 @@ STEP6:设置环境变量：export FREETYPE_HOME=path_to_install # 编译时需�
 
 第**39**行 freetype 语句是链接到FreeType库，该名称一般是不用修改的，若命名不同则看情况修改。
 
-**步骤3** 执行shell脚本或linux命令对代码进行编译：
+### 4.2 执行编译脚本
+
+执行shell脚本对代码进行编译：
 
 ```shell
 bash build.sh
 ```
 
-**步骤4** **推理** 请自行准备**jpg/jpeg**格式图像保存在工程目录下，执行如下命令：
+### 4.3 运行
+请自行准备**jpg/jpeg**格式图像保存在工程目录下，执行如下命令：
 
 ```shell
 ./bin/car_plate_recognition ./xxx.jpeg # 自行替换图片名称
 ```
+### 4.4 查看结果
 输出的图片为result.jpg（包含补边结果）。
+
 ## 5 常见问题
 由于车牌识别模型的精度问题，识别结果误差较大时，建议使用蓝底、不包含中文字符、角度适中且分辨率高的图片做为推理的输入。

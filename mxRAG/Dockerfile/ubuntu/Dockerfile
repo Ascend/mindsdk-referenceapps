@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 WORKDIR /tmp
 
@@ -6,15 +6,17 @@ ARG ARCH=aarch64
 ARG TORCH_VERSION=2.1.0
 # 请根据在服务器上执行npu-smi info 命令进行查询，将查询到的"Name"字段最后一位数字删除后值修改PLATFORM字段
 ARG PLATFORM=310P
+# 设置时区禁用交互式配置
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt-get update
 
-RUN apt-get update && apt-get install -y build-essential python3.10  python3.10-dev python3.10-distutils vim tar zip unzip git curl wget dos2unix make gcc g++ ccache gfortran libssl-dev swig ffmpeg libopenblas-dev
+RUN apt-get update && apt-get install -y build-essential python3.11  python3.11-dev python3.11-distutils python3.11-venv vim tar zip unzip git curl wget dos2unix make gcc g++ ccache gfortran libssl-dev swig ffmpeg libopenblas-dev
 
-RUN curl -k https://bootstrap.pypa.io/get-pip.py | python3.10 &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+RUN curl -k https://bootstrap.pypa.io/get-pip.py | python3.11 &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 
-# 固定pip版本
-RUN pip3 install pip==24.0
+#配置 python3-config
+RUN ln -sf /usr/bin/python3.11-config /usr/local/bin/python3-config
 
 # 安装cmake
 RUN wget https://cmake.org/files/v3.24/cmake-3.24.3.tar.gz && \
@@ -26,9 +28,9 @@ RUN wget https://cmake.org/files/v3.24/cmake-3.24.3.tar.gz && \
 RUN pip3 install --upgrade setuptools && pip3 install numpy==1.26.4 decorator==5.1.1 sympy==1.12 cffi==1.16.0 pyyaml==6.0.1 pathlib2==2.3.7.post1 protobuf==5.26.0 scipy==1.12.0 requests==2.31.0 psutil==5.9.8 absl-py==2.1.0 attrs==23.2.0
 
 # 安装torch
-RUN pip3 install torch=="${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu 
+# RUN pip3 install torch=="${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu 
 # 安装torch-npu
-RUN pip3 install torch-npu=="${TORCH_VERSION}".post3
+# RUN pip3 install torch-npu=="${TORCH_VERSION}".post3
 
 COPY ./package ./
 
@@ -55,7 +57,7 @@ RUN wget https://github.com/facebookresearch/faiss/archive/v1.7.4.tar.gz && \
     cd .. && cmake -B build . -DFAISS_ENABLE_GPU=OFF -DPython_EXECUTABLE=/usr/bin/python3 -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${FAISS_INSTALL_PATH} && \
     make -C build -j faiss && \
     make -C build -j swigfaiss && \
-    cd build/faiss/python && python3 setup.py install --install-lib=/usr/local/lib/python3.10/dist-packages && \
+    cd build/faiss/python && python3 setup.py install --install-lib=/usr/local/lib/python3.11/dist-packages && \
     cd ../../.. && make -C build install && cp ./build/faiss/python/libfaiss_python_callbacks.so ${FAISS_INSTALL_PATH}/lib
 
 # 安装index
@@ -66,7 +68,7 @@ RUN cd /usr/local/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p /ho
 # 安装ascendfaiss
 ARG FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
 ARG MXINDEX_INSTALL_PATH=/usr/local/Ascend/mxIndex
-ARG PYTHON_HEADER=/usr/include/python3.10/
+ARG PYTHON_HEADER=/usr/include/python3.11/
 ARG ASCEND_INSTALL_PATH=/usr/local/Ascend/ascend-toolkit/latest
 ARG DRIVER_INSTALL_PATH=/usr/local/Ascend
 
@@ -75,12 +77,14 @@ RUN cp -r driver /usr/local/Ascend/driver && \
     unzip master.zip && \
     cd ascend-referenceapps-master/mxIndex_samples/faiss-python && \
     swig -python -c++ -Doverride= -module swig_ascendfaiss -I${PYTHON_HEADER} -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -DSWIGWORDSIZE64 -o swig_ascendfaiss.cpp swig_ascendfaiss.swig && \
-    g++ -std=c++11 -DFINTEGER=int -fopenmp -I/usr/local/include -I${ASCEND_INSTALL_PATH}/acllib/include -I${ASCEND_INSTALL_PATH}/runtime/include -I${DRIVER_INSTALL_PATH}/driver/kernel/inc/driver -I${DRIVER_INSTALL_PATH}/driver/kernel/libc_sec/include -fPIC -fstack-protector-all -Wall -Wreturn-type -D_FORTIFY_SOURCE=2 -g -O3 -Wall -Wextra -I${PYTHON_HEADER} -I/usr/local/lib/python3.10/dist-packages/numpy/core/include -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -c swig_ascendfaiss.cpp -o swig_ascendfaiss.o && \
+    g++ -std=c++11 -DFINTEGER=int -fopenmp -I/usr/local/include -I${ASCEND_INSTALL_PATH}/acllib/include -I${ASCEND_INSTALL_PATH}/runtime/include -I${DRIVER_INSTALL_PATH}/driver/kernel/inc/driver -I${DRIVER_INSTALL_PATH}/driver/kernel/libc_sec/include -fPIC -fstack-protector-all -Wall -Wreturn-type -D_FORTIFY_SOURCE=2 -g -O3 -Wall -Wextra -I${PYTHON_HEADER} -I/usr/local/lib/python3.11/dist-packages/numpy/core/include -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -c swig_ascendfaiss.cpp -o swig_ascendfaiss.o && \
     g++ -std=c++11 -shared -fopenmp -L${ASCEND_INSTALL_PATH}/acllib/lib64 -L${ASCEND_INSTALL_PATH}/runtime/lib64 -L${DRIVER_INSTALL_PATH}/driver/lib64 -L${DRIVER_INSTALL_PATH}/driver/lib64/common -L${DRIVER_INSTALL_PATH}/driver/lib64/driver -L${FAISS_INSTALL_PATH}/lib -L${MXINDEX_INSTALL_PATH}/lib -Wl,-rpath-link=${ASCEND_INSTALL_PATH}/acllib/lib64:${ASCEND_INSTALL_PATH}/runtime/lib64:${DRIVER_INSTALL_PATH}/driver/lib64:${DRIVER_INSTALL_PATH}/driver/lib64/common:${DRIVER_INSTALL_PATH}/driver/lib64/driver -L/usr/local/lib -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -s -o _swig_ascendfaiss.so swig_ascendfaiss.o -L.. -lascendfaiss -lfaiss -lascend_hal -lacl_retr -lascendcl -lc_sec -lopenblas && \
-    python3.10 setup.py build && \
-    python3.10 setup.py install --install-lib=/usr/local/lib/python3.10/dist-packages
+    python3.11 setup.py build && \
+    python3.11 setup.py install --install-lib=/usr/local/lib/python3.11/dist-packages
 ENV LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.7.4/lib:$LD_LIBRARY_PATH
 
+#解决blinker无法卸载的问题
+RUN apt-get remove -y python3-blinker && apt-get autoremove -y
 #安装mxrag
 RUN tar -xzf Ascend-mindxsdk-mxrag_*_linux-${ARCH}.tar.gz && \
     cd mindxsdk-mxrag/ && \
@@ -96,8 +100,8 @@ RUN rm -rf ./* && rm -rf /usr/local/Ascend/driver
 RUN mkdir /usr/local/Ascend/mxrag && \
     touch /usr/local/Ascend/mxrag/setenv.bash && \
     echo '#!/bin/bash' > /usr/local/Ascend/mxrag/setenv.bash && \
-    sed -i '$a\export PYTHONPATH=/usr/local/lib/python3.10/dist-packages/mx_rag/libs:$PYTHONPATH' /usr/local/Ascend/mxrag/setenv.bash && \
-    sed -i '$a\export LD_PRELOAD=$(ls /usr/local/lib/python3.10/dist-packages/scikit_learn.libs/libgomp-*):$LD_PRELOAD' /usr/local/Ascend/mxrag/setenv.bash && \
+    sed -i '$a\export PYTHONPATH=/usr/local/lib/python3.11/dist-packages/mx_rag/libs:$PYTHONPATH' /usr/local/Ascend/mxrag/setenv.bash && \
+    sed -i '$a\export LD_PRELOAD=$(ls /usr/local/lib/python3.11/dist-packages/scikit_learn.libs/libgomp-*):$LD_PRELOAD' /usr/local/Ascend/mxrag/setenv.bash && \
     sed -i '$a\source /usr/local/Ascend/ascend-toolkit/set_env.sh' /etc/profile && \
     sed -i '$a\source /usr/local/Ascend/driver/bin/setenv.bash' /etc/profile && \
     sed -i '$a\source /usr/local/Ascend/mxrag/setenv.bash' /etc/profile

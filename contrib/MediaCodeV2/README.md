@@ -112,9 +112,9 @@ const uint32_t SRC_HEIGHT = 1080;
 const uint32_t RESIZE_WIDTH = 1280;
 const uint32_t RESIZE_HEIGHT = 720;
 ```
-将源码中`SRC_WIDTH`和`SRC_HEIGHT`设置为待转码视频分辨率，将`RESIZE_WIDTH`和'RESIZE_HEIGHT`设置为转码后目标分辨率。
+将源码中`SRC_WIDTH`和`SRC_HEIGHT`设置为待转码视频分辨率，将`RESIZE_WIDTH`和`RESIZE_HEIGHT`设置为转码后目标分辨率。
 
-### 3.2 单路转码
+### 3.3 单路转码
 
 **步骤1** 准备一个待转码视频，置于`test`文件夹中（仅支持.h64格式或者.264格式的视频，且视频帧率为25fps）。
 
@@ -137,7 +137,7 @@ bash build.sh
 执行完毕后，会将程序输出的视频转码的结果，保存在工程目录下`out`中 (在运行命令前保证`out`存在，否则会影响程序的运行）。
 
 
-### 3.3 多路转码
+### 3.4 多路转码
 
 **步骤1** 准备待转码视频：自行准备.h264格式或者.264格式的视频，且视频帧率为25fps。
 
@@ -152,7 +152,7 @@ bash build.sh
 
 ```
 nohup ./mediacodecV2 ${test_path}/xxx.264 ${out_path}/output${i}.264 > ${log_path}/output${i}.log 2>&1 &
-//xxx.264为自行准备的待转码视频
+//xxx.264 为自行准备的待转码视频
 //output${i}.264 后缀名根据准备的待转码视频进行修改，.h264或者.264。
 ```
 
@@ -172,7 +172,7 @@ bash stop.sh
 
 执行完毕后，会在控制台显示停止多路转码的情况。
 
-### 3.4 结果显示
+### 3.5 结果显示
 
 **步骤1** 进入`mxbase`目录。
 

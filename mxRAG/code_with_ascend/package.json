@@ -1,0 +1,139 @@
+{
+  "name": "code-with-ascend",
+  "displayName": "code-with-ascend",
+  "description": "talk with code LLM",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.2"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Code With Ascend Configuration",
+      "properties": {
+        "CodeLLM.url": {
+          "type": "string",
+          "default": "",
+          "description": "The address of the language model"
+        },
+        "CodeLLM.modelName": {
+          "type": "string",
+          "default": "",
+          "description": "The name of the language model"
+        },
+        "Completion.Autocomplete": {
+          "type": "boolean",
+          "default": "false",
+          "description": "Automatically complete the code when entering"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "ascend.simpleEditCases",
+        "title": "Rewrite your code",
+        "category": "code with ascend"
+      },
+      {
+        "command": "ascend.generateTestCases",
+        "title": "Generate test cases",
+        "category": "code with ascend"
+      },
+      {
+        "command": "ascend.explainCodeCases",
+        "title": "Explain your code",
+        "category": "code with ascend"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "Chat-sidebar-view",
+          "title": "code with ascend",
+          "icon": "images/logo.png"
+        }
+      ]
+    },
+    "views": {
+      "Chat-sidebar-view": [
+        {
+          "type": "webview",
+          "id": "Chat-sidebar",
+          "name": "",
+          "visibility": "visible",
+          "contextualTitle": "code with ascend"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "ascend.simpleEditCases",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "ascend.generateTestCases",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "ascend.explainCodeCases",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "ascend.simpleEditCases",
+        "mac": "cmd+i",
+        "key": "ctrl+i"
+      },
+      {
+        "command": "ascend.generateTestCases",
+        "mac": "cmd+l",
+        "key": "ctrl+l"
+      },
+      {
+        "command": "ascend.explainCodeCases",
+        "mac": "cmd+o",
+        "key": "ctrl+o"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/node-fetch": "^2.6.11",
+    "@types/uuid": "^9.0.7",
+    "@types/vscode": "^1.54.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "fastest-levenshtein": "^1.0.16",
+    "handlebars": "^4.7.8",
+    "node-fetch": "^2.7.0",
+    "uuid": "^9.0.1"
+  }
+}

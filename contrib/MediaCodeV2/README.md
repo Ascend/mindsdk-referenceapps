@@ -60,8 +60,7 @@ make install
 
 ### 1.6 相关约束
 
-MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码。在帧率为25fps的视频上，MediaCodecV2的性能和精度可以达到和v1接口一致，但是在其他的情况下的效果不够理想。
-视频每秒的转码帧率只能达到25fps，当视频帧率不满足25fps，结果不能达到。
+MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格式的视频进行视频转码。
 
 ## 2 设置环境变量
 
@@ -87,12 +86,39 @@ env
 
 ## 3 编译与运行
 
+MediaCodecV2提供了视频多路转码功能，可根据需要自行选择单路或者多路转码。
+
 运行前需先下载[BlockingQueue.h](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue)头文件，并将其添加到`mxbase`目录下。
 
+### 3.1 日志等级设置
 
-### 3.1 V2接口运行
+修改`${SDK-path}/config/logging.conf`，调节输出日志级别为info级别。
 
-**步骤1** 准备一个测试视频，置于 test 文件夹中（仅支持.h64格式或者.264格式的视频，且视频帧率为25fps）。
+```
+# will output to stderr, where level >= console_level, default is 2
+# Log level: -1-debug, 0-info, 1-warn, 2-error, 3-fatal
+console_level=0
+```
+
+### 3.2 参数设置
+
+**步骤1** 打开`MediaCodecV2.cpp`源文件。
+
+**步骤2** 修改源码参数。
+
+```c++
+const uint32_t SRC_WIDTH = 1920;
+const uint32_t SRC_HEIGHT = 1080;
+const uint32_t RESIZE_WIDTH = 1280;
+const uint32_t RESIZE_HEIGHT = 720;
+...
+const uint32_t SRC_RATE = 25;
+```
+将源码中`SRC_WIDTH`和`SRC_HEIGHT`设置为待转码视频分辨率，将`RESIZE_WIDTH`和`RESIZE_HEIGHT`设置为转码后目标分辨率。本案例默认支持25fps视频转码，用户可以根据实际需求修改源码中`SRC_RATE`进行编解码器码率设置。
+
+### 3.3 单路转码
+
+**步骤1** 准备一个待转码视频，置于`test`文件夹中。
 
 **步骤2** 进入工程目录。
 
@@ -105,61 +131,50 @@ bash build.sh
 ```
 代码编译成功会在`mxbase`目录下，生成可执行文件`mediacodecV2`。
 
-**步骤4** 输入执行指令，发起视频转码性能测试。
+**步骤4** 输入执行指令，发起视频转码。
 ```c++
-./mediacodecV2 ${测试视频路径} ${输出结果路径}
+./mediacodecV2 ${待转码视频路径} ${输出结果路径}
 例如: ./mediacodecV2 ../test/test1.264 ../out/out.264
 ```
-执行完毕后，会将程序输出的视频转码的结果，保存在工程目录下`out`中 (在运行命令前保证`out`存在，否则会影响程序的运行）。
 
+**步骤5** 查看结果。
 
-### 3.2 脚本运行
+转码成功后，`out`目录下会生成转码后的视频文件。
 
-#### 3.2.1 日志等级设置
+### 3.4 多路转码
 
-修改`${SDK-path}/config/logging.conf`，调节输出日志级别为info级别。
+**步骤1** 准备待转码视频：自行准备.h264格式或者.264格式的视频。
 
+**步骤2** 代码编译：同单路运行编译流程，进入`mxbase`目录，执行脚本，编译代码，生成可执行文件。
 ```
-# will output to stderr, where level >= console_level, default is 2
-# Log level: -1-debug, 0-info, 1-warn, 2-error, 3-fatal
-console_level=0
+cd mxbase
+bash build.sh
 ```
+编译成功后会在`mxbase`目录下，生成可执行文件`mediacodecV2`
 
-#### 3.2.2 运行多路
-
-通过计算视频编码的帧率和原视频的帧率进行对比。
-
-**步骤1** 准备测试视频：自行准备.h264格式或者.264格式的视频，且视频帧率为25fps。
-
-**步骤2** 进入`mxbase`目录。
-
-**步骤3** 在`run.sh `脚本，可修改测试视频的路径。
+**步骤3** 在`run.sh `脚本，修改待转码视频路径。
 
 ```
 nohup ./mediacodecV2 ${test_path}/xxx.264 ${out_path}/output${i}.264 > ${log_path}/output${i}.log 2>&1 &
-//xxx.264为自行准备的测试视频
-//output${i}.264 后缀名根据准备的测试视频进行修改，.h264或者.264。
+//xxx.264 为自行准备的待转码视频
+//output${i}.264 后缀名根据准备的待转码视频进行修改，.h264或者.264。
 ```
 
-**步骤4** 运行`run.sh `脚本，得到测试视频的输出和log信息。
+**步骤4** 指定转码路数，运行`run.sh`脚本，得到视频转码的输出和log信息。
 
-键入执行指令，对测试视频发起多路转码验证测试。
+注意：转码时间会根据输入视频大小而不同，如果过程中想终止转码，运行`stop.sh `脚本。
 
 ```c++
-bash run.sh ${运行路数}
-例如: bash run.sh 5
+bash stop.sh
 ```
-执行完毕后，会在`out`和`logs`文件夹输出处理过的视频和log文件（转码时间在一定范围内浮动）。
 
-### 3.3 结果显示
+执行完毕后，会在控制台显示停止多路转码的情况。
 
-**步骤1** 进入`mxbase`目录。
+**步骤5** 查看结果。
 
-**步骤2** 运行`show.sh `脚本，得到测试视频的log信息。
+转码成功后，`out`目录会生成与转码路数对应的多个视频文件，`logs`目录会生成与转码路数对应的多个log文件。 进入`mxbase`目录，运行`show.sh `脚本，可以得到视频转码的log信息。
 
-注意：运行多路视频转码后，需等待一段时间，才能显示完整的log信息，否则只显示每秒的编码帧率，因为视频转码会根据不同的转码视频的大小运行不同的时间。
-
-键入执行指令，展示log文件信息。
+注意：运行多路视频转码后，需等待一段时间，才能显示完整的log信息，否则只显示每秒的编码帧率，因为视频转码会根据转码视频的大小运行不同的时间。
 
 ```c++
 bash show.sh
@@ -178,19 +193,6 @@ I20221202 15:32:15.037037 18854 MediaCodecV2.cpp:380] video encode frame rate fo
 I20221202 15:32:15.117311 18742 MediaCodecV2.cpp:447] Total decode frame rate: 25.3556 fps.
 I20221202 15:32:15.117194 18742 MediaCodecV2.cpp:445] total process time: 205.122s.
 ```
-
-### 3.4 停止多路视频转码
-**步骤1** 进入`mxbase`目录。
-
-**步骤2** 运行`stop.sh `脚本。
-
-键入执行指令，停止多路视频转码。
-
-```c++
-bash stop.sh
-```
-
-执行完毕后，会在控制台显示停止多路转码的情况。
 
 ## 4 常见问题
 

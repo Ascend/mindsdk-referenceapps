@@ -66,6 +66,7 @@ patch -p1 -f < {FFmpeg-Plugin-Dir}/AscendFFmpegPlugin/ascend_ffmpeg.patch
 * 执行命令
     ```bash
     export ASCEND_HOME=/usr/local/Ascend
+    . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
     ```
 
 ### 编译

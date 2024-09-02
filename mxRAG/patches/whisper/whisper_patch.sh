@@ -3,7 +3,7 @@
 set -e
 
 MODEL_NAME='tiny'
-DEVICE=2
+DEVICE=0
 SOC_VERSION="Ascend310P3"
 
 PATCH_DIR=$(dirname $(readlink -f $0))

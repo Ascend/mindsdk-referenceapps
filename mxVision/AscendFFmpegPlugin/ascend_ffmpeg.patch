@@ -8186,7 +8186,7 @@
  typedef struct AVHWDeviceInternal AVHWDeviceInternal;
 --- /dev/null
 +++ Ascendffmpeg/libavutil/hwcontext_ascend.c
-@@ -0,0 +1,326 @@
+@@ -0,0 +1,330 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
 + *

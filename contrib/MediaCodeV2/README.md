@@ -162,6 +162,11 @@ nohup ./mediacodecV2 ${test_path}/xxx.264 ${out_path}/output${i}.264 > ${log_pat
 
 **步骤4** 指定转码路数，运行`run.sh`脚本，得到视频转码的输出和log信息。
 
+```
+bash run.sh ${转码路数}
+# 例如10路转码： bash run.sh 10
+```
+
 注意：转码时间会根据输入视频大小而不同，如果过程中想终止转码，运行`stop.sh `脚本。
 
 ```c++

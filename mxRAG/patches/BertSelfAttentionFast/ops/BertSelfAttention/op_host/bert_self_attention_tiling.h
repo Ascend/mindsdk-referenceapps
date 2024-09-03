@@ -34,7 +34,7 @@ namespace optiling {
     TILING_DATA_FIELD_DEF_STRUCT(TCubeTiling, scoresCubeTiling);
     TILING_DATA_FIELD_DEF_STRUCT(TCubeTiling, probsCubeTiling);
     TILING_DATA_FIELD_DEF_STRUCT(SoftMaxTiling, softMaxTilingData);
-    END_TILING_DATA_SEF;
+    END_TILING_DATA_DEF;
 
     REGISTER_TILING_DATA_CLASS(BertSelfAttention, BertSelfAttentionTilingData)
 }

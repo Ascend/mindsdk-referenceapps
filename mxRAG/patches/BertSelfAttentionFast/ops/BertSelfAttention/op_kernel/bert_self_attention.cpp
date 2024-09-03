@@ -15,7 +15,7 @@ using namespace matmul;
 template <typename DataType>
 class BertSelfAttention {
 public:
-    __aicore__ include BertSelfAttention(){};
+    __aicore__ inline BertSelfAttention(){};
 
     __aicore__ inline void Init(GM_ADDR input, GM_ADDR queryW, GM_ADDR queryBias, GM_ADDR keyW, GM_ADDR keyBias,
                                 GM_ADDR valueW, GM_ADDR valueBias, GM_ADDR attentionMask, GM_ADDR dropOutMask,
@@ -41,7 +41,7 @@ private:
 
     __aicore__ inline void AddAttentionCompute(uint64_t batchId);
 
-    __aicore__ inline void SoftMaxCompute()
+    __aicore__ inline void SoftMaxCompute();
 
     __aicore__ inline void DropOutCompute(uint64_t offset);
 
@@ -140,7 +140,7 @@ private:
     uint32_t computeSeqLength;
 
     DataType recSqrtHeadSize;
-    float mulProValue;
+    float mulProbValue;
 
     uint32_t formerNum;
     uint32_t probePerBlockFormer;
@@ -155,10 +155,10 @@ template <typename DataType>
 __aicore__ inline void BertSelfAttention<DataType>::InitBasic(const BertSelfAttentionTilingData *__restrict tiling)
 {
     this->blkIdx = GetBlockIdx();
-    this->projectionTiling = tiling->scoresCubeTiling;
+    this->projectionTiling = tiling->projectionTiling;
     this->attentionScoresTiling = tiling->scoresCubeTiling;
     this->attentionProbsTiling = tiling->probsCubeTiling;
-    this->projectedVectorsMatSize = attentionScoresTiling.M * attentionScoresTiling.ka; //左右矩阵等大小
+    this->projectedVectorsMatSize = attentionScoresTiling.M * attentionScoresTiling.Ka; //左右矩阵等大小
     this->attentionScoresMatSize = attentionScoresTiling.M * attentionScoresTiling.N;                    
     this->batchSize = tiling->batchSize;
     this->headNum = tiling->headNum;
@@ -183,12 +183,12 @@ __aicore__ inline void BertSelfAttention<DataType>::InitBasic(const BertSelfAtte
                                       (blkIdx - fomerBatchNum) * perBlockBatchLatter * attentionScoresMatSize;
         this->batchIdOffset = fomerBatchNum * perBlockBatchFormer + (blkIdx - fomerBatchNum) * perBlockBatchLatter;
     }                   
-    this->SoftMaxTiling = tiling->SoftMaxTiling;
+    this->softMaxTiling = tiling->softMaxTilingData;
     this->softMaxWorkSpaceSize = tiling->softMaxWorkSpaceSize;
     this->baseSeqLength = tiling->baseSeqLength;
     this->tailSeqLength = tiling->tailSeqLength;
     this->recSqrtHeadSize = static_cast<DataType>(1.0f / tiling->SqrtHeadSize);
-    this->mulProValue = 1.0f - tiling->dropOutkeepProb;
+    this->mulProbValue = 1.0f - tiling->dropOutKeepProb;
     //单个query需要由当前核处理的probe数量
     uint32_t partNum = batchSize * headNum * ((sequenceLength + baseSeqLength -1) / baseSeqLength);
     this->formerNum = partNum % aivNum;
@@ -196,8 +196,8 @@ __aicore__ inline void BertSelfAttention<DataType>::InitBasic(const BertSelfAtte
     this->probePerBlockLatter = partNum / aivNum;
     this->probePerBlock = (blkIdx < formerNum ? probePerBlockFormer : probePerBlockLatter);
     this->beginProbeId = (blkIdx < formerNum
-                                ? (proberPerBlockBatchFormer * blkIdx)
-                                : (proberPerBlockBatchFormer * formerNum + (blkIdx - formerNum) * probePerBlockLatter));                                                                
+                                ? (probePerBlockFormer * blkIdx)
+                                : (probePerBlockFormer * formerNum + (blkIdx - formerNum) * probePerBlockLatter));                                                                
 }
 
 template <typename DataType>
@@ -232,7 +232,7 @@ __aicore__ inline void BertSelfAttention<DataType>::Init(GM_ADDR input, GM_ADDR 
     valueBiasGlobal.SetGlobalBuffer((__gm__ DataType *)valueBias);
     outputGlobal.SetGlobalBuffer((__gm__ DataType *)output);
     queryProjectedGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace);
-    keyProjentedGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace + batchSize * sequenceLength * featuresSize);
+    keyProjectedGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace + batchSize * sequenceLength * featuresSize);
     valueProjectedGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace + 
                                           2 * batchSize * sequenceLength * featuresSize);
     queryTransedProjectedGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace + 
@@ -244,7 +244,7 @@ __aicore__ inline void BertSelfAttention<DataType>::Init(GM_ADDR input, GM_ADDR 
     attentionScoresGlobal.SetGlobalBuffer((__gm__ DataType *)usrWorkspace + 
                                             6 * batchSize * sequenceLength * featuresSize);
     attentionMaskGlobal.SetGlobalBuffer((__gm__ DataType *)attentionMask);
-    dropOutMaskGlobal.SetGlobalBuffer((__gm__ DataType *)dropOutMask);
+    dropOutMaskGlobal.SetGlobalBuffer((__gm__ uint8_t *)dropOutMask);
     headMaskGlobal.SetGlobalBuffer((__gm__ DataType *)headMask);
     auto nNum = Ceil(projectionTiling.N, projectionTiling.singleCoreN);
     auto mNum = Ceil(projectionTiling.M, projectionTiling.singleCoreM);
@@ -254,7 +254,7 @@ __aicore__ inline void BertSelfAttention<DataType>::Init(GM_ADDR input, GM_ADDR 
     mmBOffset = coreNId * projectionTiling.singleCoreN;
     mmCOffset = coreMId * projectionTiling.singleCoreM * projectionTiling.N + coreNId * projectionTiling.singleCoreN;
     mmBiasOffset = coreNId * projectionTiling.singleCoreN;
-    mmASize = (coreNId != (mNum - 1)) ? projectionTiling.singleCoreM
+    mmASize = (coreMId != (mNum - 1)) ? projectionTiling.singleCoreM
                                          : (projectionTiling.M - coreMId * (projectionTiling.singleCoreM));
     mmBSize = (coreNId != (nNum - 1)) ? projectionTiling.singleCoreN
                                          : (projectionTiling.N - coreNId * (projectionTiling.singleCoreN));
@@ -267,7 +267,7 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessProjections()
     projectionMatmulObj.SetTensorA(inputGlobal[mmAOffset]);
     projectionMatmulObj.SetTensorB(queryWGlobal[mmBOffset]);
     projectionMatmulObj.SetBias(queryBiasGlobal[mmBiasOffset]);
-    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.ka);
+    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.Ka);
     projectionMatmulObj.IterateAll(queryProjectedGlobal[mmCOffset]);
     projectionMatmulObj.End();
     SyncAll();
@@ -275,7 +275,7 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessProjections()
     projectionMatmulObj.SetTensorA(inputGlobal[mmAOffset]);
     projectionMatmulObj.SetTensorB(keyWGlobal[mmBOffset]);
     projectionMatmulObj.SetBias(keyBiasGlobal[mmBiasOffset]);
-    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.ka);
+    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.Ka);
     projectionMatmulObj.IterateAll(keyProjectedGlobal[mmCOffset]);
     projectionMatmulObj.End();   
     SyncAll();
@@ -283,7 +283,7 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessProjections()
     projectionMatmulObj.SetTensorA(inputGlobal[mmAOffset]);
     projectionMatmulObj.SetTensorB(valueWGlobal[mmBOffset]);
     projectionMatmulObj.SetBias(valueBiasGlobal[mmBiasOffset]);
-    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.ka);
+    projectionMatmulObj.SetTail(mmASize, mmBSize, projectionTiling.Ka);
     projectionMatmulObj.IterateAll(valueProjectedGlobal[mmCOffset]);
     projectionMatmulObj.End();   
     SyncAll();     
@@ -299,7 +299,7 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessAttScore()
             pipe_barrier(PIPE_ALL); //useful
             auto transBatchId = (batchIdOffset + transLoopIds) / headNum;
             auto transHeadId = (batchIdOffset + transLoopIds) % headNum;
-            auto transOffsetCopyIn = transBatchId * (sequenceLength * featuresSize) + transHeaId * headSize;
+            auto transOffsetCopyIn = transBatchId * (sequenceLength * featuresSize) + transHeadId * headSize;
             auto transOffsetCopyOut = transBatchId * (sequenceLength * featuresSize) +
                                       transHeadId * sequenceLength * headSize;
 
@@ -329,9 +329,9 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessAttScore()
         pipe_barrier(PIPE_ALL); //useful
         for (int headCnt = 0; headCnt < curHeadNum; ++headCnt) {
             attentionScoresMatmulObj.SetTensorA(
-                queryTransedProjectedGlobal[protectedVectorsOffset + headCnt * protectedVectorsMatSize]);
+                queryTransedProjectedGlobal[projectedVectorsOffset + headCnt * protectedVectorsMatSize]);
             attentionScoresMatmulObj.SetTensorB(
-                keyTransedProjectedGlobal[protectedVectorsOffset + headCnt * protectedVectorsMatSize], true);
+                keyTransedProjectedGlobal[projectedVectorsOffset + headCnt * protectedVectorsMatSize], true);
             attentionScoresMatmulObj.IterateAll(
                 attentionScoresGlobal[attentionScoresOffset + headCnt * attentionScoresMatSize]);
             attentionScoresMatmulObj.End();
@@ -347,7 +347,7 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessVectors()
         pipe_barrier(PIPE_ALL);
         uint64_t sequencePart = (sequenceLength + baseSeqLength - 1) / baseSeqLength;
         uint64_t batchId = probeId / (headNum * sequencePart);
-        uint64_t batchId = (probeId % (headNum * sequencePart)) / sequencePart;
+        uint64_t headId = (probeId % (headNum * sequencePart)) / sequencePart;
         uint64_t sequencePartId = (probeId % (headNum * sequencePart)) % sequencePart;
         this->computeSeqLength = (sequencePartId == sequencePart - 1) ? tailSeqLength : baseSeqLength;
         uint64_t offset = batchId * headNum * sequenceLength * sequenceLength + 
@@ -356,21 +356,21 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessVectors()
         CopyIn(offset);
 
         pipe_barrier(PIPE_ALL);
-        MulScalarCompute(offset);
+        MulScalarCompute();
 
         pipe_barrier(PIPE_ALL);
-        AddAttentionCompute(offset);
+        AddAttentionCompute(batchId);
 
         pipe_barrier(PIPE_ALL);
-        SoftMaxCompute(offset);
+        SoftMaxCompute();
         pipe_barrier(PIPE_ALL);
         DropOutCompute(offset);
 
         pipe_barrier(PIPE_ALL);
-        MulHeadCompute(offset);        
+        MulHeadCompute(headId);        
 
         pipe_barrier(PIPE_ALL);
-        CopyIn(offset);        
+        CopyInA(offset);        
 
         pipe_barrier(PIPE_ALL);
         attentionProbsMatmulObj.SetTensorA(attentionScoresGlobal[offset]);
@@ -403,7 +403,7 @@ __aicore__ inline void BertSelfAttention<DataType>::Process()
 }
 
 template <typename DataType>
-__aicore__ inline void BertSelfAttention<DataType>::CopyIN(uint64_t offset)
+__aicore__ inline void BertSelfAttention<DataType>::CopyIn(uint64_t offset)
 {
     invecLocal = inQueueVec.AllocTensor<DataType>();
     DataCopy(invecLocal, attentionScoresGlobal[offset], computeSeqLength * sequenceLength);
@@ -422,7 +422,7 @@ template <typename DataType>
 __aicore__ inline void BertSelfAttention<DataType>::AddAttentionCompute(uint64_t batchId)
 {
     invecLocal = inQueueVec.DeQue<DataType>();
-    attentionMaskGlobal = attentionMaskQueue.AllocTensor<DataType>();
+    attentionMaskLocal = attentionMaskQueue.AllocTensor<DataType>();
     DataCopy(attentionMaskLocal, attentionMaskGlobal[batchId * sequenceLength], sequenceLength);
     pipe_barrier(PIPE_ALL); //useful
     for (int i = 0; i < computeSeqLength; i++) {
@@ -449,10 +449,10 @@ __aicore__ inline void BertSelfAttention<DataType>::DropOutCompute(uint64_t offs
 {
     const DataType zero = 0.0f;
     invecLocal = inQueueVec.DeQue<DataType>();
-    if (mulProValue ==0) {
+    if (mulProbValue ==0) {
         Duplicate(invecLocal, zero, computeSeqLength * sequenceLength);
-    } else if (mulProValue != 1) {
-        const DataType tmpMulProbValue = 1 / mulProValue;
+    } else if (mulProbValue != 1) {
+        const DataType tmpMulProbValue = 1 / mulProbValue;
         dropOutMaskLocal = dropOutMaskQueue.AllocTensor<uint8_t>();
 
         DataCopy(dropOutMaskLocal, dropOutMaskGlobal[offset / 8], computeSeqLength * sequenceLength / 8); //需要大于328
@@ -512,6 +512,11 @@ extern "C" __global__ __aicore__ void bert_self_attention(GM_ADDR input, GM_ADDR
 
     if (TILING_KEY_IS(0)) {
         BertSelfAttention<float> op;
+        op.Init(input ,queryW, queryBias, keyW, keyBias, valueW, valueBias, attentionMask, dropOutMask, headMask,
+                output, usrWorkspace, tiling_device);
+        op.Process();
+    } else if (TILING_KEY_IS(1)) {
+        BertSelfAttention<half> op;
         op.Init(input ,queryW, queryBias, keyW, keyBias, valueW, valueBias, attentionMask, dropOutMask, headMask,
                 output, usrWorkspace, tiling_device);
         op.Process();

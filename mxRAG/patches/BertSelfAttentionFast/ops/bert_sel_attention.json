@@ -40,7 +40,7 @@
                     "ND","ND"
                 ],
                 "type": [
-                    "uint8_t","uint8_t"
+                    "uint8","uint8"
                 ]
             },
             {
@@ -90,7 +90,7 @@
                     "ND","ND"
                 ],
                 "type": [
-                    "uint8_t","uint8_t"
+                    "uint8","uint8"
                 ] 
             },
             {
@@ -101,8 +101,9 @@
                 ],
                 "type": [
                     "float","float16"
-                ] 
-            },
+                  ] 
+                }
+            ],
             "output_desc": [
                 {
                     "name": "output",

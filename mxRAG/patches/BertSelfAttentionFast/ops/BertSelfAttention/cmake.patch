@@ -1,11 +1,11 @@
 --- makeself-header_origin.sh 2024-07-25 23:04:33.000000000 -0400
 +++ makeself-header.sh 2024-07-30 04:46:00.000000000 -0400
 @@ -3,15 +3,13 @@
- # This scripts was generated using Makeself $MS_VERSION
+ # This script was generated using Makeself $MS_VERSION
  # The license covering this archive and its contents, if any, is wholly independent of the Makeself license (GPL)
  # 2022.3.19-Modified the MS_Help function and some options
  -# Huawei Technologies Co., Ltd. <foss@huawei.com>
- +# huawei Technologies Co., Ltd.
+ +# Huawei Technologies Co., Ltd.
 
   ORIG_UMASK=\`umask\`
 
@@ -23,7 +23,7 @@
    --check                      Checks integrity and version dependency of the archive
    --quiet                      Quiet install mode, skip human-computer interactions
 -  --nox11                      Do not spawn an xterm
--  --noexec                     Do not run embedded scripts
+-  --noexec                     Do not run embedded script
 -  --extract=<path>             Extract directly to a target directory (absolute or relative)
 -                               Usually used with --noexec to just extract files without running
 -  --tar arg1 [arg2 ...]        Access the contents of the archive through the tar command
@@ -60,7 +60,7 @@
             if test x"\`basename \$SHA_PATH\`" = xshasum; then
                 SHA_ARG="-a 256"
 @@ -251,35 +239,6 @@
-                crc="000000000";
+                crc="0000000000";
             fi 
         fi 
 -       if test -x "\$MD5_PATH"; then
@@ -152,6 +152,3 @@
      *)
      Script_Args_Check \$1
      scriptargs="\$scriptargs '\$'"
-
- }
- )

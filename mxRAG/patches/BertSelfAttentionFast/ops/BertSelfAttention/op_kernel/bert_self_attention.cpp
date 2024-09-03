@@ -187,7 +187,7 @@ __aicore__ inline void BertSelfAttention<DataType>::InitBasic(const BertSelfAtte
     this->softMaxWorkSpaceSize = tiling->softMaxWorkSpaceSize;
     this->baseSeqLength = tiling->baseSeqLength;
     this->tailSeqLength = tiling->tailSeqLength;
-    this->recSqrtHeadSize = static_cast<DataType>(1.0f / tiling->SqrtHeadSize);
+    this->recSqrtHeadSize = static_cast<DataType>(1.0f / tiling->sqrtHeadSize);
     this->mulProbValue = 1.0f - tiling->dropOutKeepProb;
     //单个query需要由当前核处理的probe数量
     uint32_t partNum = batchSize * headNum * ((sequenceLength + baseSeqLength -1) / baseSeqLength);
@@ -329,9 +329,9 @@ __aicore__ inline void BertSelfAttention<DataType>::ProcessAttScore()
         pipe_barrier(PIPE_ALL); //useful
         for (int headCnt = 0; headCnt < curHeadNum; ++headCnt) {
             attentionScoresMatmulObj.SetTensorA(
-                queryTransedProjectedGlobal[projectedVectorsOffset + headCnt * protectedVectorsMatSize]);
+                queryTransedProjectedGlobal[projectedVectorsOffset + headCnt * projectedVectorsMatSize]);
             attentionScoresMatmulObj.SetTensorB(
-                keyTransedProjectedGlobal[projectedVectorsOffset + headCnt * protectedVectorsMatSize], true);
+                keyTransedProjectedGlobal[projectedVectorsOffset + headCnt * projectedVectorsMatSize], true);
             attentionScoresMatmulObj.IterateAll(
                 attentionScoresGlobal[attentionScoresOffset + headCnt * attentionScoresMatSize]);
             attentionScoresMatmulObj.End();
@@ -458,7 +458,7 @@ __aicore__ inline void BertSelfAttention<DataType>::DropOutCompute(uint64_t offs
         DataCopy(dropOutMaskLocal, dropOutMaskGlobal[offset / 8], computeSeqLength * sequenceLength / 8); //需要大于328
         pipe_barrier(PIPE_ALL);
 
-        Select(invecLocal, dropOutMaskLocal, invecLocal, zero, SELMODE::VSEL_TENSOR_SCALA_MODE,
+        Select(invecLocal, dropOutMaskLocal, invecLocal, zero, SELMODE::VSEL_TENSOR_SCALAR_MODE,
                computeSeqLength * sequenceLength);
         Muls(invecLocal, invecLocal, tmpMulProbValue, computeSeqLength * sequenceLength);
 

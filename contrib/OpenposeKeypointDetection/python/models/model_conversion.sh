@@ -31,7 +31,7 @@ export ASCEND_OPP_PATH=${install_path}/opp
 # 执行，转换 Openpose 模型
 # Execute, transform Openpose model.
 
-atc --model=./simplified_560_openpose_pytorch.onnx --framework=5 --output=openpose_pytorch_560 --soc_version=Ascend310 --input_shape="data:1, 3, 560, 560" --input_format=NCHW --insert_op_conf=./insert_op.cfg
+atc --model=./simplified_560_openpose_pytorch.onnx --framework=5 --output=openpose_pytorch_560 --soc_version=Ascend310B1 --input_shape="data:1, 3, 560, 560" --input_format=NCHW --insert_op_conf=./insert_op.cfg
 
 # 删除除 om 模型外额外生成的文件
 # Remove miscellaneous

@@ -72,10 +72,8 @@
 .
 ├── build.sh
 ├── images   # readme中使用的图片
-│   ├── ATCSuccess.png
-│   ├── COCOAnnotations.png
+│   ├── EvaluateInfo.png
 │   ├── KeypointNms.jpg
-│   ├── OverallProcess.jpg
 │   ├── PathError.png
 │   └── PipelineError.png
 ├── plugins  # 后处理插件源码
@@ -134,12 +132,12 @@ ATC run success, welcome to the next use.
 ```
 bash build.sh
 chmod 440 plugins/build/libmxpi_openposepostprocess.so
-cp plugins/build/libmxpi_openposepostprocess.so ${SDK_INSTALL_PATH}/mxVision/lib/plugins/
+cp plugins/build/libmxpi_openposepostprocess.so ${SDK_INSTALL_PATH}/mxVision/lib/plugins/ # ${SDK_INSTALL_PATH}替换为用户的SDK安装路径
 ```
 注意需要将生成的so权限改为440。
 
 ### 4.2 运行
-将一张包含人体的图片放在项目目录下，命名为 test.jpg。在该图片上进行检测，执行命令：
+将一张包含人体的图片放在项目目录python下，与main.py同目录，命名为 test.jpg。在该图片上进行检测，执行命令：
 ```
 cd python
 python3 main.py

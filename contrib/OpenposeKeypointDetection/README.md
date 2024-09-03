@@ -72,7 +72,7 @@
 .
 ├── build.sh
 ├── images   # readme中使用的图片
-│   ├── COCOAnnotations.png
+│   ├── EvaluateInfo.png
 │   ├── KeypointNms.jpg
 │   ├── PathError.png
 │   └── PipelineError.png

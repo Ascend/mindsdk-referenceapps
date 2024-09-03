@@ -5,10 +5,10 @@ rm -rf ./BertSelfAttention/*
 mv ./BertSelfAttention_/* ./BertSelfAttention
 rm -rf BertSelfAttention_
 cd ./BertSelfAttention
-if [ ! -f "CMakePresets.json"]; then
+if [ ! -f "CMakePresets.json" ]; then
     echo "Error: CMakePresets.json File does not exist."
     exit 1
-fi 
+fi
 patch -p1 CMakePresets.json < CMakePresets.patch
 patch -p1 cmake/util/makeself/makeself-header.sh < cmake.patch
 sed -i 's|"customize"|"mxRAG"|' "CMakePresets.json"

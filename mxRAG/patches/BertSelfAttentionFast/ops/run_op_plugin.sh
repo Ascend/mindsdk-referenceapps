@@ -38,7 +38,7 @@ function main() {
     # 2. 编译PTA插件并安装
     cp -rf op_plugin_patch/*.cpp ${PTA_DIR}/op_plugin/ops/v2r1/opapi
     cd ${PTA_DIR};
-    (bash ci/build.sh --python=${PYTHON_VERSION} --pytorch=v$PYTORCH_VESION ; pip3.11 uninstall torch-npu -y ; pip3.10 install dist/*.whl)
+    (bash ci/build.sh --python=${PYTHON_VERSION} --pytorch=v$PYTORCH_VESION ; pip3.11 uninstall torch-npu -y ; pip3.11 install dist/*.whl)
 
 }
 main

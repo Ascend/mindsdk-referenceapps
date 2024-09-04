@@ -36,7 +36,7 @@
  {
 -    OLD_PATH="\$PATH"
 -    PATH=\${GUESS_MD5_PATH:-"\$OLD_PATH:/bin:/usr/bin:/sbin:/usr/local/ssl/bin:/usr/local/bin:/opt/openssl/bin"}
--   MD5_ARG=""
+-	MD5_ARG=""
 -    MD5_PATH=\`exec <&- 2>&-; which md5sum || command -v md5sum || type md5sum\`
 -    test -x "\$MD5_PATH" || MD5_PATH=\`exec <&- 2>&-; which md5 || command -v md5 || type md5\`
 -    test -x "\$MD5_PATH" || MD5_PATH=\`exec <&- 2>&-; which digest || command -v digest || type digest\`
@@ -50,105 +50,105 @@
 +    fi
  
      if test x"\$quiet" = xn; then
-        MS_Printf "Verifying archive integrity..."
+ 		MS_Printf "Verifying archive integrity..."
 @@ -232,7 +221,6 @@
      i=1
      for s in \$filesizes
      do
--       crc=\`echo \$CRCsum | cut -d" " -f\$i\`
-        if test -x "\$SHA_PATH"; then
-            if test x"\`basename \$SHA_PATH\`" = xshasum; then
-                SHA_ARG="-a 256"
+-		crc=\`echo \$CRCsum | cut -d" " -f\$i\`
+ 		if test -x "\$SHA_PATH"; then
+ 			if test x"\`basename \$SHA_PATH\`" = xshasum; then
+ 				SHA_ARG="-a 256"
 @@ -251,35 +239,6 @@
-                crc="0000000000";
-            fi
-        fi
--       if test -x "\$MD5_PATH"; then
--           if test x"\`basename \$MD5_PATH\`" = xdigest; then
--               MD5_ARG="-a md5"
--           fi
--           md5=\`echo \$MD5 | cut -d" " -f\$i\`
--           if test x"\$md5" = x00000000000000000000000000000000; then
--               test x"\$verb" = xy && echo " \$1 does not contain an embedded MD5 checksum." >&2
--           else
--               md5sum=\`MS_dd_Progress "\$1" \$offset \$s | eval "\$MD5_PATH \$MD5_ARG" | cut -b-32\`;
--               if test x"\$md5sum" != x"\$md5"; then
--                   echo "Error in MD5 checksums: \$md5sum is different from \$md5" >&2
--                   exit 2
--               elif test x"\$quiet" = xn; then
--                   MS_Printf " MD5 checksums are OK." >&2
--               fi
--               crc="0000000000"; verb=n
--           fi
--       fi
--       if test x"\$crc" = x0000000000; then
--           test x"\$verb" = xy && echo " \$1 does not contain a CRC checksum." >&2
--       else
--           sum1=\`MS_dd_Progress "\$1" \$offset \$s | CMD_ENV=xpg4 cksum | awk '{print \$1}'\`
--           if test x"\$sum1" != x"\$crc"; then
--               echo "Error in checksums: \$sum1 is different from \$crc" >&2
--               exit 2
--           elif test x"\$quiet" = xn; then
--               MS_Printf " CRC checksums are OK." >&2
--           fi
--       fi
-        i=\`expr \$i + 1\`
-        offset=\`expr \$offset + \$s\`
-     done
-@@ -406,56 +365,11 @@
+ 				crc="0000000000";
+ 			fi
+ 		fi
+-		if test -x "\$MD5_PATH"; then
+-			if test x"\`basename \$MD5_PATH\`" = xdigest; then
+-				MD5_ARG="-a md5"
+-			fi
+-			md5=\`echo \$MD5 | cut -d" " -f\$i\`
+-			if test x"\$md5" = x00000000000000000000000000000000; then
+-				test x"\$verb" = xy && echo " \$1 does not contain an embedded MD5 checksum." >&2
+-			else
+-				md5sum=\`MS_dd_Progress "\$1" \$offset \$s | eval "\$MD5_PATH \$MD5_ARG" | cut -b-32\`;
+-				if test x"\$md5sum" != x"\$md5"; then
+-					echo "Error in MD5 checksums: \$md5sum is different from \$md5" >&2
+-					exit 2
+-				elif test x"\$quiet" = xn; then
+-					MS_Printf " MD5 checksums are OK." >&2
+-				fi
+-				crc="0000000000"; verb=n
+-			fi
+-		fi
+-		if test x"\$crc" = x0000000000; then
+-			test x"\$verb" = xy && echo " \$1 does not contain a CRC checksum." >&2
+-		else
+-			sum1=\`MS_dd_Progress "\$1" \$offset \$s | CMD_ENV=xpg4 cksum | awk '{print \$1}'\`
+-			if test x"\$sum1" != x"\$crc"; then
+-				echo "Error in checksums: \$sum1 is different from \$crc" >&2
+-				exit 2
+-			elif test x"\$quiet" = xn; then
+-				MS_Printf " CRC checksums are OK." >&2
+-			fi
+-		fi
+ 		i=\`expr \$i + 1\`
+ 		offset=\`expr \$offset + \$s\`
     done
-    exit 0
-    ;;
--   --tar)
--   offset=\`head -n "\$skip" "\$0" | wc -c | tr -d " "\`
--   arg1="\$2"
+@@ -406,56 +365,11 @@
+ 	done
+ 	exit 0
+ 	;;
+-	--tar)
+-	offset=\`head -n "\$skip" "\$0" | wc -c | tr -d " "\`
+-	arg1="\$2"
 -    shift 2 || { MS_Help; exit 1; }
--   for s in \$filesizes
--   do
--       MS_dd "\$0" \$offset \$s | MS_Decompress | tar "\$arg1" - "\$@"
--       offset=\`expr \$offset + \$s\`
--   done
--   exit 0
--   ;;
+-	for s in \$filesizes
+-	do
+-		MS_dd "\$0" \$offset \$s | MS_Decompress | tar "\$arg1" - "\$@"
+-		offset=\`expr \$offset + \$s\`
+-	done
+-	exit 0
+-	;;
      --check)
-    MS_Check "\$0" y
-    scriptargs="\$scriptargs \$1"
+ 	MS_Check "\$0" y
+ 	scriptargs="\$scriptargs \$1"
      shift
-    ;;
--   --noexec)
--   script=""
+ 	;;
+-	--noexec)
+-	script=""
 -    cleanup_script=""
--   shift
--   ;;
+-	shift
+-	;;
 -    --extract=*)
--   keep=y
--   targetdir=\`echo \$1 | cut -d"=" -f2 \`
+-	keep=y
+-	targetdir=\`echo \$1 | cut -d"=" -f2 \`
 -    if ! shift; then MS_Help; exit 1; fi
--   ;;
+-	;;
 -    --nox11)
--   nox11=y
--   shift
--   ;;
+-	nox11=y
+-	shift
+-	;;
 -    --xwin)
--   if test "$NOWAIT" = n; then
--       finish="echo Press Return to close this window...; read junk"
--   fi
--   xterm_loop=1
--   shift
--   ;;
+-	if test "$NOWAIT" = n; then
+-		finish="echo Press Return to close this window...; read junk"
+-	fi
+-	xterm_loop=1
+-	shift
+-	;;
 -    --phase2)
--   copy=phase2
--   shift
--   ;;
+-	copy=phase2
+-	shift
+-	;;
 -    --repack | --repack-path=*)
--   Script_Args_Check \$1
--   scriptargs="\$scriptargs '\$1'"
--   shift
--   if [[ ! "\$1" =~ ^-.* ]]; then
--       scriptargs="\$scriptargs '\$1'"
--       shift
--   fi
--   ;;
+-	Script_Args_Check \$1
+-	scriptargs="\$scriptargs '\$1'"
+-	shift
+-	if [[ ! "\$1" =~ ^-.* ]]; then
+-		scriptargs="\$scriptargs '\$1'"
+-		shift
+-	fi
+-	;;
      *)
-    Script_Args_Check \$1
-    scriptargs="\$scriptargs '\$1'"
+	Script_Args_Check \$1
+	scriptargs="\$scriptargs '\$1'"

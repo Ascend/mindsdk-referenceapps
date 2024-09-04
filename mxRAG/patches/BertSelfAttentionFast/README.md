@@ -25,6 +25,7 @@ Arm架构对应custom_opp_aarch64.run
 x86_64架构对应custom_opp_x86_64.run
 ```sh
 ./build.sh
+cd BertSelfAttention/build_out/
 ./custom_opp_{arch}.run
 ```
 

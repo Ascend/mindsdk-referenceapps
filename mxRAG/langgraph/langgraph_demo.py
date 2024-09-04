@@ -342,14 +342,16 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
     from mx_rag.knowledge.knowledge import KnowledgeStore
     from mx_rag.knowledge import KnowledgeDB
     from mx_rag.knowledge.handler import upload_files
-    from mx_rag.storage.vectorstore import MindFAISS
+    from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
     from mx_rag.storage.document_store import SQLiteDocstore
 
     npu_dev_id = 1
     
     # faiss_index_save_file is your faiss index save dir
     faiss_index_save_file:str = "/usr/local/Ascend/mx_rag/rag_npu_faiss.index"
-    vector_store = MindFAISS(x_dim=1024, index_type="FLAT:L2", devs=[npu_dev_id],
+    vector_store = MindFAISS(x_dim=1024,
+                             similarity_strategy=SimilarityStrategy.FLAT_L2,
+                             devs=[npu_dev_id],
                              load_local_index=faiss_index_save_file)
     mxrag_component["vector_store"] = vector_store
 

@@ -1,5 +1,5 @@
---- makeself-header_origin.sh   2024-07-25 23:04:33.000000000 -0400
-+++ makeself-header.sh  2024-07-30 04:46:00.000000000 -0400
+--- makeself-header_origin.sh	2024-07-25 23:04:33.000000000 -0400
++++ makeself-header.sh	2024-07-30 04:46:00.000000000 -0400
 @@ -3,15 +3,13 @@
  # This script was generated using Makeself $MS_VERSION
  # The license covering this archive and its contents, if any, is wholly independent of the Makeself license (GPL)

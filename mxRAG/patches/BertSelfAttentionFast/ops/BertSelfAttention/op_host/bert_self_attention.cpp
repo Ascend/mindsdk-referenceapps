@@ -38,7 +38,7 @@ uint32_t BaseSeqHeadCompute(uint32_t &baseSeqLength, const uint32_t sequenceLeng
     uint32_t typeSize = sizeof(T);
     baseSeqLength = BASESEQLENGTH;
     uint32_t tmpBaseSeqLength;
-    uint32_t usedSpace = baseSeqLength * sequenceLength * typeSize + sequenceLength * typeSize + 
+    uint32_t usedSpace = baseSeqLength * sequenceLength * typeSize + sequenceLength * typeSize +
                          baseSeqLength * sequenceLength / 8;
     do {
         tmpBaseSeqLength = baseSeqLength + BASESEQLENGTH;
@@ -92,7 +92,7 @@ static ge::graphStatus TilingBasic(gert::TilingContext *context, BertSelfAttenti
         tailSeqLength = baseSeqLength;
     }
 
-    std::vector<int64_t> softMaxShapeVec = {baseSeqLength, sequenceLength};
+    std::vector<int64_t> softMaxShapeVec = { baseSeqLength, sequenceLength };
     ge::Shape srcShape(softMaxShapeVec);
     AscendC::SoftMaxTilingFunc(srcShape, sizeof(T), softMaxWorkSpaceSize, tilingData.softMaxTilingData);
 

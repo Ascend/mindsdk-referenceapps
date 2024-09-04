@@ -94,7 +94,7 @@
 -		fi
  		i=\`expr \$i + 1\`
  		offset=\`expr \$offset + \$s\`
-    done
+     done
 @@ -406,56 +365,11 @@
  	done
  	exit 0
@@ -105,8 +105,8 @@
 -    shift 2 || { MS_Help; exit 1; }
 -	for s in \$filesizes
 -	do
--		MS_dd "\$0" \$offset \$s | MS_Decompress | tar "\$arg1" - "\$@"
--		offset=\`expr \$offset + \$s\`
+-	    MS_dd "\$0" \$offset \$s | MS_Decompress | tar "\$arg1" - "\$@"
+-	    offset=\`expr \$offset + \$s\`
 -	done
 -	exit 0
 -	;;
@@ -150,5 +150,5 @@
 -	fi
 -	;;
      *)
-	Script_Args_Check \$1
-	scriptargs="\$scriptargs '\$1'"
+ 	Script_Args_Check \$1
+ 	scriptargs="\$scriptargs '\$1'"

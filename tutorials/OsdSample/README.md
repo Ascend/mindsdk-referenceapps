@@ -66,7 +66,7 @@ bash generate_osd_om.sh
 > C++样例
 ```bash
 # 于C++样例主文件所在目录执行以下命令
-bash build.sh  # 编译 
+bash run.sh    # 编译 
 ./main         # 执行
 ```
 > Python样例

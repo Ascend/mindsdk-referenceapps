@@ -112,7 +112,6 @@ def rag_demo_l2_tei():
     except Exception as e:
         stack_trace = traceback.format_exc()
         print(stack_trace)
-        print(f"run demo failed:{e}")
     finally:
         import acl
         acl.finalize()

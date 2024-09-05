@@ -9,11 +9,11 @@ from transformers import PreTrainedTokenizerBase, AutoTokenizer
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from mx_rag.chain.tree_text_to_text import TreeText2TextChain
 from mx_rag.document.loader import DocxLoader, ExcelLoader, PdfLoader
-from mx_rag.embedding.service import TEIEmbedding
+from mx_rag.embedding.local import TextEmbedding
 from mx_rag.knowledge.handler import save_tree, upload_files_build_tree
 from mx_rag.knowledge.knowledge import KnowledgeStore,KnowledgeTreeDB
 from mx_rag.llm import Text2TextLLM
-from mx_rag.retrievers import TreeBuilderconfig, TreeRetrieverConfig, TreeRetriever
+from mx_rag.retrievers import TreeBuilderConfig, TreeRetrieverConfig, TreeRetriever
 from mx_rag.retrievers.tree_retriever import split_text
 from mx_rag.storage.document_store import SQLiteDocstore
 
@@ -65,7 +65,7 @@ def rag_demo_tree():
         # 设置向量检索使用的npu卡，具体可以用的卡可执行npu-smi info查询获取
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
-        text_emb = TEIEmbedding(model_path=embedding_path, dev_id=dev)
+        text_emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
         # 初始化文档chunk关系数据库
         document_store = SQLiteDocstore(db_path="./sql.db")
         # 初始化TreeText2TextChain实例，具体ip、端口、llm请根据实际情况修改。在构建树总结摘要时会使用，最后问答也会使用，问答调用前设置tree_retriever
@@ -77,7 +77,7 @@ def rag_demo_tree():
         # 使用模型的tokenizer
         tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer)
         # 初始化递归树构建的参数
-        tree_builder_config = TreeBuilderconfig(tokenizer=tokenizer, summarization_model=tree_chain)
+        tree_builder_config = TreeBuilderConfig(tokenizer=tokenizer, summarization_model=tree_chain)
         # 初始化知识管理关系数据库
         knowledge_store = KnowledgeStore(db_path="./sql.db")
         # 初始化递归树知识管理
@@ -116,3 +116,6 @@ def rag_demo_tree():
 
 if __name__ == '__main__':
     rag_demo_tree()
+
+
+

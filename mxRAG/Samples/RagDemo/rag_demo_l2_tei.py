@@ -25,7 +25,7 @@ def rag_demo_l2_tei():
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", type=list[str], default=["/home"])
     parse.add_argument("--file_path", type=str, default="/home/data/gaokao.txt")
-    parse.add_argument("--llm_url", type=str, default="http://51.38.66.29.1025/v1/chat/completions")
+    parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--score_threshold", type=int, default=1)
     parse.add_argument("--reranker_url", type=str, default=None)
@@ -58,7 +58,7 @@ def rag_demo_l2_tei():
         # 设置向量检索使用的npu卡，具体可以用的卡可执行npu-smi info查询获取
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
-        emb = TEIEmbedding(url=embedding_url, dev_id=dev)
+        emb = TEIEmbedding(url=embedding_url, use_http=True)
         # 初始化向量数据库
         vector_store = MindFAISS(x_dim=embedding_dim,
                                  similarity_strategy=SimilarityStrategy.FLAT_L2,

@@ -12,18 +12,20 @@ source /usr/local/Ascend/ascend-toolkit/set_env.sh
 source /home/{当前用户名}/Ascend/ascend-toolkit/set_env.sh
 ```
 ### 步骤2
-在mindxsdk-mxrag/ops目录下拉取ascend/op-plugin工程，并执行一键式注入脚本
+在ops目录下拉取ascend/op-plugin工程，并执行一键式注入脚本
 运行一键式注入脚本会将op_plugin_patch文件夹中的文件注入到op-plugin工程中，然后编译出包含融合算子的torch_npu包并替换原有的torch_npu包
 ```sh
-cd mindxsdk-mxrag/ops
+cd ops
 git clone https://gitee.com/ascend/op-plugin.git
 bash run_op_plugin.sh
 ```
 ### 步骤3
-在mindxsdk-mxrag/ops目录下运行run包注册算子
+在ops目录下运行run包注册算子
 Arm架构对应custom_opp_aarch64.run
 x86_64架构对应custom_opp_x86_64.run
 ```sh
+./build.sh
+cd BertSelfAttention/build_out/
 ./custom_opp_{arch}.run
 ```
 

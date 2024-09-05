@@ -57,7 +57,9 @@ print(result['text'])
 "我認爲跑步最重要的事就是給我帶來了身體健康"
 ```
 ## 参数说明
-whisper接口功能请参考openai-whisper官方接口(https://github.com/openai/whisper),因模型经过npu适配重新编译，使用时需注意以下两点：
+whisper接口功能请参考openai-whisper官方接口:https://github.com/openai/whisper
+
+因模型经过npu适配重新编译，使用时需注意以下两点：
 
 1.whisper.load_model为模型加载方法,使用时参数name填写经过本地向量化的模型名称，如需更换模型请重新编译后再使用；参数download_root默认为编译模型的导出路径，使用时无需填写。
 

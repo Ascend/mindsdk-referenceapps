@@ -18,7 +18,7 @@ from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.doc_loader_mng import LoaderMng
-import acl
+import traceback
 
 def rag_demo_l2_tei():
     parse = argparse.ArgumentParser()
@@ -111,8 +111,10 @@ def rag_demo_l2_tei():
         print(res)
         acl.finalize()
     except Exception as e:
+        stack_trace = traceback.format_exc()
+        print(stack_trace)
+        import acl
         acl.finalize()
-        print(f"run demo failed: {e}")
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ from mx_rag.llm import Text2TextLLM
 from mx_rag.retrievers import TreeBuilderConfig, TreeRetrieverConfig, TreeRetriever
 from mx_rag.retrievers.tree_retriever import split_text
 from mx_rag.storage.document_store import SQLiteDocstore
-import acl
+import traceback
 
 def rag_demo_tree():
     parse = argparse.ArgumentParser()
@@ -110,10 +110,11 @@ def rag_demo_tree():
         # 递归树Tree实例化保存为json文件，使用load_tree方法反序列化
         save_path = "./tree.json"
         save_tree(tree=tree, file_path=save_path)
-        acl.finalize()
     except Exception as e:
+        stack_trace = traceback.format_exc()
+        print(stack_trace)
+        import acl
         acl.finalize()
-        print(f"run demo failed: {e}")
 
 
 if __name__ == '__main__':

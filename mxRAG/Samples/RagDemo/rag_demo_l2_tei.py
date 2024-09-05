@@ -109,10 +109,11 @@ def rag_demo_l2_tei():
         res = text2text_chain.query(text=query)
         # 打印结果
         print(res)
-        acl.finalize()
     except Exception as e:
         stack_trace = traceback.format_exc()
         print(stack_trace)
+        print(f"run demo failed:{e}")
+    finally:
         import acl
         acl.finalize()
 

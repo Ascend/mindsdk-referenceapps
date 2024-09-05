@@ -113,6 +113,8 @@ def rag_demo_tree():
     except Exception as e:
         stack_trace = traceback.format_exc()
         print(stack_trace)
+        print(f"run demo failed:{e}")
+    finally:
         import acl
         acl.finalize()
 

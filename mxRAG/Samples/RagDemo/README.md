@@ -34,12 +34,3 @@ rag_demo_cache_qa.py对应"MxRAGCache缓存和自动生成QA"。
 python3 rag_demo_l2.py --query "请描述2024年高考作为题目" 
 ```
 说明:其他参数也可通过命令行的方式传入
-
-
-
-
-
-
-
-
-

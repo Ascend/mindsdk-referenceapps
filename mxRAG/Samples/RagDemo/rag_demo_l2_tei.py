@@ -18,6 +18,7 @@ from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.doc_loader_mng import LoaderMng
+import acl
 
 def rag_demo_l2_tei():
     parse = argparse.ArgumentParser()
@@ -108,7 +109,9 @@ def rag_demo_l2_tei():
         res = text2text_chain.query(text=query)
         # 打印结果
         print(res)
+        acl.finalize()
     except Exception as e:
+        acl.finalize()
         print(f"run demo failed: {e}")
 
 

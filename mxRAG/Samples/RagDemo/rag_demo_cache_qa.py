@@ -21,7 +21,7 @@ from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
-
+import acl
 
 def rag_cache_demo():
     parse = argparse.ArgumentParser()
@@ -141,7 +141,9 @@ def rag_cache_demo():
         now_time = time.time()
         print(cache_chain.query(args.query))
         print(f"耗时:{time.time() - now_time}s")
+        acl.finalize()
     except Exception as e:
+        acl.finalize()
         print(f"run demo failed: {e}")
 
 

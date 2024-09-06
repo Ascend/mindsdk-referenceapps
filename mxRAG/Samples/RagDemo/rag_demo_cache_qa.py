@@ -33,7 +33,7 @@ def rag_cache_demo():
     parse.add_argument("--cache_save_path", type=str, default="/home/data/cache_dave_dir")
     parse.add_argument("--llm_url", type=str, default="http://51.38.66.29.1025/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
-    parse.add_argument("--score_threshold", type=int, default=1)
+    parse.add_argument("--score_threshold", type=float, default=0.5)
     parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
     parse.add_argument("--tokenizer_path", type=str, default="/home/model/Llama3-8B-Chinese-Chat/")
     parse.add_argument("--npu_device_id", type=int, default=1)

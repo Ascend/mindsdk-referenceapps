@@ -37,6 +37,7 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 | scipy   | 1.13.1 |
 | easydict   | 1.13   |
 | shapely | 2.0.6  |
+| tqdm  | 4.66.5 |
 
 ### 1.5 代码目录结构与说明
 
@@ -48,6 +49,8 @@ TextSnake 弯曲形状文字检测基于 MindX SDK 开发，对图片中的任�
 ├── t.pipeline      //pipeline
 ├── 精度1.png
 ├── 精度1.png
+├── sdk.png
+├── pipeline.png
 └──README.md          
 ```
 
@@ -76,7 +79,7 @@ https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/con
 
 该压缩文件中已存在om文件，需删除后重新进行模型转换 ，具体步骤如下：
 
-**步骤1** 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置 TextSnake/model 目录下。
+**步骤1** 下载上述模型压缩包，获取 TextSnake.onnx 模型文件放置本案例代码的 TextSnake/model 目录下（model文件夹需手动创建）。
 
 **步骤2** 进入TextSnake/model文件夹下执行命令。
 
@@ -165,7 +168,7 @@ canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool)
 canvas = canvas[1:h + 1, 1:w + 1].astype(np.bool_)
 ```
 
-**步骤 2**  按照模型转换获取om模型，放置在 TextSnake/model 路径下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型，则无需修改相关文件，否则修改 main.py 中pipeline的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名。
+**步骤 2**  按照模型转换获取om模型，放置在 TextSnake/model 路径下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型，则无需修改相关文件，否则修改 main.py 中用到的t.pipeline文件的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名。
 
 **步骤 3**  在命令行输入 如下命令运行整个工程。
 

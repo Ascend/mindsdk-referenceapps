@@ -18,7 +18,7 @@ from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.doc_loader_mng import LoaderMng
-
+import traceback
 
 def rag_demo_l2():
     parse = argparse.ArgumentParser()
@@ -26,7 +26,7 @@ def rag_demo_l2():
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", type=list[str], default=["/home"])
     parse.add_argument("--file_path", type=str, default="/home/data/gaokao.md")
-    parse.add_argument("--llm_url", type=str, default="http://51.38.66.29.1025/v1/chat/completions")
+    parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--score_threshold", type=int, default=1)
     parse.add_argument("--reranker_path", type=str, default=None)
@@ -49,7 +49,7 @@ def rag_demo_l2():
         loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md"])
         loader_mng.register_loader(loader_class=DocxLoader, file_types=[".docx"])
         # 加载文档切分器，使用langchain的
-        loader_mng.register_splitter(splitter_clsss=RecursiveCharacterTextSplitter,
+        loader_mng.register_splitter(splitter_class=RecursiveCharacterTextSplitter,
                                      file_types=[".docx", ".txt", ".md"],
                                      splitter_params={"chunk_size": 750,
                                                       "chunk_overlap": 150,
@@ -110,7 +110,11 @@ def rag_demo_l2():
         # 打印结果
         print(res)
     except Exception as e:
-        print(f"run demo failed: {e}")
+        stack_trace = traceback.format_exc()
+        print(stack_trace)
+    finally:
+        import acl
+        acl.finalize()
 
 
 if __name__ == '__main__':

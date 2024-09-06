@@ -21,7 +21,7 @@ from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
-
+import traceback
 
 def rag_cache_demo():
     parse = argparse.ArgumentParser()
@@ -47,9 +47,9 @@ def rag_cache_demo():
             vector_config={"vector_type":"npu_faiss_db",
                            "x_dim":args.embedding_dim,
                            "devs":[args.npu_device_id],
-                           "index_type":SimilarityStrategy.FLAT_L2},
+                           "similarity_strategy":SimilarityStrategy.FLAT_L2},
             cache_config="sqlite",
-            emb_config={"embedding_type":"local_text_embdding",
+            emb_config={"embedding_type":"local_text_embedding",
                         "x_dim": args.embedding_dim,
                         "model_path":args.embedding_path,
                         "dev_id":args.npu_device_id
@@ -90,7 +90,7 @@ def rag_cache_demo():
         # 加载文档加载器，可以使用mxrag自有的，也可以使用langchain的
         loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md"])
         # 加载文档切分器，使用langchain的
-        loader_mng.register_splitter(splitter_clsss=RecursiveCharacterTextSplitter,
+        loader_mng.register_splitter(splitter_class=RecursiveCharacterTextSplitter,
                                      file_types=[".txt", ".md"],
                                      splitter_params={"chunk_size": 750,
                                                       "chunk_overlap": 150,
@@ -142,7 +142,11 @@ def rag_cache_demo():
         print(cache_chain.query(args.query))
         print(f"耗时:{time.time() - now_time}s")
     except Exception as e:
-        print(f"run demo failed: {e}")
+        stack_trace = traceback.format_exc()
+        print(stack_trace)
+    finally:
+        import acl
+        acl.finalize()
 
 
 if __name__ == '__main__':

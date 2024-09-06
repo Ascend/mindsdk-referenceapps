@@ -1,5 +1,5 @@
 diff --git a/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline.py b/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline.py
-index a953ae480..7beef2f23 100644
+index a953ae480..b470ffdec 100644
 --- a/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline.py
 +++ b/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline.py
 @@ -13,19 +13,30 @@
@@ -198,7 +198,7 @@ index a953ae480..7beef2f23 100644
 +class ImageRequest(BaseModel):
 +    prompt: str
 +    output_format: str
-+	size: str = "512*512"
++    size: str = "512*512"
  
 -        if i > 4: # do not count the time spent inferring the first 0 to 4 images
 -            use_time += time.time() - start_time
@@ -211,8 +211,8 @@ index a953ae480..7beef2f23 100644
 +async def text2image(image_request: ImageRequest):
 +    prompt = image_request.prompt
 +    output_format = image_request.output_format
-+	height = int(image_request.size.split("*")[0])
-+	width = int(image_request.size.split("*")[1])
++    height = int(image_request.size.split("*")[0])
++    width = int(image_request.size.split("*")[1])
  
 -            if current_prompt != prompts[j]:
 -                current_prompt = prompts[j]
@@ -245,8 +245,8 @@ index a953ae480..7beef2f23 100644
 +        with mindietorch.npu.stream(stream):
 +            images = pipe.ascendie_infer_ddim(
 +                [prompt],
-+				height = height,
-+				width = width,
++                height = height,
++                width = width,
 +                num_inference_steps=args.steps,
 +                skip_steps=args.skip_steps,
 +                flag_cache=args.flag_cache,
@@ -254,8 +254,8 @@ index a953ae480..7beef2f23 100644
 +    else:
 +        images = pipe.ascendie_infer(
 +            [prompt],
-+			height = height,
-+			width = width,
++            height = height,
++            width = width,
 +            num_inference_steps=args.steps,
 +            skip_steps=args.skip_steps,
 +            flag_cache=args.flag_cache,
@@ -269,7 +269,7 @@ index a953ae480..7beef2f23 100644
 +    image_byte_arr = io.BytesIO()
 +    image.save(image_byte_arr, format=output_format)
 +    image_byte_arr.seek(0)    
-+	return base64.b64encode(image_byte_arr.read())
++    return base64.b64encode(image_byte_arr.read())
 +    # return Response(content=image_byte_arr.getvalue(), media_type=f"image/{output_format.lower()}")
  
  

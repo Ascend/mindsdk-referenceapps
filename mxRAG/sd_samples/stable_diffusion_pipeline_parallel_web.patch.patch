@@ -1,5 +1,5 @@
 diff --git a/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline_parallel.py b/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline_parallel.py
-index 76c7e606c..3baa44a78 100644
+index 76c7e606c..7a07a3793 100644
 --- a/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline_parallel.py
 +++ b/MindIE/MindIE-Torch/built-in/foundation/stable_diffusion/stable_diffusion_pipeline_parallel.py
 @@ -13,13 +13,20 @@
@@ -201,7 +201,7 @@ index 76c7e606c..3baa44a78 100644
 +class ImageRequest(BaseModel):
 +    prompt: str
 +    output_format: str
-+	size: str = "512*512"
++    size: str = "512*512"
  
 -            if current_prompt != prompts[j]:
 -                current_prompt = prompts[j]
@@ -212,8 +212,8 @@ index 76c7e606c..3baa44a78 100644
 +async def text2image(image_request: ImageRequest):
 +    prompt = image_request.prompt
 +    output_format = image_request.output_format
-+	height = int(image_request.size.split("*")[0])
-+	width = int(image_request.size.split("*")[1])
++    height = int(image_request.size.split("*")[0])
++    width = int(image_request.size.split("*")[1])
 +    if output_format.lower() not in ["png", "jpeg", "jpg", "webp"]:
 +        raise HTTPException(status_code=400, detail="Invalid output format")
  
@@ -243,8 +243,8 @@ index 76c7e606c..3baa44a78 100644
 +    if args.scheduler == "DDIM":
 +        images = pipe.ascendie_infer_ddim(
 +            [prompt],
-+			height = height,
-+			width = width,
++            height = height,
++            width = width,
 +            num_inference_steps=args.steps,
 +            skip_steps=args.skip_steps,
 +            flag_cache=args.flag_cache,
@@ -252,8 +252,8 @@ index 76c7e606c..3baa44a78 100644
 +    else:
 +        images = pipe.ascendie_infer(
 +            [prompt],
-+			height = height,
-+			width = width,
++            height = height,
++            width = width,
 +            num_inference_steps=args.steps,
 +            skip_steps=args.skip_steps,
 +            flag_cache=args.flag_cache,
@@ -267,7 +267,7 @@ index 76c7e606c..3baa44a78 100644
 +    image_byte_arr = io.BytesIO()
 +    image.save(image_byte_arr, format=output_format)
 +    image_byte_arr.seek(0)    
-+	return base64.b64encode(image_byte_arr.read())
++    return base64.b64encode(image_byte_arr.read())
 +    # return Response(content=image_byte_arr.getvalue(), media_type=f"image/{output_format.lower()}")
  
  

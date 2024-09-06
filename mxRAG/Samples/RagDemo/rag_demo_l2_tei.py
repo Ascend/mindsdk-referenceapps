@@ -28,7 +28,7 @@ def rag_demo_l2_tei():
     parse.add_argument("--file_path", type=str, default="/home/data/gaokao.txt")
     parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
-    parse.add_argument("--score_threshold", type=int, default=1)
+    parse.add_argument("--score_threshold", type=float, default=0.5)
     parse.add_argument("--reranker_url", type=str, default=None)
     parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
 

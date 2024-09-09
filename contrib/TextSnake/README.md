@@ -63,7 +63,6 @@ export install_path=${install_path}
 . ${install_path}/set_env.sh
 . ${MX_SDK_HOME}/set_env.sh
 ```
-
 注：**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
 **${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 

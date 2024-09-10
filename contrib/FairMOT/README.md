@@ -164,6 +164,10 @@ bash build.sh
 
 命令执行成功后会在`FairMOT/plugins/FairmotPostProcess`和`FairMOT/plugins/MxpiTrackIdReplaceClassName`目录下分别生成build文件夹。将`FairMOT/plugins/MxpiTrackIdReplaceClassName/build`目录下生成的libmxpi_trackidreplaceclassname.so移动到`${SDK安装路径}/mxVision/lib/plugins`目录下，同时将`FairMOT/plugins/FairmotPostProcess/build`目录下生成的libfairmotpostprocess.so移动到`${SDK安装路径}/mxVision/lib/plugins`目录下。注意，**需要将生成的so的权限改为440**。
 
+```
+chmod 440 FairMOT/plugins/MxpiTrackIdReplaceClassName/build/libmxpi_trackidreplaceclassname.so
+chmod 440 FairMOT/plugins/FairmotPostProcess/build/libfairmotpostprocess.so
+```
 ### 4.3 修改pipline文件
 
 **步骤1**. 修改`FairMOT/pipeline`目录下的fairmot.pipeline文件中mxpi_rtspsrc0的内容。
@@ -181,6 +185,11 @@ bash build.sh
 
 **步骤2**. 根据使用的device修改deviceId。
 
+```
+        "stream_config": {
+                    "deviceId": "0"      //修改为实际使用的device
+                },
+```
 **步骤3**. 根据输入的视频宽高修改mxpi_videoencoder0的宽高配置。
 
 ```

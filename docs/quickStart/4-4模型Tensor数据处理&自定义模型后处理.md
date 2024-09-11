@@ -166,8 +166,8 @@ ascend-toolkit-path:CANN安装路径
 修改为用户CANN安装路径和SDK安装路径。
 
 ```
-.${ascend-toolkit-path}/set_env.sh
-.${SDK-path}/set_env.sh
+. ${ascend-toolkit-path}/set_env.sh
+. ${SDK-path}/set_env.sh
 ```
 同时需取消根目录下`CMakeLists.txt`文件中如下注释内容：
 ```

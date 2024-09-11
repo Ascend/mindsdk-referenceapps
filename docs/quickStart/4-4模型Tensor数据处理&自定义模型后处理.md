@@ -39,8 +39,8 @@ bytes dataStr; // 内存中的数据
 int32 tensorDataType; //内存中张量的数据类型
 ```
 #### 1.1.2 C++结构体说明
-该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件（位于${SDK_INSTALL_PATH}/include/MxBase/Tensor/TensorBase/），本处仅摘抄部分关键信息。
-SDK_INSTALL_PATH表示SDK安装路径。
+该结构体为TensorBase数据结构相关说明，详情可参考TensorBase.h头文件(位于${SDK-path}/include/MxBase/Tensor/TensorBase/)，本处仅摘抄部分关键信息。
+SDK-path表示SDK安装路径。
 ```c++
 enum TensorDataType {
     TENSOR_DTYPE_UNDEFINED = -1,
@@ -138,7 +138,8 @@ Atlas 300I pro、Atlas 300V pro
 |   ├── SamplePluginPost.pipeline
 |   └── CMakeLists.txt
 ```
-上述目录中`samplePluginPostProc`为工程根目录，`mindx_sdk_plugin`为[插件工程目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mindx_sdk_plugin)，`mxVision`为图像分类识别样例工程目录(直接从SDK中/samples/mxVision获取)。
+上述目录中`samplePluginPostProc`为[工程根目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/samplePluginPostProc)，`mindx_sdk_plugin`为[插件工程目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mindx_sdk_plugin)，`mxVision`为图像分类识别样例工程目录(直接从SDK中/samples/mxVision获取)。
+test.jpg为分类识别样例所需图片，用户需要自行准备，并放置在对应目录下。
 
 ## 2 设置环境变量
 
@@ -156,8 +157,26 @@ export LD_LIBRARY_PATH=usr/lib64:$LD_LIBRARY_PATH
 SDK-path:SDK mxVision安装路径
 ascend-toolkit-path:CANN安装路径
 ```
-`./mxVision/C++/`和`./mxVision/python/`目录下的run.sh脚本也需要按照对应的环境变量进行修改。
+相应地，`./mxVision/C++/`和`./mxVision/python/`目录下的run.sh脚本也需要做出对应修改。 将两脚本中环境变量路径：
 
+```
+. /usr/local/Ascend/ascend-toolkit/set_env.sh
+. ../../../set_env.sh
+```
+修改为用户CANN安装路径和SDK安装路径。
+
+```
+.${ascend-toolkit-path}/set_env.sh
+.${SDK-path}/set_env.sh
+```
+同时需取消根目录下`CMakeLists.txt`文件中如下注释内容：
+```
+#set(ENV{MX_SDK_HOME} %MX_SDK_HOME%)
+```
+并将其设置为对应SDK安装路径
+```
+set(ENV{MX_SDK_HOME} "${SDK-path}")
+```
 ## 3 准备模型
 
 **步骤1** 下载[YOLOv3模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)YOLOv3模型。

@@ -169,14 +169,7 @@ ascend-toolkit-path:CANN安装路径
 . ${ascend-toolkit-path}/set_env.sh
 . ${SDK-path}/set_env.sh
 ```
-同时需取消根目录下`CMakeLists.txt`文件中如下注释内容：
-```
-#set(ENV{MX_SDK_HOME} %MX_SDK_HOME%)
-```
-并将其设置为对应SDK安装路径
-```
-set(ENV{MX_SDK_HOME} "${SDK-path}")
-```
+
 ## 3 准备模型
 
 **步骤1** 下载[YOLOv3模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)YOLOv3模型。

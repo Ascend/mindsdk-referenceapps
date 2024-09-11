@@ -13,7 +13,7 @@ def evaluate_creator(evaluator, evaluate_type: str):
     language="chinese"
 
     # prompt_dir is ragas cache_dir will speed evaluate
-    prompt_dir="/usr/local/lib/python3.10/dist-packages/mx_rag/evaluate/prompt"
+    prompt_dir="/usr/local/lib/python3.11/dist-packages/mx_rag/evaluate/prompt"
 
     def evaluate_context_relevancy(state):
         question = state["question"]
@@ -362,7 +362,7 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
     mxrag_component["chunk_store"] = chunk_store
 
     # your knowledge file white paths if docx not in white paths will raise exception
-    white_paths="/usr/local/Ascend/mx_rag/knowledge"
+    white_paths=["/usr/local/Ascend/mx_rag/knowledge"]
     knowledge_store = KnowledgeStore(db_path=sqlite_save_file)
     Knowledge_db = KnowledgeDB(knowledge_store=knowledge_store, chunk_store=chunk_store, vector_store=vector_store,
                                knowledge_name="rag", white_paths=white_paths)

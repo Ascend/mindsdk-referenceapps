@@ -381,15 +381,12 @@ def create_hybrid_search_retriever(mxrag_component: Dict[str, Any]):
     chunk_store = mxrag_component.get("chunk_store")
     vector_store = mxrag_component.get("vector_store")
     embedding = mxrag_component.get("embedding_connector")
-    llm = mxrag_component.get("llm_connector")
 
     npu_faiss_retriever = Retriever(vector_store=vector_store, document_store=chunk_store,
-                                    embed_func=embedding.embed_documents, k=10, score_threshold=1.6)
-    
-    bm_retriever = BMRetriever(docs=chunk_store.get_all_chunk(), llm=llm, k=3, max_tokens=512)
+                                    embed_func=embedding.embed_documents, k=10, score_threshold=0.4)
 
     hybrid_retriever = EnsembleRetriever(
-        retrievers=[npu_faiss_retriever, bm_retriever], weights=[0.8, 0.2]
+        retrievers=[npu_faiss_retriever], weights=[1.0]
     )
 
     mxrag_component["retriever"] = hybrid_retriever
@@ -398,9 +395,9 @@ def create_hybrid_search_retriever(mxrag_component: Dict[str, Any]):
 def create_cache(mxrag_component: Dict[str, Any],
                  reranker_url: str,
                  embedding_url: str):
-    from mx_rag.cache.cache_config import SimilarityCacheConfig
-    from mx_rag.cache.cache_config import EvictPolicy
-    from mx_rag.cache.cache_core import MxRAGCache
+    from mx_rag.cache import SimilarityCacheConfig
+    from mx_rag.cache import EvictPolicy
+    from mx_rag.cache import MxRAGCache
 
     npu_dev_id = 1
     # data_save_folder is your cache file when you next run your rag applicate it will read form disk

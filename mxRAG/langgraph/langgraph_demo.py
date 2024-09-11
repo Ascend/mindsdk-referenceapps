@@ -398,6 +398,7 @@ def create_cache(mxrag_component: Dict[str, Any],
     from mx_rag.cache import SimilarityCacheConfig
     from mx_rag.cache import EvictPolicy
     from mx_rag.cache import MxRAGCache
+    from mx_rag.storage.vectorstore import SimilarityStrategy
 
     npu_dev_id = 1
     # data_save_folder is your cache file when you next run your rag applicate it will read form disk
@@ -408,7 +409,7 @@ def create_cache(mxrag_component: Dict[str, Any],
             "vector_type": "npu_faiss_db",
             "x_dim": 1024,
             "devs": [npu_dev_id],
-            "index_type": "FLAT:L2"
+            "similarity_strategy": SimilarityStrategy.FLAT_L2
         },
         cache_config="sqlite",
         emb_config={

@@ -22,15 +22,15 @@ def rag_demo_upload():
     parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding")
     parse.add_argument("--tei_emb", type=bool, default=False)
     parse.add_argument("--embedding_dim", type=int, default=1024)
-    parse.add_argument("--white_path", type=list[str], default=["/home"])
-    parse.add_argument("--file_path", type=str, default="/home/data/gaokao.md")
+    parse.add_argument("--white_path", nargs='+', default=["/home"])
+    parse.add_argument("--file_path", nargs='+', default=["/home/tf/gaokao.docx"])
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
     tei_emb: bool = args.pop('tei_emb')
     embedding_dim: int = args.pop('embedding_dim')
     white_path: list[str] = args.pop('white_path')
-    file_path: str = args.pop('file_path')
+    file_path: list[str] = args.pop('file_path')
 
     try:
         # 离线构建知识库,首先注册文档处理器
@@ -57,7 +57,8 @@ def rag_demo_upload():
         vector_store = MindFAISS(x_dim=embedding_dim,
                                  similarity_strategy=SimilarityStrategy.FLAT_L2,
                                  devs=[dev],
-                                 load_local_index="./faiss.index"
+                                 load_local_index="./faiss.index",
+                                 auto_save=True
                                  )
         # 初始化文档chunk关系数据库
         chunk_store = SQLiteDocstore(db_path="./sql.db")
@@ -72,7 +73,7 @@ def rag_demo_upload():
                                    )
         # 完成离线知识库构建,上传领域知识gaokao.docx文档。
         upload_files(knowledge=knowledge_db,
-                     files=[file_path],
+                     files=file_path,
                      loader_mng=loader_mng,
                      embed_func=emb.embed_documents,
                      force=True

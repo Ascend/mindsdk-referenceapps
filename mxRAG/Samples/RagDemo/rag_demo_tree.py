@@ -24,12 +24,12 @@ def rag_demo_tree():
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", type=list[str], default=["/home"])
     parse.add_argument("--file_path", type=str, default="/home/data/MindIE.docx")
-    parse.add_argument("--llm_url", type=str, default="http://51.38.66.29.1025/v1/chat/completions")
+    parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--llm_tokenizer", type=str, default="/home/mxaiagent/workspace/llama3-8B-Chinese-Chat/")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--query", type=str, default="linux下如何安装MindIE?请介绍详细步骤，用中文回答")
 
-    args = parse.parse_args().__dict__
+    args = parse.parse_args()
     embedding_path: str = args.pop('embedding_path')
     white_path: list[str] = args.pop('white_path')
     file_path: str = args.pop('file_path')

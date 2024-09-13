@@ -50,7 +50,8 @@ def rag_demo_query():
         vector_store = MindFAISS(x_dim=embedding_dim,
                                  similarity_strategy=SimilarityStrategy.FLAT_L2,
                                  devs=[dev],
-                                 load_local_index="./faiss.index"
+                                 load_local_index="./faiss.index",
+                                 auto_save=True
                                  )
         # 初始化文档chunk关系数据库
         chunk_store = SQLiteDocstore(db_path="./sql.db")
@@ -66,7 +67,7 @@ def rag_demo_query():
         reranker_path = args.get("reranker_path")
         tei_reranker = args.get("tei_reranker")
         if tei_reranker and reranker_path is not None:
-            reranker = TEIReranker(url=reranker_path, dev_id=dev)
+            reranker = TEIReranker(url=reranker_path, use_http=True)
         elif reranker_path is not None:
             reranker = LocalReranker(model_path=reranker_path, dev_id=dev)
         else:

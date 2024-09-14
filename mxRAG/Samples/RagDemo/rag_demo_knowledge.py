@@ -23,7 +23,7 @@ def rag_demo_upload():
     parse.add_argument("--tei_emb", type=bool, default=False)
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", nargs='+', default=["/home"])
-    parse.add_argument("--file_path", nargs='+', default=["/home/tf/gaokao.docx"])
+    parse.add_argument("--file_path", nargs='+', default=["/home/data/gaokao.md"])
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
@@ -71,7 +71,7 @@ def rag_demo_upload():
                                    knowledge_name="test",
                                    white_paths=white_path
                                    )
-        # 完成离线知识库构建,上传领域知识gaokao.docx文档。
+        # 完成离线知识库构建,上传领域知识gaokao.md文档。
         upload_files(knowledge=knowledge_db,
                      files=file_path,
                      loader_mng=loader_mng,
@@ -90,3 +90,4 @@ def rag_demo_upload():
 
 if __name__ == '__main__':
     rag_demo_upload()
+    

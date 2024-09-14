@@ -6,7 +6,6 @@ from paddle.base import libpaddle
 from mx_rag.chain import SingleText2TextChain
 from mx_rag.embedding.local import TextEmbedding
 from mx_rag.embedding.service import TEIEmbedding
-from mx_rag.knowledge.knowledge import KnowledgeStore
 from mx_rag.llm import Text2TextLLM
 from mx_rag.reranker.local import LocalReranker
 from mx_rag.reranker.service import TEIReranker

@@ -18,7 +18,8 @@ embedding AIM  [安装地址](https://www.hiascend.com/developer/ascendhub/detai
 reranker AIM [安装地址](https://www.hiascend.com/developer/ascendhub/detail/rerank_nim_300i)
 
 ## 2 环境安装
-参考 MXRAG环境安装手册，分别安装cann、mxrag、以及部署embedding, reranker, mind-ie服务。
+参考 MXRAG环境安装手册，分别安装cann、mxrag、以及部署embedding, reranker, mind-ie服务,安装langgraph包:pip3 install langgraph==0.2.19
+
 
 ## 3 总体介绍
 基于langgraph和mx_rag sdk搭建RAG应用, 根据langgraph的定义需要包含node和graph，node中使用mx_rag的 sdk完成相应的功能。

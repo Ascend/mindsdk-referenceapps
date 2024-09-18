@@ -9,35 +9,31 @@ import argparse
 import json
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer
-from mx_rag.cache.cache_chain import CacheChainChat
-from mx_rag.cache.cache_config import CacheConfig, SimilarityCacheConfig
-from mx_rag.cache.cache_core import MxRAGCache
-from mx_rag.cache.cache_generate_qas import QAGenerationConfig,QAGenerate,MarkDownParser
+from mx_rag.cache import CacheConfig, SimilarityCacheConfig, MxRAGCache,CacheChainChat,QAGenerationConfig,QAGenerate,MarkDownParser
 from mx_rag.chain import SingleText2TextChain
 from mx_rag.embedding.local import TextEmbedding
 from mx_rag.knowledge import KnowledgeDB, KnowledgeStore, KnowledgeDB, upload_files, LoaderMng
 from mx_rag.llm import Text2TextLLM
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
-from mx_rag.storage.vectorstore import MindFAISS
-from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
+from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
 import traceback
 
 def rag_cache_demo():
     parse = argparse.ArgumentParser()
-    parse.add_argument("--embedding_path", type=str, default="/home/model/acge_text_embedding")
+    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding")
     parse.add_argument("--embedding_dim", type=int, default=1024)
-    parse.add_argument("--reranker_path", type=str, default="home/model/bge-reranker-large")
+    parse.add_argument("--reranker_path", type=str, default="home/data/bge-reranker-large")
     parse.add_argument("--white_path", type=list[str], default=["/home"])
     parse.add_argument("--file_path", type=str, default="/home/data/gaokao.md")
     parse.add_argument("--cache_save_path", type=str, default="/home/data/cache_dave_dir")
-    parse.add_argument("--llm_url", type=str, default="http://51.38.66.29.1025/v1/chat/completions")
+    parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--score_threshold", type=float, default=0.5)
     parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
     parse.add_argument("--tokenizer_path", type=str, default="/home/model/Llama3-8B-Chinese-Chat/")
     parse.add_argument("--npu_device_id", type=int, default=1)
-    args = parse.parse_args().__dict__
+    args = parse.parse_args()
 
     try:
         # memory cache缓存作为L1缓存
@@ -88,10 +84,10 @@ def rag_cache_demo():
         # 离线构建知识库，首先注册文档处理器
         loader_mng = LoaderMng()
         # 加载文档加载器，可以使用mxrag自有的，也可以使用langchain的
-        loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md"])
+        loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md", ".docx"])
         # 加载文档切分器，使用langchain的
         loader_mng.register_splitter(splitter_class=RecursiveCharacterTextSplitter,
-                                     file_types=[".txt", ".md"],
+                                     file_types=[".txt", ".md", ".docx"],
                                      splitter_params={"chunk_size": 750,
                                                       "chunk_overlap": 150,
                                                       "keep_separator": False
@@ -148,6 +144,6 @@ def rag_cache_demo():
         import acl
         acl.finalize()
 
-
+    
 if __name__ == '__main__':
     rag_cache_demo()

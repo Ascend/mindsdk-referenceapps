@@ -6,13 +6,14 @@ import json
 import requests
 import html2text
 
-DOC_QA_UNSTRUCTURED_COMPRESSOR_URL = "https://127.0.0.1:8000/doc_qa_unstructured_compressor/"
-DOC_QA_STRUCTURED_COMPRESSOR_URL = "https://127.0.0.1:8000/doc_qa_structured_compressor/"
-LOG_ANALYSE_COMPRESSOR_URL = "https://127.0.0.1:8000/log_analyse_compressor/"
-DOC_SUMMARY_COMPRESSOR_URL = "https://127.0.0.1:8000/doc_summary_compressor/"
+
+DOC_QA_UNSTRUCTURED_COMPRESSOR_URL = "http://127.0.0.1:8000/doc_qa_unstructured_compressor/"
+DOC_QA_STRUCTURED_COMPRESSOR_URL = "http://127.0.0.1:8000/doc_qa_structured_compressor/"
+LOG_ANALYSE_COMPRESSOR_URL = "http://127.0.0.1:8000/log_analyse_compressor/"
+DOC_SUMMARY_COMPRESSOR_URL = "http://127.0.0.1:8000/doc_summary_compressor/"
 
 
-def run_unstructured_doc_qa(file_path, question, target_token, target_rate):
+def run_unstructured_doc_qa(file_path, question, target_tokens, target_rate):
     with open(file_path, 'r', encoding='utf-8') as f:
         context = f.read()
 
@@ -20,12 +21,12 @@ def run_unstructured_doc_qa(file_path, question, target_token, target_rate):
         {
             'context': context,
             'question': question,
-            'target_token': target_token,
+            'target_tokens': target_tokens,
             'target_rate': target_rate
         }
     )
 
-    ret = requests.post(DOC_QA_UNSTRUCTURED_COMPRESSOR_URL, data=data)
+    ret = requests.post(DOC_QA_UNSTRUCTURED_COMPRESSOR_URL, data)
     return ret.text
 
 
@@ -41,7 +42,7 @@ def run_structured_doc_qa(file_path, question, topk):
         }
     )
 
-    ret = requests.post(DOC_QA_STRUCTURED_COMPRESSOR_URL, data=data)
+    ret = requests.post(DOC_QA_STRUCTURED_COMPRESSOR_URL, data)
     return ret.text
 
 
@@ -64,7 +65,7 @@ def run_log_analysis(file_path, question):
         }
     )
 
-    ret = requests.post(LOG_ANALYSE_COMPRESSOR_URL, data=data)
+    ret = requests.post(LOG_ANALYSE_COMPRESSOR_URL, data)
     return ret.text
 
 
@@ -82,29 +83,29 @@ def run_summary(file_path, question, compress_rate, embedding_batch_size, min_cl
         }
     )
 
-    ret = requests.post(DOC_SUMMARY_COMPRESSOR_URL, data=data)
+    ret = requests.post(DOC_SUMMARY_COMPRESSOR_URL, data)
     return ret.text
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parse = argparse.ArgumentParser()
 
     # scenes: unstructured_doc_qa, structured_doc_qa, log_analysis, summary
-    parser.add_argument('--scenes', type=str, default='summary')
+    parse.add_argument("--scenes", type=str, default="summary")
 
-    parser.add_argument('--file_path', type=str, default='')
-    parser.add_argument('--question', type=str, default='')
+    parse.add_argument("--file_path", type=str, default="")
+    parse.add_argument("--question", type=str, default="")
 
-    parser.add_argument('--topk', type=int, default=5)
+    parse.add_argument("--topk", type=int, default=5)
 
-    parser.add_argument('--target_tokens', type=int, default=3000)
-    parser.add_argument('--target_rate', type=float, default=0.5)
+    parse.add_argument("--target_tokens", type=int, default=3000)
+    parse.add_argument("--target_rate", type=float, default=0.5)
 
-    parser.add_argument('--compress_rate', type=float, default=0.6)
-    parser.add_argument('--embedding_batch_size', type=int, default=64)
-    parser.add_argument('--min_cluster_size', type=int, default=2)
+    parse.add_argument("--compress_rate", type=float, default=0.6)
+    parse.add_argument("--embedding_batch_size", type=int, default=64)
+    parse.add_argument("--min_cluster_size", type=int, default=2)
 
-    args = parser.parse_args()
+    args = parse.parse_args()
 
     if args.scenes == 'unstructured_doc_qa':
         compressed_text = run_unstructured_doc_qa(args.file_path, args.question, args.target_tokens, args.target_rate)

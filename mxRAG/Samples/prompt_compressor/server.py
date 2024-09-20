@@ -42,7 +42,7 @@ DOC_SUMMARY_MODEL_PATH = '/home/models/bge-small-zh-v1.3'
 DOC_SUMMARY_DEVICE = 'npu:1'
 
 doc_qa = DocQaCompressor(DOC_QA_MODEL_PATH, DOC_QA_DEVICE_ID)
-log_analYse = LogAnalyseCompressor()
+log_analyse = LogAnalyseCompressor()
 doc_summary = ClusterSummary(DOC_SUMMARY_MODEL_PATH, DOC_SUMMARY_DEVICE)
 
 app = FastAPI()
@@ -72,7 +72,7 @@ async def create_log_analyse_item(item: LogAnaluseItem):
     context = item.context
     question = item.question
 
-    return log_analuse.run_log_analyse(context, question)
+    return log_analyse.run_log_analysis(context, question)
 
 
 @app.post("doc_summary_compressor/")

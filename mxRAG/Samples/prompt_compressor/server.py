@@ -22,7 +22,7 @@ class DocQaStructuredItem(BaseModel):
     topk: int
 
 
-class LogAnaluseItem(BaseModel):
+class LogAnalyseItem(BaseModel):
     context: str
     question: str
 
@@ -38,7 +38,7 @@ class SummaryItem(BaseModel):
 DOC_QA_MODEL_PATH = '/home/models/bge-reranker-v2-m3'
 DOC_QA_DEVICE_ID = 1
 
-DOC_SUMMARY_MODEL_PATH = '/home/models/bge-small-zh-v1.3'
+DOC_SUMMARY_MODEL_PATH = '/home/models/bge-small-zh-v1.5'
 DOC_SUMMARY_DEVICE = 'npu:1'
 
 doc_qa = DocQaCompressor(DOC_QA_MODEL_PATH, DOC_QA_DEVICE_ID)
@@ -68,7 +68,7 @@ async def create_doc_qa_structured_item(item: DocQaStructuredItem):
 
 
 @app.post("/log_analyse_compressor/")
-async def create_log_analyse_item(item: LogAnaluseItem):
+async def create_log_analyse_item(item: LogAnalyseItem):
     context = item.context
     question = item.question
 

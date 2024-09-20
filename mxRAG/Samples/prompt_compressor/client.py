@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # scenes: unstructured_doc_qa, structured_doc_qa, log_analysis, summary
     parser.add_argument('--scenes', type=str, default='summary')
 
-    parser.add_argument('--file_patch', type=str, default='')
+    parser.add_argument('--file_path', type=str, default='')
     parser.add_argument('--question', type=str, default='')
 
     parser.add_argument('--topk', type=int, default=5)
@@ -107,13 +107,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.scenes == 'unstructured_doc_qa':
-        compressed_text = run_unstructured_doc_qa(args.file_patch, args.question, args.target_tokens, args.target_rate)
+        compressed_text = run_unstructured_doc_qa(args.file_path, args.question, args.target_tokens, args.target_rate)
     elif args.scenes == 'structured_doc_qa':
-        compressed_text = run_structured_doc_qa(args.file_patch, args.question, args.topk)
+        compressed_text = run_structured_doc_qa(args.file_path, args.question, args.topk)
     elif args.scenes == 'log_analysis':
-        compressed_text = run_log_analysis(args.file_patch, args.question)
+        compressed_text = run_log_analysis(args.file_path, args.question)
     elif args.scenes == 'summary':
-        compressed_text = run_summary(args.file_patch, args.question, args.compress_rate, args.embedding_batch_size,
+        compressed_text = run_summary(args.file_path, args.question, args.compress_rate, args.embedding_batch_size,
                                       args.min_cluster_size)
     else:
         raise ValueError('Unrecognized scenes')

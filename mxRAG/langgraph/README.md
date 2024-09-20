@@ -18,7 +18,7 @@ embedding AIM  [安装地址](https://www.hiascend.com/developer/ascendhub/detai
 reranker AIM [安装地址](https://www.hiascend.com/developer/ascendhub/detail/rerank_nim_300i)
 
 ## 2 环境安装
-参考 MXRAG环境安装手册，分别安装cann、mxrag、以及部署embedding, reranker, mind-ie服务,安装langgraph包:pip3 install langgraph==0.2.19
+参考 MXRAG环境安装手册，分别安装cann、mxrag、以及部署embedding, reranker, mindie服务,安装langgraph包:pip3 install langgraph==0.2.19
 
 
 ## 3 总体介绍
@@ -73,7 +73,7 @@ def create_loader_and_spliter(mxrag_component: Dict[str, Any],
     mxrag_component["loader_mng"] = loader_mng
 ```
 ### 4.2 RAG远端服务
-以下是分别初始化mind-ie，AIM embedding，AIM reranker服务，用户需要传入相应的地址。
+以下是分别初始化mindie，AIM embedding，AIM reranker服务，用户需要传入相应的地址。
 ```python
 def create_remote_connector(mxrag_component: Dict[str, Any],
                             reranker_url: str,
@@ -86,19 +86,18 @@ def create_remote_connector(mxrag_component: Dict[str, Any],
 
     reranker = RerankerFactory.create_reranker(similarity_type="tei_reranker",
                                                url=reranker_url,
-                                               use_http=True,
+                                               client_param=ClientParam,(use_http=True),
                                                k=3)
     mxrag_component['reranker_connector'] = reranker
 
     embedding = EmbeddingFactory.create_embedding(embedding_type="tei_embedding",
                                                   url=embedding_url,
-                                                  use_http=True)
+                                                  client_param=ClientParam(use_http=True))
     mxrag_component['embedding_connector'] = embedding
 
     llm = Text2TextLLM(base_url=llm_url, model_name=llm_model_name,
-                       use_http=True,
-                       timeout=240,
-                       max_tokens=4096)
+                       client_param=ClientParam(use_http=True),
+                       llm_config=LLMParameterConfig(max_tokens=4096))
     mxrag_component['llm_connector'] = llm
 ```
 ### 4.3 RAG知识库
@@ -165,12 +164,12 @@ def create_cache(mxrag_component: Dict[str, Any],
         emb_config={
             "embedding_type": "tei_embedding",
             "url": embedding_url,
-            "use_http": True
+           	"client_param": ClientParam(use_http=True)
         },
         similarity_config={
             "similarity_type": "tei_reranker",
             "url": reranker_url,
-            "use_http": True
+            "client_param": ClientParam(use_http=True)
         },
         retrieval_top_k=3,
         cache_size=100,
@@ -554,7 +553,7 @@ if __name__ == "__main__":
     # nim tei embed
     nim_tei_embedding_url = "http://ip:port/embed"
 
-    # mind-ie llm server
+    # mindie llm server
     llm_url = "http://ip:port/v1/chat/completions"
 
     # llm model name like Llama3-8B-Chinese-Chat etc

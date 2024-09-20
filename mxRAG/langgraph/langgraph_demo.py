@@ -8,13 +8,18 @@ from langchain_core.retrievers import BaseRetriever
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import PromptTemplate
 
+from mx_rag.utils import ClientParam
+from mx_rag.llm import LLMParameterConfig
 
 def evaluate_creator(evaluator, evaluate_type: str):
     language="chinese"
 
     # prompt_dir is ragas cache_dir will speed evaluate
-    prompt_dir="/usr/local/lib/python3.11/dist-packages/mx_rag/evaluate/prompt"
-
+    # python3.11
+    prompt_dir="/home/HwHiAiUser/.local/lib/python3.11/site-packages/mx_rag/evaluate/prompt"
+    # python3.10
+	#prompt_dir="/home/HwHiAiUser/.local/lib/python3.10/site-packages/mx_rag/evaluate/prompt"
+    
     def evaluate_context_relevancy(state):
         question = state["question"]
         documents = state["documents"]
@@ -322,19 +327,19 @@ def create_remote_connector(mxrag_component: Dict[str, Any],
 
     reranker = RerankerFactory.create_reranker(similarity_type="tei_reranker",
                                                url=reranker_url,
-                                               use_http=True,
+                                               client_param=ClientParam(use_http=True),
                                                k=3)
     mxrag_component['reranker_connector'] = reranker
 
     embedding = EmbeddingFactory.create_embedding(embedding_type="tei_embedding",
                                                   url=embedding_url,
-                                                  use_http=True)
+                                                  client_param=ClientParam(use_http=True)
+                                                  )
     mxrag_component['embedding_connector'] = embedding
 
     llm = Text2TextLLM(base_url=llm_url, model_name=llm_model_name,
-                       use_http=True,
-                       timeout=240,
-                       max_tokens=4096)
+                       client_param=ClientParam(use_http=True, timeout=240),
+                       llm_config=LLMParameterConfig(max_tokens=4096))
     mxrag_component['llm_connector'] = llm
 
 
@@ -345,10 +350,10 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
     from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
     from mx_rag.storage.document_store import SQLiteDocstore
 
-    npu_dev_id = 1
+    npu_dev_id = 0
     
     # faiss_index_save_file is your faiss index save dir
-    faiss_index_save_file:str = "/usr/local/Ascend/mx_rag/rag_npu_faiss.index"
+    faiss_index_save_file:str = "./rag_npu_faiss.index"
     vector_store = MindFAISS(x_dim=1024,
                              similarity_strategy=SimilarityStrategy.FLAT_L2,
                              devs=[npu_dev_id],
@@ -357,12 +362,12 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
 
 
     # sqlite_save_file is your sqlite save dir
-    sqlite_save_file:str = "/usr/local/Ascend/mx_rag/rag_sql.db"
+    sqlite_save_file:str = "./rag_sql.db"
     chunk_store = SQLiteDocstore(db_path=sqlite_save_file)
     mxrag_component["chunk_store"] = chunk_store
 
     # your knowledge file white paths if docx not in white paths will raise exception
-    white_paths=["/usr/local/Ascend/mx_rag/knowledge"]
+    white_paths=["/home/"]
     knowledge_store = KnowledgeStore(db_path=sqlite_save_file)
     Knowledge_db = KnowledgeDB(knowledge_store=knowledge_store, chunk_store=chunk_store, vector_store=vector_store,
                                knowledge_name="rag", white_paths=white_paths)
@@ -400,7 +405,7 @@ def create_cache(mxrag_component: Dict[str, Any],
     from mx_rag.cache import MxRAGCache
     from mx_rag.storage.vectorstore import SimilarityStrategy
 
-    npu_dev_id = 1
+    npu_dev_id = 0
     # data_save_folder is your cache file when you next run your rag applicate it will read form disk
     cache_data_save_folder = "/usr/local/Ascend/mx_rag/cache_save_folder/"
 
@@ -415,12 +420,12 @@ def create_cache(mxrag_component: Dict[str, Any],
         emb_config={
             "embedding_type": "tei_embedding",
             "url": embedding_url,
-            "use_http": True
+            "client_param": ClientParam(use_http=True)
         },
         similarity_config={
             "similarity_type": "tei_reranker",
             "url": reranker_url,
-            "use_http": True
+            "client_param": ClientParam(use_http=True)
         },
         retrieval_top_k=3,
         cache_size=100,
@@ -514,7 +519,7 @@ if __name__ == "__main__":
     # nim tei embed
     nim_tei_embedding_url = "http://ip:port/embed"
 
-    # mind-ie llm server
+    # mindie llm server
     llm_url = "http://ip:port/v1/chat/completions"
 
     # llm model name like Llama3-8B-Chinese-Chat etc

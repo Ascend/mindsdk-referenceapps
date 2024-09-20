@@ -13,6 +13,7 @@ from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
+from mx_rag.utils import ClientParam
 import traceback
 
 def rag_demo_query():
@@ -41,7 +42,7 @@ def rag_demo_query():
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
         if tei_emb:
-            emb = TEIEmbedding(url=embedding_path, use_http=True)
+            emb = TEIEmbedding(url=embedding_path, client_param=ClientParam(use_http=True))
         else:
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
 
@@ -66,16 +67,14 @@ def rag_demo_query():
         reranker_path = args.get("reranker_path")
         tei_reranker = args.get("tei_reranker")
         if tei_reranker and reranker_path is not None:
-            reranker = TEIReranker(url=reranker_path, use_http=True)
+            reranker = TEIReranker(url=reranker_path, client_param=ClientParam(use_http=True))
         elif reranker_path is not None:
             reranker = LocalReranker(model_path=reranker_path, dev_id=dev)
         else:
             reranker = None
         # 配置text生成text大模型chain，具体ip端口请根据实际情况适配修改
-        text2text_chain = SingleText2TextChain(llm=Text2TextLLM(base_url=llm_url,
-                                                                model_name=model_name,
-                                                                use_http=True,
-                                                                timeout=60),
+        llm=Text2TextLLM(base_url=llm_url, model_name=model_name, client_param=ClientParam(use_http=True, timeout=60))
+        text2text_chain = SingleText2TextChain(llm=llm,
                                                retriever=text_retriever,
                                                reranker=reranker
                                                )

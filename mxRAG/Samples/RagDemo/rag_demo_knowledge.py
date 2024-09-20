@@ -15,6 +15,7 @@ from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.doc_loader_mng import LoaderMng
+from mx_rag.utils import ClientParam
 import traceback
 
 def rag_demo_upload():
@@ -23,7 +24,7 @@ def rag_demo_upload():
     parse.add_argument("--tei_emb", type=bool, default=False)
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", nargs='+', default=["/home"])
-    parse.add_argument("--file_path", nargs='+', default=["/home/data/gaokao.md"])
+    parse.add_argument("--file_path", nargs='+', default=["/home/HwHiAiUser/gaokao.txt"])
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
@@ -50,7 +51,7 @@ def rag_demo_upload():
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
         if tei_emb:
-            emb = TEIEmbedding(url=embedding_path, use_http=True)
+            emb = TEIEmbedding(url=embedding_path, client_param=ClientParam(use_http=True))
         else:
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
         # 初始化向量数据库

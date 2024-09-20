@@ -17,6 +17,7 @@ from datasets import load_dataset
 
 from mx_rag.rag_test.model.api_model import APILLM, APIEmbedding
 from mx_rag.rag_test.model.local_model import LocalEmbedding
+from mx_rag.utils import ClientParam
 
 RAG_TEST_METRIC = {
     "faithfulness": faithfulness,
@@ -152,13 +153,13 @@ if __name__ == '__main__':
     llm_model = None
 
     if args.embed_url:
-        embedding_model = APIEmbedding(args.embed_url, use_http=True)
+        embedding_model = APIEmbedding(args.embed_url,  client_param=ClientParam(use_http=True))
 
     if args.embed_path:
         embedding_model = LocalEmbedding(args.embed_path)
 
     if args.llm_url:
-        llm_model = APILLM(args.llm_url, args.llm_model_name, use_http=True)
+        llm_model = APILLM(args.llm_url, args.llm_model_name, client_param=ClientParam(use_http=True))
 
     metric_test_list = []
     for metric_name in metric_list:

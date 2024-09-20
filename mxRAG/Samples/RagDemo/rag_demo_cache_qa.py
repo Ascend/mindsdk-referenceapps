@@ -17,6 +17,7 @@ from mx_rag.llm import Text2TextLLM
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
+from mx_rag.utils import ClientParam
 import traceback
 
 def rag_cache_demo():
@@ -25,14 +26,14 @@ def rag_cache_demo():
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--reranker_path", type=str, default="home/data/bge-reranker-large")
     parse.add_argument("--white_path", type=list[str], default=["/home"])
-    parse.add_argument("--file_path", type=str, default="/home/data/gaokao.md")
-    parse.add_argument("--cache_save_path", type=str, default="/home/data/cache_dave_dir")
+    parse.add_argument("--file_path", type=str, default="/home/HwHiAiUser/gaokao.md")
+    parse.add_argument("--cache_save_path", type=str, default="/home/HwHiAiUser/cache_dave_dir")
     parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--score_threshold", type=float, default=0.5)
     parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
-    parse.add_argument("--tokenizer_path", type=str, default="/home/model/Llama3-8B-Chinese-Chat/")
-    parse.add_argument("--npu_device_id", type=int, default=1)
+    parse.add_argument("--tokenizer_path", type=str, default="/home/data/Llama3-8B-Chinese-Chat/")
+    parse.add_argument("--npu_device_id", type=int, default=0)
     args = parse.parse_args()
 
     try:
@@ -67,7 +68,8 @@ def rag_cache_demo():
         # memory_cache和similarity_cache串联形成多级缓存入口是memory cache
         memory_cache.join(similarity_cache)
         # 定义用于生成QA的大模型
-        llm = Text2TextLLM(base_url=args.llm_url, model_name=args.model_name, use_http=True, timeout=600)
+        client_param= ClientParam(use_http=True, timeout=600)
+        llm = Text2TextLLM(base_url=args.llm_url, model_name=args.model_name, client_param=client_param)
         # 返回markdown的标题和内容，标题要和内容相关
         titles, contents = MarkDownParser(os.path.dirname(args.file_path)).parse()
         # 使用大模型计算token大小
@@ -105,9 +107,9 @@ def rag_cache_demo():
 
 
         # 初始化文档chunk关系数据库
-        chunk_store = SQLiteDocstore(db_path="/home/sql.db")
+        chunk_store = SQLiteDocstore(db_path="./sql.db")
         # <可选>初始化知识管理关系数据库
-        knowledge_store = KnowledgeStore(db_path="/home/sql.db")
+        knowledge_store = KnowledgeStore(db_path="./sql.db")
         # <可选>初始化知识库管理
         knowledge_db = KnowledgeDB(knowledge_store=knowledge_store,
                                    chunk_store=chunk_store,

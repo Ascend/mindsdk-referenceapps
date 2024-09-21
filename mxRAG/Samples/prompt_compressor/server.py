@@ -75,7 +75,7 @@ async def create_log_analyse_item(item: LogAnalyseItem):
     return log_analyse.run_log_analysis(context, question)
 
 
-@app.post("doc_summary_compressor/")
+@app.post("/doc_summary_compressor/")
 async def create_doc_summary_item(item: SummaryItem):
     context = item.context
     question = item.question

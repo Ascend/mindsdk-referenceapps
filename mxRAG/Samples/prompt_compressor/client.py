@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import ast
 import requests
 import html2text
 
@@ -27,7 +28,8 @@ def run_unstructured_doc_qa(file_path, question, target_tokens, target_rate):
     )
 
     ret = requests.post(DOC_QA_UNSTRUCTURED_COMPRESSOR_URL, data)
-    return ret.text
+    target_text = ast.literal_eval(ret.text)
+    return target_text
 
 
 def run_structured_doc_qa(file_path, question, topk):
@@ -43,7 +45,8 @@ def run_structured_doc_qa(file_path, question, topk):
     )
 
     ret = requests.post(DOC_QA_STRUCTURED_COMPRESSOR_URL, data)
-    return ret.text
+    target_text = ast.literal_eval(ret.text)
+    return target_text
 
 
 def run_log_analysis(file_path, question):
@@ -57,6 +60,7 @@ def run_log_analysis(file_path, question):
             manual_description = raw_data['manual_description']
             content = convertor.handle(fail_log)
             data_list.append((content, major_type, manual_description))
+            break
 
     data = json.dumps(
         {
@@ -66,7 +70,12 @@ def run_log_analysis(file_path, question):
     )
 
     ret = requests.post(LOG_ANALYSE_COMPRESSOR_URL, data)
-    return ret.text
+    lst = ast.literal_eval(ret.text)
+    if len(lst) == 2:
+        raise ValueError('The returned value does not meet the expectation.')
+    target_text = lst[0]
+    reserved_list = lst[1]
+    return target_text, reserved_list
 
 
 def run_summary(file_path, question, compress_rate, embedding_batch_size, min_cluster_size):
@@ -84,7 +93,8 @@ def run_summary(file_path, question, compress_rate, embedding_batch_size, min_cl
     )
 
     ret = requests.post(DOC_SUMMARY_COMPRESSOR_URL, data)
-    return ret.text
+    target_text = ast.literal_eval(ret.text)
+    return target_text
 
 
 if __name__ == '__main__':
@@ -112,7 +122,7 @@ if __name__ == '__main__':
     elif args.scenes == 'structured_doc_qa':
         compressed_text = run_structured_doc_qa(args.file_path, args.question, args.topk)
     elif args.scenes == 'log_analysis':
-        compressed_text = run_log_analysis(args.file_path, args.question)
+        compressed_text, _ = run_log_analysis(args.file_path, args.question)
     elif args.scenes == 'summary':
         compressed_text = run_summary(args.file_path, args.question, args.compress_rate, args.embedding_batch_size,
                                       args.min_cluster_size)

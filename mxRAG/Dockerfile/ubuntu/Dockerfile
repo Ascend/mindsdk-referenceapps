@@ -18,7 +18,7 @@ RUN wget https://cmake.org/files/v3.24/cmake-3.24.3.tar.gz && \
     cd cmake-3.24.3 && \
     ./bootstrap && make -j && make install
 
-ARG PYTHON_VERSION=python3.11
+ARG PYTHON_VERSION=python3.10
 
 RUN apt-get update && apt-get install -y build-essential ${PYTHON_VERSION}  ${PYTHON_VERSION}-dev ${PYTHON_VERSION}-distutils ${PYTHON_VERSION}-venv 
 RUN curl -k https://bootstrap.pypa.io/get-pip.py | ${PYTHON_VERSION} &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/${PYTHON_VERSION} 1
@@ -48,7 +48,7 @@ RUN pip3 install --upgrade setuptools && pip3 install numpy==1.26.4 decorator==5
 
 # 安装cann-toolkit和kernel
 RUN bash Ascend-cann-toolkit*_linux-${ARCH}.run --install --quiet && \
-    bash Ascend-cann-kernels*_linux.run --install --quiet
+    bash Ascend-cann-kernels*_linux-${ARCH}.run--install --quiet
 ENV ASCEND_HOME_PATH=/home/HwHiAiUser/Ascend/ascend-toolkit/latest
 ENV TOOLCHAIN_HOME=/home/HwHiAiUser/Ascend/ascend-toolkit/latest/toolkit
 ENV ASCEND_TOOLKIT_HOME=/home/HwHiAiUser/Ascend/ascend-toolkit/latest

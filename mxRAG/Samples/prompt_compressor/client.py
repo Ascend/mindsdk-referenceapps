@@ -71,7 +71,7 @@ def run_log_analysis(file_path, question):
 
     ret = requests.post(LOG_ANALYSE_COMPRESSOR_URL, data)
     lst = ast.literal_eval(ret.text)
-    if len(lst) == 2:
+    if len(lst) != 2:
         raise ValueError('The returned value does not meet the expectation.')
     target_text = lst[0]
     reserved_list = lst[1]

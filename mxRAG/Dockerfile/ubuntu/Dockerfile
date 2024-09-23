@@ -113,7 +113,7 @@ RUN pip3 install ragas==0.1.9 rank_bm25==0.2.2 readability_lxml==0.8.1 html_text
 RUN pip3 install torch-${TORCH_VERSION}*_${ARCH}.whl && pip3 install  torch_npu-${TORCH_VERSION}*_${ARCH}.whl
 
 # 添加环境变量
-RUN sed -i '$a\export PYTHONPATH/home/HwHiAiUser/.local/lib/$PYTHON_VERSION/site-packages/mx_rag/libs:$PYTHONPATH' /home/HwHiAiUser/.bashrc && \
+RUN sed -i '$a\export PYTHONPATH=/home/HwHiAiUser/.local/lib/$PYTHON_VERSION/site-packages/mx_rag/libs:$PYTHONPATH' /home/HwHiAiUser/.bashrc && \
     sed -i '$a\export LD_PRELOAD=$(ls /home/HwHiAiUser/.local/lib/$PYTHON_VERSION/site-packages/scikit_learn.libs/libgomp-*):$LD_PRELOAD' /home/HwHiAiUser/.bashrc && \
     sed -i '$a\source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh' /home/HwHiAiUser/.bashrc && \
 	sed -i '$a\export PATH=/home/HwHiAiUser/.local/bin:$PATH' /home/HwHiAiUser/.bashrc && \

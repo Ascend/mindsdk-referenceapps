@@ -48,7 +48,7 @@ RUN pip3 install --upgrade setuptools && pip3 install numpy==1.26.4 decorator==5
 
 # 安装cann-toolkit和kernel
 RUN bash Ascend-cann-toolkit*_linux-${ARCH}.run --install --quiet && \
-    bash Ascend-cann-kernels*_linux-${ARCH}.run--install --quiet
+    bash Ascend-cann-kernels*_linux-${ARCH}.run --install --quiet
 ENV ASCEND_HOME_PATH=/home/HwHiAiUser/Ascend/ascend-toolkit/latest
 ENV TOOLCHAIN_HOME=/home/HwHiAiUser/Ascend/ascend-toolkit/latest/toolkit
 ENV ASCEND_TOOLKIT_HOME=/home/HwHiAiUser/Ascend/ascend-toolkit/latest

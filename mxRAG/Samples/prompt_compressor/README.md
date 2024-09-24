@@ -63,7 +63,7 @@ uvicorn server:app
  --topk表示要召回的sentences数量，用于长文档问答结构化文本的场景
  --target_tokens表示压缩后的目标token数量，用于长文档问答非结构化文本的场景
  --target_rate表示压缩后剩余文本的比例，用于长文档问答非结构化文本的场景
- --compress_rate表示需要删除的sentences的比例，用于长文档总结场景
+ --compress_rate表示需要删除的sentences的比例，是一个大致的删除比例，用于长文档总结场景
  --embedding_batch_size表示embedding时候的并发度，用于长文档总结场景
  --min_cluster_size表示密度聚类时候的最小尺寸，值越小，划分的社区个数越多，用于长文档总结场景
 ```

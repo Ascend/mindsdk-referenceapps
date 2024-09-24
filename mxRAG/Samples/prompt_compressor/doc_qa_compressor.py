@@ -8,9 +8,9 @@ from mx_rag.retrievers import DocRetriever, StructuredDocRetriever, DocRetriever
 
 
 class DocQaCompressor(object):
-    def __init__(self, model_path: str, device: int):
+    def __init__(self, model_path: str, device_id: int):
         self.pre_processor = DocSplitter()
-        self.core_processor = LocalReranker(model_path=model_path, dev_id=device)
+        self.core_processor = LocalReranker(model_path=model_path, dev_id=device_id)
         self.post_processor = DocRetriever(model_path=model_path)
 
         self.structured_pre_processor = StructuredDocSplitter()

@@ -53,7 +53,7 @@ faiss = MindFAISS(x_dim=1024,
                   load_local_index='./faiss.index',
                   auto_save=False
                   )
-embed = TextEmbedding('/home/models/bge-large-en-v1.5')
+embed = TextEmbedding('/home/models/bge-large-en-v1.5', dev_id=1)
 
 labels_path = './data/log/history_label.jsonl'
 label_list = []

@@ -8,7 +8,7 @@ import requests
 import html2text
 
 
-LOG_PROMPT_FORMAT = f'''
+LOG_PROMPT_FORMAT = '''
 你是一名高级硬件测试工程师，下面会给你一份测试日志和一些历史问题。
 测试日志中包含了该失败用例的相关日志信息，历史问题里每条记录由问题类型和问题描述组成。
 请按照如下要求进行日志分析：
@@ -24,7 +24,7 @@ LOG_PROMPT_FORMAT = f'''
 ```{history_label}```
 '''
 
-GENERAL_PROMPT_FORMAT = f"请基于给定的文章回答下述问题。\n\n##文章：{context}\n\n##请基于上述文章回答下面的问题。\n\n{question}\n##回答："
+GENERAL_PROMPT_FORMAT = "请基于给定的文章回答下述问题。\n\n##文章：{context}\n\n##请基于上述文章回答下面的问题。\n\n{question}\n##回答："
 
 
 def run_unstructured_doc_qa(server_url, file_path, question, target_tokens, target_rate):

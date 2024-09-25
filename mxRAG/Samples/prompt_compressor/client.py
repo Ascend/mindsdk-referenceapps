@@ -68,8 +68,8 @@ def run_log_analysis(server_url, file_path, question):
     if len(lst) != 2:
         raise ValueError('The returned value does not meet the expectation.')
     target_text = lst[0]
-    reserved_list = lst[1]
-    return target_text, reserved_list
+    label_data = lst[1]
+    return target_text, label_data
 
 
 def run_summary(server_url, file_path, question, compress_rate, embedding_batch_size, min_cluster_size):
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     elif args.scenes == 'doc_qa_structured':
         compressed_text = run_structured_doc_qa(url, args.file_path, args.question, args.topk)
     elif args.scenes == 'log_analyse':
-        compressed_text, _ = run_log_analysis(url, args.file_path, args.question)
+        compressed_text, history_label = run_log_analysis(url, args.file_path, args.question)
     elif args.scenes == 'doc_summary':
         compressed_text = run_summary(url, args.file_path, args.question, args.compress_rate,
                                       args.embedding_batch_size, args.min_cluster_size)

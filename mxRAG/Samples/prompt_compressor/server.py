@@ -57,7 +57,7 @@ embed = TextEmbedding('/home/models/bge-large-en-v1.5')
 
 labels_path = './data/log/history_label.jsonl'
 label_list = []
-with open(labels_path, 'r', encoding='utf-8') as f:
+with open(labels_path, 'r') as f:
     for line in f:
         label_list.append(line)
 faiss.add(embed.embed_texts(label_list), [i for i in range(len(label_list))])
@@ -123,9 +123,9 @@ async def create_log_analyse_item(item: LogAnalyseItem):
 
     compressed_context, reserved_list = log_analyse.run_log_analysis(context, question)
     result_list = query_data_by_chunk(faiss, embed, reserved_list, label_list, 5)
-    label_data = '\n'.join([data for _, data in result_list])
+    history_label = '\n'.join([data for _, data in result_list])
 
-    return compressed_context, label_data
+    return compressed_context, history_label
 
 
 @app.post("/doc_summary_compressor/")

@@ -46,6 +46,7 @@ FAISS_INDEX_TYPE = 'FLAT:L2'
 FAISS_LOCAL_INDEX = './faiss.index'
 FAISS_EMBEDDING_MODEL = '/home/models/bge-large-en-v1.5'
 LOG_ANALYSE_LABEL_PATH = './data/log/history_label.jsonl'
+LABEL_RECALL_TOP_K = 5
 
 doc_qa = DocQaCompressor(DOC_QA_MODEL_PATH, DEVICE_ID)
 log_analyse = LogAnalyseCompressor()
@@ -125,7 +126,7 @@ async def create_log_analyse_item(item: LogAnalyseItem):
     question = item.question
 
     compressed_context, reserved_list = log_analyse.run_log_analysis(context, question)
-    result_list = query_data_by_chunk(faiss, embed, reserved_list, label_list, 5)
+    result_list = query_data_by_chunk(faiss, embed, reserved_list, label_list, LABEL_RECALL_TOP_K)
     history_label = '\n'.join([data for _, data in result_list])
 
     return compressed_context, history_label

@@ -29,14 +29,14 @@ function main() {
     # 1. PTA自定义算子注册
     cd ${CURRENT_DIR}
     FUNCTION_REGISTE_FIELD="op_plugin_patch/op_plugin_functions.yaml"
-    FUNCTION_REGISTE_FILE="${PTA_DIR}/op_plugin/config/v2r1/op_plugin_functions.yaml"
+    FUNCTION_REGISTE_FILE="${PTA_DIR}/op_plugin/config/op_plugin_functions.yaml"
     line="  - func: npu_bert_self_attention_custom(Tensor input, Tensor queryW, Tensor queryBias, Tensor keyW, Tensor keyBias, Tensor valueW, Tensor valueBias, Tensor attentionMask, Tensor dropOutMask, Tensor headMask, int numAttentionHeads, int attentionHeadSize, float dropOutKeepProb) -> Tensor"
     if ! grep -q "\  $line" $FUNCTION_REGISTE_FILE; then
         sed -i "/custom:/r   $FUNCTION_REGISTE_FIELD" $FUNCTION_REGISTE_FILE
     fi
 
     # 2. 编译PTA插件并安装
-    cp -rf op_plugin_patch/*.cpp ${PTA_DIR}/op_plugin/ops/v2r1/opapi
+    cp -rf op_plugin_patch/*.cpp ${PTA_DIR}/op_plugin/ops/opapi
     cd ${PTA_DIR};
     (bash ci/build.sh --python=${PYTHON_VERSION} --pytorch=v$PYTORCH_VESION ; pip3.11 uninstall torch-npu -y ; pip3.11 install dist/*.whl)
 

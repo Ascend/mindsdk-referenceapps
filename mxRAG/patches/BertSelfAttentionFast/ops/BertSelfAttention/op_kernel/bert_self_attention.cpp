@@ -63,7 +63,7 @@ private:
         projectionMatmulObj;
 
     Matmul<MatmulType<TPosition::GM, CubeFormat::ND, DataType>,
-           MatmulType<TPosition::GM, CubeFormat::ND, DataType, True>,
+           MatmulType<TPosition::GM, CubeFormat::ND, DataType, true>,
            MatmulType<TPosition::GM, CubeFormat::ND, DataType> >
         attentionScoresMatmulObj;
     

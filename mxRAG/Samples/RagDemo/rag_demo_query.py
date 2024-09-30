@@ -85,9 +85,7 @@ def rag_demo_query():
     except Exception as e:
         stack_trace = traceback.format_exc()
         print(stack_trace)
-    finally:
-        import acl
-        acl.finalize()
+        
 
 if __name__ == '__main__':
     rag_demo_query()

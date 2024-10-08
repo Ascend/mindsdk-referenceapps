@@ -9,7 +9,7 @@ from mx_rag.retrievers import LogRetriever
 class LogAnalyseCompressor(object):
     def __init__(self):
         self.pre_processor = LogSplitter()
-        self.core_processor = Bm25Reranker(None)
+        self.core_processor = Bm25Reranker()
         self.post_processor = LogRetriever()
 
     def run_log_analysis(self, context: str, question: str):

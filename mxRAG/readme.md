@@ -21,13 +21,8 @@ mxRAG是昇腾面向大预言模型的知识增强开发套件，为解决大模
 | chat_with_ascend    | 基于python的gradio前端框架构建的mxRAG"知识库创建"和"在线问答"系统。                                                    |
 | code_with_ascend | 基于vscode插件开发的依赖大模型的代码补全、解释、生成测试用例等功能的参考样例。                                                      |
 | finetune   | mxRAG对embedding和reranker模型进行微调模型评估脚本。                                                           |
-| langgraph    | MxRAG基于LangGraph知识检索增强应用使能方案。                                                                   |
+| langgraph    | Agentic RAG样例                                                                                   |
 | llm_samples  | 基于fastchat快速拉起大模型参考样例。                                                                          |
 | patches   | mxRAG补丁安装文件,包括支持融合算子、支持TEI、支持whisper模型。                                                         |
-| rag_test    | RAG评测脚本，基于RAGAS, 采用中文prompt, 对相应API和本地模型接口进行适配。                                                 |
 | sd_samples  | 安装并运行stable_diffusion模型参考样例。                                                                    |
-
-
- 
-
 

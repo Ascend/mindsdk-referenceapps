@@ -2,6 +2,7 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 from typing import List, Union, Dict
+from paddle.base import libpaddle
 from pydantic import BaseModel
 from fastapi import FastAPI
 from mx_rag.summary import ClusterSummary

@@ -6,6 +6,7 @@ import json
 import ast
 import requests
 import html2text
+from paddle.base import libpaddle
 
 
 LOG_PROMPT_FORMAT = '''

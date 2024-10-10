@@ -72,8 +72,8 @@ uvicorn server:app
 
 ## client 使用示例
 ```commandline
-python client --scenes doc_qa_structured --file_path './data/doc/structured.json' --question '故障处理原则是什么' --topk 5
-python client --scenes doc_qa_unstructured --file_path './data/doc/unstructured.json' --question '故障处理原则是什么' --target_tokens 3000 --target_rate 0.5
-python client --scenes log_analyse --file_path './data/log/valid_log.jsonl' --question '请将断言失败之前的信息以及error message 提取出来'
-python client --scenes doc_summary --file_path './data/doc/summary.txt' --question '请给上述内容起一个标题' --compress_rate 0.6 --embedding_batch_size 64 --min_cluster_size 2
+python3 client.py --scenes doc_qa_structured --file_path './data/doc/structured.json' --question '故障处理原则是什么' --topk 5
+python3 client.py --scenes doc_qa_unstructured --file_path './data/doc/unstructured.txt' --question '故障处理原则是什么' --target_tokens 3000 --target_rate 0.5
+python3 client.py --scenes log_analyse --file_path './data/log/valid_log.jsonl' --question '请将断言失败之前的信息以及error message 提取出来'
+python3 client.py --scenes doc_summary --file_path './data/doc/summary.txt' --question '请给上述内容起一个标题' --compress_rate 0.6 --embedding_batch_size 64 --min_cluster_size 2
 ```

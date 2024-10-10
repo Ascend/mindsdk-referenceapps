@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parse.add_argument("--host", type=str, default="127.0.0.1")
     parse.add_argument("--port", type=int, default=8000)
     # scenes: doc_qa_unstructured, doc_qa_structured, log_analyse, doc_summary
-    parse.add_argument("--scenes", type=str, default="summary")
+    parse.add_argument("--scenes", type=str, default="doc_summary")
 
     parse.add_argument("--file_path", type=str, default="")
     parse.add_argument("--question", type=str, default="")

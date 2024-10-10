@@ -2,6 +2,7 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 from typing import List, Union, Dict
+from paddle.base import libpaddle
 from pydantic import BaseModel
 from fastapi import FastAPI
 from mx_rag.summary import ClusterSummary
@@ -39,8 +40,8 @@ class SummaryItem(BaseModel):
 
 DOC_QA_MODEL_PATH = '/home/models/bge-reranker-v2-m3'
 DOC_SUMMARY_MODEL_PATH = '/home/models/bge-small-zh-v1.5'
-DOC_SUMMARY_DEVICE = 'npu:1'
-DEVICE_ID = 1
+DOC_SUMMARY_DEVICE = 'npu:0'
+DEVICE_ID = 0
 X_DIM = 1024
 FAISS_INDEX_TYPE = 'FLAT:L2'
 FAISS_LOCAL_INDEX = './faiss.index'

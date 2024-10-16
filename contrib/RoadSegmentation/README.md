@@ -87,11 +87,7 @@
 ## 3 准备模型
 ### 3.1 导出onnx文件
 
-  获取[路面分割案例](https://github.com/tunafatih/Road-Free-Space-Segmentation-Internship-Project)，将本地文件pt2onnx.py放在获取的案例中model.pt同目录下，执行：
-  ```
-  python3 pt2onnx.py
-  ```
-  将pt权重文件转换成onnx文件，或可[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件。
+[点击此处](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RoadSegmentation/model.zip)下载转换好的onnx文件，并上传至```model```目录下。
 
 ### 3.2 使用Ascend atc工具将onnx模型转换为om模型
 

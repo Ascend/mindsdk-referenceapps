@@ -40,13 +40,12 @@ USER HwHiAiUser:HwHiAiUser
 # 安装torch-npu
 # RUN pip3 install torch-npu=="${TORCH_VERSION}".post3
 
-COPY --chown=HwHiAiUser:HwHiAiUser ./package ./
-
 # 安装cann 依赖
 RUN pip3 install --upgrade setuptools && pip3 install numpy==1.26.4 decorator==5.1.1 sympy==1.12 cffi==1.16.0 pyyaml==6.0.1 pathlib2==2.3.7.post1 protobuf==5.26.0 scipy==1.12.0 requests==2.31.0 psutil==5.9.8 absl-py==2.1.0 attrs==23.2.0
 
 
 # 安装cann-toolkit和kernel
+COPY --chown=HwHiAiUser:HwHiAiUser ./package/Ascend-cann*_linux-${ARCH}.run ./
 RUN bash Ascend-cann-toolkit*_linux-${ARCH}.run --install --quiet && \
     bash Ascend-cann-kernels*_linux-${ARCH}.run --install --quiet
 ENV ASCEND_HOME_PATH=/home/HwHiAiUser/Ascend/ascend-toolkit/latest
@@ -76,6 +75,7 @@ RUN mkdir -p ${FAISS_INSTALL_PATH} && \
 	pip3 install faiss-1.7.4*.whl
 
 # 安装index
+COPY --chown=HwHiAiUser:HwHiAiUser ./package/Ascend-mindxsdk-mxindex*_linux-${ARCH}.run ./
 RUN bash Ascend-mindxsdk-mxindex*_linux-${ARCH}.run --quiet --install --install-path=/home/HwHiAiUser/Ascend/ --platform=${PLATFORM}
 ENV MX_INDEX_MODELPATH=/home/HwHiAiUser/Ascend/modelpath
 RUN cd /home/HwHiAiUser/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
@@ -87,6 +87,8 @@ ARG MXINDEX_INSTALL_PATH=/home/HwHiAiUser/Ascend/mxIndex
 ARG PYTHON_HEADER=/usr/include/${PYTHON_VERSION}/
 ARG ASCEND_INSTALL_PATH=/home/HwHiAiUser/Ascend/ascend-toolkit/latest
 ARG DRIVER_INSTALL_PATH=/tmp/
+
+COPY --chown=HwHiAiUser:HwHiAiUser ./package/driver ./driver
 
 RUN wget https://gitee.com/ascend/ascend-referenceapps/repository/archive/master.zip && \
     unzip master.zip && \
@@ -101,7 +103,9 @@ ENV LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/lib:/home/HwHiAiUser/faiss/f
 
 
 #安装mxrag
-RUN tar -xzf Ascend-mindxsdk-mxrag_*_linux-${ARCH}.tar.gz && \
+COPY --chown=HwHiAiUser:HwHiAiUser ./package/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.zip ./
+RUN unzip Ascend-mindxsdk-mxrag_*_linux-${ARCH}.zip && \
+    tar -xzf Ascend-mindxsdk-mxrag_*_linux-${ARCH}.tar.gz && \
     cd mindxsdk-mxrag/ && \
     pip3 install mx_rag-*-none-linux_${ARCH}.whl && \
     pip3 install -r requirements.txt
@@ -110,6 +114,7 @@ RUN tar -xzf Ascend-mindxsdk-mxrag_*_linux-${ARCH}.tar.gz && \
 RUN pip3 install ragas==0.1.9 rank_bm25==0.2.2 readability_lxml==0.8.1 html_text==0.6.2
 
 # 安装torch 和 torch-npu
+COPY --chown=HwHiAiUser:HwHiAiUser ./package/torch*_${ARCH}.whl ./
 RUN pip3 install torch-${TORCH_VERSION}*_${ARCH}.whl && pip3 install  torch_npu-${TORCH_VERSION}*_${ARCH}.whl
 
 # 添加环境变量

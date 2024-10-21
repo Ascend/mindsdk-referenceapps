@@ -38,7 +38,7 @@ def compile_and_save(ts_model, input_info, soc_version, save_path):
     mindie_model = mindietorch.compile(
         ts_model,
         inputs=input_info,
-        precision_policy=mindietorch._enums.PrecisionPolicy.FP16,
+        precision_policy=mindietorch.PrecisionPolicy.FP16,
         truncate_long_and_double=True,
         allow_tensor_replace_int=True,
         soc_version=soc_version,

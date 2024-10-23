@@ -14,6 +14,9 @@ bash tei_patch.sh [text-embeddings-inference包的所在路径]
 
 3. 安装patch后，在text-embeddings-inference目录下会生成NPU适配相关使用说明NPU_ADAPT.md，根据该说明进行后续相关操作
 
+4. 需要对相关嵌入式模型进行性能优化可在mxRAG/MainRepo/patches/optimize目录下选择相应模型执行补丁脚本，其中bert/BertSelfAttentionFast是针对bert类模型的融合算子优化，可大幅提高性能。
+bert/BertSelfAttentionFast和bert/tei两个补丁同时只能打一个，后者针对性能有小幅优化。
+
 ## 版本依赖
 | 软件  | 版本要求        |
 | ----- |-------------|

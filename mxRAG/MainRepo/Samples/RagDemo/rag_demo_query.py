@@ -20,16 +20,19 @@ def rag_demo_query():
     parse = argparse.ArgumentParser()
     parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding")
     parse.add_argument("--tei_emb", type=bool, default=False)
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed")
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
     parse.add_argument("--score_threshold", type=float, default=0.5)
     parse.add_argument("--tei_reranker", type=bool, default=False)
     parse.add_argument("--reranker_path", type=str, default=None)
+    parse.add_argument("--reranker_url", type=str,  default="http://127.0.0.1:8080/rerank ")
     parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
+    embedding_url: str = args.pop('embedding_url')
     tei_emb: bool = args.pop('tei_emb')
     embedding_dim: int = args.pop('embedding_dim')
     llm_url: str = args.pop('llm_url')
@@ -42,7 +45,7 @@ def rag_demo_query():
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
         if tei_emb:
-            emb = TEIEmbedding(url=embedding_path, client_param=ClientParam(use_http=True))
+            emb = TEIEmbedding(url=embedding_url, client_param=ClientParam(use_http=True))
         else:
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
 
@@ -65,9 +68,10 @@ def rag_demo_query():
                                    )
         # 配置reranker，请根据模型具体路径适配
         reranker_path = args.get("reranker_path")
+        reranker_url = args.get("reranker_url")
         tei_reranker = args.get("tei_reranker")
-        if tei_reranker and reranker_path is not None:
-            reranker = TEIReranker(url=reranker_path, client_param=ClientParam(use_http=True))
+        if tei_reranker:
+            reranker = TEIReranker(url=reranker_url, client_param=ClientParam(use_http=True))
         elif reranker_path is not None:
             reranker = LocalReranker(model_path=reranker_path, dev_id=dev)
         else:

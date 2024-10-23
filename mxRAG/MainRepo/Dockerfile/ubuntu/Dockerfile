@@ -122,7 +122,8 @@ RUN sed -i '$a\export PYTHONPATH=/home/HwHiAiUser/.local/lib/$PYTHON_VERSION/sit
     sed -i '$a\export LD_PRELOAD=$(ls /home/HwHiAiUser/.local/lib/$PYTHON_VERSION/site-packages/scikit_learn.libs/libgomp-*):$LD_PRELOAD' /home/HwHiAiUser/.bashrc && \
     sed -i '$a\source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh' /home/HwHiAiUser/.bashrc && \
 	sed -i '$a\export PATH=/home/HwHiAiUser/.local/bin:$PATH' /home/HwHiAiUser/.bashrc && \
-    sed -i 's/$PYTHON_VERSION/'"$PYTHON_VERSION"'/g' /home/HwHiAiUser/.bashrc
+    sed -i 's/$PYTHON_VERSION/'"$PYTHON_VERSION"'/g' /home/HwHiAiUser/.bashrc && \
+	sed -i '$a\export LOGURU_FORMAT="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message!r}</level>"' /home/HwHiAiUser/.bashrc
 
 
 #清理临时目录

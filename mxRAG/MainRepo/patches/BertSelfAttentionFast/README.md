@@ -29,7 +29,6 @@ cd BertSelfAttention/build_out/
 ```sh
 cd ops
 git clone https://gitee.com/ascend/op-plugin.git
-cd op-plugin & git reset --hard a6c6baddb44a9a700d45b543bb5d60770929c1ae & cd ../
 bash run_op_plugin.sh
 ```
 
@@ -49,7 +48,14 @@ bash run_op_plugin.sh
 bash bertSAFast_patch.sh
 ```
 
-## 注意事项
+## 安装transformers库补丁
+
+### 安装补丁步骤
+```bash
+bash bertSAFast_patch.sh
+```
+
+### 注意事项
 1. 安装patch前，请先设置CANN环境变量
 ```sh
     source [cann安装路径]（默认为/usr/local/Ascend/ascend-toolkit）/set_env.sh
@@ -71,6 +77,6 @@ export LD_LIBRARY_PATH=$ASCEND_OPP_PATH/vendors/mxRAG/op_api/lib/:$LD_LIBRARY_PA
 |--------------|-----------|
 | pytorch      | == 2.1.0  |
 | python       | >= 3.8.0  |
-| transformers | == 4.41.1 |
+| transformers | == 4.40.2 |
 
 

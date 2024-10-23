@@ -18,7 +18,7 @@ bash tei_patch.sh [text-embeddings-inference包的所在路径]
 | 软件  | 版本要求        |
 | ----- |-------------|
 | python | 3.10.14     |
-| transformers | 4.40.2      |
+| transformers | 4.41.1      |
 |TEI| 1.2.3       |
 |torch_npu| 2.1.0.post3 |
 |safetensors| 0.4.1       |

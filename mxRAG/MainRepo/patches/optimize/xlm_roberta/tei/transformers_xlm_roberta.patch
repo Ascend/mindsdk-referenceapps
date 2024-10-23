@@ -1,6 +1,6 @@
 --- modeling_xlm_roberta.py	2024-05-16 13:55:52.724988200 +0800
 +++ modeling_xlm_roberta_patch.py	2024-05-16 14:11:56.076500900 +0800
-@@ -71,7 +71,6 @@ class XLMRobertaEmbeddings(nn.Module):
+@@ -68,7 +68,6 @@ class XLMRobertaEmbeddings(nn.Module):
          # self.LayerNorm is not snake-cased to stick with TensorFlow model variable name and be able to load
          # any TensorFlow checkpoint file
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -8,7 +8,7 @@
          # position_ids (1, len position emb) is contiguous in memory and exported when serialized
          self.position_embedding_type = getattr(config, "position_embedding_type", "absolute")
          self.register_buffer(
-@@ -124,7 +123,6 @@ class XLMRobertaEmbeddings(nn.Module):
+@@ -121,7 +120,6 @@ class XLMRobertaEmbeddings(nn.Module):
              position_embeddings = self.position_embeddings(position_ids)
              embeddings += position_embeddings
          embeddings = self.LayerNorm(embeddings)
@@ -16,7 +16,7 @@
          return embeddings
  
      def create_position_ids_from_inputs_embeds(self, inputs_embeds):
-@@ -163,7 +161,6 @@ class XLMRobertaSelfAttention(nn.Module)
+@@ -160,7 +158,6 @@ class XLMRobertaSelfAttention(nn.Module)
          self.key = nn.Linear(config.hidden_size, self.all_head_size)
          self.value = nn.Linear(config.hidden_size, self.all_head_size)
  
@@ -24,7 +24,7 @@
          self.position_embedding_type = position_embedding_type or getattr(
              config, "position_embedding_type", "absolute"
          )
-@@ -259,10 +256,6 @@ class XLMRobertaSelfAttention(nn.Module)
+@@ -256,10 +253,6 @@ class XLMRobertaSelfAttention(nn.Module)
          # Normalize the attention scores to probabilities.
          attention_probs = nn.functional.softmax(attention_scores, dim=-1)
  
@@ -35,7 +35,7 @@
          # Mask heads if we want to
          if head_mask is not None:
              attention_probs = attention_probs * head_mask
-@@ -286,11 +279,9 @@ class XLMRobertaSelfOutput(nn.Module):
+@@ -283,11 +276,9 @@ class XLMRobertaSelfOutput(nn.Module):
          super().__init__()
          self.dense = nn.Linear(config.hidden_size, config.hidden_size)
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -47,7 +47,7 @@
          hidden_states = self.LayerNorm(hidden_states + input_tensor)
          return hidden_states
  
-@@ -367,11 +358,9 @@ class XLMRobertaOutput(nn.Module):
+@@ -371,11 +362,9 @@ class XLMRobertaOutput(nn.Module):
          super().__init__()
          self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)

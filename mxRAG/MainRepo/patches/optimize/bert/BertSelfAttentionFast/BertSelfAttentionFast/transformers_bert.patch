@@ -1,14 +1,14 @@
---- modeling_bert.py	2024-06-14 11:17:00.553390150 +0000
-+++ modeling_bert_tei.py	2024-06-14 11:32:57.753390150 +0000
-@@ -26,6 +26,7 @@
- import torch.utils.checkpoint
+--- modeling_bert.py	2024-10-23 16:20:12.748625400 +0800
++++ modeling_bert_ops.py	2024-10-23 16:19:44.059143400 +0800
+@@ -26,6 +26,7 @@ import torch.utils.checkpoint
+ from packaging import version
  from torch import nn
  from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 +import torch_npu
  
  from ...activations import ACT2FN
- from ...modeling_outputs import (
-@@ -189,7 +190,6 @@
+ from ...modeling_attn_mask_utils import (
+@@ -167,7 +168,6 @@ class BertEmbeddings(nn.Module):
          # self.LayerNorm is not snake-cased to stick with TensorFlow model variable name and be able to load
          # any TensorFlow checkpoint file
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -16,7 +16,7 @@
          # position_ids (1, len position emb) is contiguous in memory and exported when serialized
          self.position_embedding_type = getattr(config, "position_embedding_type", "absolute")
          self.register_buffer(
-@@ -237,7 +237,6 @@
+@@ -215,7 +215,6 @@ class BertEmbeddings(nn.Module):
              position_embeddings = self.position_embeddings(position_ids)
              embeddings += position_embeddings
          embeddings = self.LayerNorm(embeddings)
@@ -24,7 +24,7 @@
          return embeddings
  
  
-@@ -258,7 +257,6 @@
+@@ -236,7 +235,6 @@ class BertSelfAttention(nn.Module):
          self.key = nn.Linear(config.hidden_size, self.all_head_size)
          self.value = nn.Linear(config.hidden_size, self.all_head_size)
  
@@ -32,20 +32,20 @@
          self.position_embedding_type = position_embedding_type or getattr(
              config, "position_embedding_type", "absolute"
          )
-@@ -354,10 +352,6 @@
-         # Normalize the attention scores to probabilities.
+@@ -333,10 +331,6 @@ class BertSelfAttention(nn.Module):
          attention_probs = nn.functional.softmax(attention_scores, dim=-1)
  
--        # This is actually dropping out entire tokens to attend to, which might
+         # This is actually dropping out entire tokens to attend to, which might
 -        # seem a bit unusual, but is taken from the original Transformer paper.
 -        attention_probs = self.dropout(attention_probs)
 -
-         # Mask heads if we want to
+-        # Mask heads if we want to
          if head_mask is not None:
              attention_probs = attention_probs * head_mask
-@@ -374,17 +368,76 @@
-             outputs = outputs + (past_key_value,)
+ 
+@@ -353,6 +347,69 @@ class BertSelfAttention(nn.Module):
          return outputs
+ 
  
 +class BertSelfAttentionFast(nn.Module):
 +    def __init__(self, config, position_embedding_type=None):
@@ -108,9 +108,12 @@
 +        outputs = (context_layer, attention_probs) if output_attentions else (context_layer,)
 +
 +        return outputs
- 
- class BertSelfOutput(nn.Module):
-     def __init__(self, config):
++
++
+ class BertSdpaSelfAttention(BertSelfAttention):
+     def __init__(self, config, position_embedding_type=None):
+         super().__init__(config, position_embedding_type=position_embedding_type)
+@@ -455,11 +512,9 @@ class BertSelfOutput(nn.Module):
          super().__init__()
          self.dense = nn.Linear(config.hidden_size, config.hidden_size)
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -122,16 +125,18 @@
          hidden_states = self.LayerNorm(hidden_states + input_tensor)
          return hidden_states
  
-@@ -392,7 +445,7 @@
+@@ -473,9 +528,7 @@ BERT_SELF_ATTENTION_CLASSES = {
  class BertAttention(nn.Module):
      def __init__(self, config, position_embedding_type=None):
          super().__init__()
--        self.self = BertSelfAttention(config, position_embedding_type=position_embedding_type)
+-        self.self = BERT_SELF_ATTENTION_CLASSES[config._attn_implementation](
+-            config, position_embedding_type=position_embedding_type
+-        )
 +        self.self = BertSelfAttentionFast(config, position_embedding_type=position_embedding_type)
          self.output = BertSelfOutput(config)
          self.pruned_heads = set()
  
-@@ -458,11 +511,9 @@
+@@ -541,11 +594,9 @@ class BertOutput(nn.Module):
          super().__init__()
          self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
          self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
@@ -143,24 +148,21 @@
          hidden_states = self.LayerNorm(hidden_states + input_tensor)
          return hidden_states
  
-@@ -536,17 +587,12 @@
+@@ -619,14 +670,10 @@ class BertLayer(nn.Module):
              cross_attn_present_key_value = cross_attention_outputs[-1]
              present_key_value = present_key_value + cross_attn_present_key_value
  
 -        layer_output = apply_chunking_to_forward(
 -            self.feed_forward_chunk, self.chunk_size_feed_forward, self.seq_len_dim, attention_output
 -        )
+-        outputs = (layer_output,) + outputs
 +        intermediate_output = self.intermediate(attention_output)
 +        layer_output = self.output(intermediate_output, attention_output)
-         outputs = (layer_output,) + outputs
--
+ 
 -        # if decoder, return the attn key/values as the last output
 -        if self.is_decoder:
 -            outputs = outputs + (present_key_value,)
--
++        outputs = (layer_output,) + outputs
+ 
          return outputs
  
-+
-     def feed_forward_chunk(self, attention_output):
-         intermediate_output = self.intermediate(attention_output)
-         layer_output = self.output(intermediate_output, attention_output)

@@ -35,10 +35,12 @@ npm install
 npm run compile
 ```
 
-启动调试插件
+### 启动调试插件
 
 在code with ascend设置中填写关于你使用的大模型的url和模型名称，成功后即可开始使用插件
 
+### 设置url和模型名称
+启动调试插件后，点击vscode Settings->Extensions->Code With Ascend Configuration设置对接的大模型url和名称
 ## 环境依赖
 
 | 软件     | 版本要求     |

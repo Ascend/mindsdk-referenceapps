@@ -5,6 +5,7 @@ import os
 import shutil
 import gradio as gr
 from pathlib import Path
+from paddle.base import libpaddle
 from typing import List, Dict, Tuple
 from mx_rag.chain import SingleText2TextChain, Text2ImgChain, Img2ImgChain
 from mx_rag.document.loader import DocxLoader, ExcelLoader, PdfLoader
@@ -13,7 +14,6 @@ from mx_rag.embedding.local import TextEmbedding, ImageEmbedding
 from mx_rag.knowledge import KnowledgeDB
 from mx_rag.knowledge.knowledge import KnowledgeStore
 from mx_rag.llm import Text2TextLLM, Text2ImgMultiModel, Img2ImgMultiModel
-from mx_rag.reranker.local import LocalReranker
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
@@ -76,7 +76,7 @@ text_knowledge_db = KnowledgeDB(knowledge_store=knowledge_store, chunk_store=chu
 text_retriever = Retriever(text_vector_store, chunk_store, text_emb.embed_texts, k=1, score_threshold=1)
 
 text2text_chain = SingleText2TextChain(
-    llm=Text2TextLLM(url="http://51.38.66.29:1025/v1/chat/completions", model_name="chatglm2-6b", timeout=180, use_http=True), retriever=text_retriever)
+    llm=Text2TextLLM(url="http://127.0.0.1:1025/v1/chat/completions", model_name="chatglm2-6b", timeout=180, use_http=True), retriever=text_retriever)
 
 # 知识文档存储路径
 SAVE_FILE_PATH = "tmp/document_files"
@@ -109,7 +109,7 @@ def clear_history(history):
 
 
 def check_file_type(file):
-    file_type = os.path.splitext(file)[1].lower()
+    file_type = os.path.splitext(file.name)[1].lower()
     support_typs = SUPPORT_DOC_TYPE + SUPPORT_IMAGE_TYPE
     return file_type in support_typs
 

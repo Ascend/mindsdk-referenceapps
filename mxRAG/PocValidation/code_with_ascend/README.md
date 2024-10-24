@@ -41,6 +41,14 @@ npm run compile
 
 ### 设置url和模型名称
 启动调试插件后，点击vscode Settings->Extensions->Code With Ascend Configuration设置对接的大模型url和名称
+
+### 支持功能
+1.侧边栏可以使用聊天窗口问答
+2.选中代码,右键菜单Explain your code(ctrl+o)
+3.选中代码,右键菜单Generate test cases(ctrl+L)
+4.选中代码,右键菜单Rewrite your code(ctrl+I)
+5.代码自动提示补全
+
 ## 环境依赖
 
 | 软件     | 版本要求     |

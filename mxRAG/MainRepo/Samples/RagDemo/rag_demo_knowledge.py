@@ -22,12 +22,14 @@ def rag_demo_upload():
     parse = argparse.ArgumentParser()
     parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding")
     parse.add_argument("--tei_emb", type=bool, default=False)
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed")
     parse.add_argument("--embedding_dim", type=int, default=1024)
     parse.add_argument("--white_path", nargs='+', default=["/home"])
     parse.add_argument("--file_path", nargs='+', default=["/home/HwHiAiUser/gaokao.txt"])
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
+    embedding_url: str = args.pop('embedding_url')
     tei_emb: bool = args.pop('tei_emb')
     embedding_dim: int = args.pop('embedding_dim')
     white_path: list[str] = args.pop('white_path')
@@ -51,7 +53,7 @@ def rag_demo_upload():
         dev = 0
         # 加载embedding模型，请根据模型具体路径适配
         if tei_emb:
-            emb = TEIEmbedding(url=embedding_path, client_param=ClientParam(use_http=True))
+            emb = TEIEmbedding(url=embedding_url, client_param=ClientParam(use_http=True))
         else:
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
         # 初始化向量数据库

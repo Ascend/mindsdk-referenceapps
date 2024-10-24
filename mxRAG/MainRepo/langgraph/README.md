@@ -110,10 +110,10 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
     from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
     from mx_rag.storage.document_store import SQLiteDocstore
 
-    npu_dev_id = 1
+    npu_dev_id = 0
     
     # faiss_index_save_file is your faiss index save dir
-    faiss_index_save_file:str = "/usr/local/Ascend/mx_rag/rag_npu_faiss.index"
+    faiss_index_save_file:str = "/home/HwHiAiUser/rag_npu_faiss.index"
     vector_store = MindFAISS(x_dim=1024,
                              similarity_strategy=SimilarityStrategy.FLAT_L2,
                              devs=[npu_dev_id],
@@ -122,12 +122,12 @@ def create_knowledge_storage(mxrag_component: Dict[str, Any], knowledge_files: L
 
 
     # sqlite_save_file is your sqlite save dir
-    sqlite_save_file:str = "/usr/local/Ascend/mx_rag/rag_sql.db"
+    sqlite_save_file:str = "/home/HwHiAiUser/rag_sql.db"
     chunk_store = SQLiteDocstore(db_path=sqlite_save_file)
     mxrag_component["chunk_store"] = chunk_store
 
     # your knowledge file white paths if docx not in white paths will raise exception
-    white_paths="/usr/local/Ascend/mx_rag/knowledge"
+    white_paths=["/home/HwHiAiUser/"]
     knowledge_store = KnowledgeStore(db_path=sqlite_save_file)
     Knowledge_db = KnowledgeDB(knowledge_store=knowledge_store, chunk_store=chunk_store, vector_store=vector_store,
                                knowledge_name="rag", white_paths=white_paths)
@@ -149,9 +149,9 @@ def create_cache(mxrag_component: Dict[str, Any],
     from mx_rag.cache import MxRAGCache
     from mx_rag.storage.vectorstore import SimilarityStrategy
 
-    npu_dev_id = 1
+    npu_dev_id = 0
     # data_save_folder is your cache file when you next run your rag applicate it will read form disk
-    cache_data_save_folder = "/usr/local/Ascend/mx_rag/cache_save_folder/"
+    cache_data_save_folder = "/home/HwHiAiUser/mx_rag/cache_save_folder/"
 
     similarity_config = SimilarityCacheConfig(
         vector_config={
@@ -164,7 +164,7 @@ def create_cache(mxrag_component: Dict[str, Any],
         emb_config={
             "embedding_type": "tei_embedding",
             "url": embedding_url,
-           	"client_param": ClientParam(use_http=True)
+            "client_param": ClientParam(use_http=True)
         },
         similarity_config={
             "similarity_type": "tei_reranker",
@@ -560,9 +560,7 @@ if __name__ == "__main__":
     llm_model_name = "Llama3-8B-Chinese-Chat"
 
     # your knowledge list
-    knowledge_files = ["/usr/local/Ascend/mx_rag/knowledge/doc1.docx",
-                       "/usr/local/Ascend/mx_rag/knowledge/doc2.docx",
-                       "/usr/local/Ascend/mx_rag/knowledge/doc3.docx"]
+    knowledge_files = ["/home/HwHiAiUser/doc1.docx"]
 
     create_loader_and_spliter(mxrag_component, chunk_size=200, chunk_overlap=50)
 

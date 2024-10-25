@@ -35,9 +35,19 @@ npm install
 npm run compile
 ```
 
-启动调试插件
+### 启动调试插件
 
 在code with ascend设置中填写关于你使用的大模型的url和模型名称，成功后即可开始使用插件
+
+### 设置url和模型名称
+启动调试插件后，点击vscode Settings->Extensions->Code With Ascend Configuration设置对接的大模型url和名称
+
+### 支持功能
+1.侧边栏可以使用聊天窗口问答
+2.选中代码,右键菜单Explain your code(ctrl+o)
+3.选中代码,右键菜单Generate test cases(ctrl+L)
+4.选中代码,右键菜单Rewrite your code(ctrl+I)
+5.代码自动提示补全
 
 ## 环境依赖
 

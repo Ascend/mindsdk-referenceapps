@@ -18,17 +18,17 @@ import traceback
 
 def rag_demo_query():
     parse = argparse.ArgumentParser()
-    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding")
-    parse.add_argument("--tei_emb", type=bool, default=False)
-    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed")
-    parse.add_argument("--embedding_dim", type=int, default=1024)
-    parse.add_argument("--llm_url", type=str, default="http://<ip>:<port>/v1/chat/completions")
-    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat")
-    parse.add_argument("--score_threshold", type=float, default=0.5)
-    parse.add_argument("--tei_reranker", type=bool, default=False)
-    parse.add_argument("--reranker_path", type=str, default=None)
-    parse.add_argument("--reranker_url", type=str,  default="http://127.0.0.1:8080/rerank ")
-    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目")
+    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", metavar="", help="embedding模型本地路径;类型:str")
+    parse.add_argument("--tei_emb", type=bool, default=False, metavar="", help="是否使用TEI服务化的embedding模型;类型:bool;默认值:False")
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed", metavar="", help="使用TEI服务化的embedding模型url地址;类型:str")
+    parse.add_argument("--embedding_dim", type=int, default=1024, metavar="", help="embedding模型向量维度;类型:int;默认值:1024")
+    parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", metavar="", help="大模型url地址;类型:str")
+    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat", metavar="", help="大模型名称;类型:str")
+    parse.add_argument("--score_threshold", type=float, default=0.5, metavar="", help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1];类型:float;默认值:0.5")
+    parse.add_argument("--tei_reranker", type=bool, default=False, metavar="", help="是否使用TEI服务化的reranker模型;类型:bool;默认值:False")
+    parse.add_argument("--reranker_path", type=str, default=None, metavar="", help="reranker模型本地路径;类型:str;默认值:None")
+    parse.add_argument("--reranker_url", type=str,  default=None, metavar="", help="使用TEI服务化的embedding模型url地址;类型:str;默认值:None")
+    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目", metavar="", help="用户问题;类型:str")
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')

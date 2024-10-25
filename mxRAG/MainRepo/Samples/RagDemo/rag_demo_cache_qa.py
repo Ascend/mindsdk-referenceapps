@@ -20,20 +20,32 @@ from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
 from mx_rag.utils import ClientParam
 import traceback
 
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter):
+    def _get_default_metavar_for_optional(self, action):
+        return action.type.__name__
+
+    def _get_default_metavar_for_positional(self, action):
+        return action.type.__name__
+
+    def _format_action(self, action):
+        return super()._format_action(action)
+
+
+
 def rag_cache_demo():
-    parse = argparse.ArgumentParser()
-    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", metavar="", help="embedding模型本地路径;类型:str")
-    parse.add_argument("--embedding_dim", type=int, default=1024, metavar="", help="embedding模型向量维度;类型:int;默认值:1024")
-    parse.add_argument("--reranker_path", type=str, default="home/data/bge-reranker-large", metavar="", help="reranker模型本地路径;类型:str")
-    parse.add_argument("--white_path", nargs='+', default=["/home"], metavar="", help="白名单路径，文件需在白名单路径下")
-    parse.add_argument("--file_path", type=str, default="/home/HwHiAiUser/gaokao.md", metavar="", help="要上传的文件路径，需在白名单路径下")
-    parse.add_argument("--cache_save_path", type=str, default="/home/HwHiAiUser/cache_save_dir", metavar="", help="缓存地址")
-    parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", metavar="", help="大模型url地址;类型:str")
-    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat", metavar="", help="大模型名称;类型:str")
-    parse.add_argument("--score_threshold", type=float, default=0.5, metavar="", help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1];类型:float;默认值:0.5")
-    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目", metavar="", help="用户问题;类型:str")
-    parse.add_argument("--tokenizer_path", type=str, default="/home/data/Llama3-8B-Chinese-Chat/", metavar="", help="大模型tokenizer参数路径;类型:str")
-    parse.add_argument("--npu_device_id", type=int, default=0, metavar="", help="NPU设备ID;类型:int;默认值:0")
+    parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
+    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", help="embedding模型本地路径")
+    parse.add_argument("--embedding_dim", type=int, default=1024, help="embedding模型向量维度")
+    parse.add_argument("--reranker_path", type=str, default="home/data/bge-reranker-large", help="reranker模型本地路径")
+    parse.add_argument("--white_path", type=str, nargs='+', default=["/home"], help="白名单路径，文件需在白名单路径下")
+    parse.add_argument("--file_path", type=str, default="/home/HwHiAiUser/gaokao.md", help="要上传的文件路径，需在白名单路径下")
+    parse.add_argument("--cache_save_path", type=str, default="/home/HwHiAiUser/cache_save_dir", help="缓存地址")
+    parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", help="大模型url地址")
+    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat", help="大模型名称")
+    parse.add_argument("--score_threshold", type=float, default=0.5, help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1]")
+    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目", help="用户问题")
+    parse.add_argument("--tokenizer_path", type=str, default="/home/data/Llama3-8B-Chinese-Chat/", help="大模型tokenizer参数路径")
+    parse.add_argument("--npu_device_id", type=int, default=0, help="NPU设备ID")
     args = parse.parse_args()
 
     try:

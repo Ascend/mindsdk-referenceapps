@@ -18,14 +18,25 @@ from mx_rag.knowledge.doc_loader_mng import LoaderMng
 from mx_rag.utils import ClientParam
 import traceback
 
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter):
+    def _get_default_metavar_for_optional(self, action):
+        return action.type.__name__
+
+    def _get_default_metavar_for_positional(self, action):
+        return action.type.__name__
+
+    def _format_action(self, action):
+        return super()._format_action(action)
+
+
 def rag_demo_upload():
-    parse = argparse.ArgumentParser()
-    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", metavar="", help="embedding模型本地路径;类型:str")
-    parse.add_argument("--tei_emb", type=bool, default=False, metavar="", help="是否使用TEI服务化的embedding模型;类型:bool;默认值:False")
-    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed", metavar="", help="使用TEI服务化的embedding模型url地址;类型:str")
-    parse.add_argument("--embedding_dim", type=int, default=1024, metavar="", help="embedding模型向量维度;类型:int;默认值:1024")
-    parse.add_argument("--white_path", nargs='+', default=["/home"], metavar="", help="白名单路径，文件需在白名单路径下")
-    parse.add_argument("--file_path", nargs='+', default=["/home/HwHiAiUser/gaokao.txt"], metavar="", help="要上传的文件路径，需在白名单路径下")
+    parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
+    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", help="embedding模型本地路径")
+    parse.add_argument("--tei_emb", type=bool, default=False, help="是否使用TEI服务化的embedding模型")
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed", help="使用TEI服务化的embedding模型url地址")
+    parse.add_argument("--embedding_dim", type=int, default=1024, help="embedding模型向量维度")
+    parse.add_argument("--white_path", type=str, nargs='+', default=["/home"], help="文件白名单路径")
+    parse.add_argument("--file_path", type=str, nargs='+', default=["/home/HwHiAiUser/gaokao.txt"], help="要上传的文件路径，需在白名单路径下")
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')

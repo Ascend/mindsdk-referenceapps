@@ -16,19 +16,30 @@ from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.utils import ClientParam
 import traceback
 
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter):
+    def _get_default_metavar_for_optional(self, action):
+        return action.type.__name__
+
+    def _get_default_metavar_for_positional(self, action):
+        return action.type.__name__
+
+    def _format_action(self, action):
+        return super()._format_action(action)
+
+
 def rag_demo_query():
-    parse = argparse.ArgumentParser()
-    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", metavar="", help="embedding模型本地路径;类型:str")
-    parse.add_argument("--tei_emb", type=bool, default=False, metavar="", help="是否使用TEI服务化的embedding模型;类型:bool;默认值:False")
-    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed", metavar="", help="使用TEI服务化的embedding模型url地址;类型:str")
-    parse.add_argument("--embedding_dim", type=int, default=1024, metavar="", help="embedding模型向量维度;类型:int;默认值:1024")
-    parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", metavar="", help="大模型url地址;类型:str")
-    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat", metavar="", help="大模型名称;类型:str")
-    parse.add_argument("--score_threshold", type=float, default=0.5, metavar="", help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1];类型:float;默认值:0.5")
-    parse.add_argument("--tei_reranker", type=bool, default=False, metavar="", help="是否使用TEI服务化的reranker模型;类型:bool;默认值:False")
-    parse.add_argument("--reranker_path", type=str, default=None, metavar="", help="reranker模型本地路径;类型:str;默认值:None")
-    parse.add_argument("--reranker_url", type=str,  default=None, metavar="", help="使用TEI服务化的embedding模型url地址;类型:str;默认值:None")
-    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目", metavar="", help="用户问题;类型:str")
+    parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
+    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding", help="embedding模型本地路径")
+    parse.add_argument("--tei_emb", type=bool, default=False, help="是否使用TEI服务化的embedding模型")
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed", help="使用TEI服务化的embedding模型url地址")
+    parse.add_argument("--embedding_dim", type=int, default=1024, help="embedding模型向量维度")
+    parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", help="大模型url地址")
+    parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat",  help="大模型名称")
+    parse.add_argument("--score_threshold", type=float, default=0.5,  help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1]")
+    parse.add_argument("--tei_reranker", type=bool, default=False, help="是否使用TEI服务化的reranker模型")
+    parse.add_argument("--reranker_path", type=str, default=None, help="reranker模型本地路径")
+    parse.add_argument("--reranker_url", type=str,  default=None,  help="使用TEI服务化的embedding模型url地址")
+    parse.add_argument("--query", type=str, default="请描述2024年高考作文题目", help="用户问题")
 
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')

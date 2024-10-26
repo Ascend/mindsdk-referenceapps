@@ -27,9 +27,9 @@
     source /usr/local/Ascend/ascend-toolkit/set_env.sh
     export PYTHONPATH=/usr/local/lib/python3.10/dist-packages/mx_rag/libs/:$PYTHONPATH
 
-（4）编译检索算子，这里-d 1024表示embedding模型向量化后的维度，-t 表示芯片类型，如果无法确定具体的npu_type，则可以通过npu-smi info命令进行查询
+（4）编译检索算子，这里-d <dim>表示embedding模型向量化后的维度，-t <chip_type>表示芯片类型，如果无法确定具体的npu_type，则可以通过npu-smi info命令进行查询,取"Name"对应的字段。
 
-    cd /usr/local/Ascend/mxIndex/tools/ && python3 aicpu_generate_model.py -t 310P && python3 flat_generate_model.py -d 1024 -t 310P && cp op_models/* /home/ascend/modelpath/ 
+    cd /home/local/Ascend/mxIndex/tools/ && python3 aicpu_generate_model.py -t <chip_type> && python3 flat_generate_model.py -d <dim> -t <chip_type> && cp op_models/* /home/ascend/modelpath/ 
 
 ## demo运行
 说明：此demo适配POC版本的mxrag软件包,如果使用了网络代理启动框架前先关闭代理。

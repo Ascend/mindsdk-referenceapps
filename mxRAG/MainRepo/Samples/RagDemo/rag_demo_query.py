@@ -23,9 +23,6 @@ class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter):
     def _get_default_metavar_for_positional(self, action):
         return action.type.__name__
 
-    def _format_action(self, action):
-        return super()._format_action(action)
-
 
 def rag_demo_query():
     parse = argparse.ArgumentParser(formatter_class=CustomFormatter)

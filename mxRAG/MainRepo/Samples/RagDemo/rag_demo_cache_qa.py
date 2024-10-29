@@ -12,7 +12,8 @@ from transformers import AutoTokenizer
 from mx_rag.cache import CacheConfig, SimilarityCacheConfig, MxRAGCache,CacheChainChat,QAGenerationConfig,QAGenerate,MarkDownParser
 from mx_rag.chain import SingleText2TextChain
 from mx_rag.embedding.local import TextEmbedding
-from mx_rag.knowledge import KnowledgeDB, KnowledgeStore, KnowledgeDB, upload_files, LoaderMng
+from mx_rag.knowledge import KnowledgeDB, KnowledgeStore, KnowledgeDB, upload_files
+from mx_rag.document import LoaderMng
 from mx_rag.llm import Text2TextLLM
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore

@@ -14,6 +14,8 @@
 
 3.rag_demo_cache_qa.py对应"MxRAGCache缓存和自动生成QA"样例。
 
+4.fastapi_demo目录下为fastapi多线程并发调用在线问答的样例。
+
 
 注意：
 1.创建知识库过程和在线问答过程使用的embedding模型、关系数据库路径、向量数据库路径需对应保持一致。其中关系数据库和向量数据库路径在样例代码中已经默认设置成一致，embedding模型需用户手动设置成一致。
@@ -28,6 +30,10 @@ python3 rag_demo_knowledge.py  --file_path "/home/data/MindIE.docx" "/home/data/
 
 # 在线问答
 python3 rag_demo_query.py --query "请描述2024年高考作为题目"   
+
+# fastapi多线程并发调用
+python3 fastapi_multithread.py --llm_url http://x.x.x.x:port/v1/chat/completions 为启动fastapi服务端在线问答，python3 fastapi_request.py为客户端多线程并发请求在线问答的样例，若想单次请求也可以使用curl指令，请求示例如下：
+curl -X 'POST' 'http://127.0.0.1:8000/query/' -H 'Content-Type: application/json' -d '{"question": "介绍一下2024年高考题目"}'
 ```
 说明:调用示例前请先根据用户实际情况完成参数配置,确保embedding模型路径正确，大模型能正常访问，文件路径正确等，参数可以通过修改样例代码，也可通过命令行的方式传入。
 

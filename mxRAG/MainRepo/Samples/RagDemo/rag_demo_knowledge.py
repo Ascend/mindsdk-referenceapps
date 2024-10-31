@@ -5,6 +5,7 @@ import argparse
 from paddle.base import libpaddle
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
+from mx_rag.document import LoaderMng
 from mx_rag.document.loader import DocxLoader
 from mx_rag.embedding.local import TextEmbedding
 from mx_rag.embedding.service import TEIEmbedding
@@ -14,7 +15,6 @@ from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.knowledge.handler import upload_files
-from mx_rag.knowledge.doc_loader_mng import LoaderMng
 from mx_rag.utils import ClientParam
 import traceback
 

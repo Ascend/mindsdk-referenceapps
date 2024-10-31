@@ -31,7 +31,7 @@ wget https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav
 bash whisper_patch.sh
 ```
 注意事项：
-1.参考设计默认的模型为tiny,运行的设备为Ascend310P3,使用的DEVICE为0，如需更换模型、设备类型、device对应修改whisper_patch.sh中MODEL_NAME、SOC_VERSION、DEVICE参数后再执行补丁操作。
+1.参考设计默认的模型为tiny,运行的设备为Atlas300I Duo推理卡,使用的DEVICE为0，如需更换模型、设备类型、device对应修改whisper_patch.sh中MODEL_NAME、SOC_VERSION、DEVICE参数后再执行补丁操作。
 
 ## 模型推理
 1.命令行调用

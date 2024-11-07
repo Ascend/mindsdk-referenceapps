@@ -36,9 +36,9 @@ RUN groupadd HwHiAiUser && useradd -g HwHiAiUser -d /home/HwHiAiUser -m HwHiAiUs
 USER HwHiAiUser:HwHiAiUser
 
 # 安装torch
-# RUN pip3 install torch=="${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu 
+RUN pip3 install torch=="${TORCH_VERSION}" --index-url https://download.pytorch.org/whl/cpu
 # 安装torch-npu
-# RUN pip3 install torch-npu=="${TORCH_VERSION}".post3
+RUN pip3 install torch-npu=="${TORCH_VERSION}".post8
 
 # 安装cann 依赖
 RUN pip3 install --upgrade setuptools && pip3 install numpy==1.26.4 decorator==5.1.1 sympy==1.12 cffi==1.16.0 pyyaml==6.0.1 pathlib2==2.3.7.post1 protobuf==5.26.0 scipy==1.12.0 requests==2.31.0 psutil==5.9.8 absl-py==2.1.0 attrs==23.2.0
@@ -114,7 +114,7 @@ RUN unzip Ascend-mindxsdk-mxrag_*_linux-${ARCH}.zip && \
 RUN pip3 install ragas==0.1.9 rank_bm25==0.2.2 readability_lxml==0.8.1 html_text==0.6.2
 
 # 安装torch 和 torch-npu
-COPY --chown=HwHiAiUser:HwHiAiUser ./package/torch*_${ARCH}.whl ./
+# COPY --chown=HwHiAiUser:HwHiAiUser ./package/torch*_${ARCH}.whl ./
 RUN pip3 install torch-${TORCH_VERSION}*_${ARCH}.whl && pip3 install  torch_npu-${TORCH_VERSION}*_${ARCH}.whl
 
 # 添加环境变量

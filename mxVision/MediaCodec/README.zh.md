@@ -88,4 +88,5 @@ chmod +x run.sh
 bash run.sh
 ```
 出现如下打印信息说明运行成功：
+
 ![test](image.png)

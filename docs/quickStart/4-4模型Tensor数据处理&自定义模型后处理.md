@@ -213,7 +213,10 @@ make
 ```
 编译完成后该工程`mindx_sdk_plugin/lib/plugins/`目录下会生成自定义插件*.so文件，mxVision/C++/目录下会生成可执行文件`main`。
 
-**步骤3** 将插件复制到`${SDK-path}/lib/plugins/`目录下，执行`chmod 440 *.so`修改文件权限。
+**步骤3** 将插件复制到`${SDK-path}/lib/plugins/`目录下，执行以下脚本修改文件权限：
+```
+chmod 440 *.so
+```
 
 **步骤4** 基于自定义插件运行样例。
 ```

@@ -6,7 +6,7 @@
 ****
 **注意！**  
 本样例中后处理指使用模型输出的原始metadata，自行开发插件来进行后处理。  
-当类型为4-2中相关的内置类型时，效率不如后处理so库方式
+当类型为为[quickStart 4-2章节](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/4-2%E6%A8%A1%E5%9E%8B%E5%90%8E%E5%A4%84%E7%90%86%E5%BA%93(%E5%86%85%E7%BD%AE%E7%B1%BB%E5%9E%8B)%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E6%8C%87%E5%AF%BC.md)中相关的内置类型时，效率不如后处理so库方式
 ****
 
 ### 1.1 简介
@@ -138,7 +138,9 @@ Atlas 300I pro、Atlas 300V pro
 |   ├── SamplePluginPost.pipeline
 |   └── CMakeLists.txt
 ```
-上述目录中`samplePluginPostProc`为[工程根目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/samplePluginPostProc)，`mindx_sdk_plugin`为[插件工程目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/mindx_sdk_plugin)，`mxVision`为图像分类识别样例工程目录(直接从SDK中/samples/mxVision获取)。
+上述目录中`samplePluginPostProc`为[工程根目录](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/samplePluginPostProc)(用户需跳转到页面自行下载)，
+`mindx_sdk_plugin`为上述根目录下的插件工程目录，`mxVision`为图像分类识别样例工程目录(复制 SDK-path/samples/mxVision文件夹到根目录下，SDK-path表示SDK安装路径)。
+
 test.jpg为分类识别样例所需图片，用户需要自行准备，并放置在对应目录下。
 
 ## 2 设置环境变量
@@ -172,9 +174,9 @@ ascend-toolkit-path:CANN安装路径
 
 ## 3 准备模型
 
-**步骤1** 下载[YOLOv3模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)YOLOv3模型。
+**步骤1** 下载[YOLOv3模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)。
 
-**步骤2** 将获取到的zip文件解压，并将YOLOV3模型pb文件存放至`./mxVision/models/yolov3/`目录下。
+**步骤2** 将获取到的zip文件解压，并将YOLOV3文件夹下的`YOLOv3_for_ACL/yolov3_tf.pb`文件存放至`./mxVision/models/yolov3/`目录下。
 
 **步骤3** YOLOV3模型转换。
 
@@ -194,15 +196,11 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1** CmakeLists文件配置。
-
-将主目录下的`samplePluginPostProc`、`mindx_sdk_plugin`和`mxVision/C++/`目录下`CMakeLists.txt`文件中`MX_SDK_HOME`设置为上述SDK安装路径。
-
-**步骤2** 配置pipeline。
+**步骤1** 配置pipeline。
 
 将`SamplePluginPost.pipeline`复制到`/mxVision/pipeline/`目录下并重命名为`Sample.pipeline`。
 
-**步骤3** 对主工程进行编译。
+**步骤2** 对主工程进行编译。
 ```
 # 创建build目录
 cd samplePluginPostProc
@@ -213,11 +211,11 @@ cd build
 cmake ..
 make
 ```
-编译完成后在`mindx_sdk_plugin/lib/plugins/`下会生成自定义插件*.so文件，在mxVision/C++/目录下会生成可执行文件`main`。
+编译完成后该工程`mindx_sdk_plugin/lib/plugins/`目录下下会生成自定义插件*.so文件，mxVision/C++/目录下会生成可执行文件`main`。
 
-**步骤4** 将插件复制到`${SDK-path}/lib/plugins/`目录下。
+**步骤3** 将插件复制到`${SDK-path}/lib/plugins/`目录下，执行`chmod 440 *.so`修改文件权限。
 
-**步骤5** 基于自定义插件运行样例。
+**步骤4** 基于自定义插件运行样例。
 ```
 ## C++编译运行
 cd mxVision/C++/
@@ -227,7 +225,7 @@ bash run.sh
 cd mxVision/python/
 bash run.sh
 ```
-**步骤6** 查看结果。
+**步骤5** 查看结果。
 
 正确运行时会输出类似如下字段结果。其中MxpiSamplePlugin.cpp文件中的日志输出为插件内部结果，main.cpp日志输出为stream结果。此处tensor[0]相关值应该相同
 

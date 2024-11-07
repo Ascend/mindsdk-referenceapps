@@ -2,7 +2,9 @@
 
 ## 1.下载安装包
 
-[http://www.live555.com/liveMedia/public/live555-latest.tar.gz](https://bbs.huaweicloud.com/forum/thread-68720-1-1.html#)
+[live555安装包下载地址](http://www.live555.com/liveMedia/public/live555-latest.tar.gz)
+
+华为云相关博客参考：[博客地址](https://bbs.huaweicloud.com/forum/thread-68720-1-1.html#)
 
 ## 2. 解压
 

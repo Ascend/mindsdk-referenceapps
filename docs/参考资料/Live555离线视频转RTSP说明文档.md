@@ -34,7 +34,7 @@ CPLUSPLUS_FLAGS = (原有配置项) -std=c++2a
 
 ## 4. 运行
 
-将上衣步骤编译生成的live555MediaServer可执行文件拷贝至解压live555.tar.gz的文件夹
+将以上步骤编译生成的live555MediaServer可执行文件拷贝至解压live555.tar.gz的文件夹
 并将所有的视频文件也放在该文件夹下。
 
 ```

@@ -34,17 +34,19 @@ CPLUSPLUS_FLAGS = (原有配置项) -std=c++2a
 
 ## 4. 运行
 
-执行命令（所有的视频文件放在mediaServer文件夹同一目录下），产生的RTSP流的地址如下图所示，文件名为上一步放入mediaServer 文件夹的视频文件。
+将上衣步骤编译生成的live555MediaServer可执行文件拷贝至解压live555.tar.gz的文件夹
+并将所有的视频文件也放在该文件夹下。
 
 ```
-cd mediaServer
+./startNvr.sh ${port} ${nums}
+# ${port}：开启的端口号
+# ${nums}：从${port}开始创建nums+1个视频流
 
-./live555MediaServer
+# 检查是否起流成功 执行以下命令，若出现./live555MediaServer XXX说明正常起流
+ps -ef | grep live555MediaServer
 ```
 
-![img](img/20210720145058139.png)
-
-其中rtsp_Url的格式是 rtsp://host:port/Data，host:port/路径映射到mediaServer/目录下，Data为视频文件的路径。
+rtsp流地址的格式是 rtsp://host:port/Data，host:port/路径映射到mediaServer/目录下，Data为视频文件的路径。
 
 ## 5. 视频文件格式转换
 

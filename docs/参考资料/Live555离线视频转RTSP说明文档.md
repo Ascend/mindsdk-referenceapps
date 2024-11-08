@@ -46,7 +46,15 @@ CPLUSPLUS_FLAGS = (原有配置项) -std=c++2a
 ps -ef | grep live555MediaServer
 ```
 
-rtsp流地址的格式是 rtsp://host:port/Data，host:port/路径映射到mediaServer/目录下，Data为视频文件的路径。
+rtsp流地址格式如下：
+```
+rtsp://${ip_address}:${port}/${h264_file}
+
+# ${ip_address}：起流的机器ip地址
+# ${port}：端口
+# ${h264_file}：放置在与live555MediaServer和startNvr.sh文件同目录的h264视频文件
+```
+
 
 ## 5. 视频文件格式转换
 

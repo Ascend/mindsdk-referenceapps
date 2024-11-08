@@ -33,7 +33,7 @@
 | librosa   | 0.9.2    |
 | pypinyin  | 0.48.0   |
 
--  librosa安装若无法编译相关依赖，可参考下述指令在root用户下安装对应的库
+-  librosa编译所需相关依赖，可参考下述指令进行安装。
 ```shell
 apt-get install llvm-10 -y
 LLVM_CONFIG=/usr/lib/llvm-10/bin/llvm-config pip install librosa
@@ -84,7 +84,7 @@ apt-get install liblzma-dev
 
 ### 3.1 模型获取
 
-> 由于gitee对于文件大小的限制，om模型超过100M无法上传，可以从以下链接获取并放到项目的 model 目录下：<br/>
+> 由于gitee对于文件大小的限制，模型超过100M无法上传，可以从以下链接获取并放到项目的 model 目录下：<br/>
 >
 > [模型下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/model.zip)
 
@@ -113,12 +113,22 @@ apt-get install liblzma-dev
 
 此模型使用的数据集为[AISHELL-1_sample样例数据集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ASR%26KWR/AutoSpeechRecognition/data_sample.zip)。下载后将内含的所有wav及txt文件放至"data/S0150_mic"目录下。<kbd>data/S0150_mic/BAC009S0009W0121.wav</kbd>为其中一条语音，其对应的文字是：其中有两个是内因的指标。
 
-**步骤2**  执行以下脚本
+**步骤2** 将本项目代码的模型路径替换成3.2章节转换得到的模型存放目录，下面是需要替换的代码。
+
+```
+pipeline目录下的am_lm.pipline的第16行代码：
+"modelPath": "model/am_conform_batch_one.om"
+
+pipeline目录下的am_lm.pipline的第24代码：
+"modelPath": "model/lm_transform_batch_one.om"
+```
+
+**步骤3**  执行以下脚本
 ```bash
 python3 main.py
 ```
 
-**步骤3**  查看运行结果
+**步骤4**  查看运行结果
 执行完毕后，语音识别的结果会被保存在工程data目录的prediction.txt文件中。
 
 ## 5 常见问题

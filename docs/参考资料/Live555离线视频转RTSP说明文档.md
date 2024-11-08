@@ -2,15 +2,16 @@
 
 ## 1.下载安装包
 
-[http://www.live555.com/liveMedia/public/live555-latest.tar.gz](https://bbs.huaweicloud.com/forum/thread-68720-1-1.html#)
+[live555安装包下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/tool/live555.tar.gz)
+
 
 ## 2. 解压
 
 执行命令：
 
 ```
-tar -zxvf live555-latest.tar.gz
-
+tar -zxvf live555.tar.gz
+tar -zxvf live.tar.gz
 cd live/
 ```
 
@@ -19,9 +20,9 @@ cd live/
 执行命令：
 
 ```
-./genMakefiles linux  #注意后面这个参数是根据当前文件夹下config.<后缀>获取得到的,与服务器架构等有关。
+./genMakefiles linux  #注意后面这个"linux"参数会根据当前文件夹下config.<后缀>获取配置,请使用与服务器架构匹配的参数。
 
-make
+make -j
 ```
 若编译过程中报错：struct std::atomic_flag has no member named 'test'
 修改config.linux文件：
@@ -32,17 +33,27 @@ CPLUSPLUS_FLAGS = (原有配置项) -std=c++2a
 
 ## 4. 运行
 
-执行命令（所有的视频文件放在mediaServer文件夹同一目录下），产生的RTSP流的地址如下图所示，文件名为上一步放入mediaServer 文件夹的视频文件。
+将以上步骤编译生成的live555MediaServer可执行文件拷贝至解压live555.tar.gz的文件夹
+并将所有的视频文件也放在该文件夹下。
 
 ```
-cd mediaServer
+./startNvr.sh ${port} ${nums}
+# ${port}：开启的端口号
+# ${nums}：从${port}开始创建nums+1个视频流
 
-./live555MediaServer
+# 检查是否起流成功 执行以下命令，若出现./live555MediaServer XXX说明正常起流
+ps -ef | grep live555MediaServer
 ```
 
-![img](img/20210720145058139.png)
+rtsp流地址格式如下：
+```
+rtsp://${ip_address}:${port}/${h264_file}
 
-其中rtsp_Url的格式是 rtsp://host:port/Data，host:port/路径映射到mediaServer/目录下，Data为视频文件的路径。
+# ${ip_address}：起流的机器ip地址
+# ${port}：端口
+# ${h264_file}：放置在与live555MediaServer和startNvr.sh文件同目录的h264视频文件
+```
+
 
 ## 5. 视频文件格式转换
 

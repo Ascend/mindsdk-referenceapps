@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(MediaCodec310P)
 
-set(CMAKE_CXX_STANDARD 11)
+if("${MXVISION_VERSION}" STREQUAL "mxVision:6.0.RC3")
+    set(CMAKE_CXX_STANDARD 14)
+    message(STATUS "C++14 standard is set.")
+else()
+    set(CMAKE_CXX_STANDARD 11)
+    message(STATUS "C++11 standard is set.")
+endif()
 
 if(NOT DEFINED ENV{MX_SDK_HOME})
     message(FATAL_ERROR "MX_SDK_HOME is not defined, please set it first.")

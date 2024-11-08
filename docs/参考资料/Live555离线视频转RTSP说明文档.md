@@ -11,8 +11,8 @@
 执行命令：
 
 ```
-tar -zxvf live555-latest.tar.gz
-
+tar -zxvf live555.tar.gz
+tar -zxvf live.tar.gz
 cd live/
 ```
 
@@ -21,9 +21,9 @@ cd live/
 执行命令：
 
 ```
-./genMakefiles linux  #注意后面这个参数是根据当前文件夹下config.<后缀>获取得到的,与服务器架构等有关。
+./genMakefiles linux  #注意后面这个"linux"参数会根据当前文件夹下config.<后缀>获取配置,请使用与服务器架构匹配的参数。
 
-make
+make -j
 ```
 若编译过程中报错：struct std::atomic_flag has no member named 'test'
 修改config.linux文件：

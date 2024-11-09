@@ -15,6 +15,7 @@
  */
 
 #include "opencv2/opencv.hpp"
+#include "MxBase/Log/Log.h"
 #include "FaceAlignment.h"
 
 void FaceAlignment::DestoryMemory(std::vector<MxBase::DvppDataInfo> &outputDataInfoVec)

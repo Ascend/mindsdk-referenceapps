@@ -13,6 +13,7 @@
   | MxVision版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- | 
   | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+  | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
 ### 1.4 三方依赖
 本项目除了依赖昇腾Driver、Firmware、CANN和mxVision及其要求的配套软件外，还需额外依赖以下python软件：

@@ -26,6 +26,7 @@
 
 #include "MxBase/Maths/FastMath.h"
 #include "MxBase/MxBase.h"
+#include "MxBase/Log/Log.h"
 #include "MxBase/postprocess/include/ObjectPostProcessors/Yolov3PostProcess.h"
 #include "MxBase/E2eInfer/ImageProcessor/ImageProcessor.h"
 #include "MxBase/DeviceManager/DeviceManager.h"

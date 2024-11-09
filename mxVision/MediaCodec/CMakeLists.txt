@@ -1,19 +1,26 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(MediaCodec310P)
 
+if(NOT DEFINED ENV{MX_SDK_HOME})
+    message(FATAL_ERROR "MX_SDK_HOME is not defined, please set it first.")
+else()
+    set(MX_SDK_HOME $ENV{MX_SDK_HOME})
+    message("MX_SDK_HOME=$ENV{MX_SDK_HOME}")
+endif()
+
+# 设置c++编译版本
+execute_process(
+    COMMAND awk "/MindX SDK mxVision:/ {print \$NF}" ${MX_SDK_HOME}/version.info
+    OUTPUT_VARIABLE MXVISION_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 if("${MXVISION_VERSION}" STREQUAL "mxVision:6.0.RC3")
     set(CMAKE_CXX_STANDARD 14)
     message(STATUS "C++14 standard is set.")
 else()
     set(CMAKE_CXX_STANDARD 11)
     message(STATUS "C++11 standard is set.")
-endif()
-
-if(NOT DEFINED ENV{MX_SDK_HOME})
-    message(FATAL_ERROR "MX_SDK_HOME is not defined, please set it first.")
-else()
-    set(MX_SDK_HOME $ENV{MX_SDK_HOME})
-    message("MX_SDK_HOME=$ENV{MX_SDK_HOME}")
 endif()
 
 add_definitions(-D _GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)

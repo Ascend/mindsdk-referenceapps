@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include "MxBase/Log/Log.h"
 #include "multiObjectTracker.h"
 
 std::pair<FrameImage, MxBase::ObjectInfo> MultiObjectTracker::GetTrackLetBuffer(uint32_t trackID)

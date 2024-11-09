@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include "MxBase/Log/Log.h"
 #include "objectSelection.h"
 
 APP_ERROR ObjectSelector::Process(MultiObjectTracker &tracker, std::vector<TrackLet> &trackLetList,

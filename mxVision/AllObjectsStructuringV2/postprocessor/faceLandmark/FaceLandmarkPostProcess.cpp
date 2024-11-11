@@ -16,6 +16,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include "MxBase/Log/Log.h"
 #include "FaceLandmarkPostProcess.h"
 
 namespace {

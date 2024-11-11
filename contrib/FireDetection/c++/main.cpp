@@ -30,6 +30,7 @@
 #include "acl/acl_rt.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include "MxBase/MxBase.h"
+#include "MxBase/Log/Log.h"
 #include "VideoDecoder/VideoDecoder.h"
 #include "ConfigParser/ConfigParser.h"
 #include "BlockingQueue/BlockingQueue.h"

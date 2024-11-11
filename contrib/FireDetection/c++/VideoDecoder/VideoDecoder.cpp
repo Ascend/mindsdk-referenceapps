@@ -16,6 +16,7 @@
 #include <sys/time.h>
 #include <iostream>
 #include <sstream>
+#include "MxBase/Log/Log.h"
 #include "./VideoDecoder.h"
 
 using namespace std;

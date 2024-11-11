@@ -17,6 +17,7 @@
 #include <sstream>
 #include <algorithm>
 #include <fstream>
+#include "MxBase/Log/Log.h"
 #include "ConfigParser.h"
 
 namespace ascendVideoDecoder {

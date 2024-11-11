@@ -19,6 +19,7 @@
 #include <string>
 #include <ctime>
 #include <chrono>
+#include "MxBase/Log/Log.h"
 #include "./FrameAnalyzer.h"
 using namespace std;
 using namespace MxBase;

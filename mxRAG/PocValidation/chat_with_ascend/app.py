@@ -45,7 +45,7 @@ chunk_store = SQLiteDocstore(db_path="./sql.db")
 # 初始化知识管理关系数据库
 knowledge_store = KnowledgeStore(db_path="./sql.db")
 
-text_emb = TextEmbedding("/home/HwHiAiUser/tf/acge_text_embedding/", dev_id=dev)
+text_emb = TextEmbedding("/home/HwHiAiUser/acge_text_embedding/", dev_id=dev)
 
 text_vector_store = MindFAISS(x_dim=1024,
                               similarity_strategy=SimilarityStrategy.FLAT_L2,

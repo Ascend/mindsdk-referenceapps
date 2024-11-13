@@ -4,68 +4,52 @@
 import os
 import shutil
 import gradio as gr
-from pathlib import Path
+from loguru import logger
 from paddle.base import libpaddle
-from typing import List, Dict, Tuple
-from mx_rag.chain import SingleText2TextChain, Text2ImgChain, Img2ImgChain
-from mx_rag.document.loader import DocxLoader, ExcelLoader, PdfLoader
-from mx_rag.document.splitter import CharTextSplitter
-from mx_rag.embedding.local import TextEmbedding, ImageEmbedding
+
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import TextLoader
+
+from mx_rag.chain import SingleText2TextChain
+from mx_rag.document.loader import DocxLoader
+from mx_rag.embedding.local import TextEmbedding
 from mx_rag.knowledge import KnowledgeDB
 from mx_rag.knowledge.knowledge import KnowledgeStore
-from mx_rag.llm import Text2TextLLM, Text2ImgMultiModel, Img2ImgMultiModel
+from mx_rag.llm import Text2TextLLM, LLMParameterConfig
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
-from mx_rag.storage.vectorstore import MindFAISS
-from mx_rag.knowledge.handler import upload_files, upload_dir, delete_files
-from loguru import logger
-
-DOC_PARSER_MAP = {
-    ".docx": (DocxLoader, CharTextSplitter),
-    ".xlsx": (ExcelLoader, CharTextSplitter),
-    ".xls": (ExcelLoader, CharTextSplitter),
-    ".csv": (ExcelLoader, CharTextSplitter),
-    ".pdf": (PdfLoader, CharTextSplitter),
-}
-SUPPORT_IMAGE_TYPE = (".jpg", ".png")
-SUPPORT_DOC_TYPE = (".docx", ".xlsx", ".xls", ".csv", ".pdf")
-
-
-# 定义解析函数
-def parse_file(filepath: str) -> Tuple[List[str], List[Dict[str, str]]]:
-    def parse_image(file: Path) -> Tuple[List[str], List[Dict[str, str]]]:
-        return [file.as_posix()], [{"path": file.as_posix()}]
-
-    def parse_document(file: Path) -> Tuple[List[str], List[Dict[str, str]]]:
-        loader, splitter = DOC_PARSER_MAP.get(file.suffix)
-        metadatas = []
-        texts = []
-        for doc in loader(file.as_posix()).load():
-            split_texts = splitter(separator="\n", chunk_size=4000, chunk_overlap=200).split_text(doc.page_content)
-            metadatas.extend(doc.metadata for _ in split_texts)
-            texts.extend(split_texts)
-        return texts, metadatas
-
-    file_obj = Path(filepath)
-    if file_obj.suffix in DOC_PARSER_MAP.keys():
-        texts, metadatas = parse_document(file_obj)
-    elif file_obj.suffix in SUPPORT_IMAGE_TYPE:
-        texts, metadatas = parse_image(file_obj)
-    else:
-        raise ValueError(f"{file_obj.suffix} is not support")
-    return texts, metadatas
+from mx_rag.storage.vectorstore import MindFAISS, SimilarityStrategy
+from mx_rag.knowledge.handler import upload_files
+from mx_rag.document import LoaderMng
+from mx_rag.utils import ClientParam
 
 
 dev = 0
+
+# 离线构建知识库,首先注册文档处理器
+loader_mng = LoaderMng()
+
+# 加载文档加载器，可以使用mxrag自有的，也可以使用langchain的
+loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md"])
+loader_mng.register_loader(loader_class=DocxLoader, file_types=[".docx"])
+# 加载文档切分器，使用langchain的
+loader_mng.register_splitter(splitter_class=RecursiveCharacterTextSplitter,
+                             file_types=[".docx", ".txt", ".md"],
+                             splitter_params={"chunk_size": 750,
+                                              "chunk_overlap": 150,
+                                              "keep_separator": False
+                                              })
 
 # 初始化文档chunk关系数据库
 chunk_store = SQLiteDocstore(db_path="./sql.db")
 # 初始化知识管理关系数据库
 knowledge_store = KnowledgeStore(db_path="./sql.db")
 
-text_emb = TextEmbedding("/data/bge-large-zh-v1.5/", dev_id=dev)
+text_emb = TextEmbedding("/home/HwHiAiUser/tf/acge_text_embedding/", dev_id=dev)
 
-text_vector_store = MindFAISS(x_dim=1024, index_type="FLAT:L2", devs=[dev],
+text_vector_store = MindFAISS(x_dim=1024,
+                              similarity_strategy=SimilarityStrategy.FLAT_L2,
+                              devs=[dev],
                               load_local_index="./text_faiss.index",
                               auto_save=True)
 
@@ -73,10 +57,16 @@ text_knowledge_db = KnowledgeDB(knowledge_store=knowledge_store, chunk_store=chu
                                 vector_store=text_vector_store,
                                 knowledge_name="text", white_paths=["/tmp"])
 
-text_retriever = Retriever(text_vector_store, chunk_store, text_emb.embed_texts, k=1, score_threshold=1)
+text_retriever = Retriever(vector_store=text_vector_store,
+                           document_store=chunk_store,
+                           embed_func=text_emb.embed_documents,
+                           k=1,
+                           score_threshold=0.5)
 
-text2text_chain = SingleText2TextChain(
-    llm=Text2TextLLM(url="http://127.0.0.1:1025/v1/chat/completions", model_name="chatglm2-6b", timeout=180, use_http=True), retriever=text_retriever)
+text2text_chain = SingleText2TextChain(llm=Text2TextLLM(base_url="http://127.0.0.1:1025/v1/chat/completions",
+                                                        model_name="chatglm2-6b",
+                                                        client_param=ClientParam(use_http=True, timeout=60)),
+                                       retriever=text_retriever)
 
 # 知识文档存储路径
 SAVE_FILE_PATH = "tmp/document_files"
@@ -88,7 +78,7 @@ def bot_response(history,
                  ):
     # 将最新的问题传给RAG
     try:
-        respons = text2text_chain.query(history[-1][0], max_tokens=max_tokens, temperature=temperature, top_p=top_p, stream=True)
+        respons = text2text_chain.query(history[-1][0], LLMParameterConfig(temperature=temperature, top_p=top_p, max_tokens=max_tokens))
         # 返回迭代器
         history[-1][1] = '推理错误'
         for res in respons:
@@ -110,7 +100,7 @@ def clear_history(history):
 
 def check_file_type(file):
     file_type = os.path.splitext(file.name)[1].lower()
-    support_typs = SUPPORT_DOC_TYPE + SUPPORT_IMAGE_TYPE
+    support_typs = [".txt", ".md", ".docx"]
     return file_type in support_typs
 
 
@@ -126,7 +116,7 @@ def file_upload(files):
                 # 上传领域知识文档
                 shutil.copy(file.name, SAVE_FILE_PATH)
                 # 知识库:chunk\embedding\add
-                upload_files(text_knowledge_db, [file.name], parse_func=parse_file, embed_func=text_emb.embed_texts, force=True)
+                upload_files(text_knowledge_db, [file.name], loader_mng=loader_mng, embed_func=text_emb.embed_documents, force=True)
                 print(f"file {file.name} save to {SAVE_FILE_PATH}.")
             else:
                 print(f"file {file.name} type error.")

@@ -72,7 +72,7 @@ def rag_recursive_tree_demo():
             llm=Text2TextLLM(base_url=llm_url, model_name=model_name,
                              client_param=ClientParam(use_http=True, timeout=600)))
         # 使用模型的tokenizer
-        tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, local_files_only=True)
         # 初始化递归树构建的参数
         tree_builder_config = TreeBuilderConfig(tokenizer=tokenizer, summarization_model=tree_chain)
         # 初始化递归树知识管理

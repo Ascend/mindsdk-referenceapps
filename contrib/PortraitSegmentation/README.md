@@ -43,14 +43,14 @@ Atlas 300I pro、Atlas 300V pro
 ```
 
 ## 3 准备模型
-**步骤1**  下载Portrait原始模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PortraitSegmentation/model.zip)，并将获取到的Portrait模型pb文件存放至本案例代码的PortraitSegmentation/models 目录下。
+**步骤1**：  下载Portrait原始模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PortraitSegmentation/model.zip)，并将获取到的Portrait模型pb文件存放至本案例代码的PortraitSegmentation/models 目录下。
 
-**步骤2**  进入PortraitSegmentation/models目录执行以下命令。
+**步骤2**：  进入PortraitSegmentation/models目录执行以下命令。
 ```
 atc --model=portrait.pb  --input_shape="Inputs/x_input:1,224,224,3"  --framework=3  --output=portrait --insert_op_conf=insert_op.cfg --soc_version=Ascend310P3
 ```
 
-**步骤3** 执行命令后，终端提示如下信息说明模型转换成功，会在output参数指定的路径下生成portrait.om模型文件。  
+**步骤3**： 执行命令后，终端提示如下信息说明模型转换成功，会在output参数指定的路径下生成portrait.om模型文件。  
 ```
 ATC run success, welcome to the next use.
 ```

@@ -44,8 +44,8 @@ def bot_response(history,
             history[-1][1] = '推理错误' if res['result'] is None else res['result']
             yield history
         yield history
-    except Exception as e:
-        logger.info(f"query failed, find exception: {e}")
+    except Exception as err:
+        logger.info(f"query failed, find exception: {err}")
         history[-1][1] = "推理错误"
         yield history
 

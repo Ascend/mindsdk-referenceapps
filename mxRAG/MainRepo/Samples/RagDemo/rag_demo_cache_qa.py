@@ -82,7 +82,7 @@ def rag_cache_demo():
         # 返回markdown的标题和内容，标题要和内容相关
         titles, contents = MarkDownParser(os.path.dirname(args.file_path)).parse()
         # 使用大模型计算token大小
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_path)
+        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_path, local_files_only=True)
         # 组装生成QA的配置参数，qas_num为每个文件要生成的QA数量
         config = QAGenerationConfig(titles, contents, tokenizer, llm, qas_num=3)
         # 调用大模型生成QA对

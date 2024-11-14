@@ -18,7 +18,7 @@ RUN wget https://cmake.org/files/v3.24/cmake-3.24.3.tar.gz && \
     cd cmake-3.24.3 && \
     ./bootstrap && make -j && make install
 
-ARG PYTHON_VERSION=python3.10
+ARG PYTHON_VERSION=python3.11
 
 RUN apt-get update && apt-get install -y build-essential ${PYTHON_VERSION}  ${PYTHON_VERSION}-dev ${PYTHON_VERSION}-distutils ${PYTHON_VERSION}-venv 
 RUN curl -k https://bootstrap.pypa.io/get-pip.py | ${PYTHON_VERSION} &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/${PYTHON_VERSION} 1
@@ -102,7 +102,7 @@ RUN wget https://gitee.com/ascend/ascend-referenceapps/repository/archive/master
 ENV LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/lib:/home/HwHiAiUser/faiss/faiss1.7.4/lib:$LD_LIBRARY_PATH
 
 
-#安装mxrag
+# 安装mxrag
 COPY --chown=HwHiAiUser:HwHiAiUser ./package/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.zip ./
 RUN unzip Ascend-mindxsdk-mxrag_*_linux-${ARCH}.zip && \
     tar -xzf Ascend-mindxsdk-mxrag_*_linux-${ARCH}.tar.gz && \
@@ -115,7 +115,7 @@ RUN pip3 install ragas==0.1.9 rank_bm25==0.2.2 readability_lxml==0.8.1 html_text
 
 # 安装torch 和 torch-npu
 # COPY --chown=HwHiAiUser:HwHiAiUser ./package/torch*_${ARCH}.whl ./
-RUN pip3 install torch-${TORCH_VERSION}*_${ARCH}.whl && pip3 install  torch_npu-${TORCH_VERSION}*_${ARCH}.whl
+# RUN pip3 install torch-${TORCH_VERSION}*_${ARCH}.whl && pip3 install  torch_npu-${TORCH_VERSION}*_${ARCH}.whl
 
 # 添加环境变量
 RUN sed -i '$a\export PYTHONPATH=/home/HwHiAiUser/.local/lib/$PYTHON_VERSION/site-packages/mx_rag/libs:$PYTHONPATH' /home/HwHiAiUser/.bashrc && \

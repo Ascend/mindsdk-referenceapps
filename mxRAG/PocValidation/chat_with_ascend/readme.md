@@ -10,43 +10,48 @@
 
 3.下载embedding模型,存放在指定目录：如/data/bge-large-zh-v1.5/（与app.py中embedding模型路径对应一致）
 
-4.安装mxRAG软件包
+4.安装mxRAG软件包(如果容器中已安装mxRAG软件包可跳过此步骤)
 
 （1）解压到指定目录
 
     tar -xf Ascend-mindxsdk-mxrag_{version}_linux-{arch}.tar.gz --no-same-owner-C 指定路径
 
-（2）安装mxRAG和gradio
+（2）安装mxRAG
 
     pip3 install mx_rag-{version}-py3-none-linux_{arch}.whl
     pip3 install -r requirements.txt
-    pip3 install gradio==4.0.0
 
 （3）设置环境变量
 
     source /usr/local/Ascend/ascend-toolkit/set_env.sh
     export PYTHONPATH=/usr/local/lib/python3.10/dist-packages/mx_rag/libs/:$PYTHONPATH
 
-（4）编译检索算子，这里-d <dim>表示embedding模型向量化后的维度，-t <chip_type>表示芯片类型，如果无法确定具体的npu_type，则可以通过npu-smi info命令进行查询,取"Name"对应的字段。
+5.编译检索算子，这里-d <dim>表示embedding模型向量化后的维度，-t <chip_type>表示芯片类型，如果无法确定具体的npu_type，则可以通过npu-smi info命令进行查询,取"Name"对应的字段。
 
-    cd /usr/local/Ascend/mxIndex/tools/ && python3 aicpu_generate_model.py -t <chip_type> && python3 flat_generate_model.py -d <dim> -t <chip_type> && cp op_models/* /home/ascend/modelpath/ 
+    export MX_INDEX_MODELPATH=/home/HwHiAiUser/Ascend/modelpath
+    cd /home/HwHiAiUser/Ascend/mxIndex/tools/ && python3 aicpu_generate_model.py -t <chip_type> && python3 flat_generate_model.py -d <dim> -t <chip_type> && cp op_models/* /home/HwHiAiUser/Ascend/modelpath 
+
+6.安装gradio
+
+    pip3 install gradio==4.0.0
 
 ## demo运行
-说明：此demo适配POC版本的mxrag软件包,如果使用了网络代理启动框架前先关闭代理。
 
-1.将app.py文件放至mindxsdk-mxrag目录下
+1.将app.py文件放至指定目录下
 
-2.参数修改
+2.调用示例
 
-![alt text](images/code.png)
+    python3 app.py  --llm_url "http://127.0.0.1:1025/v1/chat/completions" --port 8080
 
-![alt text](images/code2.png)
+可通过以下命令查看，并完善其他参数的传入
 
-3.运行demo
+    python3 app.py  --help
 
-    python3 app.py
+3.运行demo打开前端网页
 
-    
+![demo.png](images%2Fdemo.png)
+
+说明：此demo适配POC版本的mxrag软件包,如果使用了网络代理启动框架前先关闭代理。如果遇到pydantic.errors.PydanticSchemaGenerationError类错误，请将gradio版本切换至3.50.2。
 
 
 

@@ -49,8 +49,7 @@
 
 3.运行demo打开前端网页
 
-    ![demo.png](images%2Fdemo.png)
-    
+![demo.png](images%2Fdemo.png)
 
 说明：此demo适配POC版本的mxrag软件包,如果使用了网络代理启动框架前先关闭代理。如果遇到pydantic.errors.PydanticSchemaGenerationError类错误，请将gradio版本切换至3.50.2。
 

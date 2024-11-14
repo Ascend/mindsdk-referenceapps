@@ -35,12 +35,12 @@ def bot_response(history,
                  ):
     # 将最新的问题传给RAG
     try:
-        respons = text2text_chain.query(history[-1][0],
+        response = text2text_chain.query(history[-1][0],
                                         LLMParameterConfig(max_tokens=max_tokens, temperature=temperature, top_p=top_p,
                                                            stream=True))
         # 返回迭代器
         history[-1][1] = '推理错误'
-        for res in respons:
+        for res in response:
             history[-1][1] = '推理错误' if res['result'] is None else res['result']
             yield history
         yield history
@@ -75,8 +75,8 @@ def file_upload(files):
             upload_files(text_knowledge_db, [file.name], loader_mng=loader_mng, embed_func=text_emb.embed_documents,
                          force=True)
             print(f"file {file.name} save to {SAVE_FILE_PATH}.")
-        except Exception as e:
-            logger.error(f"save failed, find exception: {e}")
+        except Exception as err:
+            logger.error(f"save failed, find exception: {err}")
 
 
 def file_change(files, upload_btn):

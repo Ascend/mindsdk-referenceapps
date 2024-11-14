@@ -57,7 +57,7 @@ ATC run success, welcome to the next use.
 
 ## 4 运行
 **步骤1**：配置pipeline
-根据所需场景，配置pipeline文件：
+根据所需场景，修改segment.pipeline文件：
 ```
 #配置mxpi_tensorinfer插件的模型加载路径： modelPath
 "mxpi_tensorinfer0": {

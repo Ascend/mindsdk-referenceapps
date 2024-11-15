@@ -6,21 +6,22 @@ add_definitions(-Dgoogle=mindxsdk_private)
 
 set(PLUGIN_NAME "ppyoloepostprocess")
 set(TARGET_LIBRARY ${PLUGIN_NAME})
+set(MX_SDK_HOME ${SDK安装路径})
 
-include_directories(${PROJECT_SOURCE_DIR}/../../include)
-include_directories(${PROJECT_SOURCE_DIR}/../../opensource/include)
-include_directories(${PROJECT_SOURCE_DIR}/../../opensource/include/gstreamer-1.0)
-include_directories(${PROJECT_SOURCE_DIR}/../../opensource/include/glib-2.0)
-include_directories(${PROJECT_SOURCE_DIR}/../../opensource/lib/glib-2.0/include)
+include_directories(${MX_SDK_HOME}/include)
+include_directories(${MX_SDK_HOME}/opensource/include)
+include_directories(${MX_SDK_HOME}/opensource/include/gstreamer-1.0)
+include_directories(${MX_SDK_HOME}/opensource/include/glib-2.0)
+include_directories(${MX_SDK_HOME}/opensource/lib/glib-2.0/include)
 
-link_directories(${PROJECT_SOURCE_DIR}/../../opensource/lib/)
-link_directories(${PROJECT_SOURCE_DIR}/../../lib)
+link_directories(${MX_SDK_HOME}/opensource/lib/)
+link_directories(${MX_SDK_HOME}/lib)
 
-add_compile_options(-fPIC -std=c++11 -fstack-protector-all -Wl, -z,relro,-z,now,-z,noexecstack -s -pie)
+add_compile_options(-fPIC -std=c++14 -fstack-protector-all -Wl, -z,relro,-z,now,-z,noexecstack -s -pie)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 
 add_definitions(-DENABLE_DVPP_INTERFACE)
-add_library(${TARGET_LIBRARY} SHARED PPYoloePostProcess.cpp)
+add_library(${TARGET_LIBRARY} SHARED PPYoloePostProcess.cpp PPYoloePostProcess.h)
 
 target_link_libraries(${TARGET_LIBRARY} glib-2.0 gstreamer-1.0 gobject-2.0 gstbase-1.0 gmodule-2.0)
 target_link_libraries(${TARGET_LIBRARY} plugintoolkit mxpidatatype mxbase)

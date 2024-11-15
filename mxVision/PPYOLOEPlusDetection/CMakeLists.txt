@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(C++Sample)
 
-add_compile_options(-fPIC -std=c++11 -fstack-protector-all -Wl, -z,relro,-z,now,-z,noexecstack -s -pie)
+add_compile_options(-fPIC -std=c++14 -fstack-protector-all -Wl, -z,relro,-z,now,-z,noexecstack -s -pie)
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
 set(MX_SDK_HOME $ENV{MX_SDK_HOME})
@@ -11,6 +11,7 @@ include_directories(
     ${MX_SDK_HOME}/include
     ${MX_SDK_HOME}/opensource/include
     ${MX_SDK_HOME}/opensource/include/opencv4
+    ${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
 )
 
 link_directories(

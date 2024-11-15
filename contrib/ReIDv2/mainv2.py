@@ -18,18 +18,19 @@ limitations under the License.
 """
 
 import argparse
-import os
 import io
-import time
-import threading
 import multiprocessing
+import os
+import threading
+import time
+
 import cv2
 import numpy as np
+from PIL import Image
 
 from mindx.sdk import base
 from mindx.sdk.base import ImageProcessor
-from PIL import Image
-from mindx.sdk.base import Tensor, Model, Size, Rect, log, ImageProcessor, post, BTensor, Point
+from mindx.sdk.base import Tensor, Model, Size, Rect, log, ImageProcessor, post, Tensor, Point
 
 IN_PLUGIN_ID = 0
 
@@ -49,14 +50,14 @@ ADMM_ALPHA = -2
 MIN_IMAGE_SIZE = 32
 MAX_IMAGE_SIZE = 8192
 MIN_IMAGE_WIDTH = 6
-DEVICE_ID = 1
+DEVICE_ID = 0  # 实际使用npu卡id
 NUM_THREADS_OF_INFER = 32
 YOLOV3_MODEL_PATH = "./models/yolov3.om"
 YOLOV3 = base.model(YOLOV3_MODEL_PATH, deviceId=DEVICE_ID)
 REID_MODEL_PATH = "./models/ReID.om"
 REID = base.model(REID_MODEL_PATH, deviceId=DEVICE_ID)
-LABEL_PATH = "/home/yuanlei2/cjb/mindxsdk-referenceapps/contrib/ReID/models/coco.names"  # 分类标签文件的路�?
-CONFIG_PATH = "/home/yuanlei2/cjb/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg"
+LABEL_PATH = "/path/to/coco.names"  # 需要用户填写：coco.names的路径
+CONFIG_PATH = "/path/to/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
 
 imageProcessor1 = ImageProcessor(DEVICE_ID)
 yolov3_post = post.Yolov3PostProcess(config_path=CONFIG_PATH, label_path=LABEL_PATH)
@@ -168,7 +169,7 @@ def get_pipeline_results(filepath):
     for x in range(len1):
         yolov3_outputs[x].to_host()
         n = np.array(yolov3_outputs[x])
-        tensor = BTensor(n)
+        tensor = Tensor(n)
         inputs.append(tensor)
     yolov3_post_results = yolov3_post.process(inputs, [resizeinfo])
     cropresizevec = []
@@ -453,13 +454,3 @@ if __name__ == '__main__':
     end = time.time()
     total_time = float(end - start)
     print('V2 Running time: %f Seconds' % total_time)
-
-
-
-
-
-
-
-
-
-

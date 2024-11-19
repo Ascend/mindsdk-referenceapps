@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
+# Copyright (c) 2022 Alibaba Research
 
 import importlib.util
 import json

@@ -44,15 +44,6 @@
 ```
 ## 2. 设置环境变量
 ```bash
-# 设置CANN环境变量（请确认install_path路径是否正确）
-# Set environment PATH (Please confirm that the install_path is correct).
-
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-
 #设置CANN环境变量
 . ${install_path}/set_env.sh
 
@@ -65,7 +56,7 @@ export ASCEND_OPP_PATH=${install_path}/opp
 
 **步骤1** 在ModelZoo上下载YOLOv3模型。[下载地址](https://gitee.com/link?target=https%3A%2F%2Fobs-9be7.obs.cn-east-2.myhuaweicloud.com%2F003_Atc_Models%2Fmodelzoo%2Fyolov3_tf.pb)
 
-**步骤2** 将获取到的YOLOv3模型文件内的.pb文件存放至`YoloV3Infer/model/`下。
+**步骤2** 将获取到的YOLOv3模型文件内的`.pb`文件存放至`YoloV3Infer/model/`下。
 
 **步骤3** 模型转换
 
@@ -73,17 +64,12 @@ export ASCEND_OPP_PATH=${install_path}/opp
 
 ```bash
 # 执行，转换YOLOv3模型
-
 # Execute, transform YOLOv3 model. 310P
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
-
-# Execute, transform YOLOv3 model. 310B
-atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310B2 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
-
 # 说明：out_nodes制定了输出节点的顺序，需要与模型后处理适配。
 ```
 
-执行完模型转换脚本后，会生成相应的.om模型文件。 执行后终端输出为：
+执行完模型转换脚本后，会生成相应的`.om`模型文件。 执行后终端输出为：
 ```bash
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
@@ -91,19 +77,28 @@ ATC run success, welcome to the next use.
 表示命令执行成功。
 
 
-## 4 编译与运行  
-**步骤1：** 修改配置根目录下的配置文件./CMakeLists.txt：
-1. 将所有“MX_SDK_HOME”字段中未配置的值替换为实际使用安装路径
+## 4 编译与运行
 
-2. 检查对应的include_directories和link_directories是否正确，包含使用相对目录的SDK路径和绝对路径的CANN路径
+**步骤1：** 准备测试图片，在根目录下放置待测试图片，修改命名为`test.jpg`
 
-**步骤2：** 准备测试图片，在根目录下放置待测试图片，修改命名为test.jpg
-
-**步骤3：** 检查配置根目录下的run.sh脚本中的路径和文件是否正确，包含使用相对目录的SDK路径和需要推理的图片名。
-
-**步骤4：** 执行运行脚本：
+**步骤2：** 执行运行脚本：
 
 > `bash run.sh`
 
-**步骤4：** 查看运行结果 执行完毕后，以测试图片作为参数运行的结果会保存为result.jpg和resized_yolov3_416.jpg。 
+**步骤3：** 查看运行结果 
 
+执行完毕后，以测试图片作为参数运行的结果会保存为`result.jpg`和`resized_yolov3_416.jpg`。 
+
+## 5 常见问题
+如果执行`bash run.sh`报错如下：
+```
+run.sh: line 2: $'\r': command not found
+run.sh: line 3: cd: $'.\r\r': No such file or directory
+run.sh: line 4: $'\r': command not found
+run.sh: line 8: $'\r': command not found
+run.sh: line 10: $'\r': command not found
+```
+则是文件格式需要转换，执行以下命令转换`run.sh`格式：
+```
+dos2unix run.sh
+```

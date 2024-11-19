@@ -6,7 +6,7 @@ add_definitions(-Dgoogle=mindxsdk_private)
 
 set(PLUGIN_NAME "ppyoloepostprocess")
 set(TARGET_LIBRARY ${PLUGIN_NAME})
-set(MX_SDK_HOME ${SDK安装路径})
+set(MX_SDK_HOME $ENV{MX_SDK_HOME})
 
 include_directories(${MX_SDK_HOME}/include)
 include_directories(${MX_SDK_HOME}/opensource/include)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(YoloxPostProcess)
 
-add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
+add_definitions(-D_GLIBCXX_USE_CXX14_ABI=0 -Dgoogle=mindxsdk_private)
 
 set(PLUGIN_NAME "YoloxPostProcess")
 set(TARGET_LIBRARY ${PLUGIN_NAME})

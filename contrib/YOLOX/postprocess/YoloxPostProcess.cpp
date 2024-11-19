@@ -25,7 +25,7 @@ namespace {
 
 namespace MxBase {
 // 用config文件初始化YoloxPostProcess类内成员变量
-    APP_ERROR YoloxPostProcess::Init(const std::map <std::string, std::shared_ptr<void>> &postConfig) {
+    APP_ERROR YoloxPostProcess::Init(const std::map <std::string, std::string> &postConfig) {
         LogDebug << "Start to Init YoloxPostProcess.";
         APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
         if (ret != APP_ERR_OK) {

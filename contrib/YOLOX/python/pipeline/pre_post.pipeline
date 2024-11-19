@@ -44,7 +44,7 @@
                 "dataSource": "mxpi_tensorinfer0",
                 "postProcessConfigPath":"../models/yolox_eval.cfg",
                 "labelPath": "../models/coco.names",
-                "postProcessLibPath": "libYoloxPostProcess.so"
+                "postProcessLibPath": "../../postprocess/build/libYoloxPostProcess.so"
             },
             "factory": "mxpi_objectpostprocessor",
             "next": "mxpi_dataserialize0"

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <unistd.h>
 #include <cstring>
 #include <google/protobuf/util/json_util.h>
 #include "MxBase/Log/Log.h"

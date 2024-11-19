@@ -1,5 +1,5 @@
 # YOLOX 目标检测
-## 1. 介绍
+## 1 介绍
 
 ### 1.1 简介
 YOLOX 目标检测后处理插件基于 MindX SDK 开发，对图片中的不同类目标进行检测，将检测得到的不同类的目标用不同颜色的矩形框标记。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案使用在 COCO2017 数据集上训练得到的 YOLOX-Nano 模型进行目标检测，数据集中共包含 80 个目标类，包括行人、自行车、公共汽车、手机、沙发、猫、狗等，可以对不同类别、不同角度、不同密集程度的目标进行检测。
@@ -28,7 +28,7 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas300I
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 
 ### 1.3 支持的版本
@@ -100,7 +100,7 @@ CANN 环境变量：
 . ${ascend-toolkit-path}/set_env.sh     # ascend-toolkit-path: CANN 安装路径。
 ```
 
-## 3. 准备模型
+## 3 准备模型
 
 本项目中采用的模型是 YOLOX 模型，参考实现代码：https://github.com/Megvii-BaseDetection/YOLOX ， 选用的模型是该 pytorch 项目中提供的模型 yolox-Nano.onnx，模型下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/YOLOX/yolox_nano.onnx 。 本项目使用模型转换工具 ATC 将 onnx 模型转换为 om 模型。
 
@@ -123,18 +123,21 @@ ATC run success, welcome to the next use.
 
 表示命令执行成功。
 
-## 4. 编译与运行
+## 4 编译与运行
 
 **步骤1** 在项目根目录执行命令：
  
 ```
 bash build.sh  
 chmod 640 postprocess/build/libYoloxPostProcess.so
+cp postprocess/build/libYoloxPostProcess.so ${MX_SDK_HOME}/lib/modelpostprocessors/
 ```   
 
-**步骤2** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg。
+**步骤2** 修改``python/pipeline/pre_post.pipeline``文件中的 postProcessLibPath 为 libYoloxPostProcess.so 所在路径。
 
-**步骤3** 图片检测。在项目路径``python/Main``下运行命令：
+**步骤3** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg。
+
+**步骤4** 图片检测。在项目路径``python/Main``下运行命令：
 
 ```
 python3 pre_post.py

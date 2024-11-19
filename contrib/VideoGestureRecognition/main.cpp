@@ -53,8 +53,8 @@ static APP_ERROR Process(std::vector<std::string> &rtspList)
     reasonerConfig.deviceId = DEVICE_ID;
     reasonerConfig.baseVideoChannelId = BASE_CHANNEL_ID;
     reasonerConfig.rtspList = rtspList;
-    reasonerConfig.resnetModelPath = "${gesture_yuv.om模型路径}";
-    reasonerConfig.resnetLabelPath = "${resnet18.names路径}";
+    reasonerConfig.resnetModelPath = "./model/gesture_yuv.om";
+    reasonerConfig.resnetLabelPath = "./model/resnet18.names";
     reasonerConfig.resnetModelWidth = MODEL_WIDTH;
     reasonerConfig.resnetModelHeight = MODEL_HEIGHT;
     reasonerConfig.maxDecodeFrameQueueLength = DECODE_FRAME_QUEUE_LENGTH;
@@ -95,7 +95,7 @@ static void LoadVideoSource(int argc, const std::vector<std::string> &argv, std:
                 << "Please enter at least one video stream address, such as './videoGestureRecognition xxx/xxx/xx.264'.";
         LogWarn << "Not config rtsp video stream address, use code setting.";
 
-        rtspList.emplace_back("#{rtsp流地址}");
+        rtspList.emplace_back("${rtsp流地址}");
     } else {
         for (int i = 1; i < argc; i++) {
             LogInfo << "rtsp video stream " << i << " " << argv[i];

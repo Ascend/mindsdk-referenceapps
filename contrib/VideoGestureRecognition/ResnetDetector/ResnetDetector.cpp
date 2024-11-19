@@ -144,7 +144,7 @@ APP_ERROR ResnetDetector::InitModel(const ResnetInitParam &initParam)
 APP_ERROR ResnetDetector::InitPostProcess(const ResnetInitParam &initParam)
 {
     LogDebug << "ResnetDetector init postprocess start.";
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     LoadPostProcessConfig(initParam, config);
 
     postProcess = std::make_shared<MxBase::Resnet50PostProcess>();
@@ -284,7 +284,7 @@ APP_ERROR ResnetDetector::LoadLabels(const std::string &labelPath, std::map<int,
 }
 
 APP_ERROR ResnetDetector::LoadPostProcessConfig(const ResnetInitParam &initParam,
-                                                std::map<std::string, std::shared_ptr<void>> &config)
+                                                std::map<std::string, std::string> &config)
 {
     LogInfo << "load postprocess config start.";
 
@@ -303,9 +303,14 @@ APP_ERROR ResnetDetector::LoadPostProcessConfig(const ResnetInitParam &initParam
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
-    config["labelPath"] = std::make_shared<std::string>(initParam.labelPath);
+    #ifdef MX_VERSION_5
+        auto jsonStr = configData.GetCfgJson().serialize();
+        config["postProcessConfigContent"] = jsonStr;
+    #else
+        auto jsonStr = configData.GetCfgJson();
+        config["postProcessConfigContent"] = jsonStr;
+    #endif
+    config["labelPath"] = initParam.labelPath;
 
     LogInfo << "load postprocess config successfully.";
     return APP_ERR_OK;

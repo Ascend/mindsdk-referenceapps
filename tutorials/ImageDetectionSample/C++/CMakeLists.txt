@@ -17,7 +17,7 @@ include_directories(
 link_directories(
         ${MX_SDK_HOME}/lib
         ${MX_SDK_HOME}/opensource/lib
-        /usr/local/Ascend/ascend-toolkit/latest/aarch64-linux/lib64/
+        /usr/local/Ascend/ascend-toolkit/latest/lib64/
 )
 
 add_executable(sample main.cpp)

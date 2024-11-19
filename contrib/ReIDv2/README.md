@@ -1,4 +1,5 @@
 
+
 # MindXSDK 行人重识别v2
 
 ## 1 介绍
@@ -65,11 +66,12 @@ ReID 技术和目标的技术可以做一个补充，当能看到目标的时候
 ### 1.5 代码目录结构说明
 本工程名称为ReIDv2，工程目录如下图所示：
 ```
-ReID
+ReIDv2
 |---- data
-|       |---- gallerySet                  // 查询场景图片文件夹
-|       |---- querySet                    // 行人底库图片文件夹
-|---- image                        
+|       |---- gallerySet                  // 需要用户创建：查询场景图片文件夹
+|       |---- querySet                    // 需要用户创建：行人底库图片文件夹
+|---- image     
+|       |---- flow_chart.jpg              // 流程图   
 |       |---- result_v1.jpg               // V1识别结果例图
 |       |---- V1_running_time.jpg         // V1运行时间图片
 |       |---- result_v1.jpg               // V2识别结果例图
@@ -77,8 +79,9 @@ ReID
 |---- models                              // 目标检测、ReID模型与配置文件夹
 |       |---- yolov3.cfg
 |       |---- coco.names
-|       |---- ReID_pth2onnx.cfg
-|---- result                              // 结果保存文件夹                             
+|       |---- ReID_onnx2om.cfg
+|---- result                              // 结果保存文件夹            
+|---- img.png              
 |---- mainv2.py
 |---- README.md   
 ```
@@ -174,7 +177,7 @@ ATC run success, welcome to the next use.
 经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和ReID.om模型。
 
 
-## 4 编译与运行
+## 4 运行
 
 **步骤1：** 准备行人底库数据集
 
@@ -199,15 +202,17 @@ ATC run success, welcome to the next use.
 
 **步骤3：** 运行
 
-在`项目所在目录`下进入`mainv2.py` 修改以下两行路径为用户实际路径：
+
+在`项目所在目录`下进入`mainv2.py` ， 检查调用的npu卡号是否正确(行数为原代码行数)：
 ```bash
-LABEL_PATH = "/path/to/coco.names"  # 需要用户填写：coco.names的路径
-CONFIG_PATH = "/path/to/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
+53 DEVICE_ID = 0 # 实际使用npu卡id
 ```
-并在`mainv2.py`内 检查调用的npu卡号是否正确：
+并修改以下两行路径为用户实际路径(行数为原代码行数)：
 ```bash
-DEVICE_ID = 0 # 实际使用npu卡id
+59  LABEL_PATH = "/path/to/coco.names"  # 需要用户填写：coco.names的路径
+60  CONFIG_PATH = "/path/to/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
 ```
+
 
 
 保存退出后，在`项目所在目录`下执行：

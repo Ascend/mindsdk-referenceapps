@@ -79,7 +79,7 @@ ATC run success, welcome to the next use.
 
 - 文件`coco.names`来源于下载的模型文件夹内。
 
-- `postProcessLibPath`的后处理库路径，路径根据SDK安装路径决定，可以通过`find -name libyolov3postprocess.so`搜索路径。
+- `postProcessLibPath`的后处理库路径，路径根据SDK安装路径决定，可以通过`find / -name libyolov3postprocess.so`搜索路径。
 ```bash
 37  "mxpi_objectpostprocessor0": {
 38              "props": {
@@ -120,7 +120,7 @@ Scanning dependencies of target sample
 # sample就是CMakeLists文件中指定生成的可执行文件。
 ```
 
-**步骤4：** 执行脚本
+**步骤3：** 执行脚本
 
 执行run.sh脚本前请先确认可执行文件sample已生成。
 
@@ -132,7 +132,7 @@ chmod +x run.sh
 bash run.sh
 ```
 
-**步骤5：** 查看结果
+**步骤4：** 查看结果
 
 执行run.sh完毕后，sample会将目标检测结果保存在工程目录下`result.jpg`中。
 

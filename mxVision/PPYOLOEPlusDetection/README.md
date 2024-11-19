@@ -192,11 +192,7 @@ ATC run success, welcome to the next use.
 ## 4 编译与运行
 
 **步骤1：** 编译后处理插件
-1. 在`PPYOLOEPlusDetection/plugin`目录下修改`CMakeLists.txt`， 第9行配置SDK安装路径：
-```
-set(MX_SDK_HOME ${SDK安装路径})
-```
-2. 在`PPYOLOEPlusDetection/plugin`目录下执行下面的命令行 进行编译：
+在`PPYOLOEPlusDetection/plugin`目录下执行下面的命令行 进行编译：
 ```
 mkdir build
 cd build
@@ -208,8 +204,8 @@ make
 将一张图片放项目根路径`PPYOLOEPlusDetection`下，命名为 `test.jpg`。
 
 **步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindxsdk-referenceapps安装路径：
-```
-${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
+```bash
+14  ${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
 ```
 **步骤4：** 在`PPYOLOEPlusDetection`目录下运行脚本，进行照片检测：
 ```
@@ -222,7 +218,13 @@ bash run.sh -m ${model_path} -c ${model_config_path} -l ${model_label_path} -i $
 ```${image_path}``` 代表待测图片的路径, 例如 ``` ./test.jpg```
 ```[-y]``` 添加`-y`表示模型使用的YUVSP420照片格式输入，不添加则表示模型使用的RGB输入。
 
-**步骤5：** 运行结果：
+**步骤5：** 运行结果
+
+首先检查`SDK`的日志权限，检查`${SDK安装路径}/config`目录下的设置文件`logging.conf`第21行，将设置改为：
+```bash
+21  console_level=0
+```
+
 运行结果在log日志中体现，如：
 ```
 I20241116 01:24:44.109963 281472646160448 main.cpp:98] objectInfos-0
@@ -250,8 +252,4 @@ I20241116 01:24:44.110265 281472646160448 main.cpp:104]       y1 is:152.286
 I20241116 01:24:44.110277 281472646160448 main.cpp:105]       confidence is: 0.9375
 I20241116 01:24:44.110289 281472646160448 main.cpp:106]       classId is: 38
 I20241116 01:24:44.110301 281472646160448 main.cpp:107]       className is: tennis racket
-```
-如果无法查看log日志，可检查`${SDK安装路径}/config`目录下的设置文件`logging.conf`第21行，将设置改为：
-```
-console_level=0
 ```

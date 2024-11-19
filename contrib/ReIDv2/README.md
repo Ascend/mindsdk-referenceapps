@@ -205,7 +205,7 @@ ATC run success, welcome to the next use.
 
 在`项目所在目录`下进入`mainv2.py` ， 检查调用的npu卡号是否正确(行数为原代码行数)：
 ```bash
-53 DEVICE_ID = 0 # 实际使用npu卡id
+53  DEVICE_ID = 0 # 实际使用npu卡id
 ```
 并修改以下两行路径为用户实际路径(行数为原代码行数)：
 ```bash

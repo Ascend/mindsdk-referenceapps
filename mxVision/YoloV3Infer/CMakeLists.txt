@@ -8,7 +8,7 @@ add_compile_options(-std=c++14 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--copy-dt-needed-entries")
 
-set(MX_SDK_HOME ${SDK安装路径})
+set(MX_SDK_HOME $ENV{MX_SDK_HOME})
 
 include_directories(
         ${MX_SDK_HOME}/include

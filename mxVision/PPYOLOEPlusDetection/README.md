@@ -13,7 +13,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 
 ### 1.3 支持的版本

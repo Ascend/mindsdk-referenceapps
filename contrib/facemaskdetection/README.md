@@ -50,9 +50,9 @@
 
 
 
-<img src="./image/image1.png" alt="image2" style="zoom:30%;" />
+<img src="./image/image1.png" alt="image2" style="zoom:10%;" />
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 ```bash
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径

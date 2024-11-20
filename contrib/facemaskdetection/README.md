@@ -50,7 +50,7 @@
 
 
 
-<img src="./image/image1.png" alt="image2" style="zoom:10%;" />
+<img src="./image/image1.png" alt="image2" width="200" height="500" />
 
 ## 2 设置环境变量
 

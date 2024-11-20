@@ -26,7 +26,7 @@ https://github.com/michuanhaohao/reid-strong-baseline
 
 本方案采用Yolov3+ReID模型，按照行人检索+行人检索的方式实现行人重识别功能。首先，给定需要查询的行人图像（即行人底库，记为Query），利用ReID模型推理得到其特征矩阵；然后对于给定的图像库，利用Yolov3模型推理检测出每个图像中的所有行人（记为Gallery），再利用ReID模型推理得到的所有行人的特征矩阵；进一步，计算两个特征矩阵的距离，将每个Gallery特征距离最近的Query作为去识别结果；最后，将用一张场景图像中所有Gallery的识别结果去重，并在图像上可视化，流程图如下图所示：
 
-![11](image/flow_chart.jpg)
+![11](image/flow_chart_v2.jpg)
 
 **适用场景**
 ```

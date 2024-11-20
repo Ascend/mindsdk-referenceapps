@@ -11,7 +11,7 @@
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
@@ -60,7 +60,7 @@
 
 **步骤3** 模型转换
 
-在`./model/`目录下执行以下命令
+在`./model/`目录下执行以下命令：
 
 ```bash
 # 执行，转换YOLOv3模型
@@ -79,7 +79,7 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1：** 准备测试图片，在根目录下放置待测试图片，修改命名为`test.jpg`
+**步骤1：** 准备测试图片，在根目录下放置待测试图片，修改命名为`test.jpg`。
 
 **步骤2：** 执行运行脚本：
 

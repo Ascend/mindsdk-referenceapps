@@ -39,26 +39,6 @@ PPYoloePostProcess &PPYoloePostProcess::operator = (const PPYoloePostProcess &ot
     return *this;
 }
 
-APP_ERROR PPYoloePostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
-{
-    LogDebug << "Start to Init PPYoloePostProcess.";
-    APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
-    if (ret != APP_ERR_OK) {
-        LogError << GetError(ret) << "Fail to superInit in ObjectPostProcessBase.";
-        return ret;
-    }
-    ret = configData_.GetFileValue<float>("OBJECTNESS_THRESH", objectnessThresh_, 0.0f, 1.0f);
-    if (ret != APP_ERR_OK) {
-        LogWarn << GetError(ret) << "Fail to read OBJECTNESS_THRESH from config, default is : " << objectnessThresh_;
-    }
-    ret = configData_.GetFileValue<float>("IOU_THRESH", iouThresh_, 0.0f, 1.0f);
-    if (ret != APP_ERR_OK) {
-        LogWarn << GetError(ret) << "Fail to read IOU_THRESH from config, default is : " << iouThresh_;
-    }
-    LogDebug << "End to Init PPYoloePostProcess.";
-    return APP_ERR_OK;
-}
-
 APP_ERROR PPYoloePostProcess::Init(const std::map<std::string, std::string> &postConfig)
 {
     LogDebug << "Start to Init PPYoloePostProcess.";

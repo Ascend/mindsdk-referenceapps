@@ -8,7 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(OUTPUT_NAME "videoGestureRecognition")
 
 set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")
-set(FFMPEG_PATH {ffmpeg实际安装路径})
+set(FFMPEG_PATH "$ENV{FFMPEG_PATH}")
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -35,6 +35,13 @@ add_executable(${OUTPUT_NAME} main.cpp
         VideoGestureReasoner/VideoGestureReasoner.cpp
         FrameSkippingSampling/FrameSkippingSampling.cpp
         VideoGestureReasoner/VideoGestureReasoner.cpp)
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(${OUTPUT_NAME} cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
+
 target_link_libraries(${OUTPUT_NAME}
         avcodec
         avdevice

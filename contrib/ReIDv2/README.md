@@ -44,7 +44,7 @@ ReID 技术和目标的技术可以做一个补充，当能看到目标的时候
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：

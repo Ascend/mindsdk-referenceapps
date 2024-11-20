@@ -63,7 +63,7 @@ class ToolManager:
             if _name == name:
                 return api
         logger.error(f"failed to get_api_by_name={name}")
-        return None
+        raise Exception(f"failed to get_api_by_name={name}")
 
     def get_api_description(self, name: str):
         api_info = self.get_api_by_name(name).copy()

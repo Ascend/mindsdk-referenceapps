@@ -68,12 +68,12 @@ class TrajectoryGenerator:
             raise FileNotFoundError(f"File not found: {data_path}")
 
         if data_path.endswith(".jsonl"):
-            data = [json.loads(l) for l in open(data_path, "r")]
+            traj_data = [json.loads(l) for l in open(data_path, "r")]
         else:
             raise ValueError("Unknown file format")
 
-        self._check_data_format(data)
-        return data
+        self._check_data_format(traj_data)
+        return traj_data
 
 
 def get_single_action_agent(api_base, api_key, llm_name):

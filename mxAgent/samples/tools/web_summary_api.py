@@ -71,7 +71,7 @@ class WebSummary:
         res = cls.generate_content(text, summary_prompt)
         mommt = time.time()
         logger.info(f"finish summary website: {mommt},{url}")
-        return res, None
+        return res, ""
 
     @classmethod
     async def get_details(cls, url, summary_prompt):
@@ -98,7 +98,7 @@ class WebSummary:
         res = cls.generate_content(text, summary_prompt)
         mommt = time.time()
         logger.info(f"finish summary website: {mommt},{url}")
-        return res, None
+        return res, ""
 
     @classmethod
     def summary_call(cls, web, max_summary_number, summary_prompt):

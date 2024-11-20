@@ -50,8 +50,8 @@ class API(ABC):
         p = self.format_tool_input_parameter(param)
         output = self.call(p).output
         try:
-            o = json.loads(output)
-            output = json.dumps(list(o[:1]))
+            output_json = json.loads(output)
+            output = json.dumps(list(output_json[:1]))
         except Exception as e:
             logger.error(e)
 

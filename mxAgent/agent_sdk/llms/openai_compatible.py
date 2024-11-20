@@ -39,7 +39,6 @@ class OpenAICompatibleLLM:
             max_tokens=max_tokens,
             stream=True,
             **kwargs)
-        #TODO: error handling
         for chunk in response:
             if hasattr(chunk.choices[0].delta,
                        'content') and chunk.choices[0].delta.content:
@@ -59,7 +58,6 @@ class OpenAICompatibleLLM:
             max_tokens=max_tokens,
             stream=False,
             **kwargs)
-        # TODO: error handling
         return response.choices[0].message.content
 
 

@@ -141,6 +141,8 @@ class TalkShowAgent(ToollessAgent, ABC):
         return self.prompt.format(
             query=self.query
         )
+
+
 class TravelAgent:
     @classmethod
     def route_query(cls, query):
@@ -156,23 +158,24 @@ class TravelAgent:
                             max_steps=3, 
                             max_token_number=4096,
                             final_prompt=FINAL_PMT_MAP[classify])
+
     def run(self, query, stream):   
         agent = self.route_query(query)
         return agent.run(query, stream=stream)
 
 if __name__ == "__main__":
-    # query = "去北京的旅游规划"
-    # query = "从北京到西安的机票"
-    # query = "查询北京王府井附近的高档酒店"
-    # query = "泰国有哪些值得推荐的景点"
-    # query = "帮我查一下北京最近的天气"
-    # query = "上海酒店查询"
-    # query = "北京到上海的高铁"
-    # query = "上海天气怎么样"
-    query = "帮我制定一份从北京到上海6天的旅游计划"
+    # request = "去北京的旅游规划"
+    # request = "从北京到西安的机票"
+    # request = "查询北京王府井附近的高档酒店"
+    # request = "泰国有哪些值得推荐的景点"
+    # request = "帮我查一下北京最近的天气"
+    # request = "上海酒店查询"
+    # request = "北京到上海的高铁"
+    # request = "上海天气怎么样"
+    request = "帮我制定一份从北京到上海6天的旅游计划"
 
     travel_agent = TravelAgent()
-    res = travel_agent.run(query, stream=True)
+    res = travel_agent.run(request, stream=True)
     if isinstance(res, AgentRunResult):
         logger.info("-----------run agent success-------------")
         logger.info(res.answer)

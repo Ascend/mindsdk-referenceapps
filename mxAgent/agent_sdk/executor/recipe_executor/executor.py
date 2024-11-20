@@ -83,7 +83,7 @@ class AgentExecutor():
         # if any of a node's previous actions has no input
         # ie. this node's previous operation name not in history, this node cannot execute, so pass
         if not set(action.dependency).issubset(set(history_names)):
-            return None
+            raise Exception("dependency action hasn't executed")
         node = action
         if node.activate:
             # 用表达引擎,执行看是否满足准入要求
@@ -92,7 +92,7 @@ class AgentExecutor():
             bool_activate = expression_engine(node.activate)
 
             if not bool_activate:
-                return None
+                raise Exception("action hasn't activate")
 
         if action.input:
             for key, value in action.input.items():
@@ -133,8 +133,10 @@ class AgentExecutor():
 
             if action in activated:
                 continue
-            # TODO : 问题：当前的action并不知道入参来自哪来的时候
-            node = self.process_action_args(node, executor_state,)
+            try:
+                node = self.process_action_args(node, executor_state,)
+            except Exception as e:
+                continue
             if node is not None:
                 pending_actions.append(node)
             else:
@@ -174,7 +176,7 @@ class AgentExecutor():
                     th = executor.submit(self.run_task, task, executor_state, llm)
                     thread_list.append(th)
                     executor_state.activated_tasks.add(task.name)
-                    # TODO 某个task执行失败，会被保留，循环
+                    # todo 某个task执行失败，会被保留，循环
                 for future in as_completed(thread_list):
                     with self.lock:
                         self.update_history(future.result(), executor_state)
@@ -313,7 +315,7 @@ def sub_placeholder(expression, workspace, output=None):
             if isinstance(history, dict):
                 val = str(history.get(key_name, ''))
                 return val
-            # TODO  容易down
+            # todo  容易down
             return "no value"
 
     def valid_checking(result, expression):

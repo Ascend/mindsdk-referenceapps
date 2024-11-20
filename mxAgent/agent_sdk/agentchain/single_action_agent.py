@@ -122,13 +122,10 @@ class SingleActionAgent(BaseAgent):
         )
 
     def _build_final_prompt(self, tool_output, **kwargs):
-        if self.final_prompt is None:
-            return None
-        else:
-            return self.final_prompt.format(
-                query=self.query,
-                answer=tool_output
-            )
+        return self.final_prompt.format(
+            query=self.query,
+            answer=tool_output
+        )
 
     def _prompt_agent(self, llm, **kwargs):
         result = ""

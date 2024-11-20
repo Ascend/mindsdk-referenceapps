@@ -26,7 +26,7 @@ class SopHandler:
         tool_name = action.toolname
         args = action.input
         res = self.tool_manager.executor_call(tool_name, args, llm=llm)
-        # TODO 统一为api call
+        # 统一为api call
         # res = self.tool_manager.api_call(tool_name, args)
         return res
 
@@ -99,7 +99,7 @@ class SopHandler:
                     operation_name, holders, dependency)
         else:
             pass
-            # TODO self.error_info.add(operation_name,"input的内容应该为dict类型")
+            # todo self.error_info.add(operation_name,"input的内容应该为dict类型")
 
     def init_operation_dict(self, operation):
         required_keys = {'name', 'toolname'}

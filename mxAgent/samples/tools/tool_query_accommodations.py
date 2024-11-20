@@ -56,7 +56,7 @@ class QueryAccommodations(API):
         for val in keys:
             if val is None or len(val) == 0:
                 continue
-            if '无' in val or '未' in val or '没' in val or '否' in val:
+            if '无' in val or '未' in val or '没' in val:
                 continue
             if isinstance(val, list):
                 it = flatten(val)

@@ -3,8 +3,8 @@ from samples.travel_agent.travelagent import TravelAgent
 
 if __name__ == "__main__":
     st.set_page_config(
-        page_title = "旅游规划agent",
-        page_icon = "./logo.jpg"
+        page_title="旅游规划agent",
+        page_icon="./logo.jpg"
     )
     st.logo("logo.jpg")
     st.markdown('<h3 style="font-size: 24px;">旅游规划Agent</h3>', unsafe_allow_html=True)
@@ -21,19 +21,19 @@ if __name__ == "__main__":
         st.session_state.agent = TravelAgent()
 
     with placeholder1:
-        container = st.container(height=300,border=False)
+        container = st.container(height=300, border=False)
     with placeholder2:
-        _,col1,_ = st.columns([10,2,10])
+        _,col1,_ = st.columns([10, 2, 10])
         with col1:
             st.image("logo.jpg", use_column_width=True)
     with placeholder3:
-        _,col2,_ = st.columns([1,20,1])
+        _,col2,_ = st.columns([1, 20, 1])
         helloinfo = """<p style='font-size: 16px; padding-left: 10px;'>您好，我是旅游规划agent，擅长旅行规划、景点攻略查询</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：从北京到西安旅游规划</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：西安有哪些免费的博物馆景点</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：查一下西安的酒店</p>"""
         with col2:
-                st.markdown(helloinfo,unsafe_allow_html=True)
+                st.markdown(helloinfo, unsafe_allow_html=True)
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):

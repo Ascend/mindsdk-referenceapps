@@ -62,7 +62,7 @@ class QueryTransports(API):
             for val in keys:
                 if val is None or len(val) == 0:
                     continue
-                if '无' in val or '未' in val or '没' in val or '否' in val:
+                if '无' in val or '未' in val or '没' in val:
                     continue
                 filtered.append(val)
             if len(filtered) == 0:

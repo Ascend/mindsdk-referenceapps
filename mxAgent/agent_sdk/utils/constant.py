@@ -1,4 +1,4 @@
 THOUGHT = "Thought"
 ACTION = "Action"
-ACTION_INPUT ="Action Input"
+ACTION_INPUT = "Action Input"
 OBSERVATION = "Observation"

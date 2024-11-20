@@ -35,8 +35,6 @@ class ExecutorState:
                  restored_node_list: List = None):
         self._query = query
         self._functions = functions
-
-        # TODO
         self._max_node_id = 0
         self._node_ids = []
         self._start = Node(node_id=self._max_node_id, role="start")
@@ -49,7 +47,6 @@ class ExecutorState:
         self.remaining_tasks = set()
         self.activated_tasks = set()
         self.done_tasks = set()
-
         self.activate_actions = []
 
         # for sop planning type

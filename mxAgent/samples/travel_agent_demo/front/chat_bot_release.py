@@ -23,24 +23,24 @@ if __name__ == "__main__":
     with placeholder1:
         container = st.container(height=300, border=False)
     with placeholder2:
-        _,col1,_ = st.columns([10, 2, 10])
+        _, col1, _ = st.columns([10, 2, 10])
         with col1:
             st.image("logo.jpg", use_column_width=True)
     with placeholder3:
-        _,col2,_ = st.columns([1, 20, 1])
+        _, col2, _ = st.columns([1, 20, 1])
         helloinfo = """<p style='font-size: 16px; padding-left: 10px;'>您好，我是旅游规划agent，擅长旅行规划、景点攻略查询</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：从北京到西安旅游规划</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：西安有哪些免费的博物馆景点</p>
         <p style='font-size: 16px; padding-left: 10px;'>例如：查一下西安的酒店</p>"""
         with col2:
-                st.markdown(helloinfo, unsafe_allow_html=True)
+            st.markdown(helloinfo, unsafe_allow_html=True)
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.empty()
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("send message"):
+    if prompt = st.chat_input("send message"):
         st.session_state.messages.append({"role":"user", "content":prompt})
         placeholder1.empty()
         placeholder2.empty()

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-# Copyright (c) 2023 Sehoon Kim
 
 from dataclasses import dataclass
 from typing import Any, Callable, Collection, Dict, List, Optional

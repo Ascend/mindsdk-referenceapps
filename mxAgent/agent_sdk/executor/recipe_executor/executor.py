@@ -107,13 +107,10 @@ class AgentExecutor():
         done_actions = executor_state.done_tasks
         graph = executor_state.sop_graph.actions
         activated = executor_state.activated_tasks
-        independent_actions = [
-            task_name
-            for task_name in executor_state.remaining_tasks
-            if all(
-                d in done_actions for d in graph[task_name].dependency
-            )
-        ]
+        independent_actions = []
+        for task_name in executor_state.remaining_tasks:
+            if all(d in done_actions for d in graph[task_name].dependency):
+                independent_actions.append(task_name)
         executable_actions = []
         pending_actions = []
         for action in independent_actions:
@@ -176,7 +173,6 @@ class AgentExecutor():
                     th = executor.submit(self.run_task, task, executor_state, llm)
                     thread_list.append(th)
                     executor_state.activated_tasks.add(task.name)
-                    # todo 某个task执行失败，会被保留，循环
                 for future in as_completed(thread_list):
                     with self.lock:
                         self.update_history(future.result(), executor_state)
@@ -315,7 +311,6 @@ def sub_placeholder(expression, workspace, output=None):
             if isinstance(history, dict):
                 val = str(history.get(key_name, ''))
                 return val
-            # todo  容易down
             return "no value"
 
     def valid_checking(result, expression):

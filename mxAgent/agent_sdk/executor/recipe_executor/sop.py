@@ -6,9 +6,8 @@ import re
 
 from loguru import logger
 
-from .parser import Node
 from agent_sdk.executor.common import ErrorType, ERROR_MAP
-
+from .parser import Node
 
 class SopHandler:
     def __init__(self, tool_manager) -> None:
@@ -99,7 +98,6 @@ class SopHandler:
                     operation_name, holders, dependency)
         else:
             pass
-            # todo self.error_info.add(operation_name,"input的内容应该为dict类型")
 
     def init_operation_dict(self, operation):
         required_keys = {'name', 'toolname'}

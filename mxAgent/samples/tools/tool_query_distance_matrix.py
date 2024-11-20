@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-# Copyright (c) 2024 OSU Natural Language Processing
+
 
 import json
 import os

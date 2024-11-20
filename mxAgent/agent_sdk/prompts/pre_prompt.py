@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-# Copyright (c) 2024 OSU Natural Language Processing
 
 from datetime import date
 from langchain.prompts import PromptTemplate
@@ -182,7 +181,7 @@ single_action_agent_prompt = PromptTemplate(
     template=SINGLE_AGENT_ACTION_INSTRUCTION,
 )
 
-final_prompt = PromptTemplate(
+single_action_final_prompt = PromptTemplate(
     input_variables=["query", "answer"],
     template=FINAL_PROMPT,
 )

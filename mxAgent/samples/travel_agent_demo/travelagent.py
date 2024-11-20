@@ -126,7 +126,7 @@ intents = {
     QUERY_WEATHER :"包括气温、湿度、降水等与天气、天气预报相关的意图",
     OTHERS :"与旅游场景不相干的查询"
 }
-llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
+LLM_MODEL = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
                       api_base="http://10.44.115.108:1055/v1", api_key="EMPTY", llm_name="Qwen1.5-32B-Chat").run
 
 
@@ -146,13 +146,13 @@ class TalkShowAgent(ToollessAgent, ABC):
 class TravelAgent:
     @classmethod
     def route_query(cls, query):
-        router_agent = RouterAgent(llm=llm, intents=intents)
+        router_agent = RouterAgent(llm=LLM_MODEL, intents=intents)
         classify = router_agent.run(query).answer
         if classify not in classifer or classify == OTHERS:
-            return TalkShowAgent(llm=llm)
+            return TalkShowAgent(llm=LLM_MODEL)
         return RecipeAgent(name=classify,
                             description="你的名字叫昇腾智搜，是一个帮助用户完成旅行规划的助手，你的能力范围包括：目的地推荐、行程规划、交通信息查询、酒店住宿推荐、旅行攻略推荐",
-                            llm=llm, 
+                            llm=LLM_MODEL, 
                             tool_list=TOOL_LIST_MAP[classify],
                             recipe=INST_MAP[classify], 
                             max_steps=3, 
@@ -181,4 +181,4 @@ if __name__ == "__main__":
         logger.info(res.answer)
     else:
         for char in res:
-            print(char, end="")
+            logger.info(char)

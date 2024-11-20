@@ -11,7 +11,7 @@ from loguru import logger
 from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
-from agent_sdk.prompts.pre_prompt import single_action_agent_prompt, final_prompt
+from agent_sdk.prompts.pre_prompt import single_action_agent_prompt, single_action_final_prompt
 
 
 class SingleActionAgent(BaseAgent):
@@ -22,7 +22,7 @@ class SingleActionAgent(BaseAgent):
                  llm,
                  tool_list,
                  prompt=single_action_agent_prompt,
-                 final_prompt=final_prompt,
+                 final_prompt=single_action_final_prompt,
                  **kwargs
                  ) -> None:
 

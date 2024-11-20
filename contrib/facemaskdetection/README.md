@@ -19,7 +19,7 @@
 
 ### 1.4 三方依赖
 
-第三方依赖软件和版本如下表。请确认环境已安装pip3后，使用pip3 install * 安装以下依赖。
+第三方依赖软件和版本如下表。请确认环境已安装pip3后，使用pip3 install 安装以下依赖。
 
 |软件名称    | 版本        |
 |-----------|-----------|
@@ -78,16 +78,17 @@ cd models/
 atc --model=./face_mask_detection.pb --framework=3 --output=./aipp --output_type=FP32 --soc_version=Ascend310P3 --input_shape="data_1:1,260,260,3" --input_format=NHWC --insert_op_conf=./face_mask.aippconfig
 ```
 其中--insert_op_conf参数为aipp预处理算子配置文件路径。该配置文件face_mask.aippconfig在输入图像进入模型前进行预处理。该配置文件保存在源码models目录下。
+
 执行完模型转换后，若提示如下信息说明模型转换成功，可以在该路径下找到名为aipp.om模型文件。
 
 ```
 ATC run success, welcome to the next use.
 ``` 
-其中--insert_op_conf参数为aipp预处理算子配置文件路径。该配置文件face_mask.aippconfig在输入图像进入模型前进行预处理。该配置文件保存在源码models目录下。
 ## 4 运行
 
 **步骤1:** 下载后处理代码
 在链接[GitHub](https://github.com/AIZOOTech/FaceMaskDetection/tree/master/utils)下载开源代码中utils文件夹内的3个py文件(anchor_decode.py,anchor_generator.py, nms.py)并放置于项目根目录即可，最终的目录结构参见 [1.5 代码目录结构与说明]
+
 **步骤2:** 根据使用的设备id，修改源码根目录下**main.pipeline**中所有的deviceId：
 ```
 "deviceId": "0"                # 根据实际使用的设备id修改

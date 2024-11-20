@@ -133,7 +133,7 @@ class AgentExecutor():
             try:
                 node = self.process_action_args(node, executor_state,)
             except Exception as e:
-                continue
+                node = None
             if node is not None:
                 pending_actions.append(node)
             else:

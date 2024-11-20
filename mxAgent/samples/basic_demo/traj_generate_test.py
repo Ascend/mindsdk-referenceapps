@@ -68,7 +68,7 @@ class TrajectoryGenerator:
             raise FileNotFoundError(f"File not found: {data_path}")
 
         if data_path.endswith(".jsonl"):
-            traj_data = [json.loads(l) for l in open(data_path, "r")]
+            traj_data = [json.loads(line) for line in open(data_path, "r")]
         else:
             raise ValueError("Unknown file format")
 

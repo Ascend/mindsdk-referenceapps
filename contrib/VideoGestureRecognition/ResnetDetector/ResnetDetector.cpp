@@ -303,13 +303,13 @@ APP_ERROR ResnetDetector::LoadPostProcessConfig(const ResnetInitParam &initParam
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    #ifdef MX_VERSION_5
-        auto jsonStr = configData.GetCfgJson().serialize();
-        config["postProcessConfigContent"] = jsonStr;
-    #else
-        auto jsonStr = configData.GetCfgJson();
-        config["postProcessConfigContent"] = jsonStr;
-    #endif
+#ifdef MX_VERSION_5
+    auto jsonStr = configData.GetCfgJson().serialize();
+    config["postProcessConfigContent"] = jsonStr;
+#else
+    auto jsonStr = configData.GetCfgJson();
+    config["postProcessConfigContent"] = jsonStr;
+#endif
     config["labelPath"] = initParam.labelPath;
 
     LogInfo << "load postprocess config successfully.";

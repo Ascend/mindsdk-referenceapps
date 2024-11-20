@@ -28,16 +28,6 @@
 
 **注意：**
 
-FFmpeg下载完，按以下命令进行解压和编译[下载链接](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)
-
-```bash
-tar -xzvf FFmpeg-n4.2.1.tar
-cd FFmpeg-n4.2.1
-./configure --prefix=/usr/local/ffmpeg --enable-shared
-make -j
-make install
-```
-
 第三方库默认全部安装到/usr/local/下面，全部安装完成后，请设置环境变量
 ```bash
 export PATH=/usr/local/ffmpeg/bin:$PATH
@@ -103,14 +93,14 @@ export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME
 
 ### 3 准备模型
 
-**步骤1** 下载Resnet18模型权重和网络以及cfg文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VideoGestureRecognition/model.zip)
+**步骤1：** 下载Resnet18模型权重和网络以及cfg文件。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VideoGestureRecognition/model.zip)
 
-**步骤2** 将获取到的文件存放至："样例项目所在目录/model/"
+**步骤2：** 将获取到的文件存放至："样例项目所在目录/model/"
 
-**步骤3** 模型转换。在模型权重和网络文件所在目录下执行以下命令
+**步骤3：** 模型转换。在模型权重和网络文件所在目录下执行以下命令
 
 ```
-atc --model=./resnet18_gesture.prototxt --weight=./resnet18_gesture.caffemodel --framework=0 --output=gesture_yuv --soc_version=Ascend310 --insert_op_conf=./insert_op.cfg --input_shape="data:1,3,224,224" --input_format=NCHW
+atc --model=./resnet18_gesture.prototxt --weight=./resnet18_gesture.caffemodel --framework=0 --output=gesture_yuv --soc_version=Ascend310B1 --insert_op_conf=./insert_op.cfg --input_shape="data:1,3,224,224" --input_format=NCHW
 ```
 注: --soc_version 需填写当前芯片类型，可通过`npu-smi info`查询
 
@@ -128,20 +118,20 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1** 准备测试视频并配置rtsp流地址。
+**步骤1：** 准备测试视频并配置rtsp流地址。
 
 测试视频可自己准备，也可下载，视频流格式为H264（[测试视频下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VideoGestureRecognition/data.zip)）。
 
 main.cpp中配置rtsp流源地址
 
 ```
-# 在 main.cpp 文件中配置
+# 在 main.cpp 文件中第98行修改配置
 rtspList.emplace_back("${本地或rtsp流地址}"); 
 ```
 
-**步骤2** 拉起Live555服务。[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
+**步骤2：** 拉起Live555服务。[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
 
-**步骤3** 编译
+**步骤3：** 编译
 手动编译请参照 ①，脚本编译请参照 ②
 
 >  ① 新建立build目录，进入build执行cmake ..（..代表包含CMakeLists.txt的源文件父目录），在build目录下生成了编译需要的Makefile和中间文件。执行make构建工程，构建成功后就会生成可执行文件。
@@ -162,7 +152,7 @@ chmod +x build.sh
 bash build.sh
 ```
 
-**步骤4** 运行。执行`run.sh`脚本前请先确认可执行文件 videoGestureRecognition 已生成。
+**步骤4：** 运行。执行`run.sh`脚本前请先确认可执行文件 videoGestureRecognition 已生成。
 
 ```
 chmod +x run.sh
@@ -171,7 +161,7 @@ bash run.sh
 
 注：执行脚本后，当前样例会持续循环推流，使用`Ctrl + C`来停止流程
 
-**步骤5** 查看结果。执行`run.sh`后，会在工程目录下`result`中生成jpg格式的图片。
+**步骤5：** 查看结果。执行`run.sh`后，会在工程目录下`result`中生成jpg格式的图片。
 
 ## 5 常见问题
 
@@ -179,7 +169,7 @@ bash run.sh
 
 **问题描述：**
 
-Init is not allowed in xxx environment.
+执行第4节**步骤4**运行时报错`Init is not allowed in xxx environment.`
 
 **解决方案：**
 
@@ -189,11 +179,11 @@ Init is not allowed in xxx environment.
 
 **问题描述：**
 
-Couldn't open input stream rtsp://xx.xxx.xx.xx:xx/xxxx.264
+执行第4节**步骤4**运行时报错`Couldn't open input stream rtsp://xx.xxx.xx.xx:xx/xxxx.264`
 
 **解决方案：**
 
-需在 main.cpp 中正确配置rtsp流地址，格式如下：
+需在 main.cpp 中正确配置rtsp流地址，其格式如下：
 ```
 rtsp://${ip_address}:${port}/${h264_file}
 

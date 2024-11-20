@@ -39,13 +39,7 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
-### 1.4 三方依赖
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.5+   |
-
-### 1.5 代码目录结构说明
+### 1.4 代码目录结构说明
 
 本工程名称为 YOLOX，工程目录如下所示：
 ```
@@ -82,7 +76,7 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 
 注：coco.names文件源于[链接](../Collision/model/coco.names)的coco.names文件，将这个文件下载后，放到python/models目录下。
 
-### 1.6 相关约束
+### 1.5 相关约束
 
 经过测试，该项目适用于一般的自然图像，对含单个清晰目标的图像、灰度图像、模糊图像以及高分辨率的图像均有较好的检测效果，而用于含大量小目标的图像、光照不佳的图像和存在大量遮挡的图像时，有轻微的漏检现象。
 
@@ -104,13 +98,13 @@ CANN 环境变量：
 
 本项目中采用的模型是 YOLOX 模型，参考实现代码：https://github.com/Megvii-BaseDetection/YOLOX ， 选用的模型是该 pytorch 项目中提供的模型 yolox-Nano.onnx，模型下载链接：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/YOLOX/yolox_nano.onnx 。 本项目使用模型转换工具 ATC 将 onnx 模型转换为 om 模型。
 
-**步骤1** 从上述项目链接中下载 onnx 模型 yolox_nano.onnx 至 ``python/models/conversion-scripts`` 文件夹下。
+**步骤1：** 从上述项目链接中下载 onnx 模型 yolox_nano.onnx 至 ``python/models/conversion-scripts`` 文件夹下。
 
 
-**步骤2** 将该模型转换为om模型，具体操作为： ``python/models/conversion-scripts`` 文件夹下, 执行atc指令如下：
+**步骤2：** 将该模型转换为om模型，具体操作为： ``python/models/conversion-scripts`` 文件夹下, 执行atc指令如下：
 
 ```
-atc --model=yolox_nano.onnx --framework=5 --output=./yolox_pre_post --output_type=FP32 --soc_version=Ascend310  --input_shape="images:1, 3, 416, 416" --insert_op_conf=../aipp-configs/yolox_bgr.cfg
+atc --model=yolox_nano.onnx --framework=5 --output=./yolox_pre_post --output_type=FP32 --soc_version=Ascend310P3 --input_shape="images:1, 3, 416, 416" --insert_op_conf=../aipp-configs/yolox_bgr.cfg
 ```
 注: --soc_version 需填写当前芯片类型，可通过`npu-smi info`查询
 
@@ -125,7 +119,7 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1** 在项目根目录执行命令：
+**步骤1：** 在项目根目录执行命令：
  
 ```
 bash build.sh  
@@ -133,11 +127,11 @@ chmod 640 postprocess/build/libYoloxPostProcess.so
 cp postprocess/build/libYoloxPostProcess.so ${MX_SDK_HOME}/lib/modelpostprocessors/
 ```   
 
-**步骤2** 修改``python/pipeline/pre_post.pipeline``文件中的 postProcessLibPath 为 libYoloxPostProcess.so 所在路径。
+**步骤2：** 修改``python/pipeline/pre_post.pipeline``文件中的第47行 postProcessLibPath 为 libYoloxPostProcess.so 所在路径。
 
-**步骤3** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg。
+**步骤3：** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg。
 
-**步骤4** 图片检测。在项目路径``python/Main``下运行命令：
+**步骤4：** 图片检测。在项目路径``python/Main``下运行命令：
 
 ```
 python3 pre_post.py
@@ -199,8 +193,11 @@ YOLOX在图像输入到模型前会进行slice操作，而ATC工具缺少这样�
 
 **问题描述：**
 
+执行第4节**步骤4**时，运行命令报错
+```
 TypeError: Descriptors cannot be created directly.
 If this call came from a _pb2.py file, your generated code is out of date and must be regenerated with protoc >= 3.19.0.
+```
 
 **解决方案：**
 
@@ -210,10 +207,10 @@ If this call came from a _pb2.py file, your generated code is out of date and mu
 
 **问题描述：**
 
-Failed to load offfline model data from file.
+执行第4节**步骤4**时，运行命令报错`Failed to load offfline model data from file.`
 
 **解决方案：**
 
-1、执行模型转换时，要将--soc_version 修改为当前所用的soc名
+1、执行模型转换时，要将--soc_version 修改为项目支持的硬件soc名
 
 2、检查pipeline中的模型路径是否正确，修改为正确路径

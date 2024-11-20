@@ -50,7 +50,7 @@ CenterNet 目标检测后处理插件基于 MindX SDK 开发，对图片中的�
 
 ```
 
-## 2 设置环境变量
+## 2. 设置环境变量
 
 在执行后续步骤前，需要设置环境变量：
 
@@ -63,15 +63,15 @@ CenterNet 目标检测后处理插件基于 MindX SDK 开发，对图片中的�
 # ascend-toolkit-path: CANN安装路径
 ```
 
-## 3 准备模型
-步骤1 下载模型相关文件
+## 3. 准备模型
+**步骤1:** 下载模型相关文件
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterNet/ATC%20CenterNet.zip)下载并解压，在解压后的310P_model目录下得到CenterNet.onnx文件，并放在``python/models`` 目录下。
 
 
 根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)下载coco.names文件，并放在``python/models`` 目录下。
 
-步骤2 转换模型格式
+**步骤2:** 转换模型格式
 进入到``python/models`` 目录下，将onnx格式模型转换为om格式模型。
 
        atc --framework=5 --model=CenterNet.onnx  --output=CenterNet_pre_post --input_format=NCHW --input_shape="actual_input:1,3,512,512" --log=info --soc_version=Ascend310P3 --insert_op_conf=./aipp-configs/aipp_bgr.config
@@ -87,21 +87,22 @@ ATC run success, welcome to the next use.
 
 ## 4. 编译与运行
 
-### 4.1 业务流程加图像预处理
-
-**步骤1** 在项目后处理目录执行命令：
+**步骤1:** 在项目后处理目录执行命令：
 
 ```
 bash build.sh  
 ```
 
-**步骤2** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg（python/test_img目录需用户自行创建）。
+**步骤2:** 放入待测图片。将一张图片放在路径``python/test_img``下，命名为 test.jpg（python/test_img目录需用户自行创建）。
 
-**步骤3** 图片检测。在项目路径``python/Main``下运行命令：
+**步骤3:** 图片检测。在项目路径``python/Main``下运行命令：
 
 ```
 python3 pre_post.py
 ```
-**步骤4** 查看结果
+**步骤4:** 查看结果
 
 命令执行成功后在目录``python/test_img``下生成检测结果文件 pre_post.jpg，可打开该文件观察检测结果。
+
+
+

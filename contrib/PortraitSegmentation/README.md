@@ -12,7 +12,6 @@ Atlas 300I pro、Atlas 300V pro
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
-| 5.0.0 | 7.0.0   |  23.0.0  | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
 ### 1.4 三方依赖
@@ -57,13 +56,13 @@ ATC run success, welcome to the next use.
 
 ## 4 运行
 **步骤1**：配置pipeline
-根据所需场景，修改segment.pipeline文件：
+根据所需场景，修改segment.pipeline文件第32行：
 ```
 #配置mxpi_tensorinfer插件的模型加载路径： modelPath
 "mxpi_tensorinfer0": {
     "props": {
         "dataSource": "mxpi_imageresize0",
-        "modelPath": "${portrait.om模型路径}"
+        "modelPath": "models/portrait.om"
     },
     "factory": "mxpi_tensorinfer",
     "next": "appsink0"

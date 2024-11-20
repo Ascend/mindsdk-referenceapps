@@ -33,15 +33,15 @@
 ```
 .
 |—— image
-│   └── image1.png			# 技术实现流程图
+│   └── image1.png		  # 技术实现流程图
 ├── README.md                     # 模型转换配置文件
 ├── anchor_decode.py              # 计算bbox(参考第4章运行获取源码)
 ├── anchor_generator.py           # 生成先验框（参考第4章运行获取源码）
-├── image.py											# 图片识别主程序
-├── main.pipeline									# 口罩识别推理流程pipline
-├── models												# 推理模型文件夹
-│   └── face_mask.aippconfig			# 转模型前处理配置文件
-└── nms.py												# nms计算程序
+├── image.py			  # 图片识别主程序
+├── main.pipeline		  # 口罩识别推理流程pipline
+├── models			  # 推理模型文件夹
+│   └── face_mask.aippconfig	  # 转模型前处理配置文件
+└── nms.py			  # nms计算程序
 ```
 
 
@@ -65,6 +65,7 @@
 ## 3 准备模型
 
 **步骤1:** 获取face_mask_detection的原始模型(face_mask_detection.pb)
+
 [GitHub](https://github.com/AIZOOTech/FaceMaskDetection/blob/master/models/face_mask_detection.pb)
 
 **步骤2:** 将获取到的模型pb文件存放至项目所在目录下的models目录
@@ -87,6 +88,7 @@ ATC run success, welcome to the next use.
 ## 4 运行
 
 **步骤1:** 下载后处理代码
+
 在链接[GitHub](https://github.com/AIZOOTech/FaceMaskDetection/tree/master/utils)下载开源代码中utils文件夹内的3个py文件(anchor_decode.py,anchor_generator.py, nms.py)并放置于项目根目录即可，最终的目录结构参见 [1.5 代码目录结构与说明]
 
 **步骤2:** 根据使用的设备id，修改源码根目录下**main.pipeline**中所有的deviceId：
@@ -98,4 +100,5 @@ ATC run success, welcome to the next use.
 python3.9 image.py mask.jpg
 ```
 **步骤4:** 查看结果
+
 输出结果对原图像的目标以及口罩进行识别画框并将结果保存至根目录下**my_result.jpg**

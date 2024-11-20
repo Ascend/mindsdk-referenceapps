@@ -5,11 +5,13 @@ from typing import List, Union, Dict
 from paddle.base import libpaddle
 from pydantic import BaseModel
 from fastapi import FastAPI
+import numpy as np
 from mx_rag.summary import ClusterSummary
 from doc_qa_compressor import DocQaCompressor
 from log_analyse_compressor import LogAnalyseCompressor
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.embedding.local.text_embedding import TextEmbedding
+from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 
 
 class DocQaUnstructuredItem(BaseModel):
@@ -43,7 +45,6 @@ DOC_SUMMARY_MODEL_PATH = '/home/models/bge-small-zh-v1.5'
 DOC_SUMMARY_DEVICE = 'npu:0'
 DEVICE_ID = 0
 X_DIM = 1024
-FAISS_INDEX_TYPE = 'FLAT:L2'
 FAISS_LOCAL_INDEX = './faiss.index'
 FAISS_EMBEDDING_MODEL = '/home/models/bge-large-en-v1.5'
 LOG_ANALYSE_LABEL_PATH = './data/log/history_label.jsonl'
@@ -54,7 +55,7 @@ log_analyse = LogAnalyseCompressor()
 doc_summary = ClusterSummary(DOC_SUMMARY_MODEL_PATH, DOC_SUMMARY_DEVICE)
 
 faiss = MindFAISS(x_dim=X_DIM,
-                  index_type=FAISS_INDEX_TYPE,
+                  similarity_strategy=SimilarityStrategy.FLAT_L2,
                   devs=[DEVICE_ID],
                   load_local_index=FAISS_LOCAL_INDEX,
                   auto_save=False)
@@ -63,7 +64,7 @@ label_list = []
 with open(LOG_ANALYSE_LABEL_PATH, 'r') as f:
     for line in f:
         label_list.append(line)
-faiss.add(embed.embed_texts(label_list), [i for i in range(len(label_list))])
+faiss.add(np.array(embed.embed_documents(label_list)), [i for i in range(len(label_list))])
 
 
 def query_data_by_chunk(local_faiss, local_embed, reserved_list, local_label_list, topk: int = 5):
@@ -74,7 +75,7 @@ def query_data_by_chunk(local_faiss, local_embed, reserved_list, local_label_lis
     q_len = len(reserved_list)
     epsilon = 1e-10
 
-    ret = local_faiss.search(local_embed.embed_texts(reserved_list), k=topk)
+    ret = local_faiss.search(np.array(local_embed.embed_documents(reserved_list)), k=topk)
     distances_list = ret[0]
     id_list = ret[1]
 

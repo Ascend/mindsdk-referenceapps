@@ -70,7 +70,7 @@
 
 ```bash
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
-. ${SDK_INSTALL_PATH}/mxVision/set_env.sh
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #sdk安装路径，根据实际安装路径修改
 ```
 
 ## 3、 准备模型

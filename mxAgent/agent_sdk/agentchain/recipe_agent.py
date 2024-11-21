@@ -21,7 +21,6 @@ class RecipeAgent(BaseAgent, ABC):
         self.recipe_output = ""
         self.final_prompt = final_prompt
         self.encoding = tiktoken.get_encoding("gpt2")
-        self.status = False
         self.agent_executor = AgentExecutor(tool_manager=self.tool_manager)
 
     def run(self, query, stream=False, *args, **kwargs):
@@ -30,8 +29,8 @@ class RecipeAgent(BaseAgent, ABC):
         for key, value in kwargs.items():
             setattr(self, key, value)
         cur_step = 1
-        self.status = False
-        while not self.status and cur_step < self.max_steps:
+        self.finished = False
+        while not self.finished and cur_step < self.max_steps:
             self.step()
             cur_step += 1
         if len(self.recipe_output) == 0:
@@ -69,13 +68,13 @@ class RecipeAgent(BaseAgent, ABC):
 
         valid, _ = self.agent_executor.check_valid(translation_result)
         if not valid:
-            self.status = True
+            self.finished = True
             self.recipe_output = ""
             self.answer = ""
             return ""
         else:
             result = self._execute_recipe(translation_result, self.llm)
-            self.status = True
+            self.finished = True
             self.recipe_output = result
             self.answer = result
             return result
@@ -95,11 +94,6 @@ class RecipeAgent(BaseAgent, ABC):
             clip_text = text[:clip_text_index]
             pmt = self.final_prompt.format(text=clip_text)
             return pmt
-
-    def _save_recipe_yaml(self, translation_result):
-        translation_result = translation_result.strip("'")
-        translation_result = translation_result.strip()
-        raise NotImplementedError()
 
     def _execute_recipe(self, recipefile, llm):
         answer = self.agent_executor.async_run(recipefile, llm)

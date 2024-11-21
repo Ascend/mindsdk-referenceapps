@@ -3,6 +3,7 @@
 
 import json
 import os
+import stat
 import re
 import time
 from copy import deepcopy
@@ -29,7 +30,6 @@ class SingleActionAgent(BaseAgent):
         if tool_list is None:
             tool_list = [SingleFinish]
         else:
-            tool_list = deepcopy(tool_list)
             tool_list.append(SingleFinish)
 
         super().__init__(llm, prompt, tool_list, **kwargs)
@@ -68,10 +68,8 @@ class SingleActionAgent(BaseAgent):
 
     def step(self) -> None:
         llm_response = self._prompt_agent(self.llm)
-        logger.info(f"LLM Response:\n{llm_response}")
         self.scratchpad += llm_response
         action_type, argument = self._parse_action(llm_response)
-        logger.info(f"Argument:\n{argument}")
         if action_type == "ParserException":
             result = argument
         else:
@@ -105,10 +103,11 @@ class SingleActionAgent(BaseAgent):
                 "final answer": self.answer,
                 "status": self.finished
             }
-            mode = "a" if os.path.exists(file_path) else "w"
-            with open(file_path, mode, encoding="utf-8") as f:
-                json.dump(save_dict, f, ensure_ascii=False)
-                f.write("\n")
+            flag = os.O_WRONLY | os.O_CREAT
+            mode = stat.S_IWUSR | stat.S_IRUSR
+            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
+                json.dump(save_dict, fout, ensure_ascii=False)
+                fout.write("\n")
         except Exception as e:
             logger.error(f"agent_prompt = {self.prompt}")
             logger.error(e)

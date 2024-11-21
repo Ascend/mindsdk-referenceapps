@@ -4,6 +4,7 @@
 import copy
 import json 
 import os
+import stat
 import re 
 from abc import ABC
 from dataclasses import dataclass
@@ -37,7 +38,6 @@ class APIResponseCache(ABC):
         return self._max_size
     
     def add(self, res: APIResponse, action: str, action_input: str):
-        logger.debug(f"save response cache\n{res}")
         if not res.success:
             logger.warning("skip failed response")
             return
@@ -129,10 +129,11 @@ class ReactAgent(BaseAgent, ABC):
 
             parent_folder_path = os.path.dirname(file_path)
             os.makedirs(parent_folder_path, exist_ok=True)
-            mode = 'a' if os.path.exists(file_path) else 'w'
-            with open(file_path, mode, encoding="utf-8") as f:
-                json.dump(save_dict, f, ensure_ascii=False)
-                f.write("\n")
+            flag = os.O_WRONLY | os.O_CREAT
+            mode = stat.S_IWUSR | stat.S_IRUSR
+            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
+                json.dump(save_dict, fout, ensure_ascii=False)
+                fout.write("\n")
             logger.success(f"save {self.__class__.__name__} status done")
         except Exception as e:
             logger.error(f"prompt = {self.prompt}")
@@ -215,7 +216,6 @@ class ReactReflectAgent(ReactAgent, ABC):
         return AgentRunResult(query=self.query, answer=self.answer, scratchpad=self.scratchpad, finished=self.finished)
 
     def _reflect(self, strategy: ReflexionStrategy) -> None:
-        logger.debug('Reflecting...')
         if strategy == ReflexionStrategy.REFLEXION:
             self.reflections += [self._prompt_agent(self.reflect_llm, type="reflect")]
             self.reflections_str = self._format_reflections(self.reflections)

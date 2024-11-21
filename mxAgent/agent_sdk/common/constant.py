@@ -22,3 +22,9 @@ class AgentRunStatus(BaseModel):
     def __str__(self):
         rate = round((self.success_cnt / self.total_cnt) * 100, 2)
         return str(rate) + f"% {self.success_cnt}/{self.total_cnt}"
+    
+
+THOUGHT = "Thought"
+ACTION = "Action"
+ACTION_INPUT = "Action Input"
+OBSERVATION = "Observation"

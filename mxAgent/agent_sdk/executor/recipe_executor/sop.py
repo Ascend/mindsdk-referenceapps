@@ -97,8 +97,6 @@ class SopHandler:
                 holders = re.findall(r'\$\{([^}]*)\}', str(param))
                 self.check_invalid_placeholder(
                     operation_name, holders, dependency)
-        else:
-            pass
 
     def init_operation_dict(self, operation):
         required_keys = {'name', 'toolname'}

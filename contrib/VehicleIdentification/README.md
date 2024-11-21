@@ -124,7 +124,7 @@ ATC run success, welcome to the next use.
 
 **步骤1** 
 
-后处理插件库编译：在本项目目录./VehicleIdentification下执行
+后处理插件库编译：在本项目目录`./VehicleIdentification`下执行
 ```bash
 bash build.sh
 ```

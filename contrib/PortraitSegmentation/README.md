@@ -74,7 +74,7 @@ ATC run success, welcome to the next use.
 ```
 mkdir data
 ```
-在data文件夹下存放对应jpg格式的人像和背景测试图片，并分别命名为background.jpg以及portrait.jpg。
+在data文件夹下存放对应jpg格式的人像和背景测试图片，并分别命名为portrait.jpg以及background.jpg。
 
 **步骤3**：新建result文件夹
 在工程根目录下新建result文件夹：

@@ -6,6 +6,10 @@
 
 识别图片中的人是否佩戴口罩。图片数据经过 抽帧、解码后，送给口罩检测模型推理。
 
+技术实现流程图
+
+<img src="./image/image1.png" alt="image2" width="200" height="500" />
+
 ### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
@@ -43,14 +47,6 @@
 │   └── face_mask.aippconfig	  # 转模型前处理配置文件
 └── nms.py			  # nms计算程序
 ```
-
-
-
-### 1.5 技术实现流程图
-
-
-
-<img src="./image/image1.png" alt="image2" width="200" height="500" />
 
 ## 2 设置环境变量
 

@@ -141,7 +141,7 @@ atc --model=./Deepmar_bs1.onnx --framework=5 --output=./deepmar_bs1_aipp_1 --inp
 atc --model=./Deepmar_bs1.onnx --framework=5 --output=./deepmar_bs1_unaipp --input_format=NCHW --input_shape="actual_input_1:1,3,224,224" --enable_small_channel=1 --log=error --soc_version=Ascend310P3
 ```
 
-**步骤4：** 查看结果：执行完模型转换后，若提示如下信息说明模型转换成功。
+**步骤4:** 查看结果：执行完模型转换后，若提示如下信息说明模型转换成功。
 
 ```
 ATC run success, welcome to the next use.
@@ -149,13 +149,13 @@ ATC run success, welcome to the next use.
 
 ## 4 运行
 
-**步骤1** 参照第3章节中的模型转换步骤，将yolov3的离线模型转换成功
+**步骤1:** 参照第3章节中的模型转换步骤，将yolov3的离线模型转换成功
 
-**步骤2** 参照第3章节中的模型转换步骤，将deepmar的离线模型转换成功
+**步骤2:** 参照第3章节中的模型转换步骤，将deepmar的离线模型转换成功
 
-**步骤3** 将需要进行推理的行人图片放入/dataset/test_image文件夹下，并修改main.py脚本中第92行中的“img_path"为需要推理的图片路径，将test.pipeline中的第40行中"SDK安装路径"修改为SDK真实安装路径。
+**步骤3:** 将需要进行推理的行人图片放入/dataset/test_image文件夹下，并修改main.py脚本中第92行中的“img_path"为需要推理的图片路径，将test.pipeline中的第40行中"SDK安装路径"修改为SDK真实安装路径。
 
-**步骤4** 执行命令：python main.py,得到final_result.jpg可视化结果
+**步骤4:** 执行命令：python main.py,得到final_result.jpg可视化结果
 
 
 ## 5 常见问题

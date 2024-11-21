@@ -5,6 +5,8 @@
 本开发样例是基于MindX SDK开发的端到端的Python应用实例，可在昇腾芯片上进行行人属性识别，并把可视化结果保存到本地。开发端到端行人属性识别，实现对检测图片中行人的定位与属性识别，并达到精度要求。该Sample的主要处理流程为：数据输入>预处理>行人检测>抠图缩放>行人属性识别>结果可视化。
 
 本样例适用于常见行人所处场景，如街道、红路灯路口、商场等，对于所推理的图片中的行人对象要求尽可能的完整、清晰、无遮挡、无重叠等。
+
+测试样例的像素大小要在32x32～8192x8192之间(其中不包含32x32的像素，图片像素大小必须大于32x32)，且里边的行人对象像素的高度需在[6,4096]之间，宽度需在[32,4096]之间。
 ### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
@@ -84,6 +86,7 @@
 **步骤2:** yolo模型转换：将yolov3的pb文件下载到本地，并将其放在“/model/yolov3”路径下，在终端移至该路径下，执行下面命令：
 
 ```bash
+# 转换模型时，soc_version的值需要通过npu-smi info命令查看得到，否则可能会导致模型转换失败。
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input/input_data:1,416,416,3" --out_nodes="conv_lbbox/BiasAdd:0;conv_mbbox/BiasAdd:0;conv_sbbox/BiasAdd:0"
 ```
 
@@ -134,11 +137,13 @@ aipp_op{
 将Deepmar_bs1.onnx文件拷贝到本样例的“model/deepmar”路径下，并在终端中移至该路径下，执行下面命令进行将onnx模型转om模型：
 
 ```bash
+# 转换模型时，soc_version的值需要通过npu-smi info命令查看得到，否则可能会导致模型转换失败。
 atc --model=./Deepmar_bs1.onnx --framework=5 --output=./deepmar_bs1_aipp_1 --input_format=NCHW --input_shape="actual_input_1:1,3,224,224" --enable_small_channel=1 --log=error --soc_version=Ascend310P3  --insert_op_conf=aipp_deepmar.config
 ```
 对于无aipp设置的离线模型，可执行下面命令得到：
 
 ```bash
+# 转换模型时，soc_version的值需要通过npu-smi info命令查看得到，否则可能会导致模型转换失败。
 atc --model=./Deepmar_bs1.onnx --framework=5 --output=./deepmar_bs1_unaipp --input_format=NCHW --input_shape="actual_input_1:1,3,224,224" --enable_small_channel=1 --log=error --soc_version=Ascend310P3
 ```
 
@@ -157,9 +162,3 @@ ATC run success, welcome to the next use.
 **步骤3:** 将需要进行推理的行人图片放入/dataset/test_image文件夹下，并修改main.py脚本中第92行中的“img_path"为需要推理的图片路径，将test.pipeline中的第40行中"SDK安装路径"修改为SDK真实安装路径。
 
 **步骤4:** 执行命令：python main.py,得到final_result.jpg可视化结果。
-
-
-## 5 常见问题
-
-* 测试样例的像素大小要做在32\*32～8192\*8192之间(其中不包含32*32的像素，图片像素大小必须大于32\*32)，且里边的行人对象像素的高度需在[6,4096]之间，宽度需在[32,4096]之间。
-* 转换模型时，soc_version的值需要通过npu-smi info命令查看得到，否则可能会导致模型转换失败。

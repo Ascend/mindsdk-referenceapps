@@ -15,9 +15,13 @@ class OpenAICompatibleLLM:
         self.llm_name = llm_name
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
-    def run(self, prompt, temperature=0.1, stop=None, max_tokens=4096, ismessage=False, stream=False, **kwargs):
-        messages = prompt if ismessage else [{"role": "user", "content": prompt}]
+    def run(self, prompt, ismessage=False, **kwargs):
+        temperature = kwargs.get("temperature", 0.1)
+        stop = kwargs.get("stop", None)
+        max_tokens = kwargs.get("max_tokens", 4096)
+        stream = kwargs.get("stream", False)
 
+        messages = prompt if ismessage else [{"role": "user", "content": prompt}]
         if stream:
             res = self._chat_stream(messages, temperature, max_tokens, stop=stop, **kwargs)
         else:

@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     # 构建流的输入对象
     dataInput = MxDataInput()
-    filepath = "./cityscapes/leftImg8bit/val/frankfurt"
+    filepath = "./cityscapes/leftImg8bit/val/frankfurt/"
     if os.path.exists(filepath) != 1:
         print("The filepath does not exist !")
         exit()

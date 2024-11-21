@@ -138,7 +138,13 @@ bash run.sh
 
 
 ## 5 常见问题
-如果执行`bash run.sh`报错如下：
+
+
+### 5.1 .sh文件执行报错
+
+
+
+**问题描述：**  如果执行`bash run.sh`报错如下：
 ```
 run.sh: line 2: $'\r': command not found
 run.sh: line 3: cd: $'.\r\r': No such file or directory
@@ -146,7 +152,8 @@ run.sh: line 4: $'\r': command not found
 run.sh: line 8: $'\r': command not found
 run.sh: line 10: $'\r': command not found
 ```
-则是文件格式需要转换，执行以下命令转换`run.sh`格式：
+
+**解决方案：**  是文件格式需要转换，执行以下命令转换`run.sh`格式：
 ```
 dos2unix run.sh
 ```

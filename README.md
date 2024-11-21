@@ -1,13 +1,28 @@
 EN|[CN](README.zh.md)
 # MindX SDK Reference Apps
 
-[MindX SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei. It provides simplified high-performance APIs and tools to enable Ascend AI processors in various application scenarios. mxSdkReferenceApps is a reference sample developed based on MindX SDK.
+[MindX SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as mxVision (visual analysis), mxRAG (knowledge enhancement), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
+
+To help developers quickly master the use of mxVision and mxRAG interfaces and rapidly implement business functions, this code repository (mxSdkReferenceApps) provides various reference samples developed based on mxVision and mxRAG. Users can select the appropriate sample code according to their needs.
+## Main Directory Structure and Description
+| 目录 | 说明                                            |
+|---|-----------------------------------------------|
+| [contrib](./contrib) | mxVision user-contributed sample directory    |
+| [docs](./docs) | mxVision documentation directory              |
+| [mxVision](./mxVision) | mxVision official sample directory |
+| [tutorials](./tutorials) | mxVision official tutorials directory         | 
+| [mxRAG](./mxRAG)        | mxRAG offical sample directory                |
 
 
-## Contribution
+## Related Websites
+The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest MindX SDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
 
-Refer to [CONTRIBUTING.md](contrib/CONTRIBUTING.md).
+Ascend Community Website: https://www.hiascend.com/
 
+Ascend Forum Website: https://www.hiascend.com/forum/
+
+## Disclaimer
+The reference design is not a commercial release product and is provided for users' reference only. Users need to complete the productization and implement security protection on their own if they choose to use it. Huawei does not assume security responsibilities.
 ## Copyright Description
 
 Refer to [License.md](License.md).

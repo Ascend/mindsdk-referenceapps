@@ -230,5 +230,6 @@ python3 mainv2.py --queryFilePath='data/querySet' --galleryFilePath='data/galler
 
 
 ## 5 常见问题
-· 在运行mainv2.py时出现"Vpc cropping failed"，或者"The image height zoom ratio is out of range [1/32, 16]"  
-> 这里的错误是因为yolov3模型检测到的目标过小，抠图后放大的比例超过系统给定的阈值[1/32, 16]，更新“项目所在目录/models/yolov3.cfg”文件，将OBJECTNESS_THRESH适度调大可解决该问题
+### 5.1 检测目标过小
+**问题描述：** 在运行mainv2.py时出现"Vpc cropping failed"，或者"The image height zoom ratio is out of range [1/32, 16]" 。
+**解决方案：** 这里的错误是因为yolov3模型检测到的目标过小，抠图后放大的比例超过系统给定的阈值[1/32, 16]，更新“项目所在目录/models/yolov3.cfg”文件，将OBJECTNESS_THRESH适度调大可解决该问题。

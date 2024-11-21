@@ -104,7 +104,7 @@ ATC run success, welcome to the next use.
 
 **步骤2** googlenet模型转换
 
-将在3.1节获取到的models.zip压缩包解压，得到的after-modify.caffemodel模型文件存放至`./models/googlenet`。
+将在3.1节获取到的googlenet模型压缩包解压，得到的after-modify.caffemodel模型文件存放至`./models/googlenet`。
 在`./models/googlenet`目录下执行以下命令
 
 ```bash

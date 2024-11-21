@@ -87,6 +87,7 @@
 ### 3.2 模型转换
 
 **步骤1** yolo模型转换
+
 将在3.1节获取到的yolo模型压缩包解压，得到的文件夹TOLOv3_for_ACL中的模型pb文件yolov3_tf.pb存放至`./models/yolo/`。
 在`./models/yolo`目录下执行以下命令
 

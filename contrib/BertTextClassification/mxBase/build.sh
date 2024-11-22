@@ -48,7 +48,7 @@ function build_bert_text_classification()
         echo "Failed to build mxBase_text_classification."
         exit ${ret}
     fi
-    cp ./mxBase_text_classification ../
+    cp -f ./mxBase_text_classification ../
 }
 
 check_env

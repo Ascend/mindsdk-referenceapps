@@ -42,12 +42,13 @@ function build_bert_text_classification()
     mkdir -p build
     cd build || exit
     cmake ..
-    make
+    make -j
     ret=$?
     if [ ${ret} -ne 0 ]; then
         echo "Failed to build mxBase_text_classification."
         exit ${ret}
     fi
+    cp -f ./mxBase_text_classification ../
 }
 
 check_env

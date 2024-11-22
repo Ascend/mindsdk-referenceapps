@@ -162,7 +162,7 @@ time cost: 0.0195 s
 
 ```
 int main(int argc, char* argv[]) {
-  //test1(argc,argv);
+  //test(argc,argv);
   Test::test_accuracy();
 }
 ```

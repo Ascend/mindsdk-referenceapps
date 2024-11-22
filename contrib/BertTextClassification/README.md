@@ -30,55 +30,40 @@
 本工程名称为文本分类，工程目录如下图所示：  
 
 ```
-.
-│  README.md
-│  
-├─mxBase
-│  │  build.sh
-│  │  CMakeLists.txt
-│  │  main.cpp
-│  │  
-│  ├─BertClassification
-│  │      BertClassification.cpp
-│  │      BertClassification.h
-│  │      
-│  ├─data
-│  │      vocab.txt
-│  │      
-│  ├─model
-│  │      bert_text_classification_labels.names
-│  │      
-│  ├─out
-│  │      prediction_label.txt
-│  │      
-│  └─test
-│          Test.cpp
-│          Test.h
-│          
-└─sdk
-    │  main.py
-    │  tokenizer.py
-    │  
-    ├─config
-    │      bert_text_classification_aipp_tf.cfg
-    │      bert_text_classification_labels.names
-    │      
-    ├─data
-    │      vocab.txt
-    │      
-    ├─model
-    │      bert_text_classification_aipp_tf.cfg
-    │      bert_text_classification_labels.names
-    │      model_conversion.sh
-    │      
-    ├─out
-    │      prediction_label.txt
-    │      
-    ├─pipeline
-    │      BertTextClassification.pipeline
-    │      
-    └─test
-            test.py
+├── README.md
+├── mxBase
+│   ├── BertClassification
+│   │   ├── BertClassification.cpp
+│   │   └── BertClassification.h
+│   ├── build.sh
+│   ├── CMakeLists.txt
+│   ├── data
+│   │   └── vocab.txt
+│   ├── main.cpp
+│   ├── model
+│   │   ├── bert_text_classification_labels.names
+│   ├── mxBase_text_classification
+│   ├── out
+│   │   └── prediction_label.txt
+│   └── test
+│       ├── Test.cpp
+│       └── Test.h
+└── sdk
+    ├── config
+    │   ├── bert_text_classification_aipp_tf.cfg
+    │   └── bert_text_classification_labels.names
+    ├── data
+    │   └── vocab.txt
+    ├── main.py
+    ├── model
+    │   └── model_conversion.sh
+    ├── out
+    │   └── prediction_label.txt
+    ├── pipeline
+    │   └── BertTextClassification.pipeline
+    ├── test
+    │   ├── test.py
+    └── tokenizer.py
 ```
 
 
@@ -180,6 +165,10 @@ int main(int argc, char* argv[]) {
   //test1(argc,argv);
   Test::test_accuracy();
 }
+```
+重新编译，再./mxBase目录执行以下命令
+```
+bash build.sh
 ```
 编译完成后，执行以下命令运行
 ```

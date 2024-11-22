@@ -150,7 +150,7 @@ if __name__ == '__main__':
         text = "Count: " + str(person_num)
         RGB = (0, 0, 255)
         cv2.putText(image, text, (POSITION, POSITION), cv2.FONT_HERSHEY_SIMPLEX, 4, RGB, 4)
-        cv2.imwrite(os.path.join("./result/" + str(i) + "_heatmap.jpg"), image)
+        cv2.imwrite(os.path.join("./result", str(i) + "_heatmap.jpg"), image)
     #end time
     TIME_END = time.time()
     print("total image number:", len(NAME_LIST))

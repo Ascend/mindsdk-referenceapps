@@ -56,7 +56,6 @@
 │          Test.h
 │          
 └─sdk
-    │  flowChart.png
     │  main.py
     │  tokenizer.py
     │  
@@ -97,8 +96,8 @@
 
 **步骤1** 
 
-[模型下载地址](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/bert_text_classification.pb)
-下载模型的pb文件，存放到当前项目根目录`./BertTextClassification`。
+下载模型的pb文件 [模型下载地址](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/bert_text_classification.pb)
+将模型文件存放到当前项目根目录`./BertTextClassification`。
 
 **步骤2** 进入模型所在文件夹使用atc命令进行模型转换：
 
@@ -124,7 +123,7 @@ cp ./bert_text_classification.om ./mxBase/model/
 
 **步骤1** 
 
-下载测试数据[下载地址](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/data.zip)并解压，
+下载测试数据并解压，[下载地址](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/BertTextClassification/data.zip)
 将解压后的sample.txt和test.csv文件放在项目的mxBase/data和sdk/data目录下。
 
 **步骤2** 

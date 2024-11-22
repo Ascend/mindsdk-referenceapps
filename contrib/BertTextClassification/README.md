@@ -112,7 +112,7 @@ ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-**步骤3** 执行以下命令将转换好的模型复制到项目中model文件夹中：
+**步骤3** 执行以下命令将转换好的om模型复制到项目中model文件夹中：
 
 ```
 cp ./bert_text_classification.om ./sdk/model/

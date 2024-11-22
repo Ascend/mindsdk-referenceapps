@@ -35,7 +35,7 @@ void InitBertParam(InitParam &initParam) {
     initParam.labelNumber = LABEL_NUMBER;
 }
 
-int test(int argc, char* argv[]) {
+int Test(int argc, char* argv[]) {
     if (argc <= 1) {
         LogWarn << "Please input text path, such as './mxBase_text_classification ./data/sample.txt'.";
         return APP_ERR_OK;
@@ -90,6 +90,6 @@ int test(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
-    test(argc,argv);
+    Test(argc, argv);
     // Test::test_accuracy();
 }

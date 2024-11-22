@@ -2,9 +2,6 @@
 
 ## 1. 介绍
 
-文本分类插件基于 MindXSDK 开发，在晟腾芯片上进行文本分类，将分类结果保存。输入一段新闻，可以判断该新闻属于哪个类别。
-该模型支持5个新闻类别：体育、健康、军事、教育、汽车。
-
 ### 1.1 简介
 
 文本分类插件基于 MindXSDK 开发，在晟腾芯片上进行文本分类，将分类结果保存。输入一段新闻，可以判断该新闻属于哪个类别。
@@ -86,7 +83,7 @@
 ```
 
 
-## 2 设置环境变量
+## 2. 设置环境变量
 
 
 在编译运行项目前，需要设置环境变量：
@@ -96,7 +93,7 @@
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh #sdk安装路径，根据实际安装路径修改
 ```
 
-## 3 准备模型
+## 3. 准备模型
 
 **步骤1** 
 
@@ -123,7 +120,7 @@ cp ./bert_text_classification.om ./sdk/model/
 cp ./bert_text_classification.om ./mxBase/model/
 ```
 
-## 4 编译与运行
+## 4. 编译与运行
 
 **步骤1** 
 
@@ -157,7 +154,7 @@ bash build.sh
 命令执行成功后在屏幕打印输出分类结果，同时在/BertTextClassification/mxBase/out目录下生成分类结果文件 prediction_label.txt。
 
 
-## 5 精度测试
+## 5. 精度测试
 
 **步骤1** 将第4节中下载的数据集中的test.csv文件分别放在sdk/data目录和mxBase/data目录。
 

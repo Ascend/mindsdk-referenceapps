@@ -35,7 +35,7 @@ bash build.sh #编译
 chmod 440 ./Plugin1/build/libcountpersonpostprocess.sp #修改so权限
 ```
 
-**步骤2**：准备输入图片：在项目根目录下使用`mkdir input`创建input目录，将输入图片命名为IMG_${ID}.jpg放到input目录，其中${ID}替换为图片编号（例如IMG_1.jpg,需要严格按照顺序命名）。
+**步骤2**：准备输入图片：在项目根目录下使用`mkdir input`创建input目录，将输入图片命名为IMG_id.jpg放到input目录，其中id替换为图片编号（例如IMG_1.jpg、IMG_2.jpg,需要从1开始严格按照顺序命名）。
 
 **步骤3**：创建输出目录：在项目根目录下使用`mkdir result`创建result目录。
 
@@ -45,4 +45,4 @@ bash run.sh
 ```
 
 **步骤5**：查看结果：
-运行成功后回显会显示total image number，即输入图片张树。输出图片存放在result目录。
+运行成功后回显会显示total image number，即输入图片张数。输出图片存放在result目录。

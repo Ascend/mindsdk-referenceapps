@@ -123,10 +123,11 @@ cp ./bert_text_classification.om ./mxBase/model/
 ```
 python3 main.py
 ```
+**步骤4** 查看结果
 
 命令执行成功后在屏幕打印输出分类结果，同时在/BertTextClassification/sdk/out目录下生成分类结果文件 prediction_label.txt。
 
-**步骤4** 运行C++项目，进入/BertTextClassification/mxBase目录，执行以下命令进行编译。
+**步骤5** 运行C++项目，进入/BertTextClassification/mxBase目录，执行以下命令进行编译。
 
 ```
 bash build.sh
@@ -135,6 +136,9 @@ bash build.sh
 ```
 ./mxBase_text_classification ./data/sample.txt
 ```
+
+**步骤6** 查看结果
+
 命令执行成功后在屏幕打印输出分类结果，同时在/BertTextClassification/mxBase/out目录下生成分类结果文件 prediction_label.txt。
 
 
@@ -162,7 +166,7 @@ time cost: 0.0195 s
 
 ```
 int main(int argc, char* argv[]) {
-  //Test(argc, argv);
+  //Test(argc, argv[1]);
   Test::test_accuracy();
 }
 ```

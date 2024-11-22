@@ -23,7 +23,7 @@ Atlas 300I pro、Atlas 300V pro
 ## 3 准备模型
 **步骤1**：下载原始caffemodel模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PersonCount/model.zip)，并将解压后获取到的所有文件存放至本案例代码的PersonCount/model 目录下。
 
-**步骤2**： 进入PersonCount/model目录执行以下命令。
+**步骤2**： 在项目根目录下执行以下命令。
 ```
 atc --input_shape="blob1:8,3,800,1408" --weight="model/count_person.caffe.caffemodel" --input_format=NCHW --output="model/count_person_8.caffe" --soc_version=Ascend310P3 --insert_op_conf=model/insert_op.cfg --framework=0 --model="model/count_person.caffe.prototxt"
 ```
@@ -32,7 +32,7 @@ atc --input_shape="blob1:8,3,800,1408" --weight="model/count_person.caffe.caffem
 **步骤1**：编译后处理插件so：在项目根目录下执行
 ```
 bash build.sh #编译
-chmod 440 ./Plugin1/build/libcountpersonpostprocess.sp #修改so权限
+chmod 440 ./Plugin1/build/libcountpersonpostprocess.so #修改so权限
 ```
 
 **步骤2**：准备输入图片：在项目根目录下使用`mkdir input`创建input目录，将输入图片命名为IMG_id.jpg放到input目录，其中id替换为图片编号（例如IMG_1.jpg、IMG_2.jpg,需要从1开始严格按照顺序命名）。
@@ -45,4 +45,4 @@ bash run.sh
 ```
 
 **步骤5**：查看结果：
-运行成功后回显会显示total image number，即输入图片张数。输出图片存放在result目录。
+运行成功后回显会显示输入图片的张数total image number，输出图片存放在result目录。

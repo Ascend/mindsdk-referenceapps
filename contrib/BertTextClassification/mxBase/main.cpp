@@ -39,7 +39,7 @@ int test(int argc, char* argv[]) {
     if (argc <= 1) {
         LogWarn << "Please input text path, such as './mxBase_text_classification ./data/sample.txt'.";
         return APP_ERR_OK;
-    }    
+    }
     InitParam initParam;
     InitBertParam(initParam);
     auto bert = std::make_shared<BertClassification>();
@@ -49,7 +49,7 @@ int test(int argc, char* argv[]) {
         LogError << "BertClassification init failed, ret=" << ret << ".";
         bert->DeInit();
         return ret;
-    }    
+    }
     std::string textPath = argv[1];
     std::string aa = textPath.substr(textPath.find_last_of("."));
     if (textPath.substr(textPath.find_last_of(".")) != ".txt") {
@@ -66,7 +66,7 @@ int test(int argc, char* argv[]) {
         LogError << "Failed to open textPath file: " << textPath << ".";
         bert->DeInit();
         return APP_ERR_COMM_OPEN_FAIL;
-    }    
+    }
     while (std::getline(infile, text)) {
         std::string label;
         // Inference begin.
@@ -78,7 +78,7 @@ int test(int argc, char* argv[]) {
             bert->DeInit();
             return ret;
         }
-    }    
+    }
     if (text == "") {
         LogError << "The sample.txt text is null, please input right text!";
         bert->DeInit();

@@ -1,20 +1,10 @@
 # VehicleRetrogradeRecognition交通逆行识别
 
 ## 1 介绍
-
+### 1.1 简介
 VehicleRetrogradeRecognition交通逆行识别后处理插件基于MindXSDK开发，在晟腾芯片上进行目标检测和跟踪，可以对逆行车辆进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行逆行车辆识别，识别结果经过VehicleRetrogradeRecognition后处理后得到识别框，对识别框进行跟踪和车辆行驶方向判断，用编号覆盖原有的类别信息，再将逆行车辆的识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
-### 1.1 支持的产品
-
-昇腾310(推理)
-
-### 1.2 支持的版本
-
-本样例配套的CANN版本为[7.0.rc1](https://www.hiascend.com/software/cann/commercial)。支持的SDK版本为[5.0.rc3](https://www.hiascend.com/software/Mindx-sdk)。
-
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
-
-### 1.3 软件方案介绍
+软件方案介绍
 
 基于MindX SDK的VehicleRetrogradeRecognition车辆逆行识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，检测结果通过后处理插件objectpostprocessor处理，再通过mxpi_distributor插件筛选出汽车和卡车的检测结果，再接入跟踪插件mxpi_motsimplesortV2中识别框进行目标跟踪，得到目标的跟踪编号，本项目开发的MxpiTrackRetrogradeCar后处理插件识别出逆行的车辆目标，得到识别框，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
 
@@ -36,16 +26,44 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 | 12   | OSD可视化插件        | 主要实现对每帧图像标注跟踪结果。                             |
 | 13   | 视频编码插件         | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
 
-### 1.4 代码目录结构与说明
+技术实现流程图
+
+![](image/image1.jpg)
+
+### 1.2 支持的产品
+
+本项目以昇腾Atlas300V pro、 Atlas300I pro为主要的硬件平台
+
+### 1.3 支持的版本
+
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+
+
+### 1.4 三方依赖
+
+推理中涉及到第三方软件依赖如下表所示。
+
+| 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
+| -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
+| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+
+### 1.5 代码目录结构与说明
 
 本工程名称为VehicleRetrogradeRecognition，工程目录如下图所示：
 
 ```
+├── image
+│   ├── image1.jpg
+│   ├── image2.jpg
+│   └── image3.jpg
 ├── models
 │   ├── aipp_yolov4_576_576.config            # 模型转换aipp配置文件
 │   ├── coco.names
 │   ├── fusion_result.json
-│   └── yolov4_bs.om               # om模型
+│   └── yolov4.cfg
 ├── pipeline
 │   └── VehicleRetrogradeRecognition.pipeline        # pipeline文件
 ├── plugins
@@ -54,62 +72,58 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 │       ├── MxpiTrackRetrogradeCar.cpp  
 │       ├── MxpiTrackRetrogradeCar.h
 │       └── build.sh
+├── test
+│   └── main.cpp
 ├── CMakeLists.txt
 ├── build.sh
 ├── main.cpp
+├── README.md
 └── run.sh
 ```
 
+### 1.6 相关约束
+
+#### 适用条件
+
+适用于较为笔直的公路，且只有两个方向的来车。
+
+#### 限制条件
+
+尺寸条件：单个车辆的宽高像素不得超过500
+
+光照条件：光线较为良好，如果光线不足，必须有车辆的完整轮廓
+
+视频条件：视频拍摄需固定，不能发生抖动或者移动的情况
+
+#### 参数调节
+
+| 参数名称 |参数介绍| 修改方法   | 默认值   |
+| -------------- | --------------------------------------------- | --------------------------------------------------------------------- | -------- |
+|trackThreshold      |路径记录对象属于同一目标概率阈值，大于该阈值认为是同一对象|在pipeline文件中，修改mxpi_motsimplesortV2插件中的trackThreshold的大小即可| 0.5 |
+|lostThreshold|路径记录目标丢失帧数阈值，帧数大于该阈值认为行程目标已丢失 |在pipeline文件中，修改mxpi_motsimplesortV2插件中的lostThreshold的大小即可|3|
+|IOU_THRESH       |两个框的IOU阈值，超过阈值即认为同一个框,用于nms算法|在models/yolov4.cfg文件中，修改IOU_THRESH的大小即可|0.6|
+|SCORE_THRESH     |是否为框的阈值，大于阈值即认为是框|在models/yolov4.cfg文件中，修改SCORE_THRESH的大小即可|0.6|
+|OBJECTNESS_THRESH     |是否为目标的阈值，大于阈值即认为是目标|在models/yolov4.cfg文件中，修改OBJECTNESS_THRESH的大小即可|0.7|
 
 
-### 1.5 技术实现流程图
-
-![](image/image1.jpg)
-
-
-
-## 2 环境依赖
-
-推荐系统为ubantu 18.04，环境依赖软件和版本如下表：
-
-| 软件名称            | 版本        | 说明                          | 获取方式                                                     |
-| ------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ |
-| MindX SDK           | 5.0.rc3       | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk) |
-| ubuntu              | 18.04.1 LTS | 操作系统                      | Ubuntu官网获取                                               |
-| Ascend-CANN-toolkit | 7.0.rc1       | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial)    |
+## 2 设置环境变量
 
 在编译运行项目前，需要设置环境变量：
-
 ```
-export MX_SDK_HOME=${SDK安装路径}/mxVision
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-export ASCEND_AICPU_PATH=${install_path}
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:$LD_LIBRARY_PATH
-export GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner
-export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins
+#设置CANN环境变量（请确认install_path路径是否正确）
+. ${ascend-toolkit-path}/set_env.sh
+
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
+
+#查看环境变量
+env
 ```
 
-注：其中SDK安装路径${MX_SDK_HOME}替换为用户的SDK安装路径;install_path替换为开发套件包所在路径。LD_LIBRARY_PATH用以加载开发套件包中lib库。
-
-
-
-## 3 软件依赖
-
-推理中涉及到第三方软件依赖如下表所示。
-
-| 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
-| -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/one_stop_navigation.md) |
-| ffmpeg   | 2021-07-21 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/one_stop_navigation.md) |
-
-
-
-## 4 模型转换
+## 3 准备模型
 
 **步骤1** 模型获取
-在ModelZoo上下载[YOLOv4模型](https://www.hiascend.com/zh/software/modelzoo/detail/1/abb7e641964c459398173248aa5353bc)
+下载[YOLOv4模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VehicleRetrogradeRecognition/models.zip)
 
 **步骤2** 模型存放
 将获取到的YOLOv4模型onnx文件存放至："样例项目所在目录/models/"。
@@ -118,39 +132,14 @@ export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME
 在onnx文件所在目录下执行一下命令
 
 ```
-# 设置环境变量（请确认install_path路径是否正确）
-# Set environment PATH (Please confirm that the install_path is correct).
-
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-
-# 执行，转换YOLOv4模型
-# Execute, transform YOLOv4 model.
-
-YOLOv4:
-atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_format=NCHW --soc_version=Ascend310 --insert_op_conf=./aipp_yolov4_576_576.config --input_shape="input:1,3,576,576" --out_nodes="Conv_434:0;Conv_418:0;Conv_402:0"
+atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_format=NCHW --soc_version=Ascend310P1 --insert_op_conf=./aipp_yolov4_576_576.config --input_shape="input:1,3,576,576" --out_nodes="Conv_434:0;Conv_418:0;Conv_402:0"
 ```
 
-执行完模型转换脚本后，会生成相应的.om模型文件。我们也提供了原模型以及已经转换好的YOLOv4 om模型：[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/VehicleRetrogradeRecognition/models.zip)
+## 4 编译与运行
 
-模型转换使用了ATC工具，如需更多信息请参考:
+**步骤1** 拉起Live555服务：[Live555拉流教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
- https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
-
-
-## 5 准备
-
-**步骤1** 通过pc端ffmpeg软件将输入视频格式转换为.264格式，如下所示为MP4转换为h.264命令：
-```
-ffmpeg -i test.mp4 -vcodec h264 -bf 0 -g 25 -s 1280*720 -an -f h264 test.264
-
-//-bf B帧数目控制，-g 关键帧间隔控制，-s 分辨率控制 -an关闭音频， -r 指定帧率
-```
-
-**步骤2** 按照第3小结**软件依赖**安装live555和ffmpeg，按照步骤1或者 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/one_stop_navigation.md)将mp4视频转换为h264格式。并将生成的264格式的视频上传到`live/mediaServer`目录下，然后修改`VehicleRetrogradeRecognition/pipeline`目录下的VehicleRetrogradeRecognition.pipeline文件中mxpi_rtspsrc0的内容。
+**步骤2** 根据实际的网络视频流，修改`VehicleRetrogradeRecognition/pipeline`目录下的VehicleRetrogradeRecognition.pipeline文件中mxpi_rtspsrc0第9行的内容。
 
 ```
         "mxpi_rtspsrc0": {
@@ -163,7 +152,7 @@ ffmpeg -i test.mp4 -vcodec h264 -bf 0 -g 25 -s 1280*720 -an -f h264 test.264
         },
 ```
 
-**步骤3** 根据视频划分道路的分界线，取分界线两端点的坐标，写在mxpi_trackretrogradecar插件中，其中isVertical为0时代表道路是竖直或倾斜的，isVertical为1时则代表道路是基本水平的。
+**步骤3** 根据视频划分道路的分界线，取分界线两端点的坐标，写在mxpi_trackretrogradecar插件中，其中isVertical为0时代表道路是竖直或倾斜的，isVertical为1时则代表道路是基本水平的。根据实际视频修改VehicleRetrogradeRecognition.pipeline文件的103-111行。
 
 ```
         "mxpi_trackretrogradecar0": {
@@ -180,42 +169,23 @@ ffmpeg -i test.mp4 -vcodec h264 -bf 0 -g 25 -s 1280*720 -an -f h264 test.264
                     "next": "queue4"
                 },
 ```
+**步骤4** 修改VehicleRetrogradeRecognition.pipeline文件中161、162行的imageWidth和ImageHeight为输入264视频的高和宽。
+```
+ "mxpi_videoencoder0": {
+            "props": {
+                "inputFormat": "YUV420SP_NV12",
+                "outputFormat": "H264",
+                "fps": "1",
+                "iFrameInterval": "50",
+                "imageWidth":"1280",
+                "imageHeight":"720"
+            },
+            "factory": "mxpi_videoencoder",
+            "next": "queue7"
+        },
+```
 
-
-## 使用场景概括
-
-### 适用条件
-
-适用于较为笔直的公路，且只有两个方向的来车。
-
-### 限制条件
-
-尺寸条件：单个车辆的宽高像素不得超过500
-
-光照条件：光线较为良好，如果光线不足，必须有车辆的完整轮廓
-
-视频条件：视频拍摄需固定，不能发生抖动或者移动的情况
-
-## 参数调节
-
-| 参数名称 |参数介绍| 修改方法   | 默认值   |
-| -------------- | --------------------------------------------- | --------------------------------------------------------------------- | -------- |
-|trackThreshold      |路径记录对象属于同一目标概率阈值，大于该阈值认为是同一对象|在pipeline文件中，修改mxpi_motsimplesortV2插件中的trackThreshold的大小即可| 0.5 |
-|lostThreshold|路径记录目标丢失帧数阈值，帧数大于该阈值认为行程目标已丢失 |在pipeline文件中，修改mxpi_motsimplesortV2插件中的lostThreshold的大小即可|3|
-|IOU_THRESH       |两个框的IOU阈值，超过阈值即认为同一个框,用于nms算法|在models/yolov4.cfg文件中，修改IOU_THRESH的大小即可|0.6|
-|SCORE_THRESH     |是否为框的阈值，大于阈值即认为是框|在models/yolov4.cfg文件中，修改SCORE_THRESH的大小即可|0.6|
-|OBJECTNESS_THRESH     |是否为目标的阈值，大于阈值即认为是目标|在models/yolov4.cfg文件中，修改OBJECTNESS_THRESH的大小即可|0.7|
-
-
-## 6 编译与运行
-
-**步骤1** 按照第2小节 **环境依赖** 中的步骤设置环境变量。
-
-**步骤2** 按照第4小节 **模型转换** 中的步骤获得 om 模型文件，放置在 `VehicleRetrogradeRecognition/models` 目录下。
-
-**步骤3** 修改`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`文件夹下的CMakeLists.txt文件。将其中的"$ENV{MX_SDK_HOME}"修改成自己的SDK目录。
-
-**步骤4** 编译。进入 `VehicleRetrogradeRecognition` 目录，在 `VehicleRetrogradeRecognition` 目录下执行命令：
+**步骤5** 编译。进入 `VehicleRetrogradeRecognition` 目录，在 `VehicleRetrogradeRecognition` 目录下执行命令：
 
 ```
 bash build.sh
@@ -223,33 +193,25 @@ bash build.sh
 
 命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
 
-**步骤5** 运行。回到VehicleRetrogradeRecognition目录下，在VehicleRetrogradeRecognition目录下执行命令：
+**步骤6** 运行。回到VehicleRetrogradeRecognition目录下，在VehicleRetrogradeRecognition目录下执行命令：
 
 ```
 bash run.sh
 ```
 
-命令执行成功后会在当前目录下生成检测结果视频文件out.h264,然后执行命令：
+命令执行成功后会在当前目录下生成检测结果视频文件out.h264。
 
-```
-ffmpeg -f h264 -i out.h264 -vcodec copy out.mp4
-```
-
-命令执行成功后会得到检测结果视频文件的mp4格式。
-
-## 7 性能测试
+## 5 性能测试
 
 **测试帧率：**
 
-使用`VehicleRetrogradeRecognition/test`目录下的main.cpp替换`VehicleRetrogradeRecognition`目录下的main.cpp，然后按照第6小结编译与运行中的步骤进行编译运行，服务器会输出运行到该帧的平均帧率。
+使用`VehicleRetrogradeRecognition/test`目录下的main.cpp替换`VehicleRetrogradeRecognition`目录下的main.cpp，然后按照第4小结编译与运行中的步骤进行编译运行，服务器会输出运行到该帧的平均帧率。
 
 ![](image/image2.jpg)
 
-本样例统计出每秒处理的帧数，输入为25帧率的视频，单路推理，理应每秒处理25 * 1 = 25帧，如统计每秒的帧率达到25则性能达标。经测试，本样例满足1920*1080分辨率下25帧率的推理。
+## 6 常见问题
 
-## 8 常见问题
-
-8.1 视频编码参数配置错误
+### 6.1 视频编码参数配置错误
 
 **问题描述：**
 

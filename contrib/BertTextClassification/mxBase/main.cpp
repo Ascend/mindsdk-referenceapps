@@ -35,7 +35,7 @@ void InitBertParam(InitParam &initParam) {
     initParam.labelNumber = LABEL_NUMBER;
 }
 
-int Test(int argc, char* argv[]) 
+int Test(int argc, std::string path) 
 {
     if (argc <= 1) {
         LogWarn << "Please input text path, such as './mxBase_text_classification ./data/sample.txt'.";
@@ -51,7 +51,7 @@ int Test(int argc, char* argv[])
         bert->DeInit();
         return ret;
     }
-    std::string textPath = argv[1];
+    std::string textPath = path;
     std::string aa = textPath.substr(textPath.find_last_of("."));
     if (textPath.substr(textPath.find_last_of(".")) != ".txt") {
         LogError << "please input the txt file!";
@@ -91,6 +91,6 @@ int Test(int argc, char* argv[])
 }
 
 int main(int argc, char* argv[]) {
-    Test(argc, argv);
+    Test(argc, argv[1]);
     // Test::test_accuracy();
 }

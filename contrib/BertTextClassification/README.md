@@ -162,7 +162,7 @@ time cost: 0.0195 s
 全部类别的精确度：0.9798
 ```
 
-**步骤3** mxBase项目中，将mxBase目录下main.cpp中main方法里Test::test_accuracy();的注释去掉，然后将test1注释。修改后的代码片段如下：
+**步骤3** mxBase项目中，将mxBase目录下main.cpp中main方法里Test::test_accuracy();的注释去掉，然后将Test(argc, argv[1])注释。修改后的代码片段如下：
 
 ```
 int main(int argc, char* argv[]) {

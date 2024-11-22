@@ -102,7 +102,7 @@ if __name__ == '__main__':
     # Construct the input of the stream
     DATA_INPUT = MxDataInput()
     #dataset path needs to fixde as specific path
-    DATASET_PATH = '../tools/python_count/ShanghaiTech/part_B_images/'
+    DATASET_PATH = './input/'
     NAME_LIST = os.listdir(DATASET_PATH)
     PERSON_NUM_LIST = []
     GT_LIST = []
@@ -150,26 +150,9 @@ if __name__ == '__main__':
         text = "Count: " + str(person_num)
         RGB = (0, 0, 255)
         cv2.putText(image, text, (POSITION, POSITION), cv2.FONT_HERSHEY_SIMPLEX, 4, RGB, 4)
-        cv2.imwrite("./heat_map/" + str(i) + "_heatmap.jpg", image)
-        #load ground truth information
-        #gt_num represents the person number of ground truth.
-        #the ground truth needs to fix as specific path.
-        gt_path = "../tools/python_count/ShanghaiTech/part_B_test/GT_IMG_" + str(i) + ".mat"
-        data1 = sio.loadmat(gt_path)
-        gt_num = int(data1['image_info'][0][0][0][0][1][0][0])
-        GT_LIST.append(gt_num)
+        cv2.imwrite("./result/" + str(i) + "_heatmap.jpg", image)
     #end time
     TIME_END = time.time()
     print("total image number:", len(NAME_LIST))
-    print('time cost', TIME_END - TIME_START, 's')
-    MAE = 0
-    MSE = 0
-    #computing mse of prediction value and ground truth
-    for i in range(len(NAME_LIST)):
-        MAE += abs(PERSON_NUM_LIST[i] - GT_LIST[i])
-        MSE += (PERSON_NUM_LIST[i] - GT_LIST[i]) ** 2
-    MAE /= len(NAME_LIST)
-    MSE = (MSE / len(NAME_LIST)) ** 0.5
-    print("MAE:", MAE, "\tMSE:", MSE)
     # destroy streams
     STREAM.DestroyAllStreams()

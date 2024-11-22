@@ -157,7 +157,7 @@ bash build.sh
 
 **步骤1** 将第4节中下载的数据集中的test.csv文件分别放在sdk/data目录和mxBase/data目录。
 
-**步骤2** pipeline项目中的精度测试文件为sdk/test目录下的test.py，将test.py移到sdk目录下，执行下面的命令。
+**步骤2** pipeline项目中的精度测试文件为sdk/test目录下的test.py，将test.py移到sdk目录后，再执行下面的命令。
 
 ```
 python3 test.py

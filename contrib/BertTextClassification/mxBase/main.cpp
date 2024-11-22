@@ -35,7 +35,7 @@ void InitBertParam(InitParam &initParam) {
     initParam.labelNumber = LABEL_NUMBER;
 }
 
-int Test(int argc, std::string path) 
+int Test(int argc, std::string path)
 {
     if (argc <= 1) {
         LogWarn << "Please input text path, such as './mxBase_text_classification ./data/sample.txt'.";

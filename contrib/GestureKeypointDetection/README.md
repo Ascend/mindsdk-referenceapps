@@ -40,8 +40,7 @@ Atlas 300I pro、Atlas 300V pro
 ## 3 准备模型
 **步骤1**：下载yolo模型：[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/GestureKeypointDetection/yolov3_hand.onnx)，将获取到的onnx文件存放至本案例代码的GestureKeypointDetection/model/hand 目录下。
 
-**步骤2**：下载resnet模型：[下载链接](https://codechina.csdn.net/EricLee/handpose_x。
-下载onnx模型，下载链接为https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/GestureKeypointDetection/resnet_50_size-256.onnx)，将获取到的onnx文件存放至本案例代码的GestureKeypointDetection/model/keypoint 目录下。
+**步骤2**：下载resnet模型：[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/GestureKeypointDetection/resnet_50_size-256.onnx)，将获取到的onnx文件存放至本案例代码的GestureKeypointDetection/model/keypoint 目录下。
 
 **步骤3**：进入GestureKeypointDetection/model/hand目录执行以下命令：
 ```

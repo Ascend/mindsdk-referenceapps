@@ -493,11 +493,11 @@ diff -uprN text-embeddings-inference-1.2.3/backends/python/server/text_embedding
 +        if self.has_position_ids:
 +            kwargs["position_ids"] = batch.position_ids
 +
-+        scores = self.model(**kwargs).logits.view(-1,).tolist()
++        scores = self.model(**kwargs).logits.cpu().tolist()
 +
 +        return [
 +            Prediction(
-+                values=scores[i:i+1]
++                values=scores[i]
 +            )
 +            for i in range(len(batch))
 +        ]

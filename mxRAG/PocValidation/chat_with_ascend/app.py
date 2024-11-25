@@ -274,7 +274,7 @@ def bot_response(history,
                 # 有检索到信息
                 if len(q_docs) > 0:
                     history_r_last = ''
-                    for i ,source in enumerate(q_docs):
+                    for i, source in enumerate(q_docs):
                         sources = "\n====检索信息来源:" + str(i + 1) + "[数据库名]:" + str(knowledge_name) + \
                                   "[文件名]:" + source['metadata']['source'] + "====" + "\n" + \
                                   "参考内容：" + source['page_content'] + "\n"
@@ -293,6 +293,7 @@ def re_response(history_r,
                 knowledge_name: str = 'test'
                 ):
     # 初始化检索器
+    knowledge_name = get_knowledge_rename(knowledge_name)
     retriever_cls = creat_retriever(knowledge_name, top_k, score_threshold)
     q_docs = retriever_cls.invoke(history_r[-1][0])
     if len(q_docs) > 0:

@@ -26,6 +26,13 @@ link_directories(
 )
 
 add_executable(${TARGET} main.cpp ${CROWDCOUNT} ${CROWDCOUNT_POSTPROCESS})
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(crowd_counting cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
+
 target_link_libraries(${TARGET}
         glog
         mxbase

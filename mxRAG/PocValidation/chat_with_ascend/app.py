@@ -218,6 +218,7 @@ def bot_response(history,
     is_rewrite_mapping = {"是":1,
                           "否":0}
     # 初始化检索器
+    knowledge_name = get_knowledge_rename(knowledge_name)
     retriever_cls = creat_retriever(knowledge_name, top_k, score_threshold)
     # 初始化chain
     text2text_chain = SingleText2TextChain(llm=llm, retriever=retriever_cls, reranker=reranker)

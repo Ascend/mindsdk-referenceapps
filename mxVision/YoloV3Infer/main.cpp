@@ -142,7 +142,8 @@ APP_ERROR YoloV3PostProcess(ImageInfo imageInfo, std::string& yoloV3ConfigPath, 
 	return ret;
 };
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[])
+{
     MxBase::MxInit();
     {
         if (argc <= 1)

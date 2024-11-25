@@ -36,11 +36,11 @@ void CrowdCount::SetCrowdCountPostProcessConfig(const InitParam &initParam,
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
     configData.SetJsonValue("CLASS_NUM", std::to_string(initParam.classNum));
     
-    #ifdef MX_VERSION_5
+#ifdef MX_VERSION_5
         auto jsonStr = configData.GetCfgJson().serialize();
-    #else
+#else
         auto jsonStr = configData.GetCfgJson();
-    #endif
+#endif
     config["postProcessConfigContent"] = jsonStr;
 }
 

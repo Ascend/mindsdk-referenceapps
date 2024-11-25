@@ -1,5 +1,6 @@
 import json
 from typing import List
+import re
 
 from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
@@ -30,40 +31,9 @@ class DuckDuckGoSearch(API):
         input_parameters = {"query": llm_output}
         return input_parameters
 
-    def check_api_call_correctness(self, response: dict, groundtruth=None) -> bool:
-        """
-        Checks if the response from the API call is correct.
-
-        Parameters:
-        - response (dict): the response from the API call.
-        - groundtruth (dict): the groundtruth response.
-
-        Returns:
-        - is_correct (bool): whether the response is correct.
-        """
-
-        ex = response.get("exception")
-
-        if ex is not None:
-            return False
-        else:
-            return True
-
-    def call(self, input_parameters: dict, **kwargs) -> dict:
-        """
-        Calls the API with the given parameters.
-
-        Parameters:
-
-            input_parameters = {
-                'query': query
-            }
-
-        Returns:
-        - response (str): the response from the API call.
-        """
-        logger.debug(f"{input_parameters}")
-        query = input_parameters.get('query', "")
+    def call(self, input_parameter: dict, **kwargs) -> dict:
+        logger.debug(f"{input_parameter}")
+        query = input_parameter.get('query', "")
 
         try:
             responses = self.call_duck_duck_go_search(query=query, count=4)
@@ -73,15 +43,12 @@ class DuckDuckGoSearch(API):
                 for r in responses:
                     output += self.format_step(r)
             else:
-                output = "Bing search error"
+                output = "duck duck search error"
+                return self.make_response(input_parameter, results=responses, exception=output)
+            return self.make_response(input_parameter, results=responses, exception="")
         except Exception as e:
             exception = str(e)
-            return {'api_name': self.__class__.__name__, 'input': input_parameters,
-                    'output': f'Search error,please try again',
-                    'exception': exception}
-        else:
-            return {'api_name': self.__class__.__name__, 'input': input_parameters, 'output': output,
-                    'exception': None}
+            return self.make_response(input_parameter, results="", exception=exception)
 
     def format_result(self, res):
         snippet_idx = res.find("snippet:")
@@ -101,8 +68,10 @@ class DuckDuckGoSearch(API):
             temp = search.run(query)
             logger.debug(temp)
 
-            for x in temp.split("["):
-                snippet = x.split("]")[0].strip()
+            snippets = re.findall(r'\[(.*?)\]', temp)
+            snippets = [snippet.strip() for snippet in snippets]
+
+            for snippet in snippets:
                 if len(snippet) == 0:
                     continue
                 logger.debug(f"snippet is {snippet}")

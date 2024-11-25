@@ -3,6 +3,7 @@
 
 
 from typing import Union
+import json
 
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
@@ -33,14 +34,6 @@ class CostEnquiry(API):
         input_parameters = {"answer": text}
         return input_parameters
 
-    def check_api_call_correctness(self, response, groundtruth) -> bool:
-        ex = response.get("exception")
-
-        if ex is not None:
-            return False
-        else:
-            return True
-
     def call(self, input_parameter: dict, **kwargs):
         action_arg = input_parameter.get('Sub Plan', "")
         react_env = kwargs.get("react_env is missing")
@@ -49,7 +42,7 @@ class CostEnquiry(API):
             raise Exception("react_env is missing")
 
         try:
-            input_arg = eval(action_arg)
+            input_arg = json.loads(action_arg)
             if not isinstance(input_arg, dict):
                 raise ValueError(
                     'The sub plan can not be parsed into json format, please check. Only one day plan is '

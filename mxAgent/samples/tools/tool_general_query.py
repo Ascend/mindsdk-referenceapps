@@ -33,13 +33,6 @@ class GeneralQuery(API):
     def __init__(self):
         pass
 
-    def check_api_call_correctness(self, response, groundtruth=None) -> bool:
-
-        if response['exception'] is None:
-            return True
-        else:
-            return False
-
     def call(self, input_parameter: dict, **kwargs):
         keywords = input_parameter.get('keywords')
         try:
@@ -53,27 +46,12 @@ class GeneralQuery(API):
             """
             webs = WebSummary.web_summary(
                 keys=keywords, search_num=3, summary_num=3, summary_prompt=prompt)
-
-            if len(webs) == 0:
-                content = ""
-            else:
-                content = json.dumps(webs, ensure_ascii=False)
-            logger.info(content)
+            content = json.dumps(webs, ensure_ascii=False)
             res = {
                 'reply': content
             }
-
+            return self.make_response(input_parameter, results=res, exception=None)
         except Exception as e:
             logger.error(e)
             e = str(e)
             return self.make_response(input_parameter, results=e, success=False, exception=e)
-        else:
-            return self.make_response(input_parameter, results=content, exception="")
-
-
-if __name__ == '__main__':
-    accommodationSearch = GeneralQuery()
-    tes = {
-        "keywords": "[北京,天气]"
-    }
-    test = accommodationSearch.call(tes)

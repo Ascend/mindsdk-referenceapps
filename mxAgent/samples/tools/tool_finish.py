@@ -36,14 +36,6 @@ class Finish(API):
                 f"Action: {self.__class__.__name__}\n"
                 f"Action Input: {param}\n")
 
-    def check_api_call_correctness(self, response, groundtruth) -> bool:
-        ex = response.get("exception")
-
-        if ex is not None:
-            return False
-        else:
-            return True
-
     def call(self, input_parameter: dict, **kwargs):
         answer = input_parameter.get('answer', "")
         return self.make_response(input_parameter, answer)

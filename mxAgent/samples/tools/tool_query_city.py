@@ -69,12 +69,6 @@ class CitySearch(API):
     def format_tool_input_parameters(self, text) -> Union[dict, str]:
         return text
 
-    def check_api_call_correctness(self, response, groundtruth) -> bool:
-        if response["exception"] is None:
-            return True
-        else:
-            return False
-
     def call(self, input_parameter: dict, **kwargs):
         state = input_parameter.get('state', '')
 

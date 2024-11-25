@@ -35,6 +35,3 @@ class QueryRestaurants(API):
     def call(self, input_parameter, **kwargs):
         city = input_parameter.get('City', "")
         return self.make_response(input_parameter, f"success to get restaurant in {city}")
-
-    def check_api_call_correctness(self, response, ground_truth=None) -> bool:
-        return True

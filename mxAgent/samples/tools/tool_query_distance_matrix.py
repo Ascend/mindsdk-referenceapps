@@ -52,12 +52,6 @@ class QueryGoogleDistanceMatrix(API):
     def __init__(self) -> None:
         logger.info("QueryGoogleDistanceMatrix API loaded.")
 
-    def check_api_call_correctness(self, response, groundtruth) -> bool:
-        if response['exception'] is None:
-            return True
-        else:
-            return False
-
     def call(self, input_parameter: dict, **kwargs):
         origin = input_parameter.get('origin', "")
         destination = input_parameter.get('destination', "")

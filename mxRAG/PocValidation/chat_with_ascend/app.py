@@ -24,7 +24,7 @@ from mx_rag.document.loader import DocxLoader, PdfLoader, ExcelLoader
 from mx_rag.knowledge import KnowledgeStore, KnowledgeDB, KnowledgeMgrStore, KnowledgeMgr
 from mx_rag.knowledge.handler import upload_files, LoaderMng
 
-#初始化数据库管理
+# 初始化数据库管理
 knowledge_mgr = KnowledgeMgr(KnowledgeMgrStore("./test_sql.db"))
 
 
@@ -125,7 +125,7 @@ def file_upload(files,
         knowledge_db_cls = creat_knowledge_db(knowledge_db_name, is_regist=False)
     else:
         knowledge_db_cls = creat_knowledge_db(knowledge_db_name)
-    # 注册文档加载器
+    # 注册文档处理器
     loader_mng = LoaderMng()
     # 加载文档加载器，可以使用mxrag自有的，也可以使用langchain的
     loader_mng.register_loader(loader_class=TextLoader, file_types=[".txt", ".md"])
@@ -207,8 +207,8 @@ def bot_response(history,
                  top_k: int = 1,
                  chat_type: str = "RAG检索增强对话",
                  show_type: str = "不显示",
-                 is_rewrite:str = "否",
-                 knowledge_name: str = 'test',
+                 is_rewrite: str = "否",
+                 knowledge_name: str = 'test'
                  ):
     chat_type_mapping = {"RAG检索增强对话":1,
                          "仅大模型对话":0}
@@ -218,15 +218,15 @@ def bot_response(history,
     is_rewrite_mapping = {"是":1,
                           "否":0}
     # 初始化检索器
-    retrieve_cls = creat_retriever(knowledge_name, top_k, score_threshold)
+    retriever_cls = creat_retriever(knowledge_name, top_k, score_threshold)
     # 初始化chain
-    text2text_chain = SingleText2TextChain(llm=llm, retriever=retrieve_cls, reranker=reranker)
+    text2text_chain = SingleText2TextChain(llm=llm, retriever=retriever_cls, reranker=reranker)
     # 历史问题改写
     if is_rewrite_mapping.get(is_rewrite) == 1:
         history = generate_question(history, llm, history_n)
     history[-1][1] = '推理错误'
     try:
-        # 仅使用大模型
+        # 仅使用大模型回答
         if chat_type_mapping.get(chat_type) == 0:
             response = llm.chat_streamly(query=history[-1][0],
                                          llm_config=LLMParameterConfig(max_tokens=max_tokens,
@@ -257,10 +257,10 @@ def bot_response(history,
                 # 有检索到信息
                 if len(q_docs) > 0:
                     history_last = ''
-                    for i ,source in enumerate(q_docs):
-                        sources = "\n====检索信息来源:" + str(i + 1) + ":" + "[数据库名]:" + str(knowledge_name) + \
+                    for i, source in enumerate(q_docs):
+                        sources = "\n====检索信息来源:" + str(i + 1) + "[数据库名]:" + str(knowledge_name) + \
                                   "[文件名]:" + source['metadata']['source'] + "====" + "\n" + \
-                                  "参考内容：" +source['page_content'] + "\n"
+                                  "参考内容：" + source['page_content'] + "\n"
                         history_last += sources
                     history += [[None, history_last]]
                 yield history, history_r
@@ -274,9 +274,9 @@ def bot_response(history,
                 if len(q_docs) > 0:
                     history_r_last = ''
                     for i ,source in enumerate(q_docs):
-                        sources = "\n====检索信息来源:" + str(i + 1) + ":" + "[数据库名]:" + str(knowledge_name) + \
+                        sources = "\n====检索信息来源:" + str(i + 1) + "[数据库名]:" + str(knowledge_name) + \
                                   "[文件名]:" + source['metadata']['source'] + "====" + "\n" + \
-                                  "参考内容：" +source['page_content'] + "\n"
+                                  "参考内容：" + source['page_content'] + "\n"
                         history_r_last += sources
                     history_r += [[history[-1][0], history_r_last]]
                 yield history, history_r
@@ -292,12 +292,12 @@ def re_response(history_r,
                 knowledge_name: str = 'test'
                 ):
     # 初始化检索器
-    retrieve_cls = creat_retriever(knowledge_name, top_k, score_threshold)
-    q_docs = retrieve_cls.invoke(history_r[-1][0])
+    retriever_cls = creat_retriever(knowledge_name, top_k, score_threshold)
+    q_docs = retriever_cls.invoke(history_r[-1][0])
     if len(q_docs) > 0:
         history_r_last = ''
         for i, source in enumerate(q_docs):
-            sources = "\n====检索信息来源:" + str(i + 1) + "[数据库名]:" + str(knowledge_name)  +\
+            sources = "\n====检索信息来源:" + str(i + 1) + "[数据库名]:" + str(knowledge_name) + \
                       "[文件名]:" + source.metadata['source'] + "====" + "\n" + \
                       "参考内容：" + source.page_content + "\n"
             history_r_last += sources
@@ -309,7 +309,7 @@ def re_response(history_r,
 
 # 检索信息
 def user_retriever(user_message, history_r):
-    return "",history_r + [[user_message, None]]
+    return "", history_r + [[user_message, None]]
 
 
 # 聊天信息
@@ -366,7 +366,7 @@ if __name__ == '__main__':
         text_emb = TEIEmbedding(url=embedding_url, client_param=ClientParam(use_http=True))
     else:
         text_emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
-    # 配置rerank,请根据模型具体路径适配
+    # 配置reranker,请根据模型具体路径适配
     if tei_reranker:
         reranker = TEIReranker(url=reranker_url, client_param=ClientParam(use_http=True))
     elif reranker_path is not None:
@@ -381,10 +381,10 @@ if __name__ == '__main__':
             with gr.Row():
                 with gr.Column(scale=100):
                     with gr.Row():
-                        model_select = gr.Dropdown(choices=["Default"], value="Default", container=False, interactive=True)
+                        model_select = gr.Dropdown(choices=[model_name], value="Llama3-8B-Chinese-Chat", container=False, interactive=True)
                     with gr.Row():
-                        files = gr.Files(
-                            height=300,
+                        files = gr.components.File(
+                            height=100,
                             file_count="multiple",
                             file_types=[".docx", ".txt", ".md", ".pdf", ".xlsx", ".xls"],
                             interactive=True,
@@ -393,8 +393,8 @@ if __name__ == '__main__':
                     with gr.Row():
                         upload_btn = gr.Button("上传文件")
                     with gr.Row():
-                        with gr.TabItem(label='知识库情况'):
-                            set_knowledge_name = gr.Textbox(label='设置当前知识库',placeholder='在此输入知识库名称，默认使用test知识库')
+                        with gr.TabItem("知识库情况"):
+                            set_knowledge_name = gr.Textbox(label='设置当前知识库', placeholder="在此输入知识库名称,默认使用test知识库")
                             with gr.Row():
                                 creat_knowledge_btn = gr.Button('创建知识库')
                                 delete_knowledge_btn = gr.Button('删除知识库')
@@ -402,15 +402,15 @@ if __name__ == '__main__':
                             knowledge_number_output = gr.Textbox(label='知识库数量')
                             with gr.Row():
                                 show_knowledge_btn = gr.Button('显示知识库')
-                        with gr.TabItem(label='文件情况'):
-                            knowledge_name = gr.Textbox('知识库名称')
-                            knowledge_file_output = gr.Textbox('知识库文件列表')
-                            knowledge_file_num_output = gr.Textbox('知识库文件数量')
+                        with gr.TabItem("文件情况"):
+                            knowledge_name = gr.Textbox(label='知识库名称')
+                            knowledge_file_output = gr.Textbox(label='知识库文件列表')
+                            knowledge_file_num_output = gr.Textbox(label='知识库文件数量')
                             with gr.Row():
                                 knowledge_file_out_btn = gr.Button('显示文件情况')
                                 knowledge_clear_btn = gr.Button('清空知识库')
                     with gr.Row():
-                        with gr.According(label='文档切分参数设置',open=False):
+                        with gr.Accordion(label='文档切分参数设置', open=False):
                             chunk_size = gr.Slider(
                                 minimum=50,
                                 maximum=5000,
@@ -430,7 +430,7 @@ if __name__ == '__main__':
                                 info="文本切分填充长度"
                             )
                     with gr.Row():
-                        with gr.According(label='大模型参数设置', open=False):
+                        with gr.Accordion(label='大模型参数设置', open=False):
                             temperature = gr.Slider(
                                 minimum=0.01,
                                 maximum=2,
@@ -458,14 +458,14 @@ if __name__ == '__main__':
                                 label="最大tokens",
                                 info="输入+输出最多的tokens数"
                             )
-                            is_rewrite = gr.Radio(['是','否'], value='否', label="是否根据历史提问重写问题？")
+                            is_rewrite = gr.Radio(['是', '否'], value="否", label="是否根据历史提问重写问题？")
                             history_n = gr.Slider(
                                 minimum=1,
                                 maximum=10,
                                 value=5,
                                 step=1,
                                 interactive=True,
-                                label="历史提问重新轮数",
+                                label="历史提问重写轮数",
                                 info="问题重写时所参考的历史提问轮数"
                             )
                     with gr.Row():
@@ -477,7 +477,7 @@ if __name__ == '__main__':
                                 step=0.01,
                                 interactive=True,
                                 label="score_threshold",
-                                info="相似性检索阈值，值越大表示越相关,低于阈值不会被返回。"
+                                info="相似性检索阈值,值越大表示越相关,低于阈值不会被返回。"
                             )
                             top_k = gr.Slider(
                                 minimum=1,
@@ -488,11 +488,11 @@ if __name__ == '__main__':
                                 label="top_k",
                                 info="相似性检索返回条数"
                             )
-                            show_type = gr.Radio(['对话结束后显示','检索框单独显示','不显示'], value="对话结束后显示", label="知识库文档匹配结果展示方式选择")
+                            show_type = gr.Radio(['对话结束后显示', '检索框单独显示', '不显示'], value="对话结束后显示", label="知识库文档匹配结果展示方式选择")
                 with gr.Column(scale=200):
                     with gr.Tabs():
                         with gr.TabItem("对话窗口"):
-                            chat_type = gr.Radio(['RAG检索增强对话','仅大模型对话'], value="RAG检索增强对话", label="请选择对话模式？")
+                            chat_type = gr.Radio(['RAG检索增强对话', '仅大模型对话'], value="RAG检索增强对话", label="请选择对话模式？")
                             chatbot = gr.Chatbot(height=550)
                             with gr.Row():
                                 msg = gr.Textbox(placeholder="在此输入问题...", container=False)
@@ -517,7 +517,7 @@ if __name__ == '__main__':
                 files.change(file_change, [], [])
                 upload_btn.click(file_upload, [files, set_knowledge_name, chunk_size, chunk_overlap], files)
                 # 管理所有知识库
-                creat_knowledge_btn.click(creat_knowledge_db, [set_knowledge_name],[]).then(get_knowledge_db, [],[knowledge_name_output, knowledge_number_output])
+                creat_knowledge_btn.click(creat_knowledge_db, [set_knowledge_name], []).then(get_knowledge_db, [], [knowledge_name_output, knowledge_number_output])
                 show_knowledge_btn.click(get_knowledge_db, [], [knowledge_name_output, knowledge_number_output])
                 delete_knowledge_btn.click(delete_knowledge_db, [set_knowledge_name], [knowledge_name_output, knowledge_number_output])
                 # 管理知识库里文件

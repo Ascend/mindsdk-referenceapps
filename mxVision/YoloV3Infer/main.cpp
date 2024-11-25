@@ -146,8 +146,7 @@ int main(int argc, char* argv[])
 {
     MxBase::MxInit();
     {
-        if (argc <= 1)
-        {
+        if (argc <= 1) {
             LogWarn << "Please input image path, such as './cppv2_sample test.jpg'.";
             return APP_ERR_OK;
         }
@@ -162,8 +161,7 @@ int main(int argc, char* argv[])
 
         // global init
         ret = MxInit();
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "MxInit failed, ret=" << ret << ".";
         }
 
@@ -176,8 +174,7 @@ int main(int argc, char* argv[])
         // *****2读取图片
         MxBase::Image decodedImage;
         ret = imageProcessor.Decode(imgPath, decodedImage, ImageFormat::YUV_SP_420);
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "Decode failed, ret=" << ret;
             return ret;
         }
@@ -188,8 +185,7 @@ int main(int argc, char* argv[])
         Size resizeConfig(YOLOV3_RESIZE, YOLOV3_RESIZE);
 
         ret = imageProcessor.Resize(decodedImage, resizeConfig, resizeImage, Interpolation::HUAWEI_HIGH_ORDER_FILTER);
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "Resize failed, ret=" << ret;
             return ret;
         }
@@ -197,8 +193,7 @@ int main(int argc, char* argv[])
         // save resize image
         std::string path = "./resized_yolov3_416.jpg";
         ret = imageProcessor.Encode(resizeImage, path);
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "Encode failed, ret=" << ret;
             return ret;
         }
@@ -206,8 +201,7 @@ int main(int argc, char* argv[])
         // *****4模型推理
         Tensor tensorImg = resizeImage.ConvertToTensor();
         ret = tensorImg.ToDevice(deviceId);
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "ToDevice failed, ret=" << ret;
             return ret;
         }
@@ -219,8 +213,7 @@ int main(int argc, char* argv[])
         std::cout << "yoloV3Outputs len=" << yoloV3Outputs.size() << std::endl;
 
         // !move result to host!
-        for (auto output : yoloV3Outputs)
-        {
+        for (auto output : yoloV3Outputs) {
             output.ToHost();
         }
 
@@ -230,8 +223,7 @@ int main(int argc, char* argv[])
         imageInfo.oriImage = decodedImage;
 
         ret = YoloV3PostProcess(imageInfo, v2Param.configPath, v2Param.labelPath, yoloV3Outputs);
-        if (ret != APP_ERR_OK)
-        {
+        if (ret != APP_ERR_OK) {
             LogError << "YoloV3PostProcess execute failed, ret=" << ret;
             return ret;
         }

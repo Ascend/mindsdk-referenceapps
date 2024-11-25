@@ -469,7 +469,7 @@ if __name__ == '__main__':
                                 info="问题重写时所参考的历史提问轮数"
                             )
                     with gr.Row():
-                        with gr.According(label='检索参数设置', open=False):
+                        with gr.Accordion(label='检索参数设置', open=False):
                             score_threshold = gr.Slider(
                                 minimum=0,
                                 maximum=1,

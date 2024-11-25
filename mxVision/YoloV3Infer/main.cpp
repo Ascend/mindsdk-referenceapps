@@ -144,103 +144,89 @@ APP_ERROR YoloV3PostProcess(ImageInfo imageInfo, std::string& yoloV3ConfigPath, 
 
 int main(int argc, char* argv[])
 {
-    if (argc <= 1) 
+    MxBase::MxInit();
     {
-        LogWarn << "Please input image path, such as './cppv2_sample test.jpg'.";
-        return APP_ERR_OK;
+        if (argc <= 1) {
+            LogWarn << "Please input image path, such as './cppv2_sample test.jpg'.";
+            return APP_ERR_OK;
+        }
+        std::string imgPath = argv[1];
+        APP_ERROR ret;
+
+        // *****1初始化模型推理
+        V2Param v2Param;
+        InitV2Param(v2Param);
+        int32_t deviceId = v2Param.deviceId;
+        std::string modelPath = v2Param.modelPath;
+
+        // global init
+        ret = MxInit();
+        if (ret != APP_ERR_OK) {
+            LogError << "MxInit failed, ret=" << ret << ".";
+        }
+
+        // imageProcess init
+        MxBase::ImageProcessor imageProcessor(deviceId);
+
+        // model init
+        MxBase::Model yoloV3(modelPath, deviceId);
+
+        // *****2读取图片
+        MxBase::Image decodedImage;
+        ret = imageProcessor.Decode(imgPath, decodedImage, ImageFormat::YUV_SP_420);
+        if (ret != APP_ERR_OK) {
+            LogError << "Decode failed, ret=" << ret;
+            return ret;
+        }
+
+        // *****3缩放图片
+        MxBase::Image resizeImage;
+        // set size param
+        Size resizeConfig(YOLOV3_RESIZE, YOLOV3_RESIZE);
+
+        ret = imageProcessor.Resize(decodedImage, resizeConfig, resizeImage, Interpolation::HUAWEI_HIGH_ORDER_FILTER);
+        if (ret != APP_ERR_OK) {
+            LogError << "Resize failed, ret=" << ret;
+            return ret;
+        }
+
+        // save resize image
+        std::string path = "./resized_yolov3_416.jpg";
+        ret = imageProcessor.Encode(resizeImage, path);
+        if (ret != APP_ERR_OK) {
+            LogError << "Encode failed, ret=" << ret;
+            return ret;
+        }
+
+        // *****4模型推理
+        Tensor tensorImg = resizeImage.ConvertToTensor();
+        ret = tensorImg.ToDevice(deviceId);
+        if (ret != APP_ERR_OK) {
+            LogError << "ToDevice failed, ret=" << ret;
+            return ret;
+        }
+
+        // make infer input
+        std::vector<Tensor> yoloV3Inputs = {tensorImg};
+        // do infer
+        std::vector<Tensor> yoloV3Outputs = yoloV3.Infer(yoloV3Inputs);
+        std::cout << "yoloV3Outputs len=" << yoloV3Outputs.size() << std::endl;
+
+        // !move result to host!
+        for (auto output : yoloV3Outputs) {
+            output.ToHost();
+        }
+
+        // *****5模型后处理
+        ImageInfo imageInfo;
+        imageInfo.oriImagePath = argv[1];
+        imageInfo.oriImage = decodedImage;
+
+        ret = YoloV3PostProcess(imageInfo, v2Param.configPath, v2Param.labelPath, yoloV3Outputs);
+        if (ret != APP_ERR_OK) {
+            LogError << "YoloV3PostProcess execute failed, ret=" << ret;
+            return ret;
+        }
     }
-	std::string imgPath = argv[1]; 
-    APP_ERROR ret;
-    
-    // *****1初始化模型推理
-    V2Param v2Param;
-    InitV2Param(v2Param);
-	int32_t deviceId = v2Param.deviceId;
-	std::string modelPath = v2Param.modelPath;
-
-    // global init
-    ret = MxInit();
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "MxInit failed, ret=" << ret << ".";
-    }
-
-    // imageProcess init
-    MxBase::ImageProcessor imageProcessor(deviceId); 
-
-    // model init
-    MxBase::Model yoloV3(modelPath, deviceId);
-
-    // *****2读取图片
-    MxBase::Image decodedImage;
-    ret = imageProcessor.Decode(imgPath, decodedImage, ImageFormat::YUV_SP_420);
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "Decode failed, ret=" << ret;
-        return ret;
-    }
-
-    // *****3缩放图片
-    MxBase::Image resizeImage;
-    // set size param
-    Size resizeConfig(YOLOV3_RESIZE, YOLOV3_RESIZE);
-
-    ret = imageProcessor.Resize(decodedImage, resizeConfig, resizeImage, Interpolation::HUAWEI_HIGH_ORDER_FILTER);
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "Resize failed, ret=" << ret;
-        return ret;
-    }
-
-    // save resize image
-    std::string path = "./resized_yolov3_416.jpg";
-    ret = imageProcessor.Encode(resizeImage, path);
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "Encode failed, ret=" << ret;
-        return ret;
-    }
-
-    // *****4模型推理
-    Tensor tensorImg = resizeImage.ConvertToTensor();
-    ret = tensorImg.ToDevice(deviceId);
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "ToDevice failed, ret=" << ret;
-        return ret;
-    }
-
-    // make infer input
-    std::vector<Tensor> yoloV3Inputs = {tensorImg};
-    // do infer
-    std::vector<Tensor> yoloV3Outputs = yoloV3.Infer(yoloV3Inputs);
-    std::cout << "yoloV3Outputs len=" << yoloV3Outputs.size() << std::endl;
-
-    // !move result to host!
-    for (auto output : yoloV3Outputs)
-    {
-        output.ToHost();
-    }
-
-    // *****5模型后处理
-	ImageInfo imageInfo;
-	imageInfo.oriImagePath = argv[1];
-	imageInfo.oriImage = decodedImage;
-	
-    ret = YoloV3PostProcess(imageInfo, v2Param.configPath, v2Param.labelPath, yoloV3Outputs);
-	if (ret != APP_ERR_OK)
-	{
-		LogError << "YoloV3PostProcess execute failed, ret=" << ret;
-		return ret;
-	}
-
-    // deinit
-    ret = MxDeInit();
-    if (ret != APP_ERR_OK) 
-    {
-        LogError << "MxDeInit failed, ret=" << ret << ".";
-        return ret;
-    }
-
-    return APP_ERR_OK;
+    MxBase::MxDeInit();
 };

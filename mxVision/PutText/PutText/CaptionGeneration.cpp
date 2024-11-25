@@ -19,6 +19,7 @@
 #include "CaptionGenManager.h"
 #include <ctime>
 #include <opencv2/imgcodecs.hpp>
+#include "MxBase/Log/Log.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 
 using namespace std;

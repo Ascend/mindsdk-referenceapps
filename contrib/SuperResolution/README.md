@@ -10,7 +10,7 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2为主要的硬件平台
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
@@ -20,6 +20,7 @@
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 三方依赖
 | 软件              | 版本     |
@@ -101,8 +102,9 @@ aipp_op {
 ```
 # 执行，转换VDSR模型成om格式
 # Execute, transform VDSR model.
-atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_format=NCHW --input_shape="data: 1, 1, 768, 768" --output=./VDSR_768_768 --soc_version=Ascend310B1 --output_type=FP32 --insert_op_conf=YUV420SP_U8_GRAY.cfg
+atc --model=./VDSR.prototxt --weight=./VDSR.caffemodel --framework=0 --input_format=NCHW --input_shape="data: 1, 1, 768, 768" --output=./VDSR_768_768 --soc_version=${SOC_VERSION} --output_type=FP32 --insert_op_conf=YUV420SP_U8_GRAY.cfg
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
 
 执行完模型转换脚本后，会在model目录下生成相应的VDSR_768_768.om模型文件
 

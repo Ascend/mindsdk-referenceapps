@@ -37,16 +37,18 @@
 6.适应于形状规则且与周围环境色差较大的路面图片。<br>
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 
 ### 1.3 支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
 | MxVision版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 代码目录结构说明
 ```
@@ -93,8 +95,10 @@
 
 在使用[atc工具](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行：
 ```
-atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310B1  
+atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=${SOC_VERSION} 
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+
 若出现以下信息，则转换成功。
 ```
 ATC run success

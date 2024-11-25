@@ -15,6 +15,7 @@
  */
 
 #include "SentimentAnalysis.h"
+#include "MxBase/Log/Log.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include <unistd.h>
 #include <fstream>

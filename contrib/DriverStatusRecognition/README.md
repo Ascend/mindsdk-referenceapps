@@ -37,14 +37,14 @@
 
 步骤2 转换模型格式
 
-进入到convert目录，执行以下命令
+进入到convert目录，执行以下命令：
 ```
 atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
     --framework=1 --output=./resnet50-dirver_detection-air-915-yuv \
     --input_format=NCHW --input_shape="x:1,3,224,224" --enable_small_channel=1 \
     --log=error  --insert_op_conf=yuv_aipp.config 
 ```
-
+执行该命令后会在当前文件夹下生成项目需要的模型文件 resnet50-dirver_detection-air-915-yuv.om。
 ## 4. 编译与运行
 
 **步骤1**  启动rtsp服务

@@ -83,7 +83,7 @@ ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-## 4 运行
+## 4、 运行
 
 步骤如下：
 

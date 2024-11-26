@@ -60,7 +60,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 注：coco.names文件源于[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。
 
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 MindSDK 环境变量:
 
@@ -216,7 +216,8 @@ bash run.sh -m ${model_path} -c ${model_config_path} -l ${model_label_path} -i $
 ```${model_path}``` 代表.om模型路径，例如 ```./model/ppyoloe.om```    
 ```${model_config_path}``` 代表ppyoloe模型的配置文件路径，例如 ``` ./model/ppyoloe.cfg```    
 ```${model_label_path}``` ，`coco.names`的路径，可全局搜索这个文件，    ``` path/to/coco.names```
-```${image_path}``` 代表待测图片的路径, 例如 ``` ./test.jpg```。
+```${image_path}``` 代表待测图片的路径, 例如 ``` ./test.jpg```
+
 ```[-y]``` 添加`-y`表示模型使用的YUVSP420照片格式输入，不添加则表示模型使用的RGB输入。
 
 **步骤5：** 运行结果

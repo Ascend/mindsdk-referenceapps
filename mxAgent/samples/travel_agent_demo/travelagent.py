@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
-import enum
 from abc import ABC
+import argparse
 from loguru import logger
 
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
@@ -126,8 +126,7 @@ intents = {
     QUERY_WEATHER :"包括气温、湿度、降水等与天气、天气预报相关的意图",
     OTHERS :"与旅游场景不相干的查询"
 }
-llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
-                      api_base="http://10.44.115.108:1055/v1", api_key="EMPTY", llm_name="Qwen1.5-32B-Chat").run
+
 
 
 class TalkShowAgent(ToollessAgent, ABC):
@@ -160,15 +159,22 @@ class TravelAgent:
         agent = self.route_query(query)
         return agent.run(query, stream=stream)
 
+
+def get_args():
+    parse = argparse.ArgumentParser()
+    parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")
+    parse.add_argument("--base_url", type=str, default="http://10.44.115.108:1055/v1", help="OpenAI客户端模型地址")
+    parse.add_argument("--api_key", type=str, default="EMPTY", help="OpenAI客户端api key")
+    return parse.parse_args().__dict__
+
 if __name__ == "__main__":
-    # query = "去北京的旅游规划"
-    # query = "从北京到西安的机票"
-    # query = "查询北京王府井附近的高档酒店"
-    # query = "泰国有哪些值得推荐的景点"
-    # query = "帮我查一下北京最近的天气"
-    # query = "上海酒店查询"
-    # query = "北京到上海的高铁"
-    # query = "上海天气怎么样"
+    args = get_args()
+    base_url = args.pop("base_url")
+    api_key = args.pop("api_key")
+    llm_name = args.pop("model_name")
+
+    llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
+                        api_base=base_url, api_key=api_key, llm_name=llm_name).run
     query = "帮我制定一份从北京到上海6天的旅游计划"
 
     travel_agent = TravelAgent()

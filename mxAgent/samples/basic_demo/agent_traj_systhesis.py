@@ -3,6 +3,7 @@
 
 import os
 import warnings
+import argparse
 
 from langchain._api import LangChainDeprecationWarning
 from loguru import logger
@@ -21,9 +22,6 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 warnings.filterwarnings('ignore', category=LangChainDeprecationWarning)
 
 os.environ["WORKNING_DIR"] = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-API_BASE = os.environ.get("OPENAI_API_BASE", "http://10.44.115.98:8006/v1")
-API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-LLM_NAME = os.environ.get("MODEL_NAME", "Qwen2-7b-Instruct")
 
 MAX_CONTEXT_LEN = 4096
 
@@ -34,7 +32,19 @@ def get_default_react_agent(api_base, api_key, llm_name, max_context_len):
     return ReactAgent(llm=llm, example=EXAMPLE, tool_list=tool_list, max_context_len=max_context_len)
 
 
-if __name__ == '__main__':
+def get_args():
+    parse = argparse.ArgumentParser()
+    parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")
+    parse.add_argument("--base_url", type=str, default="http://10.44.115.108:1055/v1", help="OpenAI客户端模型地址")
+    parse.add_argument("--api_key", type=str, default="EMPTY", help="OpenAI客户端api key")
+    return parse.parse_args().__dict__
+
+
+if __name__ == "__main__":
+    args = get_args()
+    API_BASE = args.pop("base_url")
+    API_KEY = args.pop("api_key")
+    LLM_NAME = args.pop("model_name")
     agent = get_default_react_agent(API_BASE, API_KEY, LLM_NAME, MAX_CONTEXT_LEN)
 
     queries = [

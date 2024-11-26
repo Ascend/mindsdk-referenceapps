@@ -3,6 +3,7 @@
 
 import warnings
 import os
+import argparse
 
 from loguru import logger
 
@@ -13,10 +14,6 @@ from samples.tools import QueryAccommodations, QueryAttractions, \
     QueryGoogleDistanceMatrix, QueryTransports, Finish
 
 warnings.filterwarnings('ignore')
-
-API_BASE = os.environ.get("OPENAI_API_BASE", "http://10.44.115.98:8006/v1")
-API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-LLM_NAME = os.environ.get("MODEL_NAME", "Qwen2-7b-Instruct")
 
 MAX_CONTEXT_LEN = 4096
 
@@ -111,8 +108,19 @@ def test_react_reflect_agent():
     
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 
+def get_args():
+    parse = argparse.ArgumentParser()
+    parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")
+    parse.add_argument("--base_url", type=str, default="http://10.44.115.108:1055/v1", help="OpenAI客户端模型地址")
+    parse.add_argument("--api_key", type=str, default="EMPTY", help="OpenAI客户端api key")
+    return parse.parse_args().__dict__
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    args = get_args()
+    API_BASE = args.pop("base_url")
+    API_KEY = args.pop("api_key")
+    LLM_NAME = args.pop("model_name")
     logger.info("react agent test begin")
     test_react_agent()
     logger.info("react agent test end")

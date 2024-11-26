@@ -29,6 +29,7 @@
 | 软件名称 | 版本     |
 | -------- |--------|
 | boost   | 1.71.0 |
+
 *boost可使用apt-get install libboost-all-dev指令安装。
 
 ### 1.5 代码目录结构说明

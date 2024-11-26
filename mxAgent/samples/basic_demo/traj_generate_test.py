@@ -6,6 +6,7 @@ import os
 import warnings
 from typing import Callable, List
 from tqdm import tqdm
+import argparse
 from loguru import logger
 from langchain._api import LangChainDeprecationWarning
 
@@ -15,14 +16,6 @@ from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from samples.tools import QueryAccommodations, QueryAttractions, QueryRestaurants, \
     QueryTransports, QueryGoogleDistanceMatrix
 
-
-API_BASE = "http://10.44.115.98:8006/v1"
-API_KEY = "EMPTY"
-MODEL_NAME = "Qwen2-7b-Instruct"
-
-os.environ["OPENAI_API_BASE"] = API_BASE
-os.environ["OPENAI_API_KEY"] = API_KEY
-os.environ["MODEL_NAME"] = MODEL_NAME
 os.environ["WORKING_DIR"] = os.path.dirname(
     os.path.dirname(os.path.realpath(__file__)))
 
@@ -86,8 +79,20 @@ def get_single_action_agent(api_base, api_key, llm_name):
     return SingleActionAgent(llm=llm, tool_list=tool_list, max_steps=5)
 
 
-if __name__ == '__main__':
-    single_agent = get_single_action_agent(API_BASE, API_KEY, MODEL_NAME)
+def get_args():
+    parse = argparse.ArgumentParser()
+    parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")
+    parse.add_argument("--base_url", type=str, default="http://10.44.115.108:1055/v1", help="OpenAI客户端模型地址")
+    parse.add_argument("--api_key", type=str, default="EMPTY", help="OpenAI客户端api key")
+    return parse.parse_args().__dict__
+
+
+if __name__ == "__main__":
+    args = get_args()
+    API_BASE = args.pop("base_url")
+    API_KEY = args.pop("api_key")
+    LLM_NAME = args.pop("model_name")
+    single_agent = get_single_action_agent(API_BASE, API_KEY, LLM_NAME)
     queries = [
         "Write a review of the hotel \"The Beach House\" in Charlotte Amalie.",
         "Book a flight from Evansville to Sacramento for April 10th.",

@@ -2,12 +2,10 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 from loguru import logger
+import argparse
 
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from agent_sdk.agentchain.router_agent import RouterAgent
-
-llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
-                      api_base="http://10.44.115.108:1055/v1", api_key="EMPTY", llm_name="Qwen1.5-32B-Chat").run
 
 INTENT = {
     "query_flight": "用户期望查询航班信息", 
@@ -26,9 +24,25 @@ querys = [
     "帮我去书城买本书", "我想上天"
 ]
 
-agent = RouterAgent(llm=llm, intents=INTENT)
 
-for query in querys:
-    response = agent.run(query)
-    agent.reset()
-    logger.info(f"query: {query}, intent: {response.answer}")
+
+
+def get_args():
+    parse = argparse.ArgumentParser()
+    parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")
+    parse.add_argument("--base_url", type=str, default="http://10.44.115.108:1055/v1", help="OpenAI客户端模型地址")
+    parse.add_argument("--api_key", type=str, default="EMPTY", help="OpenAI客户端api key")
+    return parse.parse_args().__dict__
+
+if __name__ == "__main__":
+    args = get_args()
+    API_BASE = args.pop("base_url")
+    API_KEY = args.pop("api_key")
+    LLM_NAME = args.pop("model_name")
+    llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
+                        api_base=API_BASE, api_key=API_KEY, llm_name=LLM_NAME).run
+    agent = RouterAgent(llm=llm, intents=INTENT)
+    for query in querys:
+        response = agent.run(query)
+        agent.reset()
+        logger.info(f"query: {query}, intent: {response.answer}")

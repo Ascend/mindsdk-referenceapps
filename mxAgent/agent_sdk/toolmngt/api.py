@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-
 import json
 from abc import ABC
 from dataclasses import dataclass, field
@@ -50,8 +47,8 @@ class API(ABC):
         p = self.format_tool_input_parameter(param)
         output = self.call(p).output
         try:
-            o = json.loads(output)
-            output = json.dumps(list(o[:1]))
+            output_json = json.loads(output)
+            output = json.dumps(list(output_json[:1]))
         except Exception as e:
             logger.error(e)
 

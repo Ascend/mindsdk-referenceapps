@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
-from loguru import logger
-import argparse
 
+import argparse
+from loguru import logger
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from agent_sdk.agentchain.router_agent import RouterAgent
 

@@ -4,9 +4,9 @@
 import json
 import os
 import warnings
+import argparse
 from typing import Callable, List
 from tqdm import tqdm
-import argparse
 from loguru import logger
 from langchain._api import LangChainDeprecationWarning
 

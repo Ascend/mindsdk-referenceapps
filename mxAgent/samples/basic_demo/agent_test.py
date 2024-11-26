@@ -2,7 +2,6 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 import warnings
-import os
 import argparse
 
 from loguru import logger

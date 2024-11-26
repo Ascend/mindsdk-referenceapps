@@ -72,7 +72,7 @@ python3 export_ts.py --model ${model_base} --output_dir ./models \
 
 10）启动web服务执行推理
 
-不是是使用并行：
+不使用并行：
 ```
 python3 stable_diffusion_pipeline.py \
         --model ${model_base} \

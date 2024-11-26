@@ -10,15 +10,17 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0 | 7.0.0   |  23.0.0  | 
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 
 ### 1.4 代码目录结构说明
@@ -53,8 +55,10 @@
 #执行，转换human_segmentation.pb模型
 #Execute, transform human_segmentation.pb model.
  
-atc --input_shape="input_rgb:1,512,512,3" --input_format=NHWC --output=human_segmentation --soc_version=Ascend310B1 --insert_op_conf=./insert_op.cfg --framework=3 --model=./human_segmentation.pb
+atc --input_shape="input_rgb:1,512,512,3" --input_format=NHWC --output=human_segmentation --soc_version=${SOC_VERSION} --insert_op_conf=./insert_op.cfg --framework=3 --model=./human_segmentation.pb
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+
 执行完模型转换脚本后，若提示如下信息说明模型转换成功，会在output参数指定的路径下生成human_segmentation.om模型文件。  
 ```
 ATC run success  

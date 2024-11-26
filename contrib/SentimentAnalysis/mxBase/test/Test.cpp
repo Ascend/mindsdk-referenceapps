@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include "MxBase/Log/Log.h"
 
 namespace {
   const uint32_t MAX_LENGTH = 500;

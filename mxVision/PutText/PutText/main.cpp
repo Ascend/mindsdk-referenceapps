@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include "MxBase/Log/Log.h"
 #include "CaptionGenManager.h"
 #include "CaptionGeneration.h"
 #include "CaptionImpl.h"

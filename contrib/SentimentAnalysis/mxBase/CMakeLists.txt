@@ -8,7 +8,7 @@ file(GLOB_RECURSE SentimentAnalysis ${PROJECT_SOURCE_DIR}/SentimentAnalysis/*cpp
 include_directories(./test)
 file(GLOB_RECURSE Test ${PROJECT_SOURCE_DIR}/test/*cpp)
 set(TARGET mxBase_text_classification)
-add_compile_options(-std=c++11 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
+add_compile_options(-std=c++14 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
 set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")

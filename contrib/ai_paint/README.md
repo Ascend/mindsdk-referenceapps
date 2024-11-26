@@ -9,14 +9,16 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 代码目录结构说明
 ```
@@ -47,8 +49,10 @@
 **步骤2** 通过atc工具可转换为对应OM模型，转换命令
 
 ```
-atc --output_type=FP32 --input_shape="objs:9;coarse_layout:1,256,256,17"  --input_format=NHWC --output="AIPainting_v2" --soc_version=Ascend310B1 --framework=3  --model="AIPainting_v2.pb"
+atc --output_type=FP32 --input_shape="objs:9;coarse_layout:1,256,256,17"  --input_format=NHWC --output="AIPainting_v2" --soc_version=${SOC_VERSION} --framework=3  --model="AIPainting_v2.pb"
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+
 将转换出来的om模型放入'样例所在目录/model'下
 ## 4 运行
 

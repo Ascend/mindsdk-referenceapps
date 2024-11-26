@@ -10,14 +10,15 @@
 
 ### 1.2 支持的产品
 
-支持Atlas 500 A2 推理产品。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
 | MxVision版本  | CANN版本  | Driver/Firmware版本 |
-  | --------- | ------------------ | -------------- | 
-| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+  | --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 
 
@@ -82,10 +83,10 @@
 cd 到工程目录model目录下。
 执行以下命令：
 
-     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=Ascend310B1 --insert_op_conf=./layout.aippconfig
-
-注：1.执行成功后终端会输出相关信息提示模型转换成功。
-2.模型转换使用了ATC工具，如在模型转换过程中出现异常请参考昇腾官网相关资料。
+     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION} --insert_op_conf=./layout.aippconfig
+注：1.当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+2.执行成功后终端会输出相关信息提示模型转换成功。
+3.模型转换使用了ATC工具，如在模型转换过程中出现异常请参考昇腾官网相关资料。
 
 
 ## 4 运行

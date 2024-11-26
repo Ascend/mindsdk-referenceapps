@@ -14,16 +14,24 @@
 3、由于Dvpp的crop插件对图片尺寸有限制，所以图片中的车辆不应过小。
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
 | MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
-### 1.4 代码目录结构说明
+### 1.4 三方依赖
+| 软件名称 | 版本     |
+| -------- |--------|
+| boost   | 1.71.0 |
+*boost可使用apt-get install libboost-all-dev指令安装。
+
+### 1.5 代码目录结构说明
 ```
 PoseEstNet
 |---- models
@@ -87,8 +95,10 @@ export install_path=${install_path}
 
 1. 使用ATC将.pb文件转成为.om文件。
 ```
-atc --model=yolov3_tensorflow_1.5.pb --framework=3 --output=yolov3 --output_type=FP32 --soc_version=Ascend310B1 --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0" --log=info --insert_op_conf=aipp_nv12.cfg
+atc --model=yolov3_tensorflow_1.5.pb --framework=3 --output=yolov3 --output_type=FP32 --soc_version=${SOC_VERSION} --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0" --log=info --insert_op_conf=aipp_nv12.cfg
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+
 2. 执行完模型转换脚本后，若提示如下信息说明模型转换成功，可以在该路径下找到名为yolov3.om模型文件。
 （可以通过修改output参数来重命名这个.om文件）
 ```

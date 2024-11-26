@@ -21,6 +21,7 @@
 #include <opencv2/core/mat.hpp>
 #include "iostream"
 #include "fstream"
+#include "MxBase/Log/Log.h"
 #include "CaptionGenManager.h"
 
 class CaptionGeneration {

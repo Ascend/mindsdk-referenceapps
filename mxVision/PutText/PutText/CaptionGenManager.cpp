@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include "MxBase/Log/Log.h"
 #include "CaptionGenManager.h"
 
 using namespace std;

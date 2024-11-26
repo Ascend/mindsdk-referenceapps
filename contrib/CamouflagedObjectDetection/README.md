@@ -120,5 +120,7 @@ python inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data_
 推理完成的输出图片在result文件夹中
 
 输入输出如下两图所示
+
 输入伪装图片：![](./assets/74.jpg)
+
 预测分割结果：![](./assets/74.png)

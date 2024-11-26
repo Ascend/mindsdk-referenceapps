@@ -36,7 +36,7 @@ class DuckDuckGoSearch(API):
         query = input_parameter.get('query', "")
 
         try:
-            responses = self.call_duck_duck_go_search(query=query, count=4)
+            responses = call_duck_duck_go_search(query=query, count=4)
             logger.debug(f"responses is {responses}")
             output = ""
             if len(responses) > 0:
@@ -50,34 +50,34 @@ class DuckDuckGoSearch(API):
             exception = str(e)
             return self.make_response(input_parameter, results="", exception=exception)
 
-    def format_result(self, res):
-        snippet_idx = res.find("snippet:")
-        title_idx = res.find("title:")
-        link_idx = res.find("link:")
-        snippet = res[snippet_idx + len("snippet:"):title_idx]
-        title = res[title_idx + len("title:"):link_idx]
-        link = res[link_idx + len("link:"):]
-        return {"snippet": snippet.replace("<b>", "").replace("</b>", ""), "title": title, "link": link}
+def format_result(res):
+    snippet_idx = res.find("snippet:")
+    title_idx = res.find("title:")
+    link_idx = res.find("link:")
+    snippet = res[snippet_idx + len("snippet:"):title_idx]
+    title = res[title_idx + len("title:"):link_idx]
+    link = res[link_idx + len("link:"):]
+    return {"snippet": snippet.replace("<b>", "").replace("</b>", ""), "title": title, "link": link}
 
-    def call_duck_duck_go_search(self, query: str, count: int) -> List[str]:
-        try:
-            logger.debug(f"search DuckDuckGo({query}, {count})")
-            duck_duck_search = DuckDuckGoSearchAPIWrapper(max_results=count)
-            search = DuckDuckGoSearchResults(api_wrapper=duck_duck_search)
-            self.bingsearch_results = []
-            temp = search.run(query)
-            logger.debug(temp)
+def call_duck_duck_go_search(query: str, count: int) -> List[str]:
+    try:
+        logger.debug(f"search DuckDuckGo({query}, {count})")
+        duck_duck_search = DuckDuckGoSearchAPIWrapper(max_results=count)
+        search = DuckDuckGoSearchResults(api_wrapper=duck_duck_search)
+        bingsearch_results = []
+        temp = search.run(query)
+        logger.debug(temp)
 
-            snippets = re.findall(r'\[(.*?)\]', temp)
-            snippets = [snippet.strip() for snippet in snippets]
+        snippets = re.findall(r'\[(.*?)\]', temp)
+        snippets = [snippet.strip() for snippet in snippets]
 
-            for snippet in snippets:
-                if len(snippet) == 0:
-                    continue
-                logger.debug(f"snippet is {snippet}")
-                self.bingsearch_results.append(self.format_result(snippet))
-            logger.success(f"{json.dumps(self.bingsearch_results, indent=4)}")
-        except Exception as e:
-            self.scratchpad += f'Search error {str(e)}, please try again'
+        for snippet in snippets:
+            if len(snippet) == 0:
+                continue
+            logger.debug(f"snippet is {snippet}")
+            bingsearch_results.append(format_result(snippet))
+        logger.success(f"{json.dumps(bingsearch_results, indent=4)}")
+    except Exception as e:
+        scratchpad += f'Search error {str(e)}, please try again'
 
-        return [x['snippet'] for x in self.bingsearch_results]
+    return [x['snippet'] for x in bingsearch_results]

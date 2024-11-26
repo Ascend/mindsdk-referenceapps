@@ -60,7 +60,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 注：coco.names文件源于[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。
 
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 MindSDK 环境变量:
 
@@ -110,7 +110,7 @@ vim prune_paddle_model.py
 
 执行脚本 参考命令：
 ```
-python prune_paddle_model.py --model_dir ${input_model_dir} --model_filename ${pdmodel_file_name} --params_filename ${pdiparams_file_name} --output_names tmp_20 concat_14.tmp_0 --save_dir ${new_model_dir}
+python3 prune_paddle_model.py --model_dir ${input_model_dir} --model_filename ${pdmodel_file_name} --params_filename ${pdiparams_file_name} --output_names tmp_20 concat_14.tmp_0 --save_dir ${new_model_dir}
 ```    
 对于PP-YOLOE+_l(w/nms)模型而言，建议输出端口为"tmp20"和"concat_14.tmp_0"。
 其中：  
@@ -198,6 +198,7 @@ mkdir build
 cd build
 cmake ..
 make
+make install
 ```
 **步骤2：** 放入待测图片
 
@@ -216,6 +217,7 @@ bash run.sh -m ${model_path} -c ${model_config_path} -l ${model_label_path} -i $
 ```${model_config_path}``` 代表ppyoloe模型的配置文件路径，例如 ``` ./model/ppyoloe.cfg```    
 ```${model_label_path}``` ，`coco.names`的路径，可全局搜索这个文件，    ``` path/to/coco.names```
 ```${image_path}``` 代表待测图片的路径, 例如 ``` ./test.jpg```
+
 ```[-y]``` 添加`-y`表示模型使用的YUVSP420照片格式输入，不添加则表示模型使用的RGB输入。
 
 **步骤5：** 运行结果

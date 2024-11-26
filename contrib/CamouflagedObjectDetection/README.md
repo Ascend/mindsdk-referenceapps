@@ -119,64 +119,6 @@ python inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data_
 查看结果 
 推理完成的输出图片在result文件夹中
 
-
-## 5. 性能测试
-
-- 定量性能验证：
-
-使用原始GitHub仓库中提供的标准评测代码进行测评，具体操作步骤如下：
-
-**步骤1** 
-
-```bash
-# 拉取原始仓库
-git clone https://github.com/GewelsJI/DGNet.git
-
-# 将如下两个文件夹放入当前
-mv ./DGNet/lib_ascend/eval ./contrib/CamouflagedObjectDetection/
-mv ./DGNet/lib_ascend/evaluation.py ./contrib/CamouflagedObjectDetection/
-
-# 运行如下命令进行测评
-python evaluation.py
-```
-
-然后可以生成评测指标数值表格。可以看出DGNet模型的Smeasure指标数值为0.856，已经超过了项目交付中提到的“大于0.84”的要求。
-
-```text
-+---------+-----------------------+----------+-----------+-------+-------+--------+-------+-------+--------+-------+
-| Dataset |         Method        | Smeasure | wFmeasure |  MAE  | adpEm | meanEm | maxEm | adpFm | meanFm | maxFm |
-+---------+-----------------------+----------+-----------+-------+-------+--------+-------+-------+--------+-------+
-|   NC4K  |      Exp-DGNet-OM     |  0.856   |   0.782   | 0.043 | 0.909 |  0.91  | 0.921 |  0.8  | 0.812  | 0.833 |
-+---------+-----------------------+----------+-----------+-------+-------+--------+-------+-------+--------+-------+
-```
-
-- 定性性能验证：
-
+输入输出如下两图所示
 输入伪装图片：![](./assets/74.jpg)
 预测分割结果：![](./assets/74.png)
-
-## 5 参考引用
-
-主要参考为如下三篇论文：
-
-    @article{ji2022gradient,
-      title={Deep Gradient Learning for Efficient Camouflaged Object Detection},
-      author={Ji, Ge-Peng and Fan, Deng-Ping and Chou, Yu-Cheng and Dai, Dengxin and Liniger, Alexander and Van Gool, Luc},
-      journal={Machine Intelligence Research},
-      year={2023}
-    } 
-
-    @article{fan2021concealed,
-      title={Concealed Object Detection},
-      author={Fan, Deng-Ping and Ji, Ge-Peng and Cheng, Ming-Ming and Shao, Ling},
-      journal={IEEE TPAMI},
-      year={2022}
-    }
-
-    @inproceedings{fan2020camouflaged,
-      title={Camouflaged object detection},
-      author={Fan, Deng-Ping and Ji, Ge-Peng and Sun, Guolei and Cheng, Ming-Ming and Shen, Jianbing and Shao, Ling},
-      booktitle={IEEE CVPR},
-      pages={2777--2787},
-      year={2020}
-    }

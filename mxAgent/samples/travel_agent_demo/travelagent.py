@@ -140,6 +140,8 @@ class TalkShowAgent(ToollessAgent, ABC):
         return self.prompt.format(
             query=self.query
         )
+
+
 class TravelAgent:
     @classmethod
     def route_query(cls, query):
@@ -155,6 +157,7 @@ class TravelAgent:
                             max_steps=3, 
                             max_token_number=4096,
                             final_prompt=FINAL_PMT_MAP[classify])
+    
     def run(self, query, stream):   
         agent = self.route_query(query)
         return agent.run(query, stream=stream)
@@ -184,4 +187,4 @@ if __name__ == "__main__":
         logger.info(res.answer)
     else:
         for char in res:
-            print(char, end="")
+            logger.debug(char)

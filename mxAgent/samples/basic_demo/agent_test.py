@@ -108,6 +108,7 @@ def test_react_reflect_agent():
     
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 
+
 def get_args():
     parse = argparse.ArgumentParser()
     parse.add_argument("--model_name", type=str, default="Qwen1.5-32B-Chat", help="OpenAI客户端模型名")

@@ -60,9 +60,14 @@ atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
 **步骤3** 进行驾驶员状态识别
 
 ```
-python3 main.py 
+python3 main.py ${告警间隔}
 ```
+${告警间隔}表示告警的间隔时间（单位为秒）。如，若需要每30s输出告警信息，则命令为`python3 main.py 30`。
 
-**步骤4**  停止服务
+**步骤4** 查看结果
+
+用户可在标准输出中查看驾驶员状态识别结果。
+
+**步骤5**  停止服务
 
 命令行输入Ctrl+C组合键可手动停止服务。

@@ -39,8 +39,8 @@ class QueryWeather(API):
         'destination_city': {'type': 'str', 'description': 'the destination city user aim to query weather.'},
         "province": {'type': 'str', 'description': 'The province corresponding to the city'},
         "date": {'type': 'str', 
-                 'description':("The date of the user want to query, today is"+
-                                f"{datetime.date.today()}, and today is {weekday}, "+
+                 'description': ("The date of the user want to query, today is" + 
+                                f"{datetime.date.today()}, and today is {weekday}, " + 
                                 "please reason the date from user's query, and format with YYYY-MM-DD,")
                 },
         'requirement': {'type': 'str', 'description': 'The more requirement of weather mentioned by the user'},

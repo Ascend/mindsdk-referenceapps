@@ -1,6 +1,7 @@
 import json
 from samples.tools.web_summary_api import WebSummary
 
+
 def get_website_summary(keys, prompt, llm):
     filtered = []
     for val in keys:
@@ -20,6 +21,7 @@ def get_website_summary(keys, prompt, llm):
     webs = WebSummary.web_summary(
         filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
     return json.dumps(webs, ensure_ascii=False)
+
 
 def flatten(nested_list):
     """递归地扁平化列表"""

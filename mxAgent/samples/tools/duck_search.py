@@ -50,6 +50,7 @@ class DuckDuckGoSearch(API):
             exception = str(e)
             return self.make_response(input_parameter, results="", exception=exception)
 
+
 def format_result(res):
     snippet_idx = res.find("snippet:")
     title_idx = res.find("title:")
@@ -57,7 +58,8 @@ def format_result(res):
     snippet = res[snippet_idx + len("snippet:"):title_idx]
     title = res[title_idx + len("title:"):link_idx]
     link = res[link_idx + len("link:"):]
-    return {"snippet": snippet.replace("<b>", "").replace("</b>", ""), "title": title, "link": link}
+    return {"snippet": snippet.replace("<b>", "").replace("</b>", ""), "title": title, "url": link}
+
 
 def call_duck_duck_go_search(query: str, count: int) -> List[str]:
     try:
@@ -78,6 +80,6 @@ def call_duck_duck_go_search(query: str, count: int) -> List[str]:
             bingsearch_results.append(format_result(snippet))
         logger.success(f"{json.dumps(bingsearch_results, indent=4)}")
     except Exception as e:
-        scratchpad += f'Search error {str(e)}, please try again'
-
-    return [x['snippet'] for x in bingsearch_results]
+        logger.error(e)
+        return []
+    return bingsearch_results

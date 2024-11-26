@@ -8,13 +8,13 @@
 
 本项目主要基于用于通用伪装目标分割任务的DGNet模型
 
-- 模型的具体描述和细节可以参考原文：https://arxiv.org/abs/2205.12853
+- 模型的具体描述和细节可以参考[原文](https://arxiv.org/abs/2205.12853)
 
-- 具体实现细节可以参考基于PyTorch深度学习框架的代码：https://github.com/GewelsJI/DGNet/tree/main/lib_pytorch
+- 具体实现细节可以参考基于PyTorch深度学习框架的[代码](https://github.com/GewelsJI/DGNet/tree/main/lib_pytorch)
 
-- 所使用的公开数据集是NC4K，可以在此处下载：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/data.tar
+- 所使用的公开数据集是NC4K，可以在[此处下载](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/data.tar)
 
-- 所使用的模型是EfficientNet-B4版本的DGNet模型，原始的PyTorch模型文件可以在此处下载：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/DGNet.zip
+- 所使用的模型是EfficientNet-B4版本的DGNet模型，原始的PyTorch模型文件可以在[此处下载](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/DGNet.zip)
 
 **注意：由于模型限制，本项目暂只支持自然场景下伪装动物的检测，不能用于其他用途**
 

@@ -89,7 +89,7 @@ def infer(om_path, save_path, device_id, data_path):
             res = Image.fromarray(res)
         if res.mode == 'F':
             res = res.convert('RGB')
-        imageio.imwrite(save_path+img_name.replace('.jpg', '.png'), res)
+        imageio.imwrite(save_path+img_name.replace('.jpg', '.jpeg'), res)
 
 
 if __name__ == "__main__":

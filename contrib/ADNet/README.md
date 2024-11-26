@@ -1,6 +1,7 @@
 # ADNet图像去噪参考设计
 
 ## 1  介绍
+### 1.1 简介
 使用 ADNet 模型，在 MindX SDK 环境下实现图像去噪功能。
 由用户设置测试图片，传入到 pipeline 中先后实现前处理，模型推理，后处理等功能，最终输出结果图片实现可视化及模型精度计算。
 
@@ -13,18 +14,6 @@ AB 模块用于精细提取复杂背景中的噪声信息，对于复杂噪声�
 
 最后，RB 模块通过获得的噪声映射和给定的噪声图像来构造干净的图像。
 ```
-
-### 1.1 支持的产品
-
-以昇腾 Atlas310 卡为主要的硬件平台
-
-### 1.2 支持的版本
-
-CANN：7.0.RC1
-
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
-
-### 1.3 软件方案介绍
 
 项目主要由主函数，pipeline 文件，模型及其配置文件，测试数据集组成。
 主函数中构建业务流 stream 读取图片，通过 pipeline 在 SDK 环境下先后实现图像解码，图像缩放，模型推理的功能，
@@ -42,6 +31,35 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 | 6    | appsink       | 从stream中获取数据                                           |
 | 7    | evaluate      | 模型精度计算，输出图像降噪效果评估值PSNR                        |
 | 8    | transform     | 对测试图像进行格式转换,evaluate 运行前需要进行尺寸调整           |
+
+ADNet图像去噪模型的后处理的输入是 pipeline 中 mxpi_tensorinfer0 推理结束后通过 appsink0 输出的 tensor 数据，尺寸为[1 * 1 * 321 * 481]，将张量数据通过 pred 取出推测的结果值，将像素点组成的图片保存成result.jpg，同时通过提供的 BSD68 数据集完成模型 PSNR 的精度计算。
+
+实现流程图如下图所示：
+
+![流程](./流程.png)
+
+
+pipeline流程如下图所示：
+
+![pipeline](./pipeline.png)
+
+本案例中的 ADNet 模型适用于灰度图像的去噪，并可以返回测试图像的PSNR精度值。
+
+本模型在以下几种情况去噪效果良好：含有目标数量多、含有目标数量少、前景目标面积占比图像较大、前景目标面积占比图像较小、各目标边界清晰。
+
+在以下两种情况去噪效果不太好：1. 图像中各目标之间的边界不清晰，可能会出现过度去噪、目标模糊的情况。 2. 图像中前景目标较多，可能会出现无法完成目标精确化降噪的情况。
+
+
+### 1.2 支持的产品
+
+本项目以昇腾Atlas 300I pro和 Atlas300V pro为主要的硬件平台。
+
+
+### 1.3 支持的版本
+
+| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+  | --------- | ------------------ | -------------- |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
 
 ### 1.4 代码目录结构与说明
@@ -61,83 +79,41 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 └──README.md          
 ```
 
-### 1.5 技术实现流程图
+### 1.5 三方依赖
+本项目除了依赖昇腾Driver、Firmware、CANN和mxVision及其要求的配套软件外，还需额外依赖以下python软件：
 
-ADNet图像去噪模型的后处理的输入是 pipeline 中 mxpi_tensorinfer0 推理结束后通过 appsink0 输出的 tensor 数据，尺寸为[1 * 1 * 321 * 481]，将张量数据通过 pred 取出推测的结果值，将像素点组成的图片保存成result.jpg，同时通过提供的 BSD68 数据集完成模型 PSNR 的精度计算。
-
-实现流程图如下图所示：
-
-![流程](./流程.png)
-
-
-pipeline流程如下图所示：
-
-![pipeline](./pipeline.png)
+| 软件名称 | 版本        |
+| -------- |-----------|
+| opencv-python   | 4.10.0.84 |
+| numpy   | 1.24.0    |
 
 
-### 1.6 特性及适应场景
-        
-本案例中的 ADNet 模型适用于灰度图像的去噪，并可以返回测试图像的PSNR精度值。
+## 2 设置环境变量
 
-本模型在以下几种情况去噪效果良好：含有目标数量多、含有目标数量少、前景目标面积占比图像较大、前景目标面积占比图像较小、各目标边界清晰。
-
-在以下两种情况去噪效果不太好：1. 图像中各目标之间的边界不清晰，可能会出现过度去噪、目标模糊的情况。 2. 图像中前景目标较多，可能会出现无法完成目标精确化降噪的情况。
+在执行后续步骤前，需要设置环境变量：
 
 
-## 2  环境依赖
-推荐系统为ubuntu 18.04，环境依赖软件和版本如下表
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| MindX SDK | 5.0.RC3    |
-| CANN | 7.0.RC1 |
-| ubuntu | 18.04.1 LTS |
-| python   | 3.9.2  |
-| cv2   | 4.5.5  |
-| numpy   | 1.22.3 |
-| scikit-image| 0.16.2 |
-
-
-在编译运行项目前，需要设置环境变量
-- 环境变量介绍
-
-- MX_SDK_HOME 指向SDK安装包路径
-- LD_LIBRARY_PATH  用于指定查找共享库（动态链接库）时除了默认路径之外的其他路径。
-- PYTHONPATH   Python中一个重要的环境变量，用于在导入模块的时候搜索路径
-- GST_PLUGIN_SCANNER   用于查找plugin相关的依赖和库
-- GST_PLUGIN_PATH      用于查找plugin相关的依赖和库
-  
-具体执行命令
-
-```
-. ${MX_SDK_HOME}/set_env.sh
-	
+```bash
+# 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
+. ${mxVision-path}/set_env.sh
+# mxVision: mxVision安装路径
+# ascend-toolkit-path: CANN安装路径
 ```
-
 ## 3  模型转换
+**步骤 1** 下载模型相关文件
 
-本项目使用的模型是ADNet模型。
-    
-选用的模型为 pytorch 模型，可从 Ascend modelzoo 获取模型压缩包，在运行项目之前需要将 pytorch 模型转为 onnx 模型，再由 onnx 模型转为 om 模型。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)下载并解压文件。在解压后的310P_model目录中获取得到ADNet.onnx模型文件放置在放置 ADNet/model 目录下。
 
-pth 权重文件和 onnx 文件的[下载链接](https://www.hiascend.com/zh/software/modelzoo/detail/1/d360c03430f04185a4fe1aa74250bfea) [备份链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)
+**步骤 2** 转换模型
 
-    
-模型转换工具（ATC）相关介绍如下
-https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
-    
-具体步骤如下
-
-1. 下载上述模型压缩包，获取 ADNet_bs1.onnx 模型文件放置 ADNet/model 目录下。
-
-2. 进入ADNet/model文件夹下执行命令
+进入ADNet/model文件夹下执行命令
 
 ```
-atc --framework=5 --model=ADNet.onnx --insert_op_conf=./aipp_adnet.cfg --output=ADNet_bs1 --input_format=NCHW -input_shape="image:1,1,321,481" --log=debug --soc_version=Ascend310 --output_type=FP32
+atc --framework=5 --model=ADNet.onnx --insert_op_conf=./aipp_adnet.cfg --output=ADNet_bs1 --input_format=NCHW -input_shape="image:1,1,321,481" --log=debug --soc_version=Ascend310P3 --output_type=FP32
  ```
 
-3. 执行该命令会在当前目录下生成项目需要的模型文件ADNet_bs1.om。执行后终端输出为
+执行该命令会在当前目录下生成项目需要的模型文件ADNet_bs1.om。执行后终端输出为
 
  ```
 ATC start working now, please wait for a moment.
@@ -161,41 +137,3 @@ python3 main.py
 ```
 
 **步骤 4** 图片检测。运行结束输出result.jpg。
-
-
-## 5  测试精度
-
-**步骤 1** 安装数据集用以测试精度。数据集 BSD68 需要自行下载。
-[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/BSD68.zip)
-
-在./ADNet目录下新建 dataset 文件夹与 BSD68文件夹，并将数据集下载至BSD68文件夹解压。我们运行以下命令对数据集完成格式与尺寸转换，将处理好的数据集保存在dataset文件夹中，此时ADNet文件夹的目录结构为如下所示。
-
-```
-python3 transform.py
-```
-
-```
-├── main.py  //运行工程项目的主函数
-├── evaluate.py   //精度计算
-├── transform.py   //图像转换
-├── t.pipeline      //pipeline
-├── model   //存放模型文件
-|   ├──aipp_adnet.cfg     //预处理配置文件
-├── test.jpg          //测试图像
-├── result.jpg          //输出结果
-├── 流程.png          //流程图
-├── pipeline.png          //pipeline流程图
-├── BSD68          //原始数据集
-├── dataset          //完成转换后的待测试数据集
-└──README.md           
-```
-
-**步骤 2** 修改 evaluate.py 中的 pipeline 路径与数据集路径与目录结构保持一致。修改完毕后运行如下命令完成精度测试，输出模型平均 PSNR 值。
-
-```
-python3 evaluate.py
-```
-
-模型在BSD68数据集上的精度达标，最终模型平均PSNR输出值为30.054，满足精度要求（PSNR ≥ 29.27）。
-
-![PSNR](./PSNR.png)

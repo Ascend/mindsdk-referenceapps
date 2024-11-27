@@ -200,4 +200,4 @@ std::vector<std::shared_ptr<void>> MxpiPluginCvnorm::DefineProperties()
 }
 
 // Register the Sample plugin through macro
-MX_PLUGIN_GENERATE(Mxpi_plugin_cvnorm)
+MX_PLUGIN_GENERATE(MxpiPluginCvnorm)

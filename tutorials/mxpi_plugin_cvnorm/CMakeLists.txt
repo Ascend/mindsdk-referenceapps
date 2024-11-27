@@ -9,7 +9,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../lib/plugins)
 
 
 if (NOT DEFINED MX_SDK_HOME)
-    set(MX_SDK_HOME "/usr/local/Ascend/mindx_sdk/mxVision/")
+    set(MX_SDK_HOME $ENV{MX_SDK_HOME})
     message(STATUS "set default MX_SDK_HOME: ${MX_SDK_HOME}")
 else ()
     message(STATUS "env MX_SDK_HOME: ${MX_SDK_HOME}")

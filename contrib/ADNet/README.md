@@ -100,7 +100,7 @@ pipeline流程如下图所示：
 ## 3  模型转换
 **步骤 1** 下载模型相关文件
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)下载并解压文件。在解压后的310P_model目录中获取得到ADNet.onnx模型文件放置在放置项目的 ADNet/model 目录下。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)下载并解压文件。在解压后的310P_model目录中获取得到ADNet.onnx模型文件放置在项目的 ADNet/model 目录下。
 
 **步骤 2** 转换模型
 

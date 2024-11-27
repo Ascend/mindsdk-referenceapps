@@ -18,7 +18,7 @@
 ### 1.4 三方依赖
 无
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 ```bash
 #设置CANN环境变量
@@ -28,7 +28,7 @@
 . ${SDK-path}/set_env.sh
 ```
 
-## 3. 准备模型
+## 3 准备模型
 
 **步骤1** 在ModelZoo上下载YOLOv3模型。[下载地址](https://gitee.com/link?target=https%3A%2F%2Fobs-9be7.obs.cn-east-2.myhuaweicloud.com%2F003_Atc_Models%2Fmodelzoo%2Fyolov3_tf.pb)
 
@@ -60,7 +60,10 @@ ATC run success, welcome to the next use.
 表示命令执行成功。
 
 ## 4 编译与运行
-**步骤1：** 修改项目c++目录下的配置文件`./test.pipeline`：
+
+**步骤1：** 准备一张待检测图片，放到项目目录下命名为`test.jpg`。
+
+**步骤2：** 修改项目c++目录下的配置文件`./test.pipeline`：
 
 1. 在第32行 配置mxpi_tensorinfer插件的模型加载路径`modelPath`:
 ```bash 
@@ -93,7 +96,7 @@ ATC run success, welcome to the next use.
 46          },
 ```
 
-**步骤2：** 编译项目文件
+**步骤3：** 编译项目文件
 
 
 在项目的c++目录下，新建立build目录，进入build执行cmake ..（..代表包含CMakeLists.txt的源文件父目录），在build目录下生成了编译需要的Makefile和中间文件。执行make构建工程，构建成功后就会生成可执行文件。
@@ -120,7 +123,7 @@ Scanning dependencies of target sample
 # sample就是CMakeLists文件中指定生成的可执行文件。
 ```
 
-**步骤3：** 执行脚本
+**步骤4：** 执行脚本
 
 执行run.sh脚本前请先确认可执行文件sample已生成。
 
@@ -132,7 +135,7 @@ chmod +x run.sh
 bash run.sh
 ```
 
-**步骤4：** 查看结果
+**步骤5：** 查看结果
 
 执行run.sh完毕后，sample会将目标检测结果保存在工程目录下`result.jpg`中。
 

@@ -68,7 +68,6 @@ if __name__ == '__main__':
         if (int(end - time_start) == int(detect_time)):
             thr = st_frame / total_frame
             print("frame_tatal:{}, st_frame:{}, thr:{}".format(total_frame, st_frame, thr))
-            print("cls_id:", cls_id)
             if thr < threshold_1:
                 print("安全驾驶占比小于阈值，严重警告")
             elif thr >= threshold_1 and thr < threshold_2:

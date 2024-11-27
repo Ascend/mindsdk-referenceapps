@@ -103,7 +103,7 @@ class WebSummary:
     @classmethod
     def summary_call(cls, web, max_summary_number, summary_prompt):
         title = web.get("title", "")
-        url = web.get("url")
+        url = web.get("link")
         snippet = web.get("snippet", "")
         web_summary = {}
         if url is None:
@@ -112,7 +112,7 @@ class WebSummary:
         web_summary['title'] = title
         web_summary['url'] = url
         try:
-            content = asyncio.run(cls.get_details(url, summary_prompt))
+            content, err = asyncio.run(cls.get_details(url, summary_prompt))
         except Exception as e:
             logger.error(e)
         if not isinstance(content, str) or len(content) == 0:

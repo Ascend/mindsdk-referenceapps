@@ -3,8 +3,7 @@ from typing import List
 import re
 
 from langchain_community.tools import DuckDuckGoSearchResults
-from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
-from utils.log import LOGGER as logger
+from loguru import logger
 
 from toolmngt.api import API
 
@@ -51,35 +50,11 @@ class DuckDuckGoSearch(API):
             return self.make_response(input_parameter, results="", exception=exception)
 
 
-def format_result(res):
-    snippet_idx = res.find("snippet:")
-    title_idx = res.find("title:")
-    link_idx = res.find("link:")
-    snippet = res[snippet_idx + len("snippet:"):title_idx]
-    title = res[title_idx + len("title:"):link_idx]
-    link = res[link_idx + len("link:"):]
-    return {"snippet": snippet.replace("<b>", "").replace("</b>", ""), "title": title, "url": link}
-
-
 def call_duck_duck_go_search(query: str, count: int) -> List[str]:
     try:
         logger.debug(f"search DuckDuckGo({query}, {count})")
-        duck_duck_search = DuckDuckGoSearchAPIWrapper(max_results=count)
-        search = DuckDuckGoSearchResults(api_wrapper=duck_duck_search)
-        bingsearch_results = []
-        temp = search.run(query)
-        logger.debug(temp)
-
-        snippets = re.findall(r'\[(.*?)\]', temp)
-        snippets = [snippet.strip() for snippet in snippets]
-
-        for snippet in snippets:
-            if len(snippet) == 0:
-                continue
-            logger.debug(f"snippet is {snippet}")
-            bingsearch_results.append(format_result(snippet))
-        logger.success(f"{json.dumps(bingsearch_results, indent=4)}")
+        search = DuckDuckGoSearchResults(output_format="list", max_results=count)
+        return search.invoke(query)
     except Exception as e:
         logger.error(e)
         return []
-    return bingsearch_results

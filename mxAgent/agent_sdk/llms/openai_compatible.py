@@ -3,8 +3,6 @@
 
 
 from typing import List, Dict, Optional
-from langchain_openai import OpenAI
-from loguru import logger
 from openai import OpenAI
 
 
@@ -16,10 +14,10 @@ class OpenAICompatibleLLM:
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
     def run(self, prompt, ismessage=False, **kwargs):
-        temperature = kwargs.get("temperature", 0.1)
-        stop = kwargs.get("stop", None)
-        max_tokens = kwargs.get("max_tokens", 4096)
-        stream = kwargs.get("stream", False)
+        temperature = kwargs.pop("temperature", 0.1)
+        stop = kwargs.pop("stop", None)
+        max_tokens = kwargs.pop("max_tokens", 4096)
+        stream = kwargs.pop("stream", False)
 
         messages = prompt if ismessage else [{"role": "user", "content": prompt}]
         if stream:

@@ -14,6 +14,6 @@ rouge
 langchain_openai
 colorlog
 rouge-score
-langchain-community
+langchain-community=0.38
 loguru
 tiktoken

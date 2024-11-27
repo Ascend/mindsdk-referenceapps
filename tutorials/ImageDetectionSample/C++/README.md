@@ -52,7 +52,7 @@ mv ./C++ ./C
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 # 说明：out_nodes制定了输出节点的顺序，需要与模型后处理适配。
 ```
-执行完模型转换脚本后，在`model/`目录下会生成相应的`.om`模型文件。执行后终端输出为：
+执行完模型转换脚本后，在`model/`目录下会生成相应的`yolov3_tf_bs1_fp16.om`模型文件。执行后终端输出为：
 ```bash
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
@@ -70,7 +70,7 @@ ATC run success, welcome to the next use.
 29  "mxpi_tensorinfer0": {
 30              "props": {
 31                  "dataSource": "mxpi_imageresize0",
-32                  "modelPath": "${yolov3.om模型路径}"
+32                  "modelPath": "${yolov3_tf_bs1_fp16.om模型路径}"
 33              },
 34              "factory": "mxpi_tensorinfer",
 35              "next": "mxpi_objectpostprocessor0"

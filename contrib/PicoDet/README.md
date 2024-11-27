@@ -61,7 +61,7 @@
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
 . ${mxVision-path}/set_env.sh
-# mxVision: mxVision安装路径
+# mxVision-path: mxVision安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 

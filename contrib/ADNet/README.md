@@ -68,12 +68,9 @@ pipeline流程如下图所示：
 
 ```
 ├── main.py  //运行工程项目的主函数
-├── evaluate.py   //精度计算
-├── transform.py   //图像转换
 ├── t.pipeline      //pipeline
 ├── model   //存放模型文件
-|   ├──aipp_adnet.cfg     //预处理配置文件
-├── result.jpg          //输出结果
+|   └──aipp_adnet.cfg     //预处理配置文件
 ├── 流程.png          //流程图
 ├── pipeline.png      //pipeline流程图
 └──README.md          
@@ -103,7 +100,7 @@ pipeline流程如下图所示：
 ## 3  模型转换
 **步骤 1** 下载模型相关文件
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)下载并解压文件。在解压后的310P_model目录中获取得到ADNet.onnx模型文件放置在放置 ADNet/model 目录下。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ADNet/ATC%20ADNet.zip)下载并解压文件。在解压后的310P_model目录中获取得到ADNet.onnx模型文件放置在放置项目的 ADNet/model 目录下。
 
 **步骤 2** 转换模型
 
@@ -122,18 +119,14 @@ ATC run success, welcome to the next use.
 
    表示命令执行成功。
 
-## 4  编译与运行
+## 4  运行
 
-当已有模型的om文件，保存在ADNet/model/下
+**步骤 1**  将任意一张jpg格式的图片存到当前目录下(./ADNet），命名为test.jpg。
 
-**步骤 1**  将任意一张jpg格式的图片存到当前目录下(./ADNet），命名为test.jpg。如果 pipeline 文件（或测试图片）不在当前目录下（./ADNet），需要修改 main.py 的pipeline（或测试图片）路径指向到所在目录。
-
-**步骤 2**   按照模型转换获取om模型，放置在 ADNet/model 路径下。若未从 pytorch 模型自行转换模型，使用的是上述链接提供的 onnx 模型或者 om 模型，则无需修改相关文件，否则修改 main.py 中pipeline的相关配置，将 mxpi_tensorinfer0 插件 modelPath 属性值中的 om 模型名改成实际使用的 om 模型名；将 mxpi_imageresize0 插件中的 resizeWidth 和 resizeHeight 属性改成转换模型过程中设置的模型输入尺寸值。
-
-**步骤 3**  在命令行输入 如下命令运行整个工程
+**步骤 2**  在命令行输入下述命令运行整个工程。
 
 ```
 python3 main.py
 ```
 
-**步骤 4** 图片检测。运行结束输出result.jpg。
+**步骤 3** 查看结果。模型输出的可视化结果保存在result.jpg文件，打开该文件即可查看结果。

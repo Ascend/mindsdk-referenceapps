@@ -64,10 +64,10 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 │   ├── models
 │   │   ├── aipp-configs
 │   │   │   └── yolox_bgr.cfg
-│   │   ├── conversion-scripts              # 需将下载的onnx模型存放在该文件夹下
+│   │   ├── conversion-scripts              # 需用户手动创建文件夹，并将下载的onnx模型存放在该文件夹下
 │   │   ├── yolox_eval.cfg
 │   │   └── coco.names                      # 需要下载，下载链接在下方 
-│   ├── test_img
+│   ├── test_img                            # 需用户手动创建文件夹
 │   │   └── test.jpg                        # 需要用户自行添加测试数据
 │   └── pipeline
 │       └── pre_post.pipeline

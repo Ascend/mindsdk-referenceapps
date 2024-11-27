@@ -60,7 +60,7 @@
 输入的遥感影像地图仅支持大小为256*256的jpg文件。
 
 
-## 2. 设置环境变量
+## 2 设置环境变量
 ```bash
 #设置CANN环境变量
 . ${install_path}/set_env.sh
@@ -69,7 +69,7 @@
 . ${SDK-path}/set_env.sh
 ```
 
-## 3. 准备模型
+## 3 准备模型
 
 **步骤1** 通过[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/RemoteSensingSegmentation/models.zip)下载模型文件包`models.zip`，并放在项目根目录`RemoteSensingSegmentation/`下。
 

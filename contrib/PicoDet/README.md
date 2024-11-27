@@ -35,17 +35,20 @@
 
 ```
 ├── build.sh
+├── colorlist.txt
+├── images
+│   ├── sdk流程图.png
+│   └── 精度结果.png
+├── main.py
+├── models
+│   ├── picodet.aippconfig
+│   └── picodet.cfg
+├── picodet.pipeline
 ├── PicodetPostProcess
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   ├── PicodetPostProcess.cpp
 │   └── PicodetPostProcess.h
-├── models
-│   ├── coco.names //用户自行下载
-│   ├── picodet.aippconfig
-│   └── picodet.cfg
-├── picodet.pipeline
-├── main.py
 └── README.md
 ```
 
@@ -63,21 +66,21 @@
 ```
 
 ## 3 准备模型
-步骤1 下载模型相关文件
+**步骤1** 下载模型相关文件
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Picodet/picodet_s_320_coco.onnx)下载得到picodet_s_320_coco.onnx文件，将该文件放入项目目录下的models目录。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Picodet/picodet_s_320_coco.onnx)下载得到picodet_s_320_coco.onnx文件，将该文件放入项目根目录下的models目录。
 
-步骤2 转换模型格式
+**步骤2** 转换模型格式
 
-进入到convert目录，执行以下命令：
+进入到项目根目录下的models目录，执行以下命令：
 ```
-atc --model=picodet_s_320_coco.onnx --output=picodet --output_type=FP32 --soc_version=Ascend310 --input_shape="image:1,3,320,320"  --insert_op_conf=picodet.aippconfig --input_format=NCHW --framework=5
+atc --model=picodet_s_320_coco.onnx --output=picodet --output_type=FP32 --soc_version=Ascend310P3 --input_shape="image:1,3,320,320"  --insert_op_conf=picodet.aippconfig --input_format=NCHW --framework=5
 ```
 执行该命令后会在当前文件夹下生成项目需要的模型文件 picodet.om。
 
 
 ## 4 编译与运行
-**步骤1**  编译后处理插件，在主目录下执行如下命令
+**步骤1**  编译后处理插件，在项目根目录下执行如下命令
 
 ```
 bash build.sh
@@ -87,7 +90,13 @@ bash build.sh
 
 下载文件[coco2014.names](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)，将下载的标签文件放入models目录中并修改文件名为**coco.names**
 
-**步骤3**  将一张待检测的jpg/jpeg图片放入项目根目录下的input目录
+**步骤3**  在项目根目录执行以下指令创建输入、输出目录
+
+```
+mkdir input
+mkdir output
+```
+创建成功后，将一张待检测的jpg/jpeg图片放入项目根目录下的input目录
 
 **步骤4**  执行推理
 

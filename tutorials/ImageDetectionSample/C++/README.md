@@ -80,7 +80,10 @@ ATC run success, welcome to the next use.
 
 2. 在第41和42行 配置模型后处理插件mxpi_objectpostprocessor，添加`coco.names`与 `libyolov3postprocess.so`路径:
 
-- 文件`coco.names`来源于下载的模型文件夹内。
+- 通过命令查找到文件`coco.names`路径：
+```bash
+find / -name coco.names
+```
 
 - `postProcessLibPath`的后处理库路径，路径根据SDK安装路径决定，可以通过`find / -name libyolov3postprocess.so`搜索路径。
 ```bash
@@ -88,7 +91,7 @@ ATC run success, welcome to the next use.
 38              "props": {
 39                  "dataSource": "mxpi_tensorinfer0",
 40                  "postProcessConfigPath": "model/yolov3_tf_bs1_fp16.cfg",
-41                  "labelPath": "${YOLOv3模型文件夹路径}/coco.names",
+41                  "labelPath": "${coco.names文件路径}",
 42                  "postProcessLibPath": "${libyolov3postprocess.so路径}"
 43              },
 44              "factory": "mxpi_objectpostprocessor",

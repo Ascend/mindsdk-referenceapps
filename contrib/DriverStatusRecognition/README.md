@@ -1,6 +1,6 @@
 
-# 基于MindX SDK 的驾驶员状态识别
-## 1. 介绍
+# 基于mxVision的驾驶员状态识别
+## 1 介绍
 ### 1.1 简介
 本开发样例是基于mxBase开发的端到端推理的应用程序，可在昇腾芯片上识别视频中的驾驶员状态，然后送给分类模型进行推理，再由模型后处理得到驾驶员的状态识别结果。 其中包含Rcf模型的后处理模块开发。 主要处理流程为：  输入视频>视频解码  >图像前处理 >分类模型推理 >分类模型后处理 >驾驶员状态
 
@@ -27,15 +27,15 @@
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
 . ${mxVision-path}/set_env.sh
-# mxVision: mxVision安装路径
+# mxVision-path: mxVision安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 ## 3 准备模型
-步骤1 下载模型相关文件
+**步骤1** 下载模型相关文件
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DriverStatusRecognition/model.zip)下载得到resnet50-90-dirver_detection-air.air文件，将该文件放入convert目录。
 
-步骤2 转换模型格式
+**步骤2** 转换模型格式
 
 进入到convert目录，执行以下命令：
 ```
@@ -45,7 +45,7 @@ atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
     --log=error  --insert_op_conf=yuv_aipp.config 
 ```
 执行该命令后会在当前文件夹下生成项目需要的模型文件 resnet50-dirver_detection-air-915-yuv.om。
-## 4. 编译与运行
+## 4 编译与运行
 
 **步骤1**  启动rtsp服务
 

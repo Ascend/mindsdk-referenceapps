@@ -151,7 +151,11 @@ ATC run success, welcome to the next use.
 
 **步骤1：** 准备行人底库数据集
 
-在3.2 步骤2 中下载的压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
+&ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)
+
+通过上面的链接下载压缩包`ReID相关文件`。
+
+在压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
 
 请解压“Market-1501-v15.09.15.zip”，在`Market-1501-v15.09.15\Market1501\gt_bbox`中选择想要查询的
 行人图片，将图片放在`项目所在目录/data/querySet`中。（注意：`querySet`需要用户自行创建。）
@@ -164,7 +168,7 @@ ATC run success, welcome to the next use.
 
 **步骤2：** 准备场景图片数据集
 
-在3.2 步骤2 中下载的压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
+在压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
 请解压“search_samples.rar”，然后将获取的图片放在`项目所在目录/data/gallerySet`中。
 （注意：`gallerySet`需要用户自行创建。）
 > gallery下的图片必须是1920*1080大小的jpg

@@ -59,6 +59,8 @@ atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
 
 **步骤3** 进行驾驶员状态识别
 
+进入项目根目录。执行以下指令：
+
 ```
 python3 main.py ${告警间隔}
 ```

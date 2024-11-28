@@ -55,7 +55,6 @@ atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
 
 第**8**行 `"rtspUrl": "rtsp://xxx.xxx.xxx.xxx:xxxx/test1.264"`中的rtsp://xxx.xxx.xxx.xxx:xxxx/test1.264替换为可用的 rtsp 流地址。
 
-第**50**行 `"postProcessLibPath": "${mxVision-path}/lib/modelpostprocessors/libresnet50postprocess.so"`中的${mxVision-path}替换为实际的mxVision安装路径。
 
 **步骤3** 进行驾驶员状态识别
 

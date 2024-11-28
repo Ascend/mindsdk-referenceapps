@@ -89,7 +89,7 @@ ReIDv2
 > 如果没有result文件夹，将无法产生输出
 
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 ```bash
 #设置CANN环境变量（请确认install_path路径是否正确）
@@ -125,45 +125,14 @@ ATC run success, welcome to the next use.
 
 
 ### 3.2 ReID的模型
-**步骤1** 从GitHub拉取ReID模型源代码
-
-在`项目所在目录/models`路径下输入：
-```
-git clone https://github.com/michuanhaohao/reid-strong-baseline
-```
-拉取成功后会在路径`项目所在目录/models`下看到文件夹`reid-strong-baseline`。
+**步骤1** 获取模型文件ReID.onnx
 
 
-**步骤2** 获取`.pth`权重文件
 
-&ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)
-
-通过上面的链接下载压缩包`ReID相关文件`。
-
-将`ReID.pth模型`文件夹内的`market_resnet50_model_120_rank1_945.pth`权重文件 放在`项目所在目录/models`路径下。
+通过[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReIDv2/ReID.onnx)获取模型文件ReID.onnx，并放在`项目所在目录/models`路径下。
 
 
-**步骤3** 创建转换为onnx的脚本：
-
-在`项目所在目录/models`路径下，创建py脚本：
-```bash
-vim ReID_pth2onnx.py
-```
-
-&ensp;&ensp;&ensp;&ensp;&ensp;[获取链接](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/classfication/ReID_for_Pytorch)
-
-将上面链接内的`ReID_pth2onnx.py`的代码写入文件内，然后`wq`保存退出。
-
-在`项目所在目录/models`路径下，执行下列命令，生成.onnx模型文件：
-```
-python3 ReID_pth2onnx.py --config_file='reid-strong-baseline/configs/softmax_triplet_with_center.yml' MODEL.PRETRAIN_CHOICE "('self')" TEST.WEIGHT "('market_resnet50_model_120_rank1_945.pth')"
-```
-> 注意目前ATC支持的onnx算子版本为11
-
-成功后 在`项目所在目录/models`路径下会出现ReID.onnx模型。
-
-
-**步骤4** 使用ATC将.onnx文件转成为.om文件
+**步骤2** 使用ATC将.onnx文件转成为.om文件
 
 在`项目所在目录/models`路径下执行：
 
@@ -174,7 +143,8 @@ atc --framework=5 --model=ReID.onnx --output=ReID --input_format=NCHW --input_sh
 ```
 ATC run success, welcome to the next use.
 ```  
-经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和ReID.om模型。
+
+**经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和ReID.om模型。**
 
 
 ## 4 运行

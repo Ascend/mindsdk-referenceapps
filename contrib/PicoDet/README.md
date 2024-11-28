@@ -101,10 +101,10 @@ mkdir output
 **步骤4**  执行推理
 
 ```
-python3.9 main.py ./input ./output
+python3 main.py ./input ./output
 ```
 
 **步骤5** 查看结果
 
-检测的可视化结果图像将保存在项目根目录下的output目录，打开图片查看即可观察结果。
+检测的同名可视化结果图像将保存在项目根目录下的output目录，打开图片查看即可观察结果。
 

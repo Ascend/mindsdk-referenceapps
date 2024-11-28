@@ -52,27 +52,34 @@
 ### 1.4 代码目录结构与说明
 
 ```
+├── build.sh
+├── collision.pipeline     # pipeline文件
+├── collision.py
+├── image
+│   ├── after_collision.png
+│   ├── before_collision.png
+│   ├── collision.png
+│   ├── error.png
+│   ├── SDK_process.png
+│   └── video_conversion.png
 ├── model
-│   ├── aipp_yolov3_416_416.aippconfig            # 模型转换aipp配置文件
-│   ├── coco.names              # 类名
-│   ├── yolov3.cfg              # yolov3配置文件
-│   └── yolov3.om               # om模型
-│       
+│   ├── aipp_yolov3_416_416.aippconfig      # 模型转换aipp配置文件
+│   ├── coco.names         # 类名
+│   └── yolov3.cfg        # yolov3配置文件
 ├── plugins
-│   ├── MxpiCollisionClassName     # 碰撞检测插件
-│   │   ├── CMakeLists.txt        
-│   │   ├── MxpiCollisionClassName.cpp  
-│   │   ├── MxpiCollisionClassName.h
-│   │   └── build.sh
-│   └── MxpiTrackIdReplaceClassName  # 跟踪编号取代类名插件
+│   ├── MxpiCollisionClassName      # 碰撞检测插件
+│   │   ├── build.sh
+│   │   ├── CMakeLists.txt
+│   │   ├── MxpiCollisionClassName.cpp
+│   │   └── MxpiCollisionClassName.h
+│   └── MxpiTrackIdReplaceClassName    # 跟踪编号取代类名插件
+│       ├── build.sh
 │       ├── CMakeLists.txt
 │       ├── MxpiTrackIdReplaceClassName.cpp
-│       ├── MxpiTrackIdReplaceClassName.h
-│       └── build.sh
-│
-├── build.sh
-├── collision.pipeline        # pipeline文件
-└── collision.py
+│       └── MxpiTrackIdReplaceClassName.h
+└── README.md
+
+
 ```
 
 ### 1.5 三方依赖
@@ -83,7 +90,7 @@
 |--------| ------ |
 | ffmpeg | 3.4.11 |
 
-*ffmpeg需要源码编译安装，请用户参考链接[]至相关网站下载源码进行编译安装。
+*ffmpeg需要下载源码编译安装，请用户至相关网站下载源码进行编译安装。
 
 ## 2 设置环境变量
 
@@ -101,11 +108,11 @@
 ## 3 准备模型
 **步骤1** 下载模型相关文件
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)下载得到yolov3_tf.pb文件，并放到项目根目录的`./models`文件夹。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)下载得到yolov3_tf.pb文件，并放到项目根目录的`model`文件夹。
 
 **步骤2** 转换模型格式
 
-进入 `./models` 文件夹下执行命令：
+进入项目根目录的`model`文件夹下执行命令：
 
 ```
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
@@ -125,7 +132,7 @@ ATC run success, welcome to the next use.
 
 **步骤1**  启动rtsp服务
 
-按照 [教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) 自行准备数据，并启动rtsp服务。
+按照 [教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) 自行准备视频数据，并启动rtsp服务。
 
 **步骤2** 修改collision.pipeline配置文件
 
@@ -153,7 +160,7 @@ bash build.sh
 **步骤4** 运行。回到主目录下，在主目录下执行命令：
 
 ```
-python3.9.2 collision.py
+python3 collision.py
 ```
 
 命令执行成功后会在当前目录下生成检测结果视频文件out_collision.h264, 会在标准输出打印保存视频文件的帧数。
@@ -161,3 +168,5 @@ python3.9.2 collision.py
 **步骤5**  停止服务、查看结果
 
 命令行输入Ctrl+C组合键可手动停止服务，打开out_collision.h264查看文件、观测目标跟踪结果。
+
+*考虑到保存检测结果的视频会占用较大存储空间，请用户合理控制服务运行时间，避免保存检测结果的视频文件过大、影响服务器正常工作。

@@ -29,7 +29,7 @@
         "mxpi_tensorinfer0": {
             "props": {
                 "dataSource": "mxpi_imageresize0",
-                "modelPath": "${yolov3.om模型路径}"
+                "modelPath": "${yolov3_tf_bs1_fp16.om模型路径}"
             },
             "factory": "mxpi_tensorinfer",
             "next": "mxpi_objectpostprocessor0"
@@ -38,7 +38,7 @@
             "props": {
                 "dataSource": "mxpi_tensorinfer0",
                 "postProcessConfigPath": "model/yolov3_tf_bs1_fp16.cfg",
-                "labelPath": "${SDK安装路径}/samples/mxVision/models/yolov3/coco.names",
+                "labelPath": "${coco.names文件路径}",
                 "postProcessLibPath": "${libyolov3postprocess.so路径}"
             },
             "factory": "mxpi_objectpostprocessor",

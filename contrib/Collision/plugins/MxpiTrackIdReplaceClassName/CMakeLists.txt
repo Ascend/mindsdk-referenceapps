@@ -30,3 +30,5 @@ target_link_libraries(${TARGET_LIBRARY} glib-2.0 gstreamer-1.0 gobject-2.0 gstba
 
 target_link_libraries(${TARGET_LIBRARY} mxpidatatype plugintoolkit mxbase mindxsdk_protobuf)
 
+install(TARGETS ${TARGET_LIBRARY} PERMISSIONS OWNER_READ GROUP_READ LIBRARY DESTINATION ${MX_SDK_HOME}/lib/plugins)
+

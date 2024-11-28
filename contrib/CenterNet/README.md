@@ -27,6 +27,8 @@ CenterNet 目标检测后处理插件基于 MindX SDK 开发，对图片中的�
 | NumCpp | 2.12.1   |
 
 * NumCpp需要下载源码, 请用户至 https://github.com/dpilger26/NumCpp 进行下载。下载完成后，无需编译，仅需将NumCpp源码目录下的include/NumCpp目录拷贝至项目根目录下的postprocess/include目录（postprocess/include目录需要手动创建）。
+* 编译本项目推荐使用gcc9.4.0进行编译。
+
 ### 1.5 代码目录结构与说明
 
 本工程名称为 CenterNet，工程目录如下所示：

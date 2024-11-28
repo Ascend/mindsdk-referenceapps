@@ -1,122 +1,76 @@
-#  基于Mind SDK 的驾驶员状态识别
 
-## 介绍
-
+# 基于mxBase的驾驶员状态识别
+## 1 介绍
+### 1.1 简介
 本开发样例是基于mxBase开发的端到端推理的应用程序，可在昇腾芯片上识别视频中的驾驶员状态，然后送给分类模型进行推理，再由模型后处理得到驾驶员的状态识别结果。 其中包含Rcf模型的后处理模块开发。 主要处理流程为：  输入视频>视频解码  >图像前处理 >分类模型推理 >分类模型后处理 >驾驶员状态
 
 推荐适用场景：在拍摄光线充足的情况下，拍摄角度可体现驾驶员身体上半身侧向图像(拍摄角度为副驾驶上方)，图像上驾驶员身体大部分居于图像区域内，且占比不小于50%、无大面积遮挡，支持的分辨率最佳为640*480。 本项目可识别输出为10种驾驶状态，分别为安全驾驶、右手打字、 右手打电话、 左手打字、 左手打电话、 调收音机、 喝饮料、 拿后面的东西、 整理头发和化妆、和其他乘客说话。
 
-### 支持的产品
+### 1.2 支持的产品
 
-以昇腾 Atlas310 卡为主要的硬件平台
+本项目以昇腾Atlas 300I pro和 Atlas300V pro为主要的硬件平台。
 
-### 支持的版本
 
-CANN：7.0.RC1
+### 1.3 支持的版本
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+  | --------- | ------------------ | -------------- |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
-## 基于MindSpore框架训练模型
 
-**步骤1** 训练数据获取 下载数据集 。
+## 2 设置环境变量
 
-**步骤2** 将数据集按照 4：1 分为训练集和验证集[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DriverStatusRecognition/data.zip)
+在执行后续步骤前，需要设置环境变量：
 
-**步骤3** 训练代码下载  将获取到基于MindSpore的ResNet50模型 [下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DriverStatusRecognition/model.zip)
 
-**步骤4** 训练模型
+```bash
+# 执行环境变量脚本使环境变量生效
+. ${ascend-toolkit-path}/set_env.sh
+. ${mxVision-path}/set_env.sh
+# mxVision-path: mxVision安装路径
+# ascend-toolkit-path: CANN安装路径
+```
+## 3 准备模型
+**步骤1** 下载模型相关文件
 
-(1)、按照如下修改 train.py中的 init_loss_scale()
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DriverStatusRecognition/model.zip)下载得到resnet50-90-dirver_detection-air.air文件，将该文件放入convert目录。
+
+**步骤2** 转换模型格式
+
+进入到convert目录，执行以下命令：
+```
+atc --model=./resnet50-90-dirver_detection-air.air --soc_version=Ascend310P3 \
+    --framework=1 --output=./resnet50-dirver_detection-air-915-yuv \
+    --input_format=NCHW --input_shape="x:1,3,224,224" --enable_small_channel=1 \
+    --log=error  --insert_op_conf=yuv_aipp.config 
+```
+执行该命令后会在当前文件夹下生成项目需要的模型文件 resnet50-dirver_detection-air-915-yuv.om。
+## 4 编译与运行
+
+**步骤1**  启动rtsp服务
+
+按照 [教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) 自行准备数据 并启动rtsp服务
+
+**步骤2** 修改pipeline/dirver-detection.pipeline配置文件
+
+第**8**行 `"rtspUrl": "rtsp://xxx.xxx.xxx.xxx:xxxx/test1.264"`中的rtsp://xxx.xxx.xxx.xxx:xxxx/test1.264替换为可用的 rtsp 流地址。
+
+
+**步骤3** 进行驾驶员状态识别
+
+进入项目根目录。执行以下指令：
 
 ```
-def init_loss_scale():
-    if config.dataset == "imagenet2012" or  config.dataset == "distracted_driver_detection":  
-        if not config.use_label_smooth:
-            config.label_smooth_factor = 0.0
-        loss = CrossEntropySmooth(sparse=True, reduction="mean",
-                                  smooth_factor=config.label_smooth_factor, num_classes=config.class_num)
-    else:
-        loss = SoftmaxCrossEntropyWithLogits(sparse=True, reduction='mean')
-    return loss
-
-
+python3 main.py ${告警间隔}
 ```
+${告警间隔}表示告警的间隔时间（单位为秒）。如，若需要每30s输出告警信息，则命令为`python3 main.py 30`。
 
-(2）编译与运行
+**步骤4** 查看结果
 
-```
- cd scripts
- 
- bash run_standalone_train.sh /${实际PATH}/distracted_driver_detection/train /${实际PATH}/resnet50_distracted_driver_detection_Acc_config.yaml
-```
-(3) .ckpt和.air模型下载
+用户可在标准输出中查看驾驶员状态识别告警结果。
 
-[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/DriverStatusRecognition/model.zip)
+其中，frame_total的数值代表告警间隔期间的总帧数，st_frame的数值表示告警间隔期间识别为安全驾驶的帧数，thr的数值表示告警间隔期间识别为安全驾驶的帧数占总帧数的比例。当thr在[0, 0.2)区间时，会输出”安全驾驶占比小于阈值，严重警告“；当thr在[0.2, 0.8)区间时，会输出”安全驾驶占比小于警告值，注意“。
 
-(4) 转换模型
+**步骤5**  停止服务
 
-```
-python3 export.py --network_dataset resnet50_dirver_detection  --ckpt_file scripts/train/output/checkpoint/best_acc.ckpt  --file_name resnet50-dirver_detection-915-air --file_format AIR --config_path /${实际PATH}/resnet50_distracted_driver_detection_Acc_config.yaml
-```
-
-## SDK 运行
-
-**步骤1** 设置环境变量
-
-```
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg:$PYTHONPATH
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
-```
-
-**步骤2** 模型转换
-
-```
- cd convert
- bash air2om.sh /${实际PATH}/*.air  /${实际PATH}/resnet50-dirver_detection-air-915-yuv.om  yuv_aipp.config
-```
-
-**步骤3**  启动rtsp服务
-
-按照 [教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) 自行准备数据 并启动rtsp服务
-
-**步骤4** 修改配置文件
-
-修改pipeline中的 "rtspUrl", "modelPath", "postProcessLibPath" 等选项
-
-**步骤4** 进行驾驶员状态识别
-
-```
-bash run.sh main.py 30    
-```
-
-参数说明：
-
-30： 检测时间段为30s
-
-## 精度测试
-
-(1) 模型转换
-
-```
-cd convert
-bash air2om.sh /${实际PATH}/*.air  /${实际PATH}/resnet50-dirver_detection-915-air.om  aipp.config
-```
-
-(2)  修改pipeline/dirver-detection-img.pipeline 中的相关选项，如om模型路径等
-
-(3) 测试精度
-
-```
-bash run.sh precision.py /${实际PATH}/val_data  
-```
-
-## 性能测试
-
-参考 "sdk 运行"章节准备数据、启动rtsp服务等步骤
-
-```
-bash run.sh  performance.py 
-```
+命令行输入Ctrl+C组合键可手动停止服务。

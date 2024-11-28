@@ -4,6 +4,12 @@ mxAgent是一个基于LLMs的通用Agent框架，应用多种框架解决不同�
 提供一套Agent实现框架，让用户可以通过框架搭建自己的Agent应用
 ### 1.Router Agent
 提供意图识别的能力，用户可预设意图的分类，通过Router Agent给出具体问题的分类结果，用于设别不同的问题场景。
+使用示例：
+```
+cd mxAgent
+export PYTHONPATH=.
+python samples/basic_demo/intent_router.py --model_name xxx --base_url xxx  --api_key xxxx
+```
 ### 2.Recipe Agent
 设置复杂问题执行的workflow，在解决具体问题时，将workflow翻译成有向无环图的的节点编排，通过并行的方式执行节点。
 适用于有相对固定workflow的复杂问题场景。
@@ -17,7 +23,7 @@ Recipe Agent利用用户所提供的流程指导和工具，使用LLMs生成SOP�
 ```
 cd mxAgent
 export PYTHONPATH=.
-python samplestravel_agenttravelagent.py
+python samples/travel_agent_demo/travelagent.py --model_name xxx --base_url xxx  --api_key xxxx
 ```
 
 ### 3.ReAct Agent
@@ -26,6 +32,11 @@ python samplestravel_agenttravelagent.py
 2）执行工具调用，得到工具执行结果
 3）将工具执行结果应用于下一次的模型思考
 4）循环上述过程，直到模型认为问题得到解决
+```
+cd mxAgent
+export PYTHONPATH=.
+python samples/basic_demo/agent_test.py --model_name xxx --base_url xxx  --api_key xxxx
+```
 ### 4.Single Action Agent
 
 通过模型反思、调用工具执行，总结工具结果的执行轨迹，完成一次复杂问题的处理。Single Action Agent使用一次工具调用帮助完成复杂问题解决
@@ -33,7 +44,7 @@ python samplestravel_agenttravelagent.py
 ```
 cd mxAgent
 export PYTHONPATH=.
-python samplestraj_generate_test.py
+python samples/basic_demo/traj_generate_test.py --model_name xxx --base_url xxx  --api_key xxxx
 ```
 
 ## 
@@ -41,37 +52,38 @@ python samplestraj_generate_test.py
 ## 二、接口使用方法
 ### 1.模型使用
 1.1. get_llm_backend
-参数含义
- ----  -----
-backend推理模型后台类型，当前取值
-base_urlOpenAI客户端推理模型地址
-api_keyOpenAI客户端api key
-llm_name推理模型名称
+
+| 参数 | 含义 |
+| ---- | ----- |
+| backend | 推理模型后台类型，当前取值
+| base_url | OpenAI客户端推理模型地址
+| api_key |OpenAI客户端api key
+| llm_name | 推理模型名称
 
 1.2. run
-参数含义取值
- ----  ----- ---
-prompt模型输入的prompt字符串或数组
-ismessage是否为对话信息是否为对话信息，默认值Falsebool值
+| 参数 | 含义 | 取值
+| ---- | ----- | ---|
+| prompt |模型输入的prompt | 字符串或数组
+| ismessage | 是否为对话信息是否为对话信息，默认值False | bool值
 
 更多模型后处理参数可参考transformers文档
 
 ### 2.agent接口
 2.1 初始化参数
-参数含义取值类型
- ----  ----- ---
- llm  模型客户端  OpenAICompatibleLLM 
- prompt  agent提示词  字符串 
- tool_list  工具列表  列表 
- max_steps  agent执行最大步数  int 
- max_token_number  模型生成最大token数  int 
- max_context_len  模型最大上下文token数  int 
- max_retries  最多重启次数  int 
- example  agent推理生成示例  字符串 
- reflect_prompt  agent反思提示  字符串
- recipe  recipe agent参考的标准工作流  字符串
- intents  分类的意图及含义  dict 
- final_prompt  最终生成总结的提示  字符串 
+| 参数| 含义 | 取值类型|
+| ---- | -----| --- |
+| llm  |模型客户端  |OpenAICompatibleLLM 
+| prompt  |agent提示词  |字符串 
+| tool_list | 工具列表 | 列表 
+| max_steps | agent执行最大步数 | int 
+| max_token_number | 模型生成最大token数 | int 
+| max_context_len | 模型最大上下文token数 | int 
+| max_retries | 最多重启次数 | int 
+| example | agent推理生成示例 | 字符串 
+| reflect_prompt | agent反思提示 | 字符串
+| recipe | recipe agent参考的标准工作流 | 字符串
+| intents | 分类的意图及含义 | dict 
+| final_prompt | 最终生成总结的提示 | 字符串 
 
 
 

@@ -177,11 +177,11 @@ if __name__ == "__main__":
     llm_name = args.pop("model_name")
 
     llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
-                        api_base=base_url, api_key=api_key, llm_name=llm_name).run
+                        base_url=base_url, api_key=api_key, llm_name=llm_name).run
     query = "帮我制定一份从北京到上海6天的旅游计划"
 
     travel_agent = TravelAgent()
-    res = travel_agent.run(query, stream=True)
+    res = travel_agent.run(query, stream=False)
     if isinstance(res, AgentRunResult):
         logger.info("-----------run agent success-------------")
         logger.info(res.answer)

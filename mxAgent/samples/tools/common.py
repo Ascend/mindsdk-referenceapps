@@ -13,7 +13,6 @@ def get_website_summary(keys, prompt, llm):
         if isinstance(val, list):
             it = flatten(val)
             filtered.append(it)
-        filtered.append(val)
 
     if len(filtered) == 0:
         raise Exception("keywords has no been found")

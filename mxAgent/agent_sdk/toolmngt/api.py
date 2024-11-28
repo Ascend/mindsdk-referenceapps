@@ -3,7 +3,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 from typing import Union, Tuple
 
-from agent_sdk.utils.constant import THOUGHT, ACTION, OBSERVATION, ACTION_INPUT
+from agent_sdk.common.constant import THOUGHT, ACTION, OBSERVATION, ACTION_INPUT
 from loguru import logger
 
 
@@ -76,7 +76,7 @@ class API(ABC):
                       JSON objects.')
 
     def check_api_call_correctness(self, response, groundtruth) -> bool:
-        raise NotImplementedError
+        return response.exception is not None
 
     def call(self, input_parameter: dict, **kwargs):
         raise NotImplementedError

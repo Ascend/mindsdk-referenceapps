@@ -20,7 +20,6 @@
  */
 
 #include <stdint.h>
-#include <csignal>
 
 #include "ffmpeg.h"
 #include "cmdutils.h"

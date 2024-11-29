@@ -651,6 +651,7 @@ static void ffmpeg_cleanup(int ret)
             av_log(NULL, AV_LOG_ERROR,
                    "Error closing vstats file, loss of information possible: %s\n",
                    av_err2str(AVERROR(errno)));
+        vstats_file = NULL;
     }
     av_freep(&vstats_filename);
 

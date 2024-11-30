@@ -2,12 +2,13 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 import tiktoken
-import yaml
+import json
 from loguru import logger
 
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
-from samples.tools.common import get_website_summary
+from samples.tools.common import filter_website_keywords
+from samples.tools.web_summary_api import WebSummary
 
 
 @ToolManager.register_tool()
@@ -51,7 +52,7 @@ class QueryAttractions(API):
         requirement = input_parameter.get('requirement')
         llm = kwargs.get("llm", None)
 
-        keys = [destination, scene, scene_type, requirement, "景点"]
+        keys = [destination, scene, scene_type, requirement]
         summary_prompt = """你是一个擅长于网页信息总结的智能助手，提供的网页是关于旅游规划的信息，现在已经从网页中获取到了相关的文字内容信息，你需要从网页中找到与**景区**介绍相关的内容，并进行提取，
         你务必保证提取的内容都来自所提供的文本，保证结果的客观性，真实性。
         网页中可能包含多个景点的介绍，你需要以YAML文件的格式返回，每个景点的返回的参数和格式如下：
@@ -68,8 +69,11 @@ class QueryAttractions(API):
         请开始生成：
         """
         try:
-            content = get_website_summary(keys, summary_prompt, llm)
-            res = {'attractions': content}
+            filtered = filter_website_keywords(keys)
+            filtered.append("景点")
+            webs = WebSummary.web_summary(
+                filtered, search_num=3, summary_num=3, summary_prompt=summary_prompt, llm=llm)
+            res = {'attractions': json.dumps(webs)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

@@ -285,9 +285,6 @@ static int ascend_transfer_data_to(AVHWFramesContext *ctx, AVFrame *dst, const A
 
 static int ascend_transfer_data_from(AVHWFramesContext *ctx, AVFrame *dst, const AVFrame *src)
 {
-    AVHWDeviceContext *device_ctx = ctx->device_ctx;
-    AVASCENDDeviceContext *hwctx = ctx->hwctx;
-    AscendContext *ascend_ctx = hwctx->ascend_ctx;
 
     int i;
     size_t dstBytes;

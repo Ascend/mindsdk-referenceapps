@@ -39,7 +39,7 @@ class QueryAttractions(API):
             "destination": "Paris",
             "scene": "The Louvre Museum",
             "type": "Museum",
-            "requirement": "historical"
+            "requirement": "free"
          }""")
 
     def __init__(self):

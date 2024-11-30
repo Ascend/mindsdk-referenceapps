@@ -193,7 +193,11 @@ bash build.sh
 
 命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
 
-**步骤6** 运行。回到VehicleRetrogradeRecognition目录下，在VehicleRetrogradeRecognition目录下执行命令：
+**步骤6**进入mxVision安装目录的`operators/opencvosd`目录下执行命令：
+```
+bash generate_osd_om.sh
+```
+**步骤7** 运行。回到VehicleRetrogradeRecognition目录下，在VehicleRetrogradeRecognition目录下执行命令：
 
 ```
 bash run.sh

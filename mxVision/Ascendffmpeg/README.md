@@ -21,11 +21,11 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro, 和Atlas A500 A2。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
-| --------- | ------------------ | -------------- |
-| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+| CANN版本  | Driver/Firmware版本  |
+| ------------------ | -------------- |
+| 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 三方依赖
 无

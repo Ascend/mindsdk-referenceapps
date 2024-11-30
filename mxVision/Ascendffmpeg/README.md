@@ -36,8 +36,6 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 * `ASCEND_HOME`     Ascend 安装的路径，一般为 `/usr/local/Ascend`
 * 执行命令
     ```bash
-    . ${SDK-path}/set_env.sh  # MindX SDK环境变量
-  
     export ASCEND_HOME=/usr/local/Ascend
     . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
     ```

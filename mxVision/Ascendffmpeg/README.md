@@ -18,7 +18,7 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro, 和Atlas A500 A2。
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
@@ -66,15 +66,16 @@ chmod +x ./ffbuild/*.sh
     enable-ascend : 允许使用 ascend 进行硬件加速
   ```
 执行编译命令：
-```bash
-./configure \
-    --prefix=./ascend \
-    --enable-shared \
-    --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
-    --extra-libs="-lacl_dvpp_mpi -lascendcl" \
-    --enable-ascend \
-    && make -j && make install
-```
+  ```bash
+  ./configure \
+      --prefix=./ascend \
+      --enable-shared \
+      --extra-cflags="-I${ASCEND_HOME}/ascend-toolkit/latest/acllib/include" \
+      --extra-ldflags="-L${ASCEND_HOME}/ascend-toolkit/latest/acllib/lib64" \
+      --extra-libs="-lacl_dvpp_mpi -lascendcl" \
+      --enable-ascend \
+      && make -j && make install
+  ```
 
 **步骤3：** 添加环境变量
 
@@ -131,7 +132,9 @@ export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/mxVision/Ascendffmpeg/asc
 
 ## 4 常见问题
 ### 4.1 文件编译问题
+
 问题描述： 文件编译不通过
+
 解决方案： 可能是文件格式被改变或者破坏，建议通过以下两种方式直接获取代码，而非文件传输：
 1. 在环境上通过git clone直接下载该代码仓。
 2. 直接从代码仓网页gitee下载zip包，并在环境上通过`unzip`解压。

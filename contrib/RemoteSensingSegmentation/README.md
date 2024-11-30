@@ -28,6 +28,8 @@
 | numpy                  | 1.24.0    |
 | opencv-python-headless | 4.10.0.84 |
 | Pillow                 | 9.4.0     |
+| matplotlib             | 3.9.2     |
+
 
 
 ### 1.5 代码目录结构说明

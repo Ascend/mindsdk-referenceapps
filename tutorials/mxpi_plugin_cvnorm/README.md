@@ -46,4 +46,6 @@ cd build
 cmake ..
 make
 ```
-**步骤2：** 查看结果：执行成功后会在`mindxsdk-referenceapps/lib/plugins/`下生成插件*.so文件。
+**步骤2：** 查看结果：
+执行成功后, 回显信息可以看到类似：`Linking CXX shared library /PATH/TO/lib/plugins/libmxpi_plugin_cvnorm.so`,
+可在对应路径下找到生成插件*.so文件。

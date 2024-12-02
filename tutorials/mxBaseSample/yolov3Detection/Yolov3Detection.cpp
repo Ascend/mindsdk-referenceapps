@@ -73,7 +73,11 @@ void Yolov3Detection::SetYolov3PostProcessConfig(const InitParam &initParam,
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    auto jsonStr = configData.GetCfgJson();
+#ifdef MX_VERSION_5
+        auto jsonStr = configData.GetCfgJson().serialize();
+#else
+        auto jsonStr = configData.GetCfgJson();
+#endif
     config["postProcessConfigContent"] = *std::make_shared<std::string>(jsonStr);
     config["labelPath"] = *std::make_shared<std::string>(initParam.labelPath);
 }

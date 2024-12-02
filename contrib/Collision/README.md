@@ -128,7 +128,7 @@ ATC run success, welcome to the next use.
 表示命令执行成功。
 
 
-## 4 运行
+## 4 编译与运行
 
 **步骤1**  启动rtsp服务
 
@@ -142,7 +142,7 @@ ATC run success, welcome to the next use.
 
 第**153**行 `"imageWidth":"1280"`中的1280替换为视频帧实际的宽。
 
-**步骤3** 生成osd相关文件
+**步骤3** 编译
 
 进入mxVision安装目录的`operators/opencvosd`目录下执行命令：
 

@@ -41,11 +41,6 @@ APP_ERROR CartoonGANPicture::Init(const InitParam &initParam)
         return ret;
     }
     dvppWrapper_ = std::make_shared<MxBase::DvppWrapper>();
-    ret = dvppWrapper_->Init();
-    if (ret != APP_ERR_OK) {
-        LogError << "DvppWrapper init failed, ret=" << ret << ".";
-        return ret;
-    }
     model_ = std::make_shared<MxBase::ModelInferenceProcessor>();
     ret = model_->Init(initParam.modelPath, modelDesc_);
     if (ret != APP_ERR_OK) {
@@ -58,7 +53,6 @@ APP_ERROR CartoonGANPicture::Init(const InitParam &initParam)
 
 APP_ERROR CartoonGANPicture::DeInit()
 {
-    dvppWrapper_->DeInit();
     model_->DeInit();
     MxBase::DeviceManager::GetInstance()->DestroyDevices();
     return APP_ERR_OK;

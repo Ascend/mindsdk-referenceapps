@@ -51,7 +51,7 @@ atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_ver
 ```
 - 执行完模型转换脚本后，若提示如下信息说明模型转换成功，并可以在`mxBaseSample/model/`下找到名为`yolov3_tf_bs1_fp16.om`模型文件。
 
-```
+```bash
 ATC run success, welcome to the next use.
 ```  
 
@@ -67,3 +67,4 @@ bash build.sh
 **步骤3：** 查看结果
 
 结果以`result.jpg`的形式保存在`mxBaseSample/`目录下。
+

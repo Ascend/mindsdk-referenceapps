@@ -58,7 +58,8 @@ APP_ERROR Yolov3Detection::LoadLabels(const std::string &labelPath, std::map<int
 
 // 设置配置参数
 void Yolov3Detection::SetYolov3PostProcessConfig(const InitParam &initParam,
-                                                 std::map<std::string, std::string> &config) {
+                                                 std::map<std::string, std::string> &config) 
+{
     MxBase::ConfigData configData;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
     configData.SetJsonValue("CLASS_NUM", std::to_string(initParam.classNum));

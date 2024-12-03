@@ -1,12 +1,12 @@
-# 伪装目标分割
+# 伪装目标检测
 
 ## 1、 介绍
 
 ### 1.1 简介
 
-在本系统中，目的是基于MindX SDK，在华为云昇腾平台上，开发端到端**伪装目标分割**的参考设计，实现**对图像中的伪装目标进行识别检测**的功能，达到功能要求
+在本系统中，目的是基于MindX SDK，在华为云昇腾平台上，开发端到端**伪装目标检测**的参考设计，实现**对图像中的伪装目标进行识别检测**的功能，达到功能要求
 
-本项目主要基于用于通用伪装目标分割任务的DGNet模型
+本项目主要基于用于通用伪装目标检测任务的DGNet模型
 
 - 模型的具体描述和细节可以参考[原文](https://arxiv.org/abs/2205.12853)
 
@@ -109,7 +109,7 @@ mkdir result
 
 执行离线推理Python脚本
 ```bash
-python inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data_path ./data/NC4K/Imgs
+python3 inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data_path ./data/NC4K/Imgs
 ```
 **注意：由于数据集图片较多，推理时间较长，可选择性输入部分图片来进行推理验证**
 
@@ -123,4 +123,4 @@ python inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data_
 
 输入伪装图片：![](./assets/74.jpg)
 
-预测分割结果：![](./assets/74.png)
+预测检测结果：![](./assets/74.png)

@@ -8,10 +8,10 @@ include_directories(./yolov3Detection)
 file(GLOB_RECURSE YOLOV3_POSTPROCESS ${PROJECT_SOURCE_DIR}/yolov3PostProcess/*cpp)
 file(GLOB_RECURSE YOLOV3_DETECTION ${PROJECT_SOURCE_DIR}/yolov3Detection/*cpp)
 set(TARGET mxBase_sample)
-add_compile_options(-std=c++11 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
+add_compile_options(-std=c++14 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
-set(MX_SDK_HOME ${SDK安装路径})
+set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")
 
 include_directories(
         ${MX_SDK_HOME}/include
@@ -28,6 +28,13 @@ link_directories(
 )
 
 add_executable(mxBase_sample main.cpp ${YOLOV3_DETECTION} ${YOLOV3_POSTPROCESS})
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(mxBase_sample cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
+
 target_link_libraries(mxBase_sample
         glog
         mxbase

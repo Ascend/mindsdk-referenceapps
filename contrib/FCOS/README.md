@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-本开发项目演示FCOS模型实现目标检测。本系统基于mxVision SDK进行开发，以昇腾Atlas310卡为主要的硬件平台，主要实现目标检测。待检测的图片中物体不能被遮挡太严重，并且物体要完全出现在图片中。图片亮度不能过低。输入一张图片，最后会输出图片中能检测到的物体。项目主要流程：
+本开发项目演示FCOS模型实现目标检测。本系统基于mxVision SDK进行开发，主要实现目标检测。待检测的图片中物体不能被遮挡太严重，并且物体要完全出现在图片中。图片亮度不能过低。输入一张图片，最后会输出图片中能检测到的物体。项目主要流程：
 
 1.环境搭建；
 2.模型转换；
@@ -66,10 +66,11 @@ pip3 install mmdet
 
 ## 2 设置环境变量
 在项目开始运行前需要设置环境变量：
-
-```
-. /usr/local/Ascend/ascend-toolkit/set_env.sh
-. ${SDK安装路径}/mxVision/set_env.sh
+```bash
+. ${ascend-toolkit-path}/set_env.sh
+. ${mxVision-path}/set_env.sh
+# mxVision-path: mxVision安装路径
+# ascend-toolkit-path: CANN安装路径
 ```
 
 ## 3 准备模型

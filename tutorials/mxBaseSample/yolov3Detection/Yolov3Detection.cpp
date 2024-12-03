@@ -58,7 +58,8 @@ APP_ERROR Yolov3Detection::LoadLabels(const std::string &labelPath, std::map<int
 
 // 设置配置参数
 void Yolov3Detection::SetYolov3PostProcessConfig(const InitParam &initParam,
-                                                       std::map<std::string, std::shared_ptr<void>> &config) {
+                                                 std::map<std::string, std::string> &config) 
+{
     MxBase::ConfigData configData;
     const std::string checkTensor = initParam.checkTensor ? "true" : "false";
     configData.SetJsonValue("CLASS_NUM", std::to_string(initParam.classNum));
@@ -73,9 +74,13 @@ void Yolov3Detection::SetYolov3PostProcessConfig(const InitParam &initParam,
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
-    config["labelPath"] = std::make_shared<std::string>(initParam.labelPath);
+#ifdef MX_VERSION_5
+        auto jsonStr = configData.GetCfgJson().serialize();
+#else
+        auto jsonStr = configData.GetCfgJson();
+#endif
+    config["postProcessConfigContent"] = *std::make_shared<std::string>(jsonStr);
+    config["labelPath"] = *std::make_shared<std::string>(initParam.labelPath);
 }
 
 APP_ERROR Yolov3Detection::Init(const InitParam &initParam) {
@@ -103,7 +108,7 @@ APP_ERROR Yolov3Detection::Init(const InitParam &initParam) {
         return ret;
     }
 
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     SetYolov3PostProcessConfig(initParam, config);
     //  初始化yolov3后处理对象
     post_ = std::make_shared<Yolov3PostProcess>();

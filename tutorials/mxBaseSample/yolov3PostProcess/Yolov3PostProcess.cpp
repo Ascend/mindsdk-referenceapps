@@ -54,7 +54,7 @@ Yolov3PostProcess &Yolov3PostProcess::operator=(const Yolov3PostProcess &other) 
     return *this;
 }
 
-APP_ERROR Yolov3PostProcess::Init(const std::map<std::string, std::string>& postConfig) 
+APP_ERROR Yolov3PostProcess::Init(const std::map<std::string, std::string>& postConfig)
 {
     LogDebug << "Start to Init Yolov3PostProcess.";
     APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);

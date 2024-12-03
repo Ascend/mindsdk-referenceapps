@@ -36,7 +36,7 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 300卡为主要的硬件平台。
+本项目以昇腾x86_64 Atlas 300I (型号3010)和arm Atlas 300I (型号3000)为主要的硬件平台。
 
 ### 1.3 支持的版本
 
@@ -140,13 +140,13 @@ env
 
 **步骤2** 将该模型转换为om模型，具体操作为： ``python/models`` 文件夹下,执行指令进行模型转换：
 
-### DVPP模型转换
+DVPP模型转换
 
 ```
 bash convert_om.sh conversion-scripts/fasterrcnn_mindspore.air aipp-configs/aipp.cfg conversion-scripts/fasterrcnn_mindspore_dvpp
 ```
 
-### OPENCV模型转换
+OPENCV模型转换
 
 ```
 bash convert_om.sh conversion-scripts/fasterrcnn_mindspore.air aipp-configs/aipp_rgb.cfg conversion-scripts/fasterrcnn_mindspore_rgb
@@ -181,19 +181,19 @@ python3 main.py
 
 命令执行成功后在目录``python/data/test/draw_result``下生成检测结果文件 。
 
-**步骤4** 精度测试
+## 5. 精度验证
 
-1. 准备精度测试所需图片，将[验证集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faster-RCNN/eval.zip)下载到`python/data/eval/`目录下并解压。
+**步骤1**  准备精度测试所需图片，将[验证集](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Faster-RCNN/eval.zip)下载到`python/data/eval/`目录(需创建)下并解压。
 
-2. 打开`python/pipeline/fasterrcnn_ms_dvpp.pipeline`文件，将第45行（postProcessConfigPath）配置参数改为`../models/fasterrcnn_coco2017_acc_test.cfg`。
+**步骤2**  打开`python/pipeline/fasterrcnn_ms_dvpp.pipeline`文件，将第45行（postProcessConfigPath）配置参数改为`../models/fasterrcnn_coco2017_acc_test.cfg`。
 
-3. 使用dvpp模式对图片进行推理，切换到``python/Main``目录下，执行命令：
+**步骤3**  使用dvpp模式对图片进行推理，切换到``python/Main``目录下，执行命令：
 
    ```python
    python3 main.py --img_path ../data/eval/cocodataset/val2017/ --pipeline_path ../pipeline/fasterrcnn_ms_dvpp.pipeline --model_type dvpp --infer_mode eval --ann_file ../data/eval/cocodataset/annotations/instances_val2017.json
    ```
 
-4. 因为涉及到去重处理，每种缺陷需要分开评估精度，切换到``python/Main``目录下，执行命令：
+**步骤4**  因为涉及到去重处理，每种缺陷需要分开评估精度，切换到``python/Main``目录下，执行命令：
 
    ```python
    # 验证气孔精度
@@ -205,9 +205,9 @@ python3 main.py
    
    **注**：cat_id为缺陷标签，object_name为对应缺陷名称，在 ``python/models/coco2017.names``可查看缺陷类别。
 
-## 5. 常见问题
+## 6. 常见问题
 
-### 5.1 后处理插件权限问题
+### 6.1 后处理插件权限问题
 
 运行检测 demo 和评测时都需要将生成的Faster_R-CNN后处理动态链接库的权限修改，否则将会报权限错误，如下图所示：
 
@@ -221,7 +221,7 @@ python3 main.py
 
 切换到``postprocess``目录下，修改`./build/libfasterrcnn_mindspore_post.so`文件权限为640。
 
-### 5.2 模型转换问题
+### 6.2 模型转换问题
 
 运行模型转换命名后报错：
 

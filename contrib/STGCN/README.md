@@ -51,8 +51,6 @@ SZ-Taxi数据集包含深圳市的出租车动向，包括道路邻接矩阵和�
 | scipy    | 1.13.1    |
 | numpy    | 1.24.0    |
 | pandas   |   2.2.3 |
-| google   | 3.0.0|
-|protobuf  | 3.20.2|
 |scikit-learn|1.5.2|
 
 ### 1.5 代码目录结构与说明

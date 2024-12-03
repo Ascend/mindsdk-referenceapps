@@ -6,7 +6,7 @@ include_directories(./rcfDetection)
 file(GLOB_RECURSE RCF_POSTPROCESS ${PROJECT_SOURCE_DIR}/rcfPostProcess/*cpp)
 file(GLOB_RECURSE RCF_DETECTION ${PROJECT_SOURCE_DIR}/rcfDetection/*cpp)
 set(TARGET edge_detection_picture)
-add_compile_options(-std=c++11 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
+add_compile_options(-std=c++14 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall)
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
 set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")

@@ -65,17 +65,9 @@
 
 ## 2 设置环境变量
 
-```
-# 设置环境变量（请确认install_path路径是否正确）
-
-export install_path=/usr/local/Ascend/ascend-toolkit/latest       # 默认安装路径
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH # LD_LIBRARY_PATH为lib库路径
-export ASCEND_OPP_PATH=${install_path}/opp
-
-export MX_SDK_HOME=${MX_SDK安装路径}    # MX_SDK_HOME为SDK安装路径
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/ascend-toolkit/:${LD_LIBRARY_PATH}
+```bash
+. /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh       # sdk安装路径，根据实际安装路径修改
 ```
 
 ## 3 模型转换

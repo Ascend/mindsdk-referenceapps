@@ -2,7 +2,7 @@
 
 # 离线视频推理
 
-## 1 
+## 1 介绍
 
 ### 1.1 简介
 
@@ -46,8 +46,7 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 │   └── yolov3
 |         ├── aipp_yolov3_416_416.aippconfig
 │         ├── yolov3_tf_bs1_fp16.cfg
-│         ├── coco.names
-│         └── model_conversion.sh   # 模型转换脚本
+│         └── coco.names
 ├── test                            # 需用户手动创建文件夹
 ├── run.sh
 └── README.md
@@ -55,17 +54,9 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 
 ## 2 设置环境变量
 
-mxVision SDK 环境变量:
-
-```
-`export MX_SDK_HOME=${安装路径}/mxVision `
-. ${MX_SDK_HOME}/set_env.sh
-```
-
-CANN 环境变量：
-
-```
-. ${ascend-toolkit-path}/set_env.sh     # ascend-toolkit-path: CANN 安装路径。
+```bash
+. /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh       # sdk安装路径，根据实际安装路径修改
 ```
 
 ## 3 准备模型
@@ -75,10 +66,10 @@ CANN 环境变量：
 **步骤2：** 将获取到的YOLOv3模型文件内的`.pb`文件存放至`InferOfflineVideo/models/yolov3/`下。
  
 **步骤3：** 模型转换
-在文件夹 `InferOfflineVideo/models/yolov3/` 下，执行模型转换脚本 model_conversion.sh 命令
+在文件夹 `InferOfflineVideo/models/yolov3/` 下，执行模型转换命令
 
-```
-bash model_conversion.sh
+```bash
+atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 ```
 
 执行完模型转换脚本后，会生成相应的`.om`模型文件。执行后终端输出为：
@@ -94,13 +85,13 @@ ATC run success, welcome to the next use.
 
 **步骤1：** 准备测试视频。视频流格式为264，放入 `/InferOfflineVideo/test/` 文件夹下，并修改命名为 `input.264`。
 
-**步骤2：** 修改`pipeline/regular.pipeline`文件：
+**步骤2：** 在 `/InferOfflineVideo/test/` 文件夹下拉起Live555服务。[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
 
-①：将文件中第8行的 “rtspUrl” 字段值替换为可用的 rtsp 流源地址（目前只支持264格式的rtsp流，例："rtsp://xxx.xxx.xxx.xxx:xxx/input.264", 其中xxx.xxx.xxx.xxx:xxx为ip和端口号）；
+**步骤3：** 修改`pipeline/regular.pipeline`文件：
 
-②：将所有 “deviceId” 字段值替换为实际使用的device的id值，可用的 device id 值可以使用命令：`npu-smi info` 查看
+①：将文件中第8行的 “rtspUrl” 字段值替换为可用的 rtsp 流源地址（目前只支持264格式的rtsp流，例："rtsp://xxx.xxx.xxx.xxx:xxx/input.264", 其中xxx.xxx.xxx.xxx:xxx为ip和端口号，端口号需同Live555服务的起流端口号一致）；
 
-**步骤3：** 在 `/InferOfflineVideo/test/` 文件夹下拉起Live555服务。[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
+②：将所有 “deviceId” 字段值替换为实际使用的device的id值，即文件的第4、18、29、41行，可用的 device id 值可以使用命令：`npu-smi info` 查看
 
 **步骤4：** 修改日志打印级别。打开文件 `${MX_SDK_HOME}/config/logging.conf` ，依次修改第17行、第22行的字段值为 0 ，如下所示：
 

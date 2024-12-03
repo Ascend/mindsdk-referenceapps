@@ -44,7 +44,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 **步骤2：** 将获取到的YOLOv3模型的pb文件放在`mxBaseSample/model/`下。
 
-**步骤3:** 在`mxBaseSample/model/`下执行模型转换命令
+**步骤3:**  在`mxBaseSample/model/`下执行模型转换命令
 
 ```bash
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310B1 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"

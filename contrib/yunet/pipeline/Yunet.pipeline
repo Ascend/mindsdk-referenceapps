@@ -1,7 +1,7 @@
 {
     "Yunet": {
         "stream_config": {
-            "deviceId": "1"
+            "deviceId": "0"
         },
         "mxpi_rtspsrc0": {
             "props": {
@@ -64,7 +64,7 @@
             "props": {
                 "dataSource": "mxpi_tensorinfer0",
                 "postProcessConfigPath": "./config/face_yunet.cfg",
-                "postProcessLibPath": "libtotalyunetpostprocess.so"
+                "postProcessLibPath": "libyunetpostprocess.so"
             },
             "factory": "mxpi_objectpostprocessor",
             "next": "mxpi_object2osdinstances0"
@@ -251,7 +251,7 @@
             "props": {
                 "dataSource": "mxpi_tensorinfer1",
                 "postProcessConfigPath": "./config/face_yunet.cfg",
-                "postProcessLibPath": "libtotalyunetpostprocess.so"
+                "postProcessLibPath": "libyunetpostprocess.so"
             },
             "factory": "mxpi_objectpostprocessor",
             "next": "mxpi_object2osdinstances1"
@@ -337,7 +337,7 @@
             "props": {
                 "dataSource": "mxpi_tensorinfer2",
                 "postProcessConfigPath": "./config/face_yunet.cfg",
-                "postProcessLibPath": "libtotalyunetpostprocess.so"
+                "postProcessLibPath": "libyunetpostprocess.so"
             },
             "factory": "mxpi_objectpostprocessor",
             "next": "mxpi_object2osdinstances2"

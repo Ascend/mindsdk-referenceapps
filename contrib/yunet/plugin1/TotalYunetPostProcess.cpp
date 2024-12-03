@@ -70,25 +70,25 @@ namespace MxBase {
                                                      cv::Mat& res)
     {
         auto shape = tensors[0].GetShape();
-        float width_resize_scale = (float)resizedImageInfos[0].widthResize / resizedImageInfos[0].widthOriginal;
-        float height_resize_scale = (float)resizedImageInfos[0].heightResize / resizedImageInfos[0].heightOriginal;
+        float widthResizeScale = (float)resizedImageInfos[0].widthResize / resizedImageInfos[0].widthOriginal;
+        float heightResizeScale = (float)resizedImageInfos[0].heightResize / resizedImageInfos[0].heightOriginal;
         uint32_t batchSize = shape[0];
-        uint32_t VectorNum = shape[1];
+        uint32_t vectorNum = shape[1];
 
         for (uint32_t i = 0; i < batchSize; i++) {
             std::vector <ObjectInfo> objectInfo, objectInfoSorted;
             auto dataPtr_Conf = (float *) tensors[1].GetBuffer() + i * tensors[1].GetByteSize() / batchSize;
-            for (uint32_t j = 0; j < VectorNum; j++) {
+            for (uint32_t j = 0; j < vectorNum; j++) {
                 float* begin_Conf = dataPtr_Conf + j * 2;
                 float conf = *(begin_Conf + 1);
                 
                 if (conf> confThresh_) {
                     ObjectInfo objInfo;
                     objInfo.confidence = j;
-                    objInfo.x0 = res.at<float>(j, LEFTTOPX) * IMAGE_WIDTH / width_resize_scale;
-                    objInfo.y0 = res.at<float>(j, LEFTTOPY) * IMAGE_HEIGHT / height_resize_scale;
-                    objInfo.x1 = res.at<float>(j, RIGHTTOPX) * IMAGE_WIDTH / width_resize_scale;
-                    objInfo.y1 = res.at<float>(j, RIGHTTOPY) * IMAGE_HEIGHT / height_resize_scale;
+                    objInfo.x0 = res.at<float>(j, LEFTTOPX) * IMAGE_WIDTH / widthResizeScale;
+                    objInfo.y0 = res.at<float>(j, LEFTTOPY) * IMAGE_HEIGHT / heightResizeScale;
+                    objInfo.x1 = res.at<float>(j, RIGHTTOPX) * IMAGE_WIDTH / widthResizeScale;
+                    objInfo.y1 = res.at<float>(j, RIGHTTOPY) * IMAGE_HEIGHT / heightResizeScale;
                     objInfo.classId = RECTANGLE_COLOR;
                     
                     objectInfo.push_back(objInfo);
@@ -103,10 +103,10 @@ namespace MxBase {
                 objectInfo[j].confidence = conf;
                 objectInfoSorted.push_back(objectInfo[j]);
 
-                for (int k = 0; k < KEYPOINTNUM; k++)
-                {
-                    float x = res.at<float>(keypoint_Pos, RECTANGLEPOINT + k * DIM) * IMAGE_WIDTH / width_resize_scale;
-                    float y = res.at<float>(keypoint_Pos, RECTANGLEPOINT + k * DIM + 1) * IMAGE_HEIGHT / height_resize_scale;
+                for (int k = 0; k < KEYPOINTNUM; k++) {
+                    float x = res.at<float>(keypoint_Pos, RECTANGLEPOINT + k * DIM) * IMAGE_WIDTH / widthResizeScale;
+                    float y = res.at<float>(keypoint_Pos, RECTANGLEPOINT + k * DIM + 1) *
+                              IMAGE_HEIGHT / heightResizeScale;
                     // use [(x-2,y-2),(x+2,y+2)] object rectangle to draw keypoints
                     ObjectInfo objInfo;
                     objInfo.x0= x - POINT_SIZE;
@@ -225,7 +225,8 @@ namespace MxBase {
      * @param resize_scale_factor: The factor of min(WidthOriginal/WidthResize, HeightOriginal/HeightResize)
      * @param boxes: The matrix which contains detection box coordinates(x0,y0,x1,y1), shape[21824,4]
      */
-    cv::Mat TotalYunetPostProcess::decode_for_loc(cv::Mat &loc, cv::Mat &prior) {
+    cv::Mat TotalYunetPostProcess::decode_for_loc(cv::Mat &loc, cv::Mat &prior)
+    {
         cv::Mat loc_first = loc.colRange(0, 2);
         cv::Mat loc_last = loc.colRange(2, 4);
         cv::Mat prior_first = prior.colRange(0, 2);
@@ -240,12 +241,14 @@ namespace MxBase {
         boxes2 = boxes2 + boxes1;
 
         cv::Mat boxes3;
-        for (int i = 0; i < KEYPOINTNUM; i++)
-        {
+        for (int i = 0; i < KEYPOINTNUM; i++) {
             cv::Mat singlepoint = facepoint.colRange(i * 2, (i + 1) * 2);
             singlepoint = prior_last + (singlepoint * VARIANCE[0]).mul(prior_first);
-            if (i == 0) boxes3 = singlepoint;
-            else cv::hconcat(boxes3, singlepoint, boxes3);
+            if (i == 0) {
+                boxes3 = singlepoint;
+            } else {
+                cv::hconcat(boxes3, singlepoint, boxes3);
+            }
         }
 
         cv::Mat boxes;

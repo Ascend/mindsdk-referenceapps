@@ -1,22 +1,16 @@
-## yunet实时人脸检测
+# 实时人脸检测
 
-## 1介绍
+## 1 介绍
+
+### 1.1 简介
 
 yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可视化呈现。输入3路视频，对其进行推理，输出推理结果。
 
-### 1.1 支持的产品
+技术实现流程图如下：
 
-本产品以昇腾310（推理）卡为硬件平台。
+![process](images/process.png)
 
-### 1.2 支持的版本
-
-CANN：7.0.0
-
-SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
-
-### 1.3 软件方案介绍
-
-表1.1 系统方案各子系统功能描述：
+表 1.1 系统方案各子系统功能描述：
 
 | 序号 | 子系统         | 功能描述                                                     |
 | ---- | -------------- | ------------------------------------------------------------ |
@@ -31,9 +25,26 @@ SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 | 9    | OSD可视化插件  | 实现对视频流的每一帧图像进行绘制。                           |
 | 10   | 视频编码插件   | 用于将OSD可视化插件输出的图片进行视频编码，输出视频。        |
 
+### 1.2 支持的产品
 
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
-### 1.4 代码目录结构与说明
+### 1.3 支持的版本
+
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+
+### 1.4 三方依赖
+
+| 软件名称 | 版本  | 说明                           | 使用教程                                                     |
+| -------- | ----- | ------------------------------ | ------------------------------------------------------------ |
+| live555  | 1.09  | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| ffmpeg   | 4.2.1 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
+
+### 1.5 代码目录结构说明
 
 本项目名为yunet实时人脸检测，项目目录如下所示：
 
@@ -42,242 +53,150 @@ SDK：mxVision 5.0.0（可通过cat SDK目录下的 version.info 查看）
 ├── config
 │   ├── face_yunet.cfg      # yunet配置文件
 │   └── Yunet.aippconfig    # 模型转换aipp配置文件
-├── kpmain.py	# 关键点信息输出代码
+├── images
+│   ├── error1.png
+│   ├── error2.png
+│   └── process.png
 ├── main.py		# 单路视频输出代码
 ├── test.py		# 三路后处理性能测试代码
-├── models
-│   └── Yunet.onnx 
+├── models      # 用于存放模型，需用户自己创建目录
 ├── pipeline
 │   ├── InferTest.pipeline	# 三路后处理性能测试pipeline
-│   ├── PluginTest.pipeline	# 原方案插件性能测试pipeline
-│   ├── KPYunet.pipeline	# 关键点信息输出pipeline
 │   └── Yunet.pipeline   	# 单路视频输出pipeline
 ├── plugin
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   ├── YunetPostProcess.cpp	# 人脸检测框后处理代码
 │   └── YunetPostProcess.h
-├── plugin2
-│   ├── build.sh
-│   ├── CMakeLists.txt
-│   ├── KPYunetPostProcess.cpp	# 人脸关键点后处理代码
-│   ├── KPYunetPostProcess.h
-├── plugin3
+├── plugin1
 │   ├── build.sh
 │   ├── CMakeLists.txt
 │   ├── TotalYunetPostProcess.cpp	# 人脸检测框与关键点后处理代码（以供可视化）
 │   └── TotalYunetPostProcess.h
+├── test                        # 需用户自己创建目录
 ├── README.md
 └── run.sh
 ````
 
-
-
-### 1.5 技术实现流程图
-
-![process](images/process.png)
-
-### 1.6 特性及适用场景
+### 1.6 相关约束
 
 本项目适用于单人及多人正脸视频。对于人脸侧面视频，可以将人脸位置正确标出，但关键点信息标注准确率较低。本项目可以适用于仰卧人脸，但不适用于侧卧人脸。
 
-特别地，在无人脸的情况下，我们在视频左上角设置了红色提示点。当左上角像素出现红色时，说明此场景没有检测出人脸。（下面给出该特殊点检测框的数据信息）
+另外，本项目要求输入视频为 1920*1080 25fps 视频，不支持25帧率以上视频。
 
-````
-"MxpiObject":[{"classVec":[{"classId":3,"className":"","confidence":0,"headerVec":[]}],"x0":0,"x1":0,"y0":0,"y1":0}]
-````
-另外，本项目要求输入视频为1920*1080 25fps视频，不支持25帧率以上视频。
+## 2 设置环境变量
 
-
-
-
-## 2 环境依赖
-
-推荐系统为ubuntu  18.04,环境软件和版本如下：
-
-| 软件名称            | 版本    | 说明                          | 获取方式                                                  |
-| ------------------- |-------| ----------------------------- | :-------------------------------------------------------- |
-| MindX SDK           | 5.0.0 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
-| ubuntu              | 18.04 | 操作系统                      | 请上ubuntu官网获取                                        |
-| Ascend-CANN-toolkit | 7.0.0 | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial) |
-
-
-
-在编译运行项目前，需要设置环境变量：
-
-MindXSDK 环境变量：
-
-```
-. ${SDK-path}/set_env.sh
+```bash
+. /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh       # sdk安装路径，根据实际安装路径修改
 ```
 
-CANN 环境变量：
+## 3 准备模型
 
-```
-. ${ascend-toolkit-path}/set_env.sh
-```
+**步骤1：** yunet模型下载。本项目中使用的模型是yunet模型，onnx模型可以直接下载，[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/yunet/yunet.onnx)
 
-- 环境变量介绍
+**步骤2：** 将获取到的文件存放至样例项目所在目录`/models/`下
 
-```
-SDK-path: mxVision SDK 安装路径
-ascend-toolkit-path: CANN 安装路径。
-```
-
-
-
-
-## 3 软件依赖说明
-
-
-
-| 软件名称 | 版本  | 说明                           | 使用教程                                                     |
-| -------- | ----- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.09  | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
-| ffmpeg   | 4.2.1 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
-
-
-设置视频源，此处用rtsp拉流，将视频源转化为.264格式。
+**步骤3：** 模型转换。`cd`到`models`文件夹，使用模型转换工具ATC将onnx模型转换为om模型，命令如下：
 
 ````
-ffmpeg -i xxx.mp4 -vcodec h264 -bf 0 -g 25 -r 25 -s 1920*1080 -an -f h264 xxx.264
+atc --framework=5 --model=yunet.onnx --output=yunet --input_format=NCHW --input_shape="input:1,3,120,160" --log=debug --soc_version=Ascend310P3 --insert_op_conf=../config/Yunet.aippconfig
 ````
 
-将转化后的.264视频用live555产生rtsp拉流。
-
-由于本项目是支持端对端3路推理，故设置3个视频源，请使用者自行将pipeline中的对应位置修改为自己所使用的的服务器和文件名。
-
-
-
-## 4 模型转化
-
-本项目中使用的模型是yunet模型，onnx模型可以直接[下载](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/yunet/yunet.onnx)。下载后使用模型转换工具ATC将onnx模型转换为om模型，模型转换工具相关介绍参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)
-
-模型转换步骤如下：
-
-按照2环境依赖设置环境变量
-
-`cd`到`models`文件夹，运行
-
-````
-atc --framework=5 --model=yunet.onnx --output=yunet --input_format=NCHW --input_shape="input:1,3,120,160" --log=debug --soc_version=Ascend310 --insert_op_conf=../config/Yunet.aippconfig
-````
-
-执行该命令后会在指定输出.om模型路径生成项目指定模型文件`yunet.om`。若模型转换成功则输出：
+执行该命令后会在`/models/`下生成项目指定模型文件`yunet.om`。若模型转换成功则输出：
 
 ```
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-aipp文件配置如下：
+## 4 编译与运行
 
-```
-aipp_op {
-    related_input_rank : 0
-    src_image_size_w : 160
-    src_image_size_h : 120
-    crop : false
-    aipp_mode: static
-    input_format : YUV420SP_U8
-    csc_switch : true
-    rbuv_swap_switch : false
-    matrix_r0c0 : 256
-    matrix_r0c1 : 454
-    matrix_r0c2 : 0
-    matrix_r1c0 : 256
-    matrix_r1c1 : -88
-    matrix_r1c2 : -183
-    matrix_r2c0 : 256
-    matrix_r2c1 : 0
-    matrix_r2c2 : 359
-    input_bias_0 : 0
-    input_bias_1 : 128
-    input_bias_2 : 128
-    mean_chn_0 : 0
-    mean_chn_1 : 0
-    mean_chn_2 : 0
-    min_chn_0 : 0.0
-    min_chn_1 : 0.0
-    min_chn_2 : 0.0
-    var_reci_chn_0 : 1.0
-    var_reci_chn_1 : 1.0
-    var_reci_chn_2 : 1.0
-}
+**步骤1：** 准备测试视频。视频流格式为264，放入 `test/` 文件夹下。
+
+**步骤2：** 在 `test/` 文件夹下拉起Live555服务。[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
+
+**步骤3：** 修改`pipeline/Yunet.pipeline`文件：
+
+①：将文件中第8、196、282行的 “rtspUrl” 字段值替换为可用的 rtsp 流源地址（目前只支持264格式的rtsp流，例："rtsp://xxx.xxx.xxx.xxx:xxx/xxx.264", 其中xxx.xxx.xxx.xxx:xxx为ip和端口号，端口号需同Live555服务的起流端口号一致，xxx.264为待测视频流文件名）；
+
+②：将文件中第4行的 “deviceId” 字段值替换为实际使用的device的id值，可用的 device id 值可以使用命令：`npu-smi info` 查看
+
+注意：由于本项目是支持端对端3路推理，故需设置3个视频源，请使用者自行将pipeline中的所有对应位置修改为自己所使用的源流地址和文件名。
+
+**步骤4：** 编译。在项目根目录下，先执行命令`bash ${MX_SDK_HOME}/operators/opencvosd/generate_osd_om.sh`编译opencv_osd算子，然后再执行命令`bash build.sh`
+
+**步骤5：** 拷贝so文件至MindXSDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
+
+```bash
+chmod 640 plugin/build/libyunetpostprocess.so
+cp plugin/build/libyunetpostprocess.so ${MX_SDK_HOME}/lib/modelpostprocessors/
 ```
 
+**步骤6：** 运行。在项目根目录下，执行命令`bash run.sh`，即可在根目录下得到输出结果`result.264`。
 
+使用`ctrl + c`终止程序运行。
 
-## 5 编译运行
+## 5 性能验证
 
-`main.py`：用来生成端对端单路推理的可视化视频，以提供单路推理结果可视化的应用样例
+在第 4 节的基础上，继续进行如下步骤
 
-`kpmain.py`：用来生成单路关键点后处理的数据结果（用来确保关键点类型后处理的实现成功，关键点效果看main.py的可视化结果）
+**步骤1：** 修改`pipeline/InferTest.pipeline`文件。操作方式参考[第4节步骤3](#4-编译与运行)
 
-（`kpmain.py`在此项目中不是必须的，当前没有keypoint类型osd支持下，仅给出单路pipeline输出数据信息供参考）
+**步骤2：** 拷贝so文件至MindXSDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
 
-`test.py`：用来输出端对端三路推理的后处理结果，以检测三路推理性能是否达标
+```bash
+chmod 640 plugin1/build/libtotalyunetpostprocess.so
+cp plugin1/build/libtotalyunetpostprocess.so ${MX_SDK_HOME}/lib/modelpostprocessors/
+```
 
-需要注意的是，本项目后处理插件支持三路视频推理的后处理，但由于mxVision-2.0.4暂不支持三路后处理输出，所以此处采取单路视频可视化和三路推理性能检测两部分，分别提供可视化应用与性能检测的功能。
+**步骤3：** 性能测试。修改根目录下`run.sh`文件中第32行，由`python3 main.py`改为`python3 test.py`，再次在根目录下运行`bash run.sh`，即可获得`libtotalyunetpostprocess.so`的性能结果。
 
-1.编译后处理插件
+因为性能检测结果实时输出，使用者在`test.py`运行过程中可以实时查看检测结果，并且在需要时可以在输出帧率后立刻按`ctrl + c`终止程序运行，以查看帧率。
 
-`cd`到`plugin`目录，`mkdir`新建文件夹`build`
+## 6 常见问题
 
-`cd`到`build`，运行
+### 6.1 视频解码器负荷过高，报内存相关错误
 
-````
-cmake ..
-make -j
-make install
-````
-
-将生成的模型后处理so拷贝至MindXSDK安装路径的`lib/modelpostprocessors`目录。如果权限问题，`cd`到MindXSDK安装路径的`lib/modelpostprocessors`目录，将`libyunetpostprocess.so`的权限更改为`640`。
-
-对于`plugin2`、`plugin3`目录也同样处理。
-
-2.`config/face_yunet.cfg` 确认权限`640`。
-
-3.运行`main.py`程序
-
-`cd`到根目录，运行
-
-````
-bash run.sh
-````
-
-最后会得到`result.264`即为输出结果
-
-
-
-## 6 性能检测
-修改`run.sh`中
-````
-python3 main.py
-````
-改为
-````
-python3 test.py
-````
-运行
-````
-bash run.sh
-````
-测试插件`libtotalyunetpostprocess.so`的性能：
-
-![fps](images/fps2.png)
-
-因为性能检测结果实时输出，使用者在`test.py`运行过程中可以实时查看检测结果，并且在需要时，可以在输出帧率后立刻按CTRL+C停止，以查看帧率。
-性能检测结果如上。本项目三路推理的3秒平均帧率在74.0-75.0之间，满足端对端三路25fps的需求。
-
-
-
-
-## 7 常见问题
+**问题描述：**
 
 若视频解码器负荷过高则会出现以下问题：
+
 ![error1](images/error1.png)
 ![error2](images/error2.png)
 
+**解决方案：**
+
 导致此问题的可能原因为：视频帧率过高、视频尺寸过大或解码器正在同时解码过多其他视频
-解决方案：确保三路视频都为1920*1080 25fps并且减少其它任务的运行
+
+解决方案：确保三路视频都为 1920*1080 25fps 并且减少其它任务的运行
+
+### 6.2 无法打开视频流
+
+**问题描述：**
+
+在运行的过程中，无法打开视频流
+
+**解决方案：**
+
+pipeline中需要配置多路rtsp视频地址，完善pipeline中的配置项
+
+### 6.3 未编译opencv_osd算子
+
+**问题描述：**
+
+未编译opencv_osd算子，运行过程中报错`Realpath parsing failed`
+
+**解决方案：**
+
+在项目根目录下，执行命令`bash ${MX_SDK_HOME}/operators/opencvosd/generate_osd_om.sh`编译opencv_osd算子
+
+### 6.4 推流失败
+
+**问题描述：**
+
+运行过程中报错`streamInstance GetResult return nullptr.`
+
+**解决方案：**
+
+检查pipeline中的配置项中rtsp流地址是否正确，如确认正确则重新起流(可能由于某些原因导致已启动的live555服务不可用)

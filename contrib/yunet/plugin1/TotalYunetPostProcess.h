@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-#ifndef TotalYunet_POST_PROCESS_H
-#define TotalYunet_POST_PROCESS_H
+#ifndef TOTAL_YUNET_POST_PROCESS_H
+#define TOTAL_YUNET_POST_PROCESS_H
 #include "MxBase/PostProcessBases/ObjectPostProcessBase.h"
 #include "MxBase/CV/ObjectDetection/Nms/Nms.h"
 #include "opencv2/opencv.hpp"
-#define DEFAULT_OBJECT_CONF_TENSOR  1
-#define DEFAULT_OBJECT_INFO_TENSOR  0
-#define DEFAULT_IOU_THRESH  0.3
-#define DEFAULT_CONFIDENCE_THRESH  0.9
+
+constexpr uint32_t DEFAULT_OBJECT_CONF_TENSOR = 1;
+constexpr uint32_t DEFAULT_OBJECT_INFO_TENSOR = 0;
+constexpr float DEFAULT_IOU_THRESH = 0.3;
+constexpr float DEFAULT_CONFIDENCE_THRESH = 0.9;
 
 namespace MxBase {
-    bool operator<(const ObjectInfo &a, const ObjectInfo &b) {
+    bool operator<(const ObjectInfo &a, const ObjectInfo &b)
+    {
         return a.confidence < b.confidence;
     }
-        
+
     class TotalYunetPostProcess : public ObjectPostProcessBase {
     public:
         TotalYunetPostProcess() = default;

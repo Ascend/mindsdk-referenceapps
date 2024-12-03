@@ -19,8 +19,7 @@ current_folder="$( cd "$(dirname "$0")" ;pwd -P )"
 
 SAMPLE_FOLDER=(
 /plugin/
-/plugin2/
-/plugin3/
+/plugin1/
 )
 
 

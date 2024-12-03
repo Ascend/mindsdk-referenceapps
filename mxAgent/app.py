@@ -26,12 +26,13 @@ tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 def generate(
     user_message: str,
     chat_history: List[Tuple[str, str]],
-    system_prompt: str,
+    system_prompt: str = "",
     max_new_tokens: int = 1024,
     temperature: float = 0.6,
     top_p: float = 0.9,
     top_k: int = 50,
     repetition_penalty: float = 1.2,
+    stream: bool = False
 ) -> Iterator[str]:
     # 限制历史记录的长度
     print(user_message)
@@ -41,7 +42,7 @@ def generate(
     conversation = []
     if system_prompt:
         conversation.append({"role": "system", "content": system_prompt})
-    conversation.append(user_message)
+    conversation.append({"role": "user", "content": user_message})
 
 
     input_ids = tokenizer.apply_chat_template(conversation, return_tensors="pt")
@@ -49,11 +50,8 @@ def generate(
         input_ids = input_ids[:, -MAX_INPUT_TOKEN_LENGTH:]
         gr.Warning(f"Trimmed input from conversation as it was longer than {MAX_INPUT_TOKEN_LENGTH} tokens.")
     input_ids = input_ids.to(model.device)
-
-    streamer = TextIteratorStreamer(tokenizer, timeout=10.0, skip_prompt=True, skip_special_tokens=True)
     generate_kwargs = dict(
         {"input_ids": input_ids},
-        streamer=streamer,
         max_new_tokens=max_new_tokens,
         do_sample=True, 
         top_p=top_p,
@@ -62,7 +60,18 @@ def generate(
         num_beams=1,
         repetition_penalty=repetition_penalty,
     )
+    if stream:
+        return stream_generate(generate_kwargs)
     
+    output_ids = model.generate(generate_kwargs)
+    output_ids = [
+        output_ids[len(input_ids):] for input_ids, output_ids in zip(input_ids, output_ids)
+    ]
+    return tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0]
+
+def stream_generate(generate_kwargs):
+    streamer = TextIteratorStreamer(tokenizer, timeout=10.0, skip_prompt=True, skip_special_tokens=True)
+    generate_kwargs['streamer'] = streamer
     t = Thread(target=model.generate, kwargs=generate_kwargs)
     t.start()
 
@@ -75,6 +84,7 @@ def generate(
 chat_interface = gr.ChatInterface(
     fn=generate,
     stop_btn=None,
+    type="messages"
     examples=[
         ["作为程序员该如何防止脱发？"],
         ["请给我简短的介绍一下python语言的历史?"],

@@ -30,14 +30,6 @@ function check_env() {
     else
       echo "MX_SDK_HOME set as ${MX_SDK_HOME}, ready."
     fi
-
-    # check FFmpeg env
-    if [ ! "${FFMPEG_HOME}" ]; then
-      env_ready=false
-      echo "please set FFMPEG_HOME path into env."
-    else
-      echo "FFMPEG_HOME set as ${FFMPEG_HOME}, ready."
-    fi
 }
 
 function export_env() {

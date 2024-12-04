@@ -97,10 +97,9 @@ if __name__ == '__main__':
     if len(os.listdir(data_path)) == 0:
         raise RuntimeError("No Input Image!")
 
-    for index, data in tqdm(enumerate(sorted(os.listdir(data_path)))):
+    for index, data in tqdm(enumerate(sorted(os.listdir(data_path))), disabled=True):
         image_path = os.path.join(data_path, data)
 
-        print("====", image_path)
         infer(image_path, streamManagerApi)
 
         while True:  # 轮询, 等待异步线程

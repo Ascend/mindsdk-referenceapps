@@ -8,6 +8,7 @@ set(OUTPUT_NAME "multiChannelVideoReasoner")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")
+set(FFMPEG_HOME "$ENV{FFMPEG_HOME}")
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -15,6 +16,7 @@ include_directories(
         ${MX_SDK_HOME}/opensource/include
         ${MX_SDK_HOME}/opensource/include/opencv4
         ${MX_SDK_HOME}/include/MxBase/postprocess/include
+        ${FFMPEG_HOME}/include
         #该处为ascend-toolkit的实际安装位置，默认为/usr/local下指向对应架构include的软连接
         /usr/local/Ascend/ascend-toolkit/latest/include
 )
@@ -23,6 +25,7 @@ link_directories(
         ${MX_SDK_HOME}/lib
         ${MX_SDK_HOME}/opensource/lib
         ${MX_SDK_HOME}/lib/modelpostprocessors
+        ${FFMPEG_HOME}/lib
 )
 
 add_executable(${OUTPUT_NAME} main.cpp

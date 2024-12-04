@@ -25,6 +25,8 @@
 | live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 | ffmpeg   | 4.2.1 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
 
+注：live555和ffmpeg需要用户到相关网址下载源码编译安装。
+
 ### 1.5 代码目录结构说明
 
 ```
@@ -72,6 +74,7 @@
 ```bash
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh       # sdk安装路径，根据实际安装路径修改
+export FFMPEG_HOME=/usr/local/ffmpeg            # ffmpeg默认安装路径，根据实际安装路径修改
 ```
 
 ## 3 准备模型
@@ -117,4 +120,6 @@ APP_ERROR ret = configUtil.LoadConfiguration("${MX_SDK_HOME}/config/logging.conf
 
 **步骤4：** 编译。在项目根目录下，执行命令`bash build.sh`，编译成功会在根目录下生成`multiChannelVideoReasoner`可执行文件
 
-**步骤5：** 运行。在项目根目录下，执行命令`bash run.sh`，会有打屏日志显示检测结果，同时会将目标检测结果保存在工程目录下`result`中。
+**步骤5：** 运行。在项目根目录下，执行命令`bash run.sh`
+
+**步骤6：** 查看结果。在执行`bash run.sh`后会有打屏日志显示检测结果，同时会将目标检测结果保存在工程目录下`result`中。手动执行 `ctrl + C` 结束程序

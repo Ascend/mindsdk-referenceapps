@@ -141,10 +141,10 @@ python3 msame.py --model ./test/yolox_pre_post.om --input test/test1.npy --outpu
 python3 msame.py --model ./test/bert_text_classification.om --input test/test2.npy,test/test2.npy --output test --outfmt TXT --loop 2
 ```
 
-**步骤3：**  查看执行结果。执行成功后，在test目录下生成 `.txt` 或 `.bin` 输出文件，文件类型取决于命令中的 `--outfmt`参数配置    
+**步骤3：**  查看结果。执行成功后，在test目录下生成 `.txt` 或 `.bin` 输出文件，文件类型取决于命令中的 `--outfmt`参数配置    
 
 ## 5 常见问题
-### 6.1 存储为txt格式时可能会出现第六位开始的误差
+### 5.1 存储为txt格式时可能会出现第六位开始的误差
 
 **问题描述：**
 
@@ -159,7 +159,7 @@ python3 msame.py --model ./test/bert_text_classification.om --input test/test2.n
 
 可以忽略此问题。
 
-### 6.2 模型需要的输入与提供的数据不一致   
+### 5.2 模型需要的输入与提供的数据不一致
 
 **问题描述：**
 

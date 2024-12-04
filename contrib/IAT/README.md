@@ -68,10 +68,12 @@ python3 main.py
 
 即可在./data/目录下得到推理后的结果result.png文件.
 
-**步骤2** 精度测试
+**步骤2** 
+
+精度测试
 
 下载LOLv1数据集，在[论文地址](https://daooshee.github.io/BMVC2018website/)Download Links章节下载LOL数据集。
-将数据集解压后将测试集目录(eval15)放到本项目./data/文件夹下,如下图所示:
+将数据集解压后将其中的测试集目录(eval15)和文件放到本项目./data/文件夹下,如下图所示:
 
 ```
   ├── data		  
@@ -80,9 +82,7 @@ python3 main.py
   		├──low
 ```
 
-**步骤5** （修改主函数并运行）
-
-切换到项目环境下，将main.py中的主函数改为调用test_precision()，修改如下:
+切换到项目根目录下，将main.py中的主函数改为调用test_precision()，修改如下:
 
 ```
 #142行修改为 test_precision()

@@ -157,6 +157,7 @@ def extract_query_feature(queryPath, streamApi):
                 tensorPackage.ParseFromString(inferResult[0].messageBuf)
                 featureFromTensor = np.frombuffer(tensorPackage.tensorPackageVec[0].tensorVec[0].dataStr,
                                                   dtype=np.float32)
+                featureFromTensor = featureFromTensor.copy()
                 cv2.normalize(src=featureFromTensor, dst=featureFromTensor, norm_type=cv2.NORM_L2)
                 queryFeatures.append(featureFromTensor.tolist())
             else:
@@ -277,6 +278,7 @@ def compute_feature_distance(objectList, featureList, queryFeatures):
             detectedFeature = \
                 np.frombuffer(featureList.tensorPackageVec[detectedItemIndex - filterImageCount].tensorVec[0].dataStr,
                               dtype=np.float32)
+            detectedFeature = detectedFeature.copy()
             cv2.normalize(src=detectedFeature, dst=detectedFeature, norm_type=cv2.NORM_L2)
             detectedPersonFeature.append(detectedFeature.tolist())
 

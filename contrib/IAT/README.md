@@ -3,7 +3,7 @@
 ## 1、 介绍
 
 ### 1.1 简介
-基于 MindX SDK 实现 IAT 模型的推理，在 LOL 数据集上达到 $PSNR\ge$23, $SSIM\ge 0.8$, 并把可视化结果保存到本地，达到预期的功能和精度要求。
+基于昇腾硬件和MindX SDK 实现 IAT 模型的推理。
 
 ### 1.2 支持的产品
 
@@ -40,12 +40,13 @@
 
 **步骤1** 
 
-本文提供已转换好的onnx模型：[IAT_lol-sim.onnx](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/IAT/IAT_lol-sim.onnx)
-下载后放到项目目录的models文件夹
+原始pth模型源码[地址](https://github.com/cuiziteng/illumination-adaptive-transformer)
+本文提供已从pth模型转换好的onnx模型直接使用：[IAT_lol-sim.onnx](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/IAT/IAT_lol-sim.onnx)
+下载后放到项目根目录的models文件夹下
 
 **步骤2** 
 
-将模型转换为om模型，在models目录下，执行以下命令生成om模型
+将模型转换为om模型，在models文件夹下，执行以下命令生成om模型
 ```
 atc --framework=5 --model=./IAT_lol-sim.onnx --input_shape="input_1:1,3,400,600" --output=IAT_lol-sim --soc_version=Ascend310P3
 ```
@@ -66,7 +67,7 @@ ATC run success, welcome to the next use.
 python3 main.py
 ```
 
-即可在./data/目录下得到推理后的结果result.png文件.
+即可在./data/文件夹下得到推理后的结果result.png文件.
 
 **步骤2** 
 
@@ -80,7 +81,11 @@ python3 main.py
   ├── data		  
   	├──eval15  	# 精度测试数据集
   		├──high
+      	├──xx.png
+        ├──...
   		├──low
+        ├──xx.png
+        ├──...
 ```
 
 切换到项目根目录下，将main.py中的主函数改为调用test_precision()，修改如下:

@@ -39,7 +39,7 @@ void RcfDetection::SetRcfPostProcessConfig(const InitParam &initParam,
     configData.SetJsonValue("MODEL_TYPE", std::to_string(initParam.modelType));
     configData.SetJsonValue("INPUT_TYPE", std::to_string(initParam.inputType));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
-    auto jsonStr = configData.GetCfgJson().serialize();
+    auto jsonStr = configData.GetCfgJson();
     config["postProcessConfigContent"] = jsonStr;
 }
 
@@ -57,11 +57,6 @@ APP_ERROR RcfDetection::Init(const InitParam &initParam)
         return ret;
     }
     dvppWrapper_ = std::make_shared<MxBase::DvppWrapper>();
-    ret = dvppWrapper_->Init();
-    if (ret != APP_ERR_OK) {
-        LogError << "DvppWrapper init failed, ret=" << ret << ".";
-        return ret;
-    }
     model_ = std::make_shared<MxBase::ModelInferenceProcessor>();
     ret = model_->Init(initParam.modelPath, modelDesc_);
     if (ret != APP_ERR_OK) {
@@ -86,7 +81,6 @@ APP_ERROR RcfDetection::Init(const InitParam &initParam)
 
 APP_ERROR RcfDetection::DeInit()
 {
-    dvppWrapper_->DeInit();
     model_->DeInit();
     post_->DeInit();
     MxBase::DeviceManager::GetInstance()->DestroyDevices();

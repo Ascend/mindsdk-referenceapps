@@ -20,13 +20,13 @@
 #include "MxStream/StreamManager/MxStreamManager.h"
 
 namespace {
-bool signalRecieved = false;
+bool g_signalRecieved = false;
 }
 
 static void SigHandler(int signal)
 {
     if (signal == SIGINT) {
-        signalRecieved = true;
+        g_signalRecieved = true;
     }
 }
 
@@ -49,14 +49,14 @@ APP_ERROR TestInferOfflineVideo()
     }
     signal(SIGINT, SigHandler);
 
-    while (!signalRecieved) {
+    while (!g_signalRecieved) {
         MxStream::MxstDataOutput* output = mxStreamManager.GetResult("inferofflinevideo", 0);
         if (output->errorCode != APP_ERR_OK) {
             LogInfo << "Failed to get pipeline output, ret = " << output->errorCode;
             mxStreamManager.DestroyAllStreams();
             return output->errorCode;
         }
-        std::string result = std::string((char *)output->dataPtr, output->dataSize);
+        std::string result((char *)output->dataPtr, output->dataSize);
         LogInfo << "Results:" << result << "\n\n";
     }
 

@@ -1,0 +1,43 @@
+ARG BASE_VERSION
+ARG BASE=ascendbase-infer:$BASE_VERSION
+FROM $BASE
+ARG CHIP=all
+WORKDIR /tmp
+COPY . ./
+# 1.驱动路径环境变量设置
+ARG ASCEND_BASE=/usr/local/Ascend
+ENV LD_LIBRARY_PATH=\
+$ASCEND_BASE/driver/lib64:\
+$ASCEND_BASE/driver/lib64/common:\
+$ASCEND_BASE/driver/lib64/driver:\
+$LD_LIBRARY_PATH
+# 2. CANN Toolkit安装
+ARG TOOLKIT_PKG
+ARG TOOLKIT_PATH=$ASCEND_BASE/ascend-toolkit/latest
+
+# 安装Toolkit
+RUN mkdir -p $ASCEND_BASE/driver && \
+    cp version.info $ASCEND_BASE/driver/ && \
+    cp ascend_install.info /etc/ && \
+    if [ "$CHIP" != "all" ]; \
+    then \
+        CHIPOPTION="--chip=$CHIP"; \
+    else \
+        CHIPOPTION=""; \
+    fi && \
+    chmod +x $TOOLKIT_PKG && \
+    ./$TOOLKIT_PKG --quiet --install --install-path=$ASCEND_BASE \
+    --install-for-all $CHIPOPTION && \
+    rm -f $TOOLKIT_PKG && \
+    rm -rf $ASCEND_BASE/driver && \
+    rm -f /etc/ascend_install.info
+
+ENV GLOG_v=2 \
+    LD_LIBRARY_PATH=$TOOLKIT_PATH/runtime/lib64:$LD_LIBRARY_PATH \
+    TBE_IMPL_PATH=$TOOLKIT_PATH/opp/op_impl/built-in/ai_core/tbe \
+    PATH=$TOOLKIT_PATH/atc/ccec_compiler/bin:$TOOLKIT_PATH/atc/bin:$PATH \
+    ASCEND_OPP_PATH=$TOOLKIT_PATH/opp \
+    ASCEND_AICPU_PATH=$TOOLKIT_PATH
+ENV PYTHONPATH=$TBE_IMPL_PATH:$PYTHONPATH
+
+RUN rm -rf ./*

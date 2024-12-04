@@ -94,6 +94,9 @@ python3 main.py
 python3 main.py
 ```
 
-即可得到精度测试结果,测试结果如下：
+可得到精度测试结果,屏幕输出类似如下信息：
 
-![模型计算量](images/精度测试.jpeg)
+```
+PSNR:  XX.XXXXXX
+SSIM:  XX.XXXXXX
+```

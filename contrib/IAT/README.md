@@ -59,13 +59,17 @@ ATC run success, welcome to the next use.
 
 ## 4、 运行
 
+**步骤1**
 将要推理的test.png图片放到本项目./data/文件夹下，执行以下命令:
 
 ```
 python3 main.py
 ```
 
-即可在./data/文件夹下得到推理后的结果result.png文件.
+**步骤2**
+
+查看结果
+运行命令后即可在./data/文件夹下得到推理后的结果result.png文件.
 
 ## 5、 精度验证
 
@@ -99,7 +103,10 @@ python3 main.py
 python3 main.py
 ```
 
-可得到精度测试结果,屏幕输出类似如下信息：
+**步骤3**
+
+查看结果
+运行后可得到精度测试结果,屏幕输出类似如下信息：
 
 ```
 PSNR:  XX.XXXXXX

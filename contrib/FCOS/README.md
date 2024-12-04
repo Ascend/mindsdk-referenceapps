@@ -36,9 +36,7 @@
 本项目名为FCOS目标检测，项目的目录如下所示：
 
 ```
-├── build.sh
 ├── colorlist.txt
-├── evaluate.py
 ├── image
 │   ├── image1.png
 │   └── image2.png

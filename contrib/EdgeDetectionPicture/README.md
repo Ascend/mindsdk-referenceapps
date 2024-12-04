@@ -38,8 +38,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 ├── build.sh
 ├── main.cpp
 ├── README.md
-├── CMakeLists.txt
-└── License
+└── CMakeLists.txt
 ```
 
 ## 2 设置环境变量

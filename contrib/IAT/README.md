@@ -59,8 +59,6 @@ ATC run success, welcome to the next use.
 
 ## 4、 运行
 
-**步骤1** 
-
 将要推理的test.png图片放到本项目./data/文件夹下，执行以下命令:
 
 ```
@@ -71,8 +69,8 @@ python3 main.py
 
 ## 5、 精度验证
 
-精度测试
 
+**步骤1**
 下载LOLv1数据集，在[论文地址](https://daooshee.github.io/BMVC2018website/)Download Links章节下载LOL数据集。
 将数据集解压后将其中的测试集目录(eval15)和文件放到本项目./data/文件夹下,如下图所示:
 
@@ -87,6 +85,8 @@ python3 main.py
 				├──xx.png
 				├──...
 ```
+
+**步骤2**
 
 切换到项目根目录下，将main.py中的主函数改为调用test_precision()，修改如下:
 

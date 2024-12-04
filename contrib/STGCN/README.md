@@ -119,7 +119,7 @@ result_dir：推理结果保存路径，如“results/”
 
 例如： python predict.py data/sz_speed.csv results/
 ```
-则会在results文件夹下生成代表预测的交通速度数据prediction.txt文件
+这会在results文件夹下生成代表预测的交通速度数据prediction.txt文件
 这是通过已知数据集里过去时段的交通速度数据预测未来一定时间内的交通速度，无标准参考，所以只会输出代表预测的交通速度数据的prediction.txt文件，而没有MAE和RMSE等精度。
 另外和main.py的运行指令相比少一个n_pred参数，因为已在代码中定义了确定数值，无需额外输入。
 

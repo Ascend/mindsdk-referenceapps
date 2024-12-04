@@ -67,14 +67,15 @@ python3 main.py
 ```
 
 **步骤2**
-
 查看结果
+
 运行命令后即可在./data/文件夹下得到推理后的结果result.png文件.
 
 ## 5、 精度验证
 
 
 **步骤1**
+
 下载LOLv1数据集，在[论文地址](https://daooshee.github.io/BMVC2018website/)Download Links章节下载LOL数据集。
 将数据集解压后将其中的测试集目录(eval15)和文件放到本项目./data/文件夹下,如下图所示:
 

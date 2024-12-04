@@ -91,7 +91,7 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1** 准备一张jpg图片，修改main.py
+**步骤1** 准备一张jpg图片放到项目目录下，然后修改main.py
 
 
 第**120**行 `IMAGENAME = '{image path}'`中的{image path}替换为实际的jpg图片路径。
@@ -99,7 +99,7 @@ ATC run success, welcome to the next use.
 
 **步骤2** 编译
 
-进入FCOS/plugin/FCOSPostprocess目录，在该目录下运行下列命令：
+进入在项目根目录的plugin/FCOSPostprocess目录，在该目录下运行下列命令：
 
 ```
 bash build.sh
@@ -116,5 +116,5 @@ python3 main.py
 
 **步骤4** 查看结果
 
-最后生成的结果会在FCOS文件夹目录下result.jpg图片中。
+标准输出中会打印目标检测信息，项目根目录下result.jpg图片中会保存可视化检测结果。
 

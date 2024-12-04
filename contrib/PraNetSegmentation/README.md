@@ -58,12 +58,12 @@ atc --model=PraNet-19.onnx --output=./PraNet-19_bs1 --framework=5 --input_shape=
 bash build.sh
 ```
 
-**步骤2:** 创建输入图片路径：在项目根目录下使用`mkdir input`创建输入图片目录，并将输入jpg格式图片放入此目录。
+**步骤2:** 准备输入图片路径：输入图片命名为test.jpg放入根目录。
 
 **步骤3:** 运行：在根目录下执行
 
 ```
-python3 main.py --pipeline_path pipeline/pranet_pipeline.json --data_path ./input/
+python3 main.py
 ```
 
 **步骤4:** 查看结果：在infer_result目录可以查看图片结果。

@@ -41,7 +41,6 @@ Atlas 300I pro、Atlas 300V pro
 ```
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #CANN默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh #根据实际SDK安装路径修改
-export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 ```
 
 ## 3 准备模型
@@ -64,7 +63,7 @@ bash build.sh
 **步骤3:** 运行：在根目录下执行
 
 ```
-python main.py --pipeline_path pipeline/pranet_pipeline.json --data_path ./input/
+python3 main.py --pipeline_path pipeline/pranet_pipeline.json --data_path ./input/
 ```
 
 **步骤4:** 查看结果：在infer_result目录可以查看图片结果。

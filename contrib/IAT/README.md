@@ -78,14 +78,14 @@ python3 main.py
 
 ```
 ...
-  ├── data		  
-  	├──eval15  	# 精度测试数据集
-  		├──high
-      	├──xx.png
-        ├──...
-  		├──low
-        ├──xx.png
-        ├──...
+	├── data		  
+		├──eval15  	# 精度测试数据集
+			├──high
+				├──xx.png
+				├──...
+			├──low
+				├──xx.png
+				├──...
 ```
 
 切换到项目根目录下，将main.py中的主函数改为调用test_precision()，修改如下:

@@ -30,6 +30,7 @@ atc --model=./AdaBins_nyu.onnx --framework=5 --output=./AdaBins_nyu --soc_versio
 
 ## 4 运行
 **步骤1**：准备输入图片
+
 将输入图片命名为test.jpg放入项目根目录下
 
 **步骤2**：运行
@@ -37,4 +38,5 @@ atc --model=./AdaBins_nyu.onnx --framework=5 --output=./AdaBins_nyu --soc_versio
 python3 main.py
 ```
 **步骤3**：查看结果
+
 在当前目录生成result.jpg

@@ -42,6 +42,7 @@ bash generate_osd_om.sh
 
 ## 4 编译与运行
 **步骤1**：配置pipeline
+
 根据实际的网络视频流，修改passengerflowestimation.pipeline文件第9行：
 ```
 #将rtspUrl的值修改为实际的rtsp网络视频流地址
@@ -70,6 +71,7 @@ bash generate_osd_om.sh
 ```
 
 **步骤2**：编译后处理插件so
+
 在项目根目录下执行
 ```
 bash build.sh #编译
@@ -87,4 +89,5 @@ python3 main.py
 ```
 
 **步骤5**：查看结果
+
 生成的结果保存在result.h264文件里面（每次运行前请手动删除该文件）。

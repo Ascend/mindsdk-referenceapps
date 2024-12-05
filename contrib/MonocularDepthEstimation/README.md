@@ -21,18 +21,22 @@ Atlas 300I pro、Atlas 300V pro
 ```
 
 ## 3 准备模型
-**步骤1**：下载模型：[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MonocularDepthEstimation/AdaBins_nyu.onnx)，将获取到的.onnx文件存放至本案例代码的MonocularDepthEstimation/model 目录下。
+**步骤1**：下载模型-[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MonocularDepthEstimation/AdaBins_nyu.onnx)，将获取到的.onnx文件存放至本案例代码的MonocularDepthEstimation/model 目录下。
 
-**步骤2**：进入MonocularDepthEstimation/model目录执行以下命令。
+**步骤2**：进入MonocularDepthEstimation/model目录执行以下命令
 ```
 atc --model=./AdaBins_nyu.onnx --framework=5 --output=./AdaBins_nyu --soc_version=Ascend310P3 --insert_op_conf=./aipp_adabins_640_480.aippconfig --log=error
 ```
 
-## 4 编译与运行
-**步骤1**：准备输入图片：将输入图片命名为test.jpg放入项目根目录下
+## 4 运行
+**步骤1**：准备输入图片
 
-**步骤2**：运行：
+将输入图片命名为test.jpg放入项目根目录下
+
+**步骤2**：运行
 ```
 python3 main.py
 ```
-**步骤3**：查看结果：会在当前目录生成result.jpg
+**步骤3**：查看结果
+
+在当前目录生成result.jpg

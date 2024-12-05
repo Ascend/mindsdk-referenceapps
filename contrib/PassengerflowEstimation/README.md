@@ -27,21 +27,22 @@ Atlas 300I pro、Atlas 300V pro
 ```
 
 ## 3 准备模型
-**步骤1**：下载原始yolov4模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PassengerflowEstimation/ATC%20Yolov4%28FP16%29%20from%20Pytorch.zip)，并将解压后获取到的.onnx文件存放至本案例代码的PassengerflowEstimation/models 目录下。
+**步骤1**：下载原始yolov4模型-[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PassengerflowEstimation/ATC%20Yolov4%28FP16%29%20from%20Pytorch.zip)，并将解压后获取到的.onnx文件存放至本案例代码的PassengerflowEstimation/models 目录下。
 
-**步骤2**： 进入PassengerflowEstimation/models目录执行以下命令。
+**步骤2**： 进入PassengerflowEstimation/models目录执行以下命令
 ```
 atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4 --input_format=NCHW --output_type=FP32 --soc_version=Ascend310P3 --input_shape="input:1,3,608,608" --log=info --insert_op_conf=./aipp_Passengerflowdetection.config 
 ```
 
-**步骤3**： 转换opencvosd模型,执行以下命令：
+**步骤3**： 转换opencvosd模型,执行以下命令
 ```
 cd ${SDK_INSTALL_PATH}/mxVision/operators/opencvosd #根据实际SDK安装路径修改
 bash generate_osd_om.sh
 ```
 
 ## 4 编译与运行
-**步骤1**：配置pipeline：
+**步骤1**：配置pipeline
+
 根据实际的网络视频流，修改passengerflowestimation.pipeline文件第9行：
 ```
 #将rtspUrl的值修改为实际的rtsp网络视频流地址
@@ -69,7 +70,9 @@ bash generate_osd_om.sh
 },
 ```
 
-**步骤2**：编译后处理插件so：在项目根目录下执行
+**步骤2**：编译后处理插件so
+
+在项目根目录下执行
 ```
 bash build.sh #编译
 chmod 440 ./plugins/mxpi_passengerflowestimation/build/libmxpi_passengerflowestimation.so #修改so权限
@@ -78,11 +81,13 @@ cp ./plugins/mxpi_passengerflowestimation/build/libmxpi_passengerflowestimation.
 cp ./plugins/mxpi_selectobject/build/libmxpi_selectobject.so ${SDK_INSTALL_PATH}/mxVision/lib/plugins #拷贝so到相应路径，${SDK_INSTALL_PATH}根据实际SDK安装路径修改
 ```
 
-**步骤3**：拉起Live555服务：[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
+**步骤3**：拉起Live555服务-[Live555拉流教程](../../docs/参考资料/Live555离线视频转RTSP说明文档.md)
 
-**步骤4**：在根目录下运行：
+**步骤4**：在根目录下运行
 ```
 python3 main.py
 ```
 
-**步骤5**：查看结果：生成的结果保存在result.h264文件里面。
+**步骤5**：查看结果
+
+生成的结果保存在result.h264文件里面（每次运行前请手动删除该文件）。

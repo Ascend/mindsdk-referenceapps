@@ -38,7 +38,7 @@
 
 ![SDK流程图](../Collision/image/SDK_process.png)
 
-注：红色为本项目开发插件 蓝色为沿用其他项目开发插件 其余为SDK内置插件
+注：红色和蓝色字体表示相关插件为本项目开发插件，其余为SDK内置插件。
 ### 1.2 支持的产品
 
 本项目以昇腾Atlas 300I pro和 Atlas300V pro为主要的硬件平台。
@@ -97,11 +97,11 @@
 
 
 ## 3 准备模型
-**步骤1** 下载模型相关文件
+**步骤1：** 下载模型相关文件
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)下载得到yolov3_tf.pb文件，并放到项目根目录的`model`文件夹。
 
-**步骤2** 转换模型格式
+**步骤2：** 转换模型格式
 
 进入项目根目录的`model`文件夹下执行命令：
 
@@ -121,11 +121,11 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1**  启动rtsp服务
+**步骤1：**  启动rtsp服务
 
 按照 [教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) 自行准备视频数据，并启动rtsp服务。
 
-**步骤2** 修改collision.pipeline配置文件
+**步骤2：** 修改collision.pipeline配置文件
 
 第**9**行 `"rtspUrl":"rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264"`中的rtsp://xxx.xxx.xxx.xxx:xxxx/xxx.264替换为可用的 rtsp 流地址。
 
@@ -133,7 +133,7 @@ ATC run success, welcome to the next use.
 
 第**153**行 `"imageWidth":"1280"`中的1280替换为视频帧实际的宽。
 
-**步骤3** 编译
+**步骤3：** 编译
 
 进入mxVision安装目录的`operators/opencvosd`目录下执行命令：
 
@@ -148,7 +148,7 @@ bash build.sh
 ```
 
 
-**步骤4** 启动服务
+**步骤4：** 启动服务
 
 回到主目录下，在主目录下执行命令：
 
@@ -159,13 +159,13 @@ python3 collision.py
 命令执行成功后会在标准输出实时打印已保存的视频帧数量。
 
 
-**步骤5**  停止服务
+**步骤5：**  停止服务
 
 命令行输入Ctrl+C组合键可手动停止服务。
 
-*考虑到保存检测结果的视频会占用较大存储空间，请用户合理控制服务运行时间、及时停止服务，避免视频文件过大、影响服务器正常工作。
+注意：考虑到保存检测结果的视频会占用较大存储空间，请用户合理控制服务运行时间、及时停止服务，避免视频文件过大、影响服务器正常工作。
 
 
-**步骤6**  查看结果
+**步骤6：**  查看结果
 
 命令执行成功后会在当前目录下生成检测结果视频文件out_collision.h264，打开out_collision.h264查看文件、观测目标跟踪结果。

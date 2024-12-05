@@ -27,7 +27,7 @@
 | live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 | ffmpeg   | 4.2.1 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
 
-**注意：**
+**注意：** live555和ffmpeg需要用户到相关网址下载源码编译安装。
 
 第三方库默认全部安装到/usr/local/下面，全部安装完成后，请设置环境变量
 ```bash
@@ -102,4 +102,4 @@ console_level = 0
 
 **步骤5：** 运行。在样例根目录下执行命令 `bash run.sh`
 
-正常启动后，控制台会输出检测到各类目标的对应信息。手动执行 `ctrl + C` 结束程序
+**步骤6：** 查看结果。正常启动后，控制台会输出检测到各类目标的对应信息。手动执行 `ctrl + C` 结束程序

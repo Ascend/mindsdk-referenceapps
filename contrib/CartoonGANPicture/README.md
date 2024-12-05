@@ -27,7 +27,7 @@
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
 
@@ -41,7 +41,7 @@
 
 工程目录如下图所示：
 
-> data文件及目录下的images、model文件夹需要用户在项目运行前手动创建
+data文件及目录下的images、model文件夹需要用户在项目运行前手动创建。
 
 ```
 |-----CartoonGANPicture
@@ -61,7 +61,7 @@
 ### 1.5 相关约束
 
 - 适用场景：本项目支持通用场景下的jpg图片卡通化。为了保证卡通化效果，建议使用图像线条简单，细节较少的图片进行推理。
-- Dvpp图片解码接口只支持图片格式为jpg、jpeg，并且对图片分辨率在[32，8192]范围内的图片的解码，图片格式不支持或分辨率不符合约束的图片无法成功进行推理
+- Dvpp图片解码接口只支持图片格式为jpg、jpeg，并且对图片分辨率在[32，8192]范围内的图片的解码，图片格式不支持或分辨率不符合约束的图片无法成功进行推理。
 
 ## 2 设置环境变量
 
@@ -72,15 +72,9 @@
 
 ## 3 模型转换
 
-**步骤1：** 模型下载
+**步骤1：** 模型下载。将下载好的模型和配置文件解压后放入`data/model/`文件夹下。[模型及配置文件下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CartoonGANPicture/model.zip)
 
-[模型及配置文件下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CartoonGANPicture/model.zip)
-
-将下载好的模型和配置文件解压后放入`data/model`目录下
-
-**步骤2：** 模型转换
-
-进入`data/model`目录，运行如下模型转换命令实现模型转换：
+**步骤2：** 模型转换。进入`data/model/`文件夹，运行如下模型转换命令实现模型转换：
 
 ```
 atc --output_type=FP32 --input_shape="train_real_A:1,256,256,3"  --input_format=NHWC --output="cartoonization" --soc_version=Ascend310P3 --insert_op_conf=insert_op.cfg --framework=3 --model="cartoonization.pb" --precision_mode=allow_fp32_to_fp16
@@ -109,7 +103,7 @@ bash build.sh
 ./CartoonGAN_picture ./data/images
 ```
 
-**步骤3：** 查看结果。推理完成后的图片存放在生成的`data/output`目录下
+**步骤3：** 查看结果。推理完成后的图片存放在生成的`data/output`文件夹下。
 
 ## 5 常见问题
 
@@ -117,8 +111,8 @@ bash build.sh
 
 **问题描述：**
 
-Dvpp图片解码接口只支持图片格式为jpg、jpeg，并且对图片分辨率在[32，8192]范围内的图片的解码，图片格式不支持或分辨率不符合约束的图片无法成功进行推理
+Dvpp图片解码接口只支持图片格式为jpg、jpeg，并且对图片分辨率在[32，8192]范围内的图片的解码，图片格式不支持或分辨率不符合约束的图片无法成功进行推理。
 
 **解决方案：**
 
-使用规格约束内的图片进行推理
+使用规格约束内的图片进行推理。

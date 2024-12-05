@@ -10,7 +10,7 @@
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
 
@@ -29,7 +29,7 @@
 
 **注意：** live555和ffmpeg需要用户到相关网址下载源码编译安装。
 
-第三方库默认全部安装到/usr/local/下面，全部安装完成后，请设置环境变量
+第三方库默认全部安装到/usr/local/下面，全部安装完成后，请设置环境变量。
 ```bash
 export PATH=/usr/local/ffmpeg/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
@@ -65,8 +65,7 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 
 **步骤2：** 将获取到的YOLOv3模型文件内的`.pb`文件存放至`InferOfflineVideo/models/yolov3/`下。
  
-**步骤3：** 模型转换
-在文件夹 `InferOfflineVideo/models/yolov3/` 下，执行模型转换命令
+**步骤3：** 模型转换。在文件夹 `InferOfflineVideo/models/yolov3/` 下，执行模型转换命令：
 
 ```bash
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
@@ -91,7 +90,7 @@ ATC run success, welcome to the next use.
 
 ①：将文件中第8行的 “rtspUrl” 字段值替换为可用的 rtsp 流源地址（目前只支持264格式的rtsp流，例："rtsp://xxx.xxx.xxx.xxx:xxx/input.264", 其中xxx.xxx.xxx.xxx:xxx为ip和端口号，端口号需同Live555服务的起流端口号一致）；
 
-②：将所有 “deviceId” 字段值替换为实际使用的device的id值，即文件的第4、18、29、41行，可用的 device id 值可以使用命令：`npu-smi info` 查看
+②：将文件的第4、18、29、41行所有 “deviceId” 字段值替换为实际使用的device的id值。
 
 **步骤4：** 修改日志打印级别。打开文件 `${MX_SDK_HOME}/config/logging.conf` ，依次修改第17行、第22行的字段值为 0 ，如下所示：
 
@@ -100,6 +99,6 @@ global_level = 0
 console_level = 0
 ```
 
-**步骤5：** 运行。在样例根目录下执行命令 `bash run.sh`
+**步骤5：** 运行。在样例根目录下执行命令 `bash run.sh`。
 
-**步骤6：** 查看结果。正常启动后，控制台会输出检测到各类目标的对应信息。手动执行 `ctrl + C` 结束程序
+**步骤6：** 查看结果。正常启动后，控制台会输出检测到各类目标的对应信息。手动执行 `ctrl + C` 结束程序。

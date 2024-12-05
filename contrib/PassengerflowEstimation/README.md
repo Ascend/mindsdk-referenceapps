@@ -85,4 +85,4 @@ cp ./plugins/mxpi_selectobject/build/libmxpi_selectobject.so ${SDK_INSTALL_PATH}
 python3 main.py
 ```
 
-**步骤5**：查看结果：生成的结果保存在result.h264文件里面。
+**步骤5**：查看结果：生成的结果保存在result.h264文件里面（每次运行前请手动删除该文件）。

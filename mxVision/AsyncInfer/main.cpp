@@ -24,7 +24,7 @@ using namespace MxBase;
 using namespace std;
 
 APP_ERROR ret = APP_ERR_OK;
-int32_t g_deviceId = 1;
+int32_t g_deviceId = 0;
 
 int BATCH_SIZE = 4;
 int STREAM_NUM = 4;
@@ -44,9 +44,6 @@ std::vector <Tensor> resnetTensorVec;
 
 std::string yoloPath = "./model/yolov3/yolov3_tf_aipp.om";
 Model yoloV3(yoloPath, g_deviceId);
-
-std::string resnetPath = "./model/resnet50/resnet50_tensorflow_1.7.om";
-Model resnet50(resnetPath, g_deviceId);
 
 std::vector <std::vector<Image>> decodeImageBatch(BATCH_SIZE);
 std::vector <std::vector<Image>> resizeImageBatch(BATCH_SIZE);
@@ -213,13 +210,13 @@ void ResnetYoloV3PostProcess(vector <Tensor> resnetOutput_) {
 }
 
 APP_ERROR PrepareData() {
-    string imagePath_ = "./imgs_bak";
-    int totalImgs = SplitImage(imagePath_);
+    string imagePath = "./images";
+    int totalImgs = SplitImage(imagePath);
     std::vector <std::vector<std::string>> imgFileVecs(BATCH_SIZE);
     for (size_t i = 0; i < imgFileVecs.size(); i++) {
         std::ifstream imgFileStream;
-        std::string imagePath = imagePath_ + "/imgSplitFile" + std::to_string(i);
-        imgFileStream.open(imagePath);
+        std::string imageSplitPath = imagePath + "/imgSplitFile" + std::to_string(i);
+        imgFileStream.open(imageSplitPath);
         std::string imgFile;
         std::vector <std::string> imgVecs;
         while (getline(imgFileStream, imgFile)) {
@@ -398,40 +395,6 @@ APP_ERROR E2eInferAsync(int batchIndex, Params *param) {
                                                          static_cast<void * >(asyncYoloV3PostProcessParam));
 
         AscendStreamVec[batchIndex].Synchronize();
-
-        ret = imageProcessor.CropResize(param->DecodeImageBatch[i], param->CropConfigRectBatch[i],
-                                        Size(sizeValue2, sizeValue2),
-                                        param->CropResizeImageBatch[i], AscendStreamVec[batchIndex]);
-
-        ConvertToTensorParam *convertToTensorParam2 = new ConvertToTensorParam {false, param, i};
-        ret = AscendStreamVec[batchIndex].LaunchCallBack(ConvertToTensorProcess,
-                                                         static_cast<void *>(convertToTensorParam2));
-
-        std::cout << "===================== resnet推理开始 ====================" << std::endl;
-
-        MxBase::Tensor resnetOutput1({1, 1001}, MxBase::TensorDType::FLOAT32, g_deviceId);
-
-        MallocResNetTensor *mallocResNetTensor = new MallocResNetTensor {resnetOutput1};
-        ret = AscendStreamVec[batchIndex].LaunchCallBack(ResNetMalloc, static_cast<void *>(mallocResNetTensor));
-        vector <Tensor> *resnetoutput = new vector <Tensor> {resnetOutput1};
-
-        resnet50.Infer(param->ResnetInputBatch[i], *resnetoutput, AscendStreamVec[batchIndex]);
-
-        AsyncResnetYoloV3PostProcessParam *asyncResnetYoloV3PostProcessParam = new AsyncResnetYoloV3PostProcessParam {
-                *resnetoutput
-        };
-
-        ret = AscendStreamVec[batchIndex].LaunchCallBack(AsyncResNetYoloV3PostProcessCallbackFunc,
-                                                         static_cast<void *>(asyncResnetYoloV3PostProcessParam));
-
-        HoldResourceParam *holdResourceParam = new HoldResourceParam{outTensor1, outTensor2, outTensor3, resnetOutput1,
-                                                                     yoloV3outputs, convertToTensorParam1,
-                                                                     convertToTensorParam2, mallocYoloTensor,
-                                                                     mallocResNetTensor, resnetoutput,
-                                                                     asyncResnetYoloV3PostProcessParam,
-                                                                     asyncYoloV3PostProcessParam};
-        ret = AscendStreamVec[batchIndex].LaunchCallBack(HoldResourceCallback, static_cast<void *>(holdResourceParam));
-
     }
 
     return ret;
@@ -529,7 +492,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < BATCH_SIZE; i++) {
-        std::string filePath = "./imgs_bak/imgSplitFile" + std::to_string(i);
+        std::string filePath = "./images/imgSplitFile" + std::to_string(i);
         auto ret = remove(filePath.c_str());
         if (ret != 0) {
             std::cout << "remove file [" << filePath << "] failed." << endl;

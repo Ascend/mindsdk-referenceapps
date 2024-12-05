@@ -49,10 +49,7 @@ if __name__ == '__main__':
         fo.write(infer_result.data)
         T = T + 1
         print(T)
-        # the toal frames of video
-        if T > 100:
-            print('ending')
-            break
+
     
     fo.close()
     # destroy streams

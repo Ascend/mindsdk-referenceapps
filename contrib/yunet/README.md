@@ -8,7 +8,7 @@ yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可�
 
 技术实现流程图如下：
 
-![process](images/process.png)
+<img src="images/process.png" style="zoom:40%"/>
 
 表 1.1 系统方案各子系统功能描述：
 
@@ -27,7 +27,7 @@ yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可�
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、Atlas 300V pro。
 
 ### 1.3 支持的版本
 
@@ -97,7 +97,7 @@ yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可�
 
 **步骤1：** yunet模型下载。本项目中使用的模型是yunet模型，onnx模型可以直接下载，[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/yunet/yunet.onnx)
 
-**步骤2：** 将获取到的文件存放至样例项目所在目录`/models/`下
+**步骤2：** 将获取到的文件存放至样例项目所在目录`/models/`下。
 
 **步骤3：** 模型转换。`cd`到`models`文件夹，使用模型转换工具ATC将onnx模型转换为om模型，命令如下：
 
@@ -122,7 +122,7 @@ ATC run success, welcome to the next use.
 
 ①：将文件中第8、196、282行的 “rtspUrl” 字段值替换为可用的 rtsp 流源地址（目前只支持264格式的rtsp流，例："rtsp://xxx.xxx.xxx.xxx:xxx/xxx.264", 其中xxx.xxx.xxx.xxx:xxx为ip和端口号，端口号需同Live555服务的起流端口号一致，xxx.264为待测视频流文件名）；
 
-②：将文件中第4行的 “deviceId” 字段值替换为实际使用的device的id值，可用的 device id 值可以使用命令：`npu-smi info` 查看
+②：将文件中第4行的 “deviceId” 字段值替换为实际使用的device的id值。
 
 注意：由于本项目是支持端对端3路推理，故需设置3个视频源，请使用者自行将pipeline中的所有对应位置修改为自己所使用的源流地址和文件名。
 
@@ -169,36 +169,36 @@ cp plugin1/build/libtotalyunetpostprocess.so ${MX_SDK_HOME}/lib/modelpostprocess
 
 **解决方案：**
 
-导致此问题的可能原因为：视频帧率过高、视频尺寸过大或解码器正在同时解码过多其他视频
+导致此问题的可能原因为：视频帧率过高、视频尺寸过大或解码器正在同时解码过多其他视频。
 
-解决方案：确保三路视频都为 1920*1080 25fps 并且减少其它任务的运行
+解决方案：确保三路视频都为 1920*1080 25fps 并且减少其它任务的运行。
 
 ### 6.2 无法打开视频流
 
 **问题描述：**
 
-在运行的过程中，无法打开视频流
+在运行的过程中，无法打开视频流。
 
 **解决方案：**
 
-pipeline中需要配置多路rtsp视频地址，完善pipeline中的配置项
+pipeline中需要配置多路rtsp视频地址，完善pipeline中的配置项。
 
-### 6.3 未编译opencv_osd算子
+### 6.3 运行过程中报错`Realpath parsing failed`
 
 **问题描述：**
 
-未编译opencv_osd算子，运行过程中报错`Realpath parsing failed`
+未编译opencv_osd算子，运行过程中报错`Realpath parsing failed`。
 
 **解决方案：**
 
-在项目根目录下，执行命令`bash ${MX_SDK_HOME}/operators/opencvosd/generate_osd_om.sh`编译opencv_osd算子
+在项目根目录下，执行命令`bash ${MX_SDK_HOME}/operators/opencvosd/generate_osd_om.sh`编译opencv_osd算子。
 
 ### 6.4 推流失败
 
 **问题描述：**
 
-运行过程中报错`streamInstance GetResult return nullptr.`
+运行过程中报错`streamInstance GetResult return nullptr`。
 
 **解决方案：**
 
-检查pipeline中的配置项中rtsp流地址是否正确，如确认正确则重新起流(可能由于某些原因导致已启动的live555服务不可用)
+检查pipeline中的配置项中rtsp流地址是否正确，如确认正确则重新起流（可能由于某些原因导致已启动的live555服务不可用）。

@@ -4,11 +4,11 @@
 
 ### 1.1 简介
 
-多路视频目标检测，实现同时对两路本地视频或RTSP视频流(H264)进行yolov3目标检测，生成可视化结果(可选)。
+多路视频目标检测，实现同时对两路本地视频或RTSP视频流（H264）进行yolov3目标检测，生成可视化结果（可选）。
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、Atlas 300V pro。
 
 ### 1.3 支持的版本
 
@@ -81,9 +81,9 @@ export FFMPEG_HOME=/usr/local/ffmpeg            # ffmpeg默认安装路径，根
 
 **步骤1：** 下载YOLOv3模型 。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)
 
-**步骤2：** 将获取到的YOLOv3模型的pb文件存放至`样例项目所在目录/model/`。
+**步骤2：** 将获取到的YOLOv3模型的pb文件存放至`model/`文件夹下。
 
-**步骤3：** 模型转换。在`样例项目所在目录/model/`目录下执行以下命令：
+**步骤3：** 模型转换。在`model/`文件夹下，执行以下命令：
 
 ```bash
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
@@ -112,14 +112,14 @@ rtspList.emplace_back("${rtsp流地址1}");
 rtspList.emplace_back("${rtsp流地址2}");
 ```
 
-②：将文件中第96行的`${MindXSDK安装路径}`字段值替换为实际使用的安装路径
+②：将文件中第96行的`${MindXSDK安装路径}`字段值替换为实际使用的安装路径。
 
 ```c++
 APP_ERROR ret = configUtil.LoadConfiguration("${MX_SDK_HOME}/config/logging.conf", configData, MxBase::ConfigMode::CONFIGFILE);
 ```
 
-**步骤4：** 编译。在项目根目录下，执行命令`bash build.sh`，编译成功会在根目录下生成`multiChannelVideoReasoner`可执行文件
+**步骤4：** 编译。在项目根目录下，执行命令`bash build.sh`，编译成功会在根目录下生成`multiChannelVideoReasoner`可执行文件。
 
-**步骤5：** 运行。在项目根目录下，执行命令`bash run.sh`
+**步骤5：** 运行。在项目根目录下，执行命令`bash run.sh`。
 
-**步骤6：** 查看结果。在执行`bash run.sh`后会有打屏日志显示检测结果，同时会将目标检测结果保存在工程目录下`result`中。手动执行 `ctrl + C` 结束程序
+**步骤6：** 查看结果。在执行`bash run.sh`后会有打屏日志显示检测结果，同时会将目标检测结果保存在工程目录下`result`中。手动执行 `ctrl + C` 结束程序。

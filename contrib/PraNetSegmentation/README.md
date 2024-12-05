@@ -45,25 +45,29 @@ Atlas 300I pro、Atlas 300V pro
 
 ## 3 准备模型
 
-**步骤1：** 下载PraNet原始模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PranetSegementation/ATC%20PraNet%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip)，并将获取到的PraNet-19.onnx文件存放至本案例代码的PraNetSegmentation/model目录下。
+**步骤1：** 下载PraNet原始模型-[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PranetSegementation/ATC%20PraNet%28FP16%29%20from%20Pytorch%20-%20Ascend310.zip)，并将获取到的PraNet-19.onnx文件存放至本案例代码的PraNetSegmentation/model目录下。
 
-**步骤2：**  进入PraNetSegmentation/model目录执行以下命令：
+**步骤2：** 进入PraNetSegmentation/model目录执行以下命令
 ```
 atc --model=PraNet-19.onnx --output=./PraNet-19_bs1 --framework=5 --input_shape="actual_input_1:1,3,352,352" --soc_version=Ascend310P3 --input_format=NCHW --output_type=FP32 --insert_op_conf=./pranet.aippconfig
 ```
 ## 4 编译与运行
 
-**步骤1:** 编译后处理插件so：进入PraNetSegmentation/plugin/postprocess/目录，执行命令：
+**步骤1：** 编译后处理插件so
+进入PraNetSegmentation/plugin/postprocess/目录，执行命令
 ```
 bash build.sh
 ```
 
-**步骤2:** 准备输入图片路径：输入图片命名为test.jpg放入根目录。
+**步骤2：** 准备输入图片路径
+输入图片命名为test.jpg放入根目录。
 
-**步骤3:** 运行：在根目录下执行
+**步骤3：** 运行
+在根目录下执行
 
 ```
 python3 main.py
 ```
 
-**步骤4:** 查看结果：在infer_result目录可以查看图片结果。
+**步骤4：** 查看结果
+在infer_result目录可以查看图片结果。

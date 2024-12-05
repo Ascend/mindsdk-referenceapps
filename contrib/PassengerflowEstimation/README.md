@@ -27,14 +27,6 @@ Atlas 300I pro、Atlas 300V pro
 ```
 
 ## 3 准备模型
-**步骤1**：下载原始caffemodel模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PersonCount/model.zip)，并将解压后获取到的所有文件存放至本案例代码的PersonCount/model 目录下。
-
-**步骤2**： 在项目根目录下执行以下命令。
-```
-atc --input_shape="blob1:8,3,800,1408" --weight="model/count_person.caffe.caffemodel" --input_format=NCHW --output="model/count_person_8.caffe" --soc_version=Ascend310P3 --insert_op_conf=model/insert_op.cfg --framework=0 --model="model/count_person.caffe.prototxt"
-```
-
-## 3 准备模型
 **步骤1**：下载原始yolov4模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/PassengerflowEstimation/ATC%20Yolov4%28FP16%29%20from%20Pytorch.zip)，并将解压后获取到的.onnx文件存放至本案例代码的PassengerflowEstimation/models 目录下。
 
 **步骤2**： 进入PassengerflowEstimation/models目录执行以下命令。

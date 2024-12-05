@@ -4,8 +4,7 @@
 
 ### 1.1 简介
 
-mxVison ascend 硬件平台内置了视频相关的硬件加速解码器， 
-为了提升用户的易用性，mxVision提供了 FFmepg-Ascend 解决方案。
+mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为了提升用户的易用性，mxVision提供了 Ffmepg-Ascend 解决方案。
 
 支持的功能：
 
@@ -18,7 +17,7 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 
 ### 1.2 支持的产品
 
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro, 和Atlas A500 A2。
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro、 Atlas A500 A2。
 
 ### 1.3 支持的版本
 本样例配套的CANN版本、Driver/Firmware版本如下所示：
@@ -26,10 +25,6 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 | CANN版本  | Driver/Firmware版本  |
 | ------------------ | -------------- |
 | 8.0.RC3   |  24.1.RC3  |
-
-### 1.4 三方依赖
-无
-
 
 
 ## 2 设置环境变量
@@ -43,7 +38,7 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 
 ## 3 编译与运行
 
-**步骤1：** 在项目目录`Ascendffmpeg/`下添加可执行权限
+**步骤1：** 在项目目录`Ascendffmpeg/`下添加可执行权限：
 ```bash
 chmod +x ./configure
 chmod +x ./ffbuild/*.sh
@@ -53,16 +48,16 @@ chmod +x ./ffbuild/*.sh
 
 
 
-**步骤2：** 在项目目录`Ascendffmpeg/`下执行编译
-* 编译选项说明
-  ```text
-    prefix : FFmpeg 及相关组件安装目录
-    enable-shared : FFmpeg 允许生成 so 文件
-    extra-cflags : 添加第三方头文件
-    extra-ldflags : 指定第三方库位置
-    extra-libs : 添加第三方 so 文件
-    enable-ascend : 允许使用 ascend 进行硬件加速
-  ```
+**步骤2：** 在项目目录`Ascendffmpeg/`下执行编译：
+
+编译选项说明：
+* `prefix`    -   FFmpeg 及相关组件安装目录
+* `enable-shared`    -   FFmpeg 允许生成 so 文件
+* `extra-cflags`    -   添加第三方头文件
+* `extra-ldflags`    -   指定第三方库位置
+* `extra-libs`    -   添加第三方 so 文件
+* `enable-ascend`    -   允许使用 ascend 进行硬件加速
+
 执行编译命令：
   ```bash
   ./configure \
@@ -77,33 +72,27 @@ chmod +x ./ffbuild/*.sh
 
 **步骤3：** 添加环境变量
 
-通过指令
-`find / -name libavdevice.so`
-查找到文件所在路径，
-
-形如`/PATH/TO/mindxsdk-referenceapps/mxVision/Ascendffmpeg/ascend/lib/libavdevice.so`，
-
-则执行：
+通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindxsdk-referenceapps/mxVision/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
 ```bash
 export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/mxVision/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
 ```
 
 **步骤4：** 运行
 
-在项目目录`Ascendffmpeg/`下会生成 `ffmpeg` 可执行文件，可以参考下面的说明使用。
+通过步骤3在项目目录`Ascendffmpeg/`下会生成 `ffmpeg` 可执行文件，可以参考下面的说明使用。
 
 相关指令参数：
 
 * `-hwaccel`    -   指定采用 ascend 来进行硬件加速, 用来做硬件相关初始化工作。
 
-解码相关参数(注意：解码相关参数需要在 `-i` 参数前设置)：
+解码相关参数（注意：解码相关参数需要在 `-i` 参数前设置）：
 * `-c:v`        -   指定解码器为 h264_ascend (解码 h265 格式可以使用 h265_ascend)。
 * `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数
 * `-channel_id` -   指定解码通道 id ,默认为0,取值范围取决于芯片实际情况,超出时会报错（对于昇腾Atlas 300I pro、 Atlas 300V pro，该参数的取值范围：[0, 256)，JPEGD功能和VDEC功能共用通道，且通道总数最多256。对于Atlas 500 A2推理产品，该参数的取值范围：[0, 128)，JPEGD功能和VDEC功能共用通道，且通道总数最多128）。 若是指定的通道已被占用, 则自动寻找并申请新的通道。
 * `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304（此为h264的约束）。宽要与 16 对齐，高要与 2 对齐。
 * `-i`          -   指定输入文件（支持h264和h265及rtsp视频流, 其他视频格式不做保证）。
 
-编码相关参数(注意：编码相关参数需要在 `-i` 参数后设置)：
+编码相关参数（注意：编码相关参数需要在 `-i` 参数后设置）：
 * `-c:v`        -   指定编码器为 h264_ascend (编码成 h265 格式可以使用 h265_ascend)。
 * `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数。
 * `-channel_id` -   指定解码通道 id ,默认为0,取值范围取决于芯片实际情况,超出时会报错（对于昇腾Atlas 300I pro、 Atlas 300V pro，该参数的取值范围：[0, 256)，JPEGD功能和VDEC功能共用通道，且通道总数最多256。Atlas 500 A2推理产品，该参数的取值范围：[0, 128)，JPEGD功能和VDEC功能共用通道，且通道总数最多128）。 若是指定的通道已被占用, 则自动寻找并申请新的通道。
@@ -133,10 +122,10 @@ export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/mxVision/Ascendffmpeg/asc
 ```
 
 ## 4 常见问题
-### 4.1 文件编译问题
+### 4.1 文件编译不通过
 
 问题描述： 文件编译不通过
 
 解决方案： 可能是文件格式被改变或者破坏，建议通过以下两种方式直接获取代码，而非文件传输：
-1. 在环境上通过git clone直接下载该代码仓。
-2. 直接从代码仓网页gitee下载zip包，并在环境上通过`unzip`解压。
+- 在环境上通过git clone直接下载该代码仓。
+- 直接从代码仓网页gitee下载zip包，并在环境上通过`unzip`解压。

@@ -41,8 +41,8 @@
 ```
 ReID
 |---- data
-|   |---- gallerySet                    // 查询场景图片文件夹
-|   |---- querySet                      // 行人底库图片文件夹
+|   |---- gallerySet                    // 查询场景图片文件夹（需要用户自行创建）
+|   |---- querySet                      // 行人底库图片文件夹（需要用户自行创建）
 |---- models                            // 目标检测、ReID模型与配置文件夹
 |   |   |---- yolov3.cfg
 |   |   |---- coco.names
@@ -117,8 +117,9 @@ ATC run success, welcome to the next use.
 
 **步骤1：** 准备行人底库数据集。
 
+1. 在目录`ReID/data/`下创建文件夹`querySet`。
 
-通过[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)下载压缩包`ReID相关文件`。 在压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
+2. 通过[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)下载压缩包`ReID相关文件`。 在压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
 
 请解压`Market-1501-v15.09.15.zip`，在`Market-1501-v15.09.15\Market1501\gt_bbox`中选择想要查询的行人图片，将图片放在`ReID/data/querySet`中。
 - 推荐每次查询1人，使用2-6张图片作为底库，效果较好；  
@@ -127,7 +128,9 @@ ATC run success, welcome to the next use.
 
 **步骤2：** 准备场景图片数据集。
 
-在步骤1的压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
+1. 在目录`ReID/data/`下创建文件夹`gallerySet`。
+
+2. 在步骤1的压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
 请解压`search_samples.rar`，然后将获取的图片放在`ReID/data/gallerySet`中。
 - gallerySet下的图片必须是1920*1080大小的jpg。
 

@@ -87,4 +87,7 @@ if __name__ == '__main__':
         sys.exit()
 
     infer("./test.jpg", streamManagerApi)
+    while True:
+        if os.path.exists(INFER_RESULT + "0.png"):
+            break
     streamManagerApi.DestroyAllStreams()

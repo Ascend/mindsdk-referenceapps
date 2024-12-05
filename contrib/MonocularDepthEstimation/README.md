@@ -1,9 +1,9 @@
-# 基于MxStream的AdaBins单目深度估计
+# 基于MxVision的AdaBins单目深度估计
 
 ## 1 介绍
 
 ### 1.1 简介
-基于AdaBins室内模型的单目深度估计，输出输入图像的深度图（灰度图形式）。
+本案例是基于AdaBins室内模型的单目深度估计，输出为对应输入图像的深度图（灰度图形式）。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro
@@ -23,7 +23,7 @@ Atlas 300I pro、Atlas 300V pro
 ## 3 准备模型
 **步骤1**：下载模型：[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MonocularDepthEstimation/AdaBins_nyu.onnx)，将获取到的.onnx文件存放至本案例代码的MonocularDepthEstimation/model 目录下。
 
-**步骤2**：  进入MonocularDepthEstimation/model目录执行以下命令。
+**步骤2**：进入MonocularDepthEstimation/model目录执行以下命令。
 ```
 atc --model=./AdaBins_nyu.onnx --framework=5 --output=./AdaBins_nyu --soc_version=Ascend310P3 --insert_op_conf=./aipp_adabins_640_480.aippconfig --log=error
 ```

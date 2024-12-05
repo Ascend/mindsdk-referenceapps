@@ -129,7 +129,7 @@ ATC run success, welcome to the next use.
 
 在步骤1的压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
 请解压`search_samples.rar`，然后将获取的图片放在`ReID/data/gallerySet`中。
-> gallerySet下的图片必须是1920*1080大小的jpg。
+- gallerySet下的图片必须是1920*1080大小的jpg。
 
 
 **步骤3：** 配置pipeline。

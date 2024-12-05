@@ -135,9 +135,9 @@ cp postprocess/build/libYoloxPostProcess.so ${MX_SDK_HOME}/lib/modelpostprocesso
 
 ```
 python3 pre_post.py
-```     
+```
 
-命令执行成功后在目录``python/test_img``下生成检测结果文件 pre_post_bgr.jpg，查看结果文件验证检测结果。
+**步骤5：** 查看结果。命令执行成功后在目录``python/test_img``下生成检测结果文件 pre_post_bgr.jpg，查看结果文件验证检测结果。
 
 ## 5 常见问题
 

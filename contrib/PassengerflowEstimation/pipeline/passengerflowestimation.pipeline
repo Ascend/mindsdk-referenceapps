@@ -135,8 +135,6 @@
                 "next": "mxpi_opencvosd0:1"
             },
             "mxpi_opencvosd0": {
-                "dataSourceImage": "queue2",
-                "dataSourceOsd": "queue11",
                 "factory": "mxpi_opencvosd",
                 "next": "queue9"
             },

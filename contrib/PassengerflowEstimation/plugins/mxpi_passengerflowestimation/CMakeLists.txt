@@ -14,7 +14,7 @@ link_directories(${MX_SDK_HOME}/lib)
 link_directories(${MX_SDK_HOME}/opensource/lib)
 
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 add_definitions(-DENABLE_DVPP_INTERFACE)
 add_definitions(-Dgoogle=mindxsdk_private)

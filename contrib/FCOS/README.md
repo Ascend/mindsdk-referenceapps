@@ -70,12 +70,12 @@
 
 ## 3 准备模型
 
-步骤1 下载模型相关文件
+**步骤1：** 下载模型相关文件
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/Fcos/ATC%20Fcos.zip)下载并解压，在解压后的model目录下得到fcos.onnx文件，并放在项目根目录的``models`` 目录下。
 
 
-步骤2 转换模型格式
+**步骤2：** 转换模型格式
 
 放在项目根目录的``models`` 目录下，执行如下命令：
 ```
@@ -93,22 +93,22 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1** 准备一张jpg图片放到项目目录下，然后修改main.py
+**步骤1：** 准备一张jpg图片放到项目目录下，然后修改main.py
 
 
 第**120**行 `IMAGENAME = '{image path}'`中的{image path}替换为实际的jpg图片路径。
 
 
-**步骤2** 编译
+**步骤2：** 编译
 
-进入在项目根目录的plugin/FCOSPostprocess目录，在该目录下运行下列命令：
+进入项目根目录的plugin/FCOSPostprocess目录，在该目录下运行下列命令：
 
 ```
 bash build.sh
 ```
 
 
-**步骤3** 运行
+**步骤3：** 运行
 
 在项目根目录下执行以下命令：
 
@@ -116,7 +116,7 @@ bash build.sh
 python3 main.py
 ```
 
-**步骤4** 查看结果
+**步骤4：** 查看结果
 
 标准输出中会打印目标检测信息，项目根目录下result.jpg图片会保存可视化检测结果。
 

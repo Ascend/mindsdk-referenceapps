@@ -74,10 +74,11 @@ if __name__ == '__main__':
     FLAGS = os.O_WRONLY | os.O_CREAT
     MODES = stat.S_IWUSR | stat.S_IRUSR
     with os.fdopen(os.open('./result.264', FLAGS, MODES), 'wb') as fp:
-        while FRAME_COUNT <= 100:
+        while True:
             FRAME_COUNT += 1
             inferResult = STREAM_MANAGER_API.GetResult(STREAM_NAME, IN_PLUGIN_ID)
             fp.write(inferResult.data)
+            print("%d frame has been processed and saved" % FRAME_COUNT)
             if ISSIGINTUP:
                 print("Exit")
                 break

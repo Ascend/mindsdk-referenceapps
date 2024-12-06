@@ -97,7 +97,9 @@ python3 video_main.py
 **步骤3**：查看结果
 
 运行可视化结果会以`video_result.mp4`视频形式保存在`Burpee_Detection/Video_burpee_detection`目录下
+
 波比跳识别个数会以`result.txt`文件形式保存在`Burpee_Detection/Video_burpee_detection`目录下
+
 检测过程中的帧图片会保存在`Burpee_Detection/Video_burpee_detection/result_pic`目录下
 
 

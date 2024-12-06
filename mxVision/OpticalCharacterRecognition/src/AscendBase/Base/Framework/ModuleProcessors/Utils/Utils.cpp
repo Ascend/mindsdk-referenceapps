@@ -7,6 +7,7 @@
 */
 
 #include "Utils.h"
+#include "MxBase/Log/Log.h"
 
 uint32_t Utils::ImageChanSizeF32(uint32_t width, uint32_t height)
 {

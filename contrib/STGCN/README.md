@@ -50,6 +50,10 @@ SZ-Taxi数据集包含深圳市的出租车动向，包括道路邻接矩阵和�
 | -------- | --------- |
 | scipy    | 1.13.1    |
 | numpy    | 1.24.0    |
+| pandas   |   2.2.3 |
+| google   | 3.0.0|
+|protobuf  | 3.20.2|
+|scikit-learn|1.5.2|
 
 ### 1.5 代码目录结构与说明
 
@@ -104,11 +108,28 @@ stgcn10：生成的om模型文件名，转换脚本会在此基础上添加.om�
 ```
 
 ## 4 运行
-### 4.1 数据集准备
+
+如果需要推理自定义的数据集(行数大于12行，列数为156列的csv文件)，运行predict.py，指令如下：
+```
+python predict.py [image_path] [result_dir]
+
+参数说明：
+image_path：验证集文件，如“data/sz_speed.csv”
+result_dir：推理结果保存路径，如“results/”
+
+例如： python predict.py data/sz_speed.csv results/
+```
+这会在results文件夹下生成代表预测的交通速度数据prediction.txt文件
+这是通过已知数据集里过去时段的交通速度数据预测未来一定时间内的交通速度，无标准参考，所以只会输出代表预测的交通速度数据的prediction.txt文件，而没有MAE和RMSE等精度。
+另外和main.py的运行指令相比少一个n_pred参数，因为已在代码中定义了确定数值，无需额外输入。
+
+## 5 精度验证
+
+### 5.1 数据集准备
 SZ-Taxi数据集下载链接：https://github.com/lehaifeng/T-GCN/tree/master/data
 将sz_speed.csv放置在工程目录/data下
 
-### 4.2 运行main.py
+### 5.2 运行main.py
 运行main.py可以在sz_speed.csv的测试集上获得推理精度，指令如下：
 ```
 python main.py [image_path] [result_dir] [n_pred]
@@ -123,18 +144,3 @@ n_pred：预测时段，如9
 ```
 最后sz_speed.csv测试集的推理预测的结果会保存在results/predictions.txt文件中，实际数据会保存在results/labels.txt文件中。
 推理精度会直接显示在界面上。
-
-### 4.3 运行predict.py
-如果需要推理自定义的数据集(行数大于12行，列数为156列的csv文件)，运行predict.py，指令如下：
-```
-python predict.py [image_path] [result_dir]
-
-参数说明：
-image_path：验证集文件，如“data/sz_speed.csv”
-result_dir：推理结果保存路径，如“results/”
-
-例如： python predict.py data/sz_speed.csv results/
-```
-则会在results文件夹下生成代表预测的交通速度数据prediction.txt文件
-这是通过已知数据集里过去时段的交通速度数据预测未来一定时间内的交通速度，无标准参考，所以只会输出代表预测的交通速度数据的prediction.txt文件，而没有MAE和RMSE等精度。
-另外和main.py的运行指令相比少一个n_pred参数，因为已在代码中定义了确定数值，无需额外输入。

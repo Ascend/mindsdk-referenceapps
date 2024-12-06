@@ -55,17 +55,17 @@
 
 ### 3.1 模型获取
 
-**步骤1** 
+**步骤1**：下载DGNet (Efficient-B4) 的ONNX模型
 
-下载DGNet (Efficient-B4) 的ONNX模型：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/DGNet.zip)
+[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/DGNet.zip)
 
 ### 3.2 模型转换
 
-**步骤1** 
+**步骤1**：准备文件
 
 在项目目录./CamouflagedObjectDetection下创建models文件夹，将上一小节下载的模型文件解压后，把其中的DGNet.onnx模型文件拷贝至models文件夹
 
-**步骤2** 
+**步骤2**：执行转换命令
 
 在模型所在的文件夹执行以下命令
 
@@ -85,27 +85,24 @@ ATC run success, welcome to the next use.
 
 ## 4、 运行
 
-步骤如下：
 
-**步骤1** 
+**步骤1**：数据集下载
 
 下载测试数据集并放到项目文件夹./CamouflagedObjectDetection：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/snapshots/data.tar)
-
-**步骤2** 
 
 执行以下命令将下载后的文件解压缩
 ```bash
 tar -xf data.tar
 ```
 
-**步骤3** 
+**步骤2**：创建项目输出文件夹
 
 执行以下命令创建项目输出文件夹
 ```bash
 mkdir result
 ```
 
-**步骤4** 
+**步骤4**：运行
 
 执行离线推理Python脚本
 ```bash
@@ -114,9 +111,9 @@ python3 inference_om.py --om_path ./models/DGNet.om --save_path ./result/ --data
 **注意：由于数据集图片较多，推理时间较长，可选择性输入部分图片来进行推理验证**
 
 
-**步骤5**
+**步骤5**：查看结果
 
-查看结果 
+ 
 推理完成的输出图片在result文件夹中
 
 输入输出如下两图所示

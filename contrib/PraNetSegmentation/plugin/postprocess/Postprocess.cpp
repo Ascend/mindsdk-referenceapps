@@ -222,7 +222,7 @@ APP_ERROR MxpiPostProcess::GenerateVisionListOutput(const MxpiTensorPackageList 
 
     auto data = reinterpret_cast<float *>(tensor->GetBuffer());
     float pixel;
-    float64_t pixel_64bit;
+    double pixel_64bit;
     uint8_t pixel_8bit;
     for (size_t x = 0; x < HEIGHT; ++x) {
         for (size_t y = 0; y < WIDTH; ++y) {
@@ -237,7 +237,7 @@ APP_ERROR MxpiPostProcess::GenerateVisionListOutput(const MxpiTensorPackageList 
         for (size_t y = 0; y < WIDTH; ++y) {
             pixel = imgrgbf.at<cv::Vec3f>(x, y)[0];
             pixel = (pixel - min_value) / (max_value - min_value + EPS_); // normalize
-            pixel_64bit = static_cast<float64_t>(pixel) * NNN + ZZZ; // 转精度
+            pixel_64bit = static_cast<double>(pixel) * NNN + ZZZ; // 转精度
             pixel_8bit = static_cast<uint8_t>(pixel_64bit);
             imgrgb.at<cv::Vec3b>(x, y) = cv::Vec3b {pixel_8bit, pixel_8bit, pixel_8bit};
         }

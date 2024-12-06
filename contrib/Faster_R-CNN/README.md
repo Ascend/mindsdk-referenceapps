@@ -29,7 +29,7 @@
 技术实现流程图
 
 <center>
-    <img src="./images/1.png" width="600" height="300">
+    <img src="./images/1.png" width="800" height="400">
     <br>
 </center>
 

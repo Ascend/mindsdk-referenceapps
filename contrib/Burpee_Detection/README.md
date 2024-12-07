@@ -40,7 +40,6 @@
 │   └── burpee_detection_v.pipeline          //视频流识别使用的pipeline文件
 ├── Video_burpee_detection
 │   ├── video_main.py            //识别，保存结果，并进行性能测试
-|   └── run.sh                   //运行脚本
 └── README.md
 ```
 

@@ -84,7 +84,7 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 
 TSM.onnx模型[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/offline_models.zip) , 将下载好压缩包解压并把模型放在“${TSM代码根目录}/model”目录下。
 
-**步骤2** 模型转换
+**步骤2**：模型转换
 
 将模型转换为om模型，在“model”目录下，执行以下命令生成om模型
 

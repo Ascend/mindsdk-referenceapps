@@ -4,8 +4,8 @@
 
 ### 1.1 简介
 
-基于昇腾硬件和MindX SDK 实现波比跳运动检，并将检测结果保存成视频。
-主要流程：通过 live555 服务器进行拉流输入视频，然后进行视频解码将 H.264 格式的视频解码为图片，图片缩放后经过模型推理进行波比跳检测，识别结果经过后处理后利用 cv 可视化识别框，以视频的形式输出，同时生成文本文件记录视频中完成的波比跳个数。
+基于昇腾硬件和MindX SDK 实现波比跳运动检测，并将检测结果保存成视频。
+主要流程：通过 live555 服务器进行拉流输入视频，然后进行视频解码，将H.264格式的视频解码为图片，图片缩放后经过模型推理进行波比跳检测，识别结果经过后处理后利用 cv 可视化识别框，以视频的形式输出，同时生成文本文件记录视频中完成的波比跳个数。
 
 ### 1.2 支持的产品
 
@@ -73,12 +73,12 @@ ATC run success, welcome to the next use.
 
 ## 4、 运行
 
-**步骤1**：安装live555并创建视频流 
+**步骤1**：安装live555并创建视频流。 
 
 按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)，使用h264视频创建rtsp视频流。
 
-**步骤2**：修改流程编排文件
-进入pipeline文件夹
+**步骤2**：修改流程编排文件。
+进入pipeline文件夹，
 把burpee_detection_v.pipeline文件中的流地址替换为实际的地址：
 
 ```bash
@@ -86,20 +86,20 @@ ATC run success, welcome to the next use.
 ```
 
 
-**步骤3**：运行检测程序
+**步骤3**：运行检测程序。
 进入Video_burpee_detection文件夹，执行以下命令：
 ```bash
 python3 video_main.py
 ```
-注意：检测程序不会自动停止，需要执行ctrl+c键盘命令停止程序
+注意：检测程序不会自动停止，需要执行ctrl+c键盘命令停止程序。
 
-**步骤3**：查看结果
+**步骤3**：查看结果。
 
-运行可视化结果会以`video_result.mp4`视频形式保存在`Burpee_Detection/Video_burpee_detection`目录下
+- 运行可视化结果会以`video_result.mp4`视频形式保存在`Burpee_Detection/Video_burpee_detection`目录下。
 
-波比跳识别个数会以`result.txt`文件形式保存在`Burpee_Detection/Video_burpee_detection`目录下
+- 波比跳识别个数会以`result.txt`文件形式保存在`Burpee_Detection/Video_burpee_detection`目录下。
 
-检测过程中的帧图片会保存在`Burpee_Detection/Video_burpee_detection/result_pic`目录下
+- 检测过程中的帧图片会保存在`Burpee_Detection/Video_burpee_detection/result_pic`目录下。
 
 
 

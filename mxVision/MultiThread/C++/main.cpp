@@ -59,7 +59,7 @@ APP_ERROR streamCallback(MxStreamManager& mxStreamManager, std::string streamNam
     std::string catImage = ReadFileContent("./test.jpg");
     mxstDataInput.dataPtr = (uint32_t *) catImage.c_str();
     mxstDataInput.dataSize = catImage.size();
-    ret = mxStreamManager.SendData(streamName, 0, mxstDataInput);
+    APP_ERROR ret = mxStreamManager.SendData(streamName, 0, mxstDataInput);
     if (ret != APP_ERR_OK) {
         LogError << "Failed to send data to stream";
     }

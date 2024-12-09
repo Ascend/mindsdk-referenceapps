@@ -21,16 +21,16 @@ Atlas 300I pro、Atlas 300V pro
 ```
 
 ## 3 准备模型
-**步骤1**：下载yolov3模型-[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)，解压后将获取到yolov3_tf.pb文件存放至${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3目录，并进入该目录。
+**步骤1**：下载yolov3模型-[下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)，解压后将获取到yolov3_tf.pb文件存放至${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3目录（根据实际SDK安装路径修改），并进入该目录。
 
 **步骤2**：执行以下命令
 ```
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 ```
 
-**步骤3**：在MultiThread项目根目录下使用`mkdir models`创建目录，执行以下拷贝命令
+**步骤3**：进入MultiThread项目根目录，使用`mkdir models`创建目录，执行以下拷贝命令
 ```
-cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models
+cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models #根据实际SDK安装路径修改
 ```
 
 ## 4 编译与运行
@@ -44,9 +44,9 @@ cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models
 "postProcessLibPath": "${SDK安装路径}/mxVision/lib/libMpYOLOv3PostProcessor.so"
 ```
 
-**步骤2**：将输入图片命名为test.jpg放到MultiThread项目根目录
+**步骤2**：将输入图片命名为test.jpg放到MultiThread/C++目录
 
-**步骤3**：编译后处理插件，在项目根目录下执行
+**步骤3**：编译后处理插件，在MultiThread/C++目录下执行
 ```
 bash build.sh
 ```

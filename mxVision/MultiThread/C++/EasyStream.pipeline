@@ -31,8 +31,8 @@
               "dataSource": "mxpi_imageresize0",
               "modelPath": "../models/yolov3/yolov3_tf_bs1_fp16.om",
               "postProcessConfigPath": "../models/yolov3/yolov3_tf_bs1_fp16.cfg",
-              "labelPath": "../models/yolov3/coco.names",
-              "postProcessLibPath": "libMpYOLOv3PostProcessor.so"
+              "labelPath": "../models/yolov3/yolov3.names",
+              "postProcessLibPath": "${SDK安装路径}/mxVision/lib/libMpYOLOv3PostProcessor.so"
           },
           "factory": "mxpi_modelinfer",
           "next": "mxpi_dataserialize0"
@@ -47,7 +47,7 @@
     },
     "detection1": {
         "stream_config":{
-            "deviceId":"1"
+            "deviceId":"0"
         },
         "appsrc0": {
             "factory": "appsrc",
@@ -77,8 +77,8 @@
               "dataSource": "mxpi_imageresize0",
               "modelPath": "../models/yolov3/yolov3_tf_bs1_fp16.om",
               "postProcessConfigPath": "../models/yolov3/yolov3_tf_bs1_fp16.cfg",
-              "labelPath": "../models/yolov3/coco.names",
-              "postProcessLibPath": "libMpYOLOv3PostProcessor.so"
+              "labelPath": "../models/yolov3/yolov3.names",
+              "postProcessLibPath": "${SDK安装路径}/mxVision/lib/libMpYOLOv3PostProcessor.so"
             },
             "factory": "mxpi_modelinfer",
             "next": "mxpi_dataserialize0"
@@ -93,7 +93,7 @@
     },
     "detection2": {
         "stream_config":{
-            "deviceId":"2"
+            "deviceId":"0"
             },
             "appsrc0": {
             "factory": "appsrc",
@@ -123,8 +123,8 @@
                 "dataSource": "mxpi_imageresize0",
                 "modelPath": "../models/yolov3/yolov3_tf_bs1_fp16.om",
                 "postProcessConfigPath": "../models/yolov3/yolov3_tf_bs1_fp16.cfg",
-                "labelPath": "../models/yolov3/coco.names",
-                "postProcessLibPath": "libMpYOLOv3PostProcessor.so"
+                "labelPath": "../models/yolov3/yolov3.names",
+                "postProcessLibPath": "${SDK安装路径}/mxVision/lib/libMpYOLOv3PostProcessor.so"
             },
             "factory": "mxpi_modelinfer",
             "next": "mxpi_dataserialize0"

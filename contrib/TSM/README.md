@@ -86,6 +86,7 @@ TSM.onnx模型[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/
 
 **步骤2**：模型转换
 
+
 将模型转换为om模型，在“model”目录下，执行以下命令生成om模型
 
 ```shell

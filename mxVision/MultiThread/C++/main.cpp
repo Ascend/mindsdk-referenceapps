@@ -113,11 +113,11 @@ int main(int argc, char *argv[])
     gettimeofday(&inferStartTime, nullptr);
     APP_ERROR ret = TestMultiThread("EasyStream.pipeline");
     if (ret == APP_ERR_OK) {
-        float SEC2MS = 1000.0;
+        float sec2ms = 1000.0;
         gettimeofday(&inferEndTime, nullptr);
-        double inferCostTime = SEC2MS * (inferEndTime.tv_sec - inferStartTime.tv_sec) +
-                               (inferEndTime.tv_usec - inferStartTime.tv_usec) / SEC2MS;
-        LogInfo << "Total time: " << inferCostTime / SEC2MS;
+        double inferCostTime = sec2ms * (inferEndTime.tv_sec - inferStartTime.tv_sec) +
+                               (inferEndTime.tv_usec - inferStartTime.tv_usec) / sec2ms;
+        LogInfo << "Total time: " << inferCostTime / sec2ms;
     }
     return 0;
 }

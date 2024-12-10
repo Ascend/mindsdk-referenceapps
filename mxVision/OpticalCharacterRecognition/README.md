@@ -211,7 +211,7 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
   ```
 2. 第28行配置文本识别模型字符标签文件:
   ```bash
-  dictPath = dictPath = /path/to/ppocr_keys_v1.txt // 识别模型字典文件
+  dictPath = /path/to/ppocr_keys_v1.txt // 识别模型字典文件
   ```
 
 **步骤5：** 编译项目
@@ -267,7 +267,7 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
 **注意**：如果输入图片中包含敏感信息，使用完后请按照当地法律法规要求自行处理，防止信息泄露。
 
 
-# 5 精度验证
+## 5 精度验证
 
 **步骤1：** 准备验证数据集
 

@@ -51,7 +51,7 @@ cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models #根�
 bash build.sh
 ```
 
-**步骤4**：运行
+**步骤4**：在MultiThread/C++目录下运行
 ```
 ./build/mxVisionMultiThread
 ```

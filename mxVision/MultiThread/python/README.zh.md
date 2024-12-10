@@ -46,7 +46,7 @@ cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models #根�
 
 **步骤2**：将输入图片命名为test.jpg放到MultiThread/python目录
 
-**步骤3**：运行
+**步骤3**：在MultiThread/python目录下运行
 ```
 python3 main.py
 ```

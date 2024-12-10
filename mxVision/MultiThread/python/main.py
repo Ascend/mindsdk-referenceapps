@@ -39,10 +39,7 @@ def SendAndGetData(streamManagerApi, streamName, threadId, dataInput):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        fileName = sys.argv[1]
-    else:
-        fileName = "./EasyStream.pipeline"
+    fileName = "./EasyStream.pipeline"
     # init stream manager
     streamManagerApi = StreamManagerApi()
     ret = streamManagerApi.InitManager()
@@ -60,7 +57,7 @@ if __name__ == '__main__':
 
     # Construct the input of the stream
     dataInput = MxDataInput()
-    with open("../picture/test.jpg", 'rb') as f:
+    with open("./test.jpg", 'rb') as f:
         dataInput.data = f.read()
 
     # Inputs data to a specified stream based on streamName.

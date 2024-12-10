@@ -18,10 +18,6 @@ set -e
 file_path=$(cd $(dirname $0); pwd)
 build_type="Debug"
 
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:${LD_LIBRARY_PATH}
-export GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-plugin-scanner
-export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins
-
 function build_mxvision() {
 
     build_path=$file_path/./build
@@ -39,7 +35,6 @@ function build_mxvision() {
         exit -1
     fi
     cd ..
-    cp ./build/mxVisionMultiThread ./dist/
     exit 0
 }
 

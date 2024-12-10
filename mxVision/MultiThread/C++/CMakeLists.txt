@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(Test)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 if(NOT DEFINED ENV{MX_SDK_HOME})
     message(FATAL_ERROR "MX_SDK_HOME is not defined, please set it first.")
@@ -12,7 +12,7 @@ endif()
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 add_definitions(-Dgoogle=mindxsdk_private)
 set(TARGET_NAME mxVisionMultiThread)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 include_directories(${MX_SDK_HOME}/include)
 include_directories(${MX_SDK_HOME}/opensource/include)

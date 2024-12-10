@@ -54,14 +54,14 @@
 
 ## 2、 设置环境变量
 
-**步骤1** 设置CANN和mxVision相关环境变量
+**步骤1**：设置CANN和mxVision相关环境变量
 
 ```bash
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
 . ${SDK_INSTALL_PATH}/mxVision/set_env.sh #sdk安装路径，根据实际安装路径修改
 ```
 
-**步骤2** 安装并设置ffmpeg相关环境变量
+**步骤2**：安装并设置ffmpeg相关环境变量
 
 下载[ffmpeg](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)，解压进入并执行以下命令安装：
 
@@ -80,10 +80,13 @@ export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 
 ## 3、 准备模型
 
-**步骤1** 
-下载[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/offline_models.zip) TSM.onnx, 将下载好压缩包解压并把模型放在“${TSM代码根目录}/model”目录下。
+**步骤1**：模型文件下载
 
-**步骤2** 
+TSM.onnx模型[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/offline_models.zip) , 将下载好压缩包解压并把模型放在“${TSM代码根目录}/model”目录下。
+
+**步骤2**：模型转换
+
+
 将模型转换为om模型，在“model”目录下，执行以下命令生成om模型
 
 ```shell
@@ -93,8 +96,7 @@ bash onnx2om.sh
 
 ## 4、 运行
 
-**步骤1** 
-Kinetics-400数据集下载
+**步骤1**：Kinetics-400数据集下载
 
 参考[Kinetics-400 数据准备](https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md#%E4%B8%8B%E8%BD%BDvideo%E6%95%B0%E6%8D%AE)中的脚本下载操作，下载验证集链接列表文件val_link.list并编写下载脚本download.sh。放在代码根目录的"download_data"目录下。
 
@@ -129,7 +131,7 @@ bash k400_extractor.sh
         ├── zumba
 ```
 
-**步骤2** 数据集预处理
+**步骤2**：数据集预处理
 
 1、视频抽帧
 
@@ -198,7 +200,7 @@ python3 vid2img_kinetics.py ../data ../dataset/
 python3 gen_label_kinetics.py
 ```
 
-**步骤3** 运行精度测试
+**步骤3**：运行精度测试
 
 修改${TSM代码根目录}/ops/dataset_config.py 脚本中参数root_data、filename_imglist_train和filename_imglist_val，若仅进行离线精度测试则可忽略filename_imglist_train设置。
 

@@ -38,13 +38,13 @@
 
 ## 3、 准备模型
 
-**步骤1** 
+**步骤1**：模型文件下载
 
 原始pth模型源码[地址](https://github.com/cuiziteng/illumination-adaptive-transformer)
 本文提供已从pth模型转换好的onnx模型直接使用：[IAT_lol-sim.onnx](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/IAT/IAT_lol-sim.onnx)
 下载后放到项目根目录的models文件夹下。
 
-**步骤2** 
+**步骤2**：模型转换
 
 将模型转换为om模型，在models文件夹下，执行以下命令生成om模型：
 ```
@@ -59,22 +59,20 @@ ATC run success, welcome to the next use.
 
 ## 4、 运行
 
-**步骤1**
-
-将要推理的test.png图片放到本项目./data/文件夹下，执行以下命令:
+**步骤1**：将要推理的test.png图片放到本项目./data/文件夹下，执行以下命令:
 
 ```
 python3 main.py
 ```
 
-**步骤2**
+**步骤2**：查看结果
 
-查看结果：运行命令后即可在./data/文件夹下得到推理后的结果result.png文件。
+运行命令后即可在./data/文件夹下得到推理后的结果result.png文件。
 
 ## 5、 精度验证
 
 
-**步骤1**
+**步骤1**：数据集下载
 
 下载LOLv1数据集，在[论文地址](https://daooshee.github.io/BMVC2018website/)Download Links章节下载LOL数据集。
 将数据集解压后，把其中的测试集目录(eval15)和文件放到本项目./data/文件夹下，如下图所示：
@@ -91,7 +89,7 @@ python3 main.py
 				├──...
 ```
 
-**步骤2**
+**步骤2**：运行
 
 切换到项目根目录下，将main.py中的主函数改为调用test_precision()，修改如下:
 
@@ -104,9 +102,8 @@ python3 main.py
 python3 main.py
 ```
 
-**步骤3**
+**步骤3**：查看结果
 
-查看结果：
 运行后可得到精度测试结果，屏幕输出类似如下信息：
 
 ```

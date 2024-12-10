@@ -84,7 +84,7 @@ def stream_generate(generate_kwargs):
 chat_interface = gr.ChatInterface(
     fn=generate,
     stop_btn=None,
-    type="messages"
+    type="messages", 
     examples=[
         ["作为程序员该如何防止脱发？"],
         ["请给我简短的介绍一下python语言的历史?"],

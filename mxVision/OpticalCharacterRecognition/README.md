@@ -196,10 +196,12 @@ rm -r train_full_images_1
 **步骤3：** 标签格式转换
 
 label标注文件格式转换为ICDAR2015格式, 执行的转换脚本为`OpticalCharacterRecognition/src/Common/LabelTrans/label_trans.py`。
+`--label_json_path`为上述“4 编译与运行”步骤1.2所下载的`train_full_labels.json`文件所在路径；
+`--output_path`为上述“4 编译与运行”步骤1.2所创建的数据集目录`icdar2019`所在路径。
 
 执行命令：
 ```bash
-python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --output_path=/xx/xx/icdar2019/
+python3 ./label_trans.py --label_json_path=/PATH/TO/train_full_labels.json --output_path=/PATH/TO/icdar2019/
 ```
 
 **步骤4：** 修改配置文件
@@ -209,9 +211,9 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
   ```bash
   deviceId = 0 // 进行推理的device的id
   ```
-2. 第28行配置文本识别模型字符标签文件:
+2. 第28行配置文本识别模型字符标签文件路径:（上述“4 编译与运行”步骤1.1所下载的模型字典文件）
   ```bash
-  dictPath = /path/to/ppocr_keys_v1.txt // 识别模型字典文件
+  dictPath = /PATH/TO/ppocr_keys_v1.txt // 识别模型字典文件
   ```
 
 **步骤5：** 编译项目
@@ -225,15 +227,17 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
 **步骤6：** 准备输入图片
 
 需要使用的输入图片必须为JPEG格式，图片名格式为前缀+下划线+数字的形式，如`xxx_xx.jpg`。
-将需要输入的图片放在目录`/xx/xx/icdar2019/images/`下。
+将需要输入的图片放在目录`/PATH/TO/icdar2019/images/`下。（上述“4 编译与运行”步骤1.2所创建的数据集目录`icdar2019/images/`）
 
 
 **步骤7：** 运行程序
 
-执行如下命令，启动程序：
+在目录`OpticalCharacterRecognition/src/`下执行如下命令，启动程序：
+
+注意：`-image_path`为上述“4 编译与运行”步骤1.2所创建的数据集目录`icdar2019/images/`所在路径。
 
 ```bash
-./dist/main -image_path /xx/xx/icdar2019/images/ -thread_num 1 -direction_classification false -config ./data/config/setup.config
+./dist/main -image_path /PATH/TO/icdar2019/images/ -thread_num 1 -direction_classification false -config ./data/config/setup.config
 ```
 运行可使用的参数说明：
 
@@ -246,9 +250,11 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
 
 **步骤8：** 查看结果
 
-- 结果位置：
 
 根据屏幕日志确认是否执行成功。
+
+- 结果位置：
+
 
 识别结果默认存放在`OpticalCharacterRecognition/src/result`目录下。
 
@@ -280,8 +286,11 @@ python3 ./label_trans.py --label_json_path=/xx/xx/train_full_labels.json --outpu
 **步骤3：** 进行精度计算
 
 在目录`OpticalCharacterRecognition/src/Common/EvalScript`下执行：
+
+注意：`--gt_path`为上述“4 编译与运行”步骤1.2所创建的数据集目录`icdar2019/labels`所在路径；`--pred_path`为上述“4 编译与运行”步骤8结果存放位置所在路径。
+
 ```bash
-python3 eval_script.py --gt_path=/xx/xx/icdar2019/labels --pred_path=/xx/xx/result
+python3 eval_script.py --gt_path=/PATH/TO/icdar2019/labels --pred_path=/PATH/TO/result
 ```
 运行可使用的参数说明：
 

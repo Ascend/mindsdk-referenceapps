@@ -46,7 +46,7 @@ cp -r ${SDK_INSTALL_PATH}/mxVision/samples/mxVision/models/yolov3 ./models #根�
 
 **步骤2**：将输入图片命名为test.jpg放到MultiThread/C++目录
 
-**步骤3**：编译后处理插件，在MultiThread/C++目录下执行
+**步骤3**：编译，在MultiThread/C++目录下执行
 ```
 bash build.sh
 ```

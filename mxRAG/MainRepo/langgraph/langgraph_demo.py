@@ -7,7 +7,7 @@ from typing import List, TypedDict, Any, Dict
 from langchain_core.retrievers import BaseRetriever
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import PromptTemplate
-
+from langchain_core.documents import Document
 from mx_rag.utils import ClientParam
 from mx_rag.llm import LLMParameterConfig
 
@@ -27,12 +27,11 @@ def evaluate_creator(evaluator, evaluate_type: str):
 
         datasets = {
             "question": [question] * len(documents),
-            "contexts": [[doc] for doc in documents]
+            "contexts": [[doc.page_content] for doc in documents]
         }
 
         scores = evaluator.evaluate_scores(metrics_name=["context_relevancy"],
                                            datasets=datasets,
-                                           is_async=False,
                                            language=language,
                                            prompt_dir=prompt_dir)
         return scores["context_relevancy"]
@@ -53,7 +52,6 @@ def evaluate_creator(evaluator, evaluate_type: str):
 
         scores = evaluator.evaluate_scores(metrics_name=["answer_relevancy", "faithfulness"],
                                            datasets=datasets,
-                                           is_async=False,
                                            language=language,
                                            prompt_dir=prompt_dir)
         return scores["answer_relevancy"], scores["faithfulness"]
@@ -168,8 +166,10 @@ def rerank(reranker):
         logger.info("---RERANK---")
         question = state["question"]
         documents = state["documents"]
-
+        if len(documents) < 2:
+            return {"documents": documents, "question": question}
         scores = reranker.rerank(query=question, texts=documents)
+        documents = [Document(page_content=content) for content in documents]
         documents = reranker.rerank_top_k(objs=documents, scores=scores)
 
         return {"documents": documents, "question": question}

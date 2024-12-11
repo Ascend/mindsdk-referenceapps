@@ -16,6 +16,7 @@
 
 4.fastapi_demo目录下为fastapi多线程并发调用在线问答的样例。
 
+5.langchain_chains目录下为使用langchain llm chain支持双向认证样例。
 
 注意：
 1.创建知识库过程和在线问答过程使用的embedding模型、关系数据库路径、向量数据库路径需对应保持一致。其中关系数据库和向量数据库路径在样例代码中已经默认设置成一致，embedding模型需用户手动设置成一致。

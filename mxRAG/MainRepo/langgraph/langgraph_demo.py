@@ -32,7 +32,6 @@ def evaluate_creator(evaluator, evaluate_type: str):
 
         scores = evaluator.evaluate_scores(metrics_name=["context_relevancy"],
                                            datasets=datasets,
-                                           is_async=False,
                                            language=language,
                                            prompt_dir=prompt_dir)
         return scores["context_relevancy"]
@@ -53,7 +52,6 @@ def evaluate_creator(evaluator, evaluate_type: str):
 
         scores = evaluator.evaluate_scores(metrics_name=["answer_relevancy", "faithfulness"],
                                            datasets=datasets,
-                                           is_async=False,
                                            language=language,
                                            prompt_dir=prompt_dir)
         return scores["answer_relevancy"], scores["faithfulness"]

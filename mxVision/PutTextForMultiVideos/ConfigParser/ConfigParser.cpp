@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
- * Description: Blocking Queue Function Implementation.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ * Description: ConfigParser implementation.
  * Author: MindX SDK
- * Create: 2023
+ * Create: 2024
  * History: NA
  */
 

@@ -39,17 +39,18 @@ namespace {
     using namespace chrono;
     using namespace std;
     using namespace MxBase;
+    bool SAVE_VIDEO = true;
     static bool g_signalReceived = false;
     const int QUEUE_SIZE = 1000;
     const int TIME_OUT = 3000;
+    const uint32_t CHANNEL_COUNT = 25;
     const int FULL_HD_WIDTH = 1920;
     const int FULL_HD_HEIGHT = 1080;
     const int CIF_WIDTH = 352;
     const int CIF_HEIGHT = 288;
     const int SIGNAL_CHECK_TIMESTEP = 1000;
-    const std::string CONFIG_FILE_NAME = "./config/setup.config";
+    const std::string CONFIG_FILE_NAME = "../setup.config";
     const MxBase::Size CIF_IMAGE_SIZE(CIF_WIDTH, CIF_HEIGHT);
-    const MxBase::Size FULL_HD__IMAGE_SIZE(FULL_HD_WIDTH, FULL_HD_HEIGHT);
     const MxBase::Size RESIZE_MIDDLE_IMAGE_SIZE(960, 540);
     const MxBase::Point leftTop{60, 60};
     const MxBase::Point rightTop{1400, 60};;
@@ -277,28 +278,36 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
 }
 
 
-APP_ERROR SetConfigValue(ConfigParser &configParser, uint32_t &channelCount, uint32_t &deviceNum, std::vector<std::string> &streamNames)
+APP_ERROR SetConfigValue(ConfigParser &configParser, uint32_t &deviceNum, std::vector<std::string> &streamNames)
 {
     APP_ERROR ret = configParser.ParseConfig(CONFIG_FILE_NAME);
     if (ret != APP_ERR_OK) {
         LogError << "Cannot parse file.";
         return APP_ERR_COMM_FAILURE;
     }
-    ret = configParser.GetUnsignedIntValue("SystemConfig.channelCount", channelCount);
+
+    ret = configParser.GetUnsignedIntValue("deviceNum", deviceNum);
     if (ret != APP_ERR_OK) {
-        LogError << "Get channelCount from config file fail.";
+        LogError << "Fail to get config variable named deviceNum.";
         return APP_ERR_COMM_FAILURE;
     }
 
-    std::string itemCfgStr = std::string("deviceNum");
-    ret = configParser.GetUnsignedIntValue(itemCfgStr, deviceNum);
+    unsigned int saveVideo = 0;
+    ret = configParser.GetUnsignedIntValue("saveVideo", saveVideo);
     if (ret != APP_ERR_OK) {
-        LogError << "Fail to get config variable named " << itemCfgStr << ".";
+        LogError << "Fail to get config variable named saveVideo.";
         return APP_ERR_COMM_FAILURE;
     }
-    streamNames = std::vector<std::string>(channelCount * deviceNum);
-    for (unsigned int i = 0; i < deviceNum * channelCount; i++) {
-        itemCfgStr = std::string("stream.ch") + std::to_string(i);
+    if (saveVideo != 0 && saveVideo != 1) {
+        LogError << "saveVideo must be set in the range [0, 1].";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (saveVideo == 0) {
+        SAVE_VIDEO = false;
+    }
+    streamNames = std::vector<std::string>(CHANNEL_COUNT * deviceNum);
+    for (unsigned int i = 0; i < deviceNum * CHANNEL_COUNT; i++) {
+        std::string itemCfgStr = std::string("stream.ch") + std::to_string(i);
         ret = configParser.GetStringValue(itemCfgStr, streamNames[i]);
         if (ret != APP_ERR_OK) {
             LogError << "Get StreamNames from config file fail.";
@@ -317,8 +326,9 @@ APP_ERROR VencCallBack(std::shared_ptr<uint8_t>& outDataPtr, uint32_t& outDataSi
         LogError << "EncodedQueue has been released." << std::endl;
         return APP_ERR_DVPP_INVALID_FORMAT;
     }
-
-    encodedQueue->Push(encodedFrame);
+    if (SAVE_VIDEO == true) {
+        encodedQueue->Push(encodedFrame);
+    }
     return APP_ERR_OK;
 }
 
@@ -375,7 +385,7 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
 // 编码后视频帧保存线程
 void SaveFrameThread(int deviceId, int channelId, std::string VideoType)
 {
-    string savePath = "./output/deviceId_" + to_string(deviceId) + " _channelId_" + to_string(channelId) + "_" + VideoType + ".h264";
+    string savePath = "../output/deviceId_" + to_string(deviceId) + " _channelId_" + to_string(channelId) + "_" + VideoType + ".h264";
     FILE *fp = fopen(savePath.c_str(), "wb");
     if (fp == nullptr) {
         LogError << "Failed to open file.";
@@ -528,8 +538,10 @@ void InitializeThreadPools(ThreadPools &threadPools, int deviceNum, int channelC
         threadPools.threadFrameProcessPool.emplace(deviceId, std::move(threadFrameProcess));
         threadPools.threadVenc1080PPool.emplace(deviceId, std::move(threadVenc1080P));
         threadPools.threadVencCIFPool.emplace(deviceId, std::move(threadVencCIF));
-        threadPools.threadCIFSavePool.emplace(deviceId, std::move(threadCIFSave));
-        threadPools.thread1080PSavePool.emplace(deviceId, std::move(thread1080PSave));
+        if (SAVE_VIDEO == true) {
+            threadPools.threadCIFSavePool.emplace(deviceId, std::move(threadCIFSave));
+            threadPools.thread1080PSavePool.emplace(deviceId, std::move(thread1080PSave));
+        }
     }
 }
 
@@ -555,10 +567,12 @@ void StartThreads(ThreadPools &threadPools, std::map<int, std::vector<AVFormatCo
             // 启动1080P视频编码线程
             threadPools.threadVenc1080PPool[deviceId][channelId] = std::thread(VencThread, videoEncoderMap["1080P"][deviceId][channelId],
                                                                                imageProcessorMap[deviceId][channelId], deviceId, channelId, "1080P");
-            // 启动CIF视频保存线程
-            threadPools.threadCIFSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "CIF");
-            // 启动1080P视频保存线程
-            threadPools.thread1080PSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "1080P");
+            if (SAVE_VIDEO == true) {
+                // 启动CIF视频保存线程
+                threadPools.threadCIFSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "CIF");
+                // 启动1080P视频保存线程
+                threadPools.thread1080PSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "1080P");
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             LogInfo << "Succeed to start working threads for device " << deviceId << ", channelId " << channelId;
         }
@@ -573,8 +587,10 @@ void JoinThreads(ThreadPools &threadPools, int deviceNum, int channelCount) {
             threadPools.threadFrameProcessPool[deviceId][channelId].join();
             threadPools.threadVencCIFPool[deviceId][channelId].join();
             threadPools.threadVenc1080PPool[deviceId][channelId].join();
-            threadPools.threadCIFSavePool[deviceId][channelId].join();
-            threadPools.thread1080PSavePool[deviceId][channelId].join();
+            if (SAVE_VIDEO == true) {
+                threadPools.threadCIFSavePool[deviceId][channelId].join();
+                threadPools.thread1080PSavePool[deviceId][channelId].join();
+            }
             LogInfo << "Succeed to join working threads for device " << deviceId << ", channelId " << channelId;
         }
     }
@@ -630,25 +646,24 @@ int main(int argc, char *argv[]) {
     CaptionGenManager::getInstance().Init();
     {
         // 解析配置文件
-        uint32_t channelCount = 0;
         uint32_t deviceNum = 0;
         std::vector<std::string> streamNames;
         ConfigParser configParser;
-        APP_ERROR ret = SetConfigValue(configParser, channelCount, deviceNum, streamNames);
+        APP_ERROR ret = SetConfigValue(configParser, deviceNum, streamNames);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to parse config file";
             return APP_ERR_COMM_FAILURE;
         }
 
         // 生成设备资源
-        ret = GenerateResourcesForDevices(deviceNum, channelCount, configParser);
+        ret = GenerateResourcesForDevices(deviceNum, CHANNEL_COUNT, configParser);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to generate resources for devices";
             return APP_ERR_COMM_FAILURE;
         }
 
         // 拉起服务
-        ret = StartServices(deviceNum, channelCount, streamNames);
+        ret = StartServices(deviceNum, CHANNEL_COUNT, streamNames);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to start services";
             return APP_ERR_COMM_FAILURE;

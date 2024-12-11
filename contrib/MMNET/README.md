@@ -51,7 +51,6 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 |-------- main.py                             // 主程序  
 |-------- pipeline                               
 |           |---- MMNET.pipeline              // pipeline流水线配置文件 
-|-------- evaluate.py                         // 精度测试程序
 |-------- README.md   
 ```
 

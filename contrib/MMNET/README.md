@@ -121,10 +121,10 @@ ATC run success, welcome to the next use.
 
 **步骤2:** 将main.py中第45行修改为真实的输入人像图片路径。
 
-**步骤3:** 执行run.sh文件：
+**步骤3:** 执行命令：
 
 ```
-bash run.sh
+python3 main.py
 ```
 
 **步骤4:** 查看结果，输出的test_out.jpg即为样例的人像分割后的图片。

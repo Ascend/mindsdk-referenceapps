@@ -3,7 +3,7 @@
 
 [MindX SDK](https://www.hiascend.com/software/mindx-sdk) 是华为推出的软件开发套件(SDK)，提供极简易用、高性能的API和工具，包含mxVision（视觉分析）、mxRAG（知识增强）、mxIndex（特征检索）、mxRec（搜索推荐）等多个SDK，助力昇腾AI处理器赋能各应用场景。
 
-为助力开发者快速掌握mxVision和mxRAG接口的使用、快速实现业务功能，本代码仓（mxSdkReferenceApps）提供了基于mxVision和mxRAG开发的各类参考样例。用户可根据自身需求选择相应案例代码。
+为助力开发者快速掌握mxVision,mxRAG接口和mxIndex接口的使用、快速实现业务功能，本代码仓（mxSdkReferenceApps）提供了基于mxVision, mxRAG和mxIndex开发的各类参考样例。用户可根据自身需求选择相应案例代码。
 
 
 
@@ -16,6 +16,7 @@
 | [mxVision](./mxVision) | mxVision官方应用样例目录        |
 | [tutorials](./tutorials) | mxVision官方开发样例和文档参考工程目录 | 
 | [mxRAG](./mxRAG)        | mxRAG参考样例目录             |
+| [mxIndex](./mxIndex)        | mxIndex参考样例目录             |
 
 ## 相关网站
 

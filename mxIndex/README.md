@@ -3,9 +3,16 @@
 #### 介绍
 **本仓库提供了昇腾MindX SDK index组件实现的几种常见检索算法的demo**
 
-**master分支**对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为1.7.4
+#### 版本配套表
+| MindX SDK版本  | mxIndex版本  | CANN版本  | HDK版本 | 硬件形态  |
+| -------------- | ------------ | -------- | -------- | --------- |
+| master | 6.0.RC3 | 8.0.RC3  | 24.1.RC2 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
 
-**mxIndex-faiss1.7.1分支**对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
+之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/mxIndex_samples
+
+master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为1.7.4
+
+mxIndex-faiss1.7.1分支对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
 
 #### 关于MindX SDK 更多信息
 请关注昇腾社区[MindX SDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本

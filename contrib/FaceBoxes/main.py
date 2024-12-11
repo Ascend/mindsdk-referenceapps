@@ -23,14 +23,6 @@ import MxpiDataType_pb2 as MxpiDataType
 import os
 import argparse
 
-
-parser = argparse.ArgumentParser(description='FaceBoxes')
-parser.add_argument('--save_folder', default='./data/FDDB_Evaluation/', type=str, help='Dir to save results')
-parser.add_argument('--img_info', default='./data/FDDB/img_list.txt')
-parser.add_argument('--image_folder', default = './data/FDDB/images/')
-parser.add_argument('--cpu', action="store_true", default=False, help='Use cpu inference')
-args = parser.parse_args()
-
 if __name__ == '__main__':
     # init stream manager
     streamManagerApi = StreamManagerApi()
@@ -49,64 +41,47 @@ if __name__ == '__main__':
 
     # Construct the input of the stream
     dataInput = MxDataInput()
-    img_addresses = []
-    img_names = []
-    if not os.path.exists(args.save_folder):
-        os.makedirs(args.save_folder)
-    fw = open(os.path.join(args.save_folder, 'FDDB_dets.txt'), 'w')
-
-    with open(args.img_info, 'r') as fr:
-        for img_address in fr:
-            #img_address  e.g. 2002/08/11/big/img_591
-            img_addresses.append(os.path.join(args.image_folder, str.strip(img_address) + '.jpg'))
-            img_names.append(str.strip(img_address).replace('/', '_'))
-
-    for i, name_img in enumerate(img_addresses):
-        with open(name_img, 'rb')as f:
-            dataInput.data = f.read()              
-        # Inputs data to a specified stream based on streamName.
-        streamName = b'Faceboxes'
-        inPluginId = 0
-        uniqueId = streamManagerApi.SendData(streamName, inPluginId, dataInput)
-        if uniqueId < 0:
-            print("Failed to send data to stream.")
-            exit()
     
-        # Obtain the inference result by specifying streamName and uniqueId.
-        keyVec = StringVector()
-        keyVec.push_back(b"mxpi_objectpostprocessor0")
-        inferResult = streamManagerApi.GetProtobuf(streamName, 0, keyVec)
-        fw.write('{:s}\n'.format(img_names[i]))
+    with open("test.jpg", 'rb')as f:
+        dataInput.data = f.read()              
+    # Inputs data to a specified stream based on streamName.
+    streamName = b'Faceboxes'
+    inPluginId = 0
+    uniqueId = streamManagerApi.SendData(streamName, inPluginId, dataInput)
+    if uniqueId < 0:
+        print("Failed to send data to stream.")
+        exit()
 
-        if inferResult.size() == 0:
-            print("infer_result is null")
-            img = cv2.imread(img_addresses[i])
-            cv2.imwrite('./data/results/test_{}.jpg'.format(img_names[i]), img)
-            fw.write('{:.1f}\n'.format(0))
-            continue
+    # Obtain the inference result by specifying streamName and uniqueId.
+    keyVec = StringVector()
+    keyVec.push_back(b"mxpi_objectpostprocessor0")
+    inferResult = streamManagerApi.GetProtobuf(streamName, 0, keyVec)
+
+    if inferResult.size() == 0:
+        print("infer_result is null")
+        img = cv2.imread("./test.jpg")
+        cv2.imwrite("./result.jpg", img)
+        exit()
+
+    # print the infer result
     
-        # print the infer result
-        
-        # Obtain mxpi_objectpostprocessor output
-        tensorList = MxpiDataType.MxpiObjectList()
-        tensorList.ParseFromString(inferResult[0].messageBuf)
-        
-        fw.write('{:.1f}\n'.format(len(tensorList.objectVec)))
-        img = cv2.imread(img_addresses[i])
-        for j in range(len(tensorList.objectVec)):
-            x0 = tensorList.objectVec[j].x0
-            y0 = tensorList.objectVec[j].y0
-            x1 = tensorList.objectVec[j].x1
-            y1 = tensorList.objectVec[j].y1
-            conf = tensorList.objectVec[j].classVec[0].confidence
-            # Visualization of results
-            cv2.rectangle(img, (int(x0), int(y0)), (int(x1), int(y1)), (0, 0, 255), 2)
-            cv2.putText(img, str(conf), (int(x0), int(y0)+10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
-            w = x1 - x0 + 1.0
-            h = y1 - y0 + 1.0
-            fw.write('{:.3f} {:.3f} {:.3f} {:.3f} {:.3f}\n'.format(x0, y0, w, h, conf))
-        cv2.imwrite('./data/results/{}.jpg'.format(img_names[i]), img)
-    fw.close() 
+    # Obtain mxpi_objectpostprocessor output
+    tensorList = MxpiDataType.MxpiObjectList()
+    tensorList.ParseFromString(inferResult[0].messageBuf)
+    
+    img = cv2.imread("./test.jpg")
+    for j in range(len(tensorList.objectVec)):
+        x0 = tensorList.objectVec[j].x0
+        y0 = tensorList.objectVec[j].y0
+        x1 = tensorList.objectVec[j].x1
+        y1 = tensorList.objectVec[j].y1
+        conf = tensorList.objectVec[j].classVec[0].confidence
+        # Visualization of results
+        cv2.rectangle(img, (int(x0), int(y0)), (int(x1), int(y1)), (0, 0, 255), 2)
+        cv2.putText(img, str(conf), (int(x0), int(y0)+10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
+        w = x1 - x0 + 1.0
+        h = y1 - y0 + 1.0
+    cv2.imwrite("./result.jpg", img)
     # destroy streams
     streamManagerApi.DestroyAllStreams()
 

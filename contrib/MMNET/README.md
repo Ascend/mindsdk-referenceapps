@@ -1,6 +1,7 @@
 # MMNET人像分割
 
 ## 1 介绍
+### 1.1 简介
 MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模型性能降级在移动设备上获得实时推断。MMNet模型基多分支dilated conv以及线性bottleneck模块，性能优于最新模型，并且速度提高了几个数量级。
 
 本开发样例基于MindX SDK实现人像分割的功能，其主要功能是利用MMNET模型对输入图片中的人像进行灰度提取，从而与背景分离开，生成一张人像分割图片。
@@ -8,34 +9,6 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 样例输入：带有人体的jpg图片
 
 样例输出：人像与背景分离的新图片
-
-### 1.1 支持的产品
-
-项目所用的硬件平台：Ascend310
-
-### 1.2 支持的版本
-
-CANN：7.0.RC1
-
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
-
-### 1.3 代码目录结构与说明
-
-本工程名称为MMNET，工程目录如下图所示：
-
-```
-|-------- test                                // 存放测试图片
-|-------- mask                                // 存放测试图片mask掩膜
-|-------- model
-|           |---- mmnet.aippconf              // aipp配置文件
-|-------- main.py                             // 主程序  
-|-------- pipeline                               
-|           |---- MMNET.pipeline              // pipeline流水线配置文件 
-|-------- evaluate.py                         // 精度测试程序
-|-------- README.md   
-```
-
-### 1.4 场景限制
 
 本项目能够针对人像清晰的图像完成人像分割任务并实现可视化。对于大部分人像图片，在图像清晰且人像在图片中占据较大比例的情况下都可以进行正确识别。但由于MMNET原算法的局限性，在部分情况下识别效果较差，具体如下：
 
@@ -47,38 +20,60 @@ SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 建议使用纯色的背景，且目标在图片中占比较大的图片进行测试。
 
-## 2 环境依赖
 
-| 软件名称  | 版本  |
-| --------- | ----- |
-| MindX SDK | 5.0.CR3 |
-| python    | 3.9.2   |
-| CANN      | 7.0.RC1  |
-| opencv2   |       |
-| numpy     |       |
+### 1.2 支持的产品
+
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
+
+### 1.3 支持的版本
+
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
 
-在编译运行项目前，需要设置环境变量：
+### 1.4 三方依赖
+| 软件名称          | 版本        |
+|---------------|-----------|
+| cmake         | 3.10.2    |
+| python        | 3.9.2     |
+| opencv-python | 4.10.0.84 |
+| numpy         | 1.24.0    |
+| pillow        | 11.0.0    |
 
-- 环境变量介绍
-运行以下设置脚本以完成，其中{%Mind_SDK%}请替换为实际SDK安装位置
+### 1.5 代码目录结构与说明
+
+本工程名称为MMNET，工程目录如下图所示：
 
 ```
-source {%Mind_SDK%}/mxVision-3.0.RC3/
+|-------- model
+|           |---- mmnet.aippconf              // aipp配置文件
+|-------- main.py                             // 主程序  
+|-------- pipeline                               
+|           |---- MMNET.pipeline              // pipeline流水线配置文件 
+|-------- evaluate.py                         // 精度测试程序
+|-------- README.md   
 ```
 
+## 2 设置环境变量
+```bash
+#设置CANN环境变量，ascend-toolkit-path为cann安装路径
+. ${ascend-toolkit-path}/set_env.sh
 
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
+```
 
-## 3 模型转换
+## 3 准备模型
 人像分割采用提供的mmnet.pb模型。由于原模型是基于tensorflow的人像分割模型，因此我们需要借助于ATC工具将其转化为对应的om模型。
 
 具体步骤如下：
-**步骤1** 获取模型pb文件
+**步骤1:** 获取模型pb文件
 ，下载链接为https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MMNET/mmnet.pb
 
-**步骤2** 将获取到的mmnet模型pb文件存放至：“项目所在目录/model”
+**步骤2:** 将获取到的mmnet模型pb文件存放至：“项目所在目录/model”
 
-**步骤3** 模型转换
+**步骤3:** 模型转换
 
 在pb文件所在目录下存放aipp配置文件，文件名为，具体内容如下：
 
@@ -108,81 +103,29 @@ aipp_op {
 在确保环境变量设置正确后，在pb文件所在目录下执行以下命令：
 
 ```
-atc --model=mmnet.pb --framework=3 --output=mmnet --soc_version=Ascend310 --insert_op_conf=mmnet.aippconf --input_shape="input_x:1,256,256,3"
+atc --model=mmnet.pb --framework=3 --output=mmnet --soc_version=Ascend310P3 --insert_op_conf=mmnet.aippconf --input_shape="input_x:1,256,256,3"
 ```
 
-执行完模型转换脚本后，若提示如下信息说明模型转换成功，会在output参数指定的路径下生成mmnet.om模型文件。
+**步骤4:** 查看结果
+执行完模型转换脚本后，若提示如下信息说明模型转换成功。
 
-```python
-ATC run success  
+```
+ATC run success, welcome to the next use.
 ```
 
-
-
-## 4 编译运行
+## 4 运行
 
 接下来进行模型的安装运行，具体步骤如下：
 
-**步骤1** 获取om模型
+**步骤1:** 参照第3章节中的模型转换步骤，将mmnet的离线模型转换成功。
 
-**步骤2** 修改run.sh中MX_SDK_HOME
+**步骤2:** 将main.py中第45行修改为真实的输入人像图片路径。
 
-
-**步骤3** 配置pipeline
-
-根据所需场景，配置pipeline文件，调整路径参数等。
-
-```python
-"mxpi_tensorinfer0": {
-			"props": {
-				"modelPath": "./model/mmnet.om"
-			},
-			"factory": "mxpi_tensorinfer",
-			"next":"appsink0"
-#修改om文件存放的路径
-```
-
-**步骤4** 存放图片，执行模型进行测试
-
-将测试图片存放至主目录下，修改main.py中的图片存放路径以及人像分割后的存储路径的相关代码：
-【注意】测试图片尽量仅包含一个人物，正脸且周围环境较为简单，同时图片为jpg格式。否则会对人像分割效果有较大影响,造成较大误差。
-
-```
-filepath = "test.jpg"
-filepath_out = "test-out.jpg"
-```
-
-然后执行run.sh文件：
+**步骤3:** 执行run.sh文件：
 
 ```
 bash run.sh
 ```
 
-输出的图片即为样例的人像分割后的图片。
-
-## 5 精度测试
-
-对测试集中的300张图片进行精度测试，具体步骤如下：
-
-**步骤1** 获取测试集的图片,确保测试集的输入图片为jpg格式。
-获取地址为：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MMNET/data.zip
-
-**步骤2** 修改evaluate.py中的测试集图片存放路径：
-
-```
-filepath = "./test/"  #测试集图片存放路径
-gt_dir = './mask'   #测试集掩膜mask图片存放路径
-```
-
-**步骤3** 修改run.sh中MX_SDK_HOME和执行文件名称：
-
-```
-python3 evaluate.py
-```
-
-并执行：
-
-```
-bash run.sh
-```
+**步骤4:** 查看结果，输出的test_out.jpg即为样例的人像分割后的图片。
 

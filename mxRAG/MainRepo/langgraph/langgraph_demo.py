@@ -166,7 +166,7 @@ def rerank(reranker):
         logger.info("---RERANK---")
         question = state["question"]
         documents = state["documents"]
-        if len(documents)<2:
+        if len(documents) < 2:
             return {"documents": documents, "question": question}
         scores = reranker.rerank(query=question, texts=documents)
         documents = [Document(page_content=content) for content in documents]

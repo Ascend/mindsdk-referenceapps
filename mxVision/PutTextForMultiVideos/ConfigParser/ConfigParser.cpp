@@ -11,12 +11,10 @@
 #include <fstream>
 #include "ConfigParser.h"
 
-
 namespace {
     const char COMMENT_CHARATER = '#';
 }
 
-// Remove spaces from both left and right based on the string
 inline void ConfigParser::Trim(std::string &str) const
 {
     str.erase(str.begin(), std::find_if(str.begin(), str.end(), std::not1(std::ptr_fun(::isspace))));
@@ -26,7 +24,6 @@ inline void ConfigParser::Trim(std::string &str) const
 
 APP_ERROR ConfigParser::ParseConfig(const std::string &fileName)
 {
-    // Open the input file
     std::ifstream inFile(fileName);
     if (!inFile.is_open()) {
         std::cout << "cannot read setup.config file!" << std::endl;
@@ -34,36 +31,35 @@ APP_ERROR ConfigParser::ParseConfig(const std::string &fileName)
     }
     std::string line, newLine;
     int startPos, endPos, pos;
-    // Cycle all the line
+
     while (getline(inFile, line)) {
         if (line.empty()) {
             continue;
         }
         startPos = 0;
         endPos = line.size() - 1;
-        pos = line.find(COMMENT_CHARATER); // Find the position of comment
+        pos = line.find(COMMENT_CHARATER);
         if (pos != -1) {
             if (pos == 0) {
                 continue;
             }
             endPos = pos - 1;
         }
-        newLine = line.substr(startPos, (endPos - startPos) + 1); // delete comment
+        newLine = line.substr(startPos, (endPos - startPos) + 1);
         pos = newLine.find('=');
         if (pos == -1) {
             continue;
         }
         std::string na = newLine.substr(0, pos);
-        Trim(na);      // Delete the space of the key name
+        Trim(na);
         std::string value = newLine.substr(pos + 1, endPos + 1 - (pos + 1));
-        Trim(value);                                   // Delete the space of value
-        configData_.insert(std::make_pair(na, value));       // Insert the key-value pairs into configData_
+        Trim(value);
+        configData_.insert(std::make_pair(na, value));
     }
     inFile.close();
     return APP_ERR_OK;
 }
 
-// Get the string value by key name
 APP_ERROR ConfigParser::GetStringValue(const std::string &name, std::string &value) const
 {
     if (configData_.count(name) == 0) {
@@ -73,7 +69,6 @@ APP_ERROR ConfigParser::GetStringValue(const std::string &name, std::string &val
     return APP_ERR_OK;
 }
 
-// Get the unsigned integer value by key name
 APP_ERROR ConfigParser::GetUnsignedIntValue(const std::string &name, unsigned int &value) const
 {
     if (configData_.count(name) == 0) {

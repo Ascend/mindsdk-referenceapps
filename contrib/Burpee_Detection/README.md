@@ -65,7 +65,7 @@
 ```bash
 bash ./atc.sh
 ```
-执行完模型转换脚本后，会在model文件夹生成相应的burpee_detection.om模型文件：
+执行完模型转换脚本后，执行后终端输出如下，会在model文件夹生成相应的burpee_detection.om模型文件：
 ```bash
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.

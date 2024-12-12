@@ -83,19 +83,18 @@ namespace {
         std::map<int, std::vector<std::thread>> thread1080PSavePool;
     };
 
-    std::map<int, std::vector<std::shared_ptr<MxBase::ImageProcessor>>> imageProcessorMap = {};
-    std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>> pullerToVdecQueueMap = {};
-    std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>> vdecToCaptionQueueMap = {};
+    std::map<int, std::vector<std::shared_ptr<MxBase::ImageProcessor>>> g_imageProcessorMap = {};
+    std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>> g_pullerToVdecQueueMap = {};
+    std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>> g_vdecToCaptionQueueMap = {};
     std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>>>
-        captionToVencQueueMap = {};
+        g_captionToVencQueueMap = {};
     std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>>>
-        vencToFileQueueMap = {};
-    std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> captionImplVecForTimeMap = {};
-    std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> captionImplVecForTextMap = {};
-    std::map<int, std::vector<std::shared_ptr<VideoDecoder>>> videoDecoderMap = {};
-    std::map<std::string, std::map<int, std::vector<std::shared_ptr<VideoEncoder>>>> videoEncoderMap = {};
+        g_vencToFileQueueMap = {};
+    std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> g_captionImplVecForTimeMap = {};
+    std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> g_captionImplVecForTextMap = {};
+    std::map<int, std::vector<std::shared_ptr<VideoDecoder>>> g_videoDecoderMap = {};
+    std::map<std::string, std::map<int, std::vector<std::shared_ptr<VideoEncoder>>>> g_videoEncoderMap = {};
 }
-
 
 AVFormatContext* CreateFormatContext(const std::string &filePath)
 {
@@ -185,7 +184,7 @@ void StreamPullerThread(const std::string filePath, AVFormatContext* pFormatCtx,
         encodedFrame.channelId = channelId;
         encodedFrame.frameId = frameId;
         GetFrame(pkt, encodedFrame, pFormatCtx);
-        pullerToVdecQueueMap[deviceId][channelId]->Push(encodedFrame, true);
+        g_pullerToVdecQueueMap[deviceId][channelId]->Push(encodedFrame, true);
         frameId += 1;
     }
 }
@@ -195,19 +194,19 @@ void FrameProcessThread(const uint32_t deviceId, const int &channelId)
 {
     while (!g_signalReceived) {
         DecodedFrame decodedFrame;
-        APP_ERROR ret = vdecToCaptionQueueMap[deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
+        APP_ERROR ret = g_vdecToCaptionQueueMap[deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             continue;
         }
         MxBase::Image imageRGB;
-        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(
+        ret = g_imageProcessorMap[deviceId][channelId]->ConvertFormat(
             decodedFrame.image, MxBase::ImageFormat::RGB_888, imageRGB);
         if (ret != 0) {
             LogError << "Fail to convert format for decoded image into RGB format";
         }
         auto imageTensor = imageRGB.ConvertToTensor(true, false);
-        ret = captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "位置信息1", "位置信息2",
-            leftTop, DEFAULT_OPACITY);
+        ret = g_captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "位置信息1", "位置信息2",
+                                                                       leftTop, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the address text in the top left corner.";
         }
@@ -218,31 +217,31 @@ void FrameProcessThread(const uint32_t deviceId, const int &channelId)
         std::stringstream ss;
         ss << t->tm_year + YEAR_OFFSET << "." << t->tm_mon + MONTH_OFFSET << "." << t->tm_mday
            << " " << t->tm_hour << ":" << t->tm_min << ":" << t->tm_sec;
-        ret = captionImplVecForTimeMap[deviceId][channelId]->putText(imageTensor, ss.str(), "",
-            rightTop, DEFAULT_OPACITY);
+        ret = g_captionImplVecForTimeMap[deviceId][channelId]->putText(imageTensor, ss.str(), "",
+                                                                       rightTop, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the time text in the top right corner.";
         }
-        ret = captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "", "预留信息",
-            leftButtom, DEFAULT_OPACITY);
+        ret = g_captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "", "预留信息",
+                                                                       leftButtom, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the reserved text in the left button corner.";
         }
 
         MxBase::Image imageYuv;
-        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(imageRGB,
-            MxBase::ImageFormat::YUV_SP_420, imageYuv);
+        ret = g_imageProcessorMap[deviceId][channelId]->ConvertFormat(imageRGB,
+                                                                      MxBase::ImageFormat::YUV_SP_420, imageYuv);
         if (ret != 0) {
             LogError << "Fail to convert format for image";
         }
         decodedFrame.image = imageYuv;
 
         // 一路变两路
-        ret = captionToVencQueueMap["CIF"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
+        ret = g_captionToVencQueueMap["CIF"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             std::cout << "Fail to push frame into vencQueue";
         }
-        ret = captionToVencQueueMap["1080P"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
+        ret = g_captionToVencQueueMap["1080P"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             std::cout << "Fail to push frame into vencQueue";
         }
@@ -274,12 +273,12 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
 
     while (!g_signalReceived) {
         EncodedFrame encodedFrame;
-        ret = pullerToVdecQueueMap[deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
+        ret = g_pullerToVdecQueueMap[deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             continue;
         }
         ret = videoDecoder->Decode(encodedFrame.data, encodedFrame.dataSize, frameId, psatedImgTmp,
-            (void*)&(*vdecToCaptionQueueMap[deviceId][channelId]));
+            (void*)&(*g_vdecToCaptionQueueMap[deviceId][channelId]));
         if (ret != APP_ERR_OK) {
             LogError << "VideoDecoder decode failed. Ret is: " << ret;
         }
@@ -351,20 +350,20 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
     while (!g_signalReceived) {
         if (videoType == "CIF") {
             DecodedFrame decodedFrame;
-            APP_ERROR ret = captionToVencQueueMap[videoType][deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
+            APP_ERROR ret = g_captionToVencQueueMap[videoType][deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
             if (ret != APP_ERR_OK) {
                 continue;
             }
             Image resizedImage;
             Image resizedMidImage;
-            ret = imageProcessorMap[deviceId][channelId]->Resize(
+            ret = g_imageProcessorMap[deviceId][channelId]->Resize(
                 decodedFrame.image, RESIZE_MIDDLE_IMAGE_SIZE, resizedMidImage, (MxBase::Interpolation)0);
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to resize middle image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
             }
 
-            ret = imageProcessorMap[deviceId][channelId]->Resize(
+            ret = g_imageProcessorMap[deviceId][channelId]->Resize(
                 resizedMidImage, CIF_IMAGE_SIZE, resizedImage, (MxBase::Interpolation)0);
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to resize final image" << " [DeviceId: " << deviceId
@@ -372,19 +371,19 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
             }
             decodedFrame.image = resizedImage;
             ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId,
-                static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
+                static_cast<void*>(&(*g_vencToFileQueueMap[videoType][deviceId][channelId])));
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to encode 1080P image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
             }
         } else {
             DecodedFrame decodedFrame;
-            APP_ERROR ret = captionToVencQueueMap[videoType][deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
+            APP_ERROR ret = g_captionToVencQueueMap[videoType][deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
             if (ret != APP_ERR_OK) {
                 continue;
             }
             ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId,
-                static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
+                static_cast<void*>(&(*g_vencToFileQueueMap[videoType][deviceId][channelId])));
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to encode 1080P image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
@@ -409,7 +408,7 @@ void SaveFrameThread(int deviceId, int channelId, std::string videoType)
     bool bIsIDR = false;
     while (!g_signalReceived) {
         EncodedFrame encodedFrame;
-        APP_ERROR ret = vencToFileQueueMap[videoType][deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
+        APP_ERROR ret = g_vencToFileQueueMap[videoType][deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             continue;
         }
@@ -471,7 +470,7 @@ APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId)
     vDecodeConfig.height = FULL_HD_HEIGHT;
     vDecodeConfig.callbackFunc = VdecCallBack;
     std::shared_ptr<VideoDecoder> videoDecoder = std::make_shared<VideoDecoder>(vDecodeConfig, deviceId, channelId);
-    videoDecoderMap[deviceId].push_back(videoDecoder);
+    g_videoDecoderMap[deviceId].push_back(videoDecoder);
 
     VideoEncodeConfig vEncodeConfig;
     vEncodeConfig.callbackFunc = VencCallBack;
@@ -484,14 +483,14 @@ APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId)
     vEncodeConfig.maxPicWidth = FULL_HD_WIDTH;
     std::shared_ptr<VideoEncoder> videoEncoder1080p =
             std::make_shared<VideoEncoder>(vEncodeConfig, deviceId, channelId);
-    videoEncoderMap["1080P"][deviceId].push_back(videoEncoder1080p);
+    g_videoEncoderMap["1080P"][deviceId].push_back(videoEncoder1080p);
 
     vEncodeConfig.height = CIF_HEIGHT;
     vEncodeConfig.width = CIF_WIDTH;
     vEncodeConfig.maxPicHeight = CIF_HEIGHT;
     vEncodeConfig.maxPicWidth = CIF_WIDTH;
     std::shared_ptr<VideoEncoder> videoEncoderCIF = std::make_shared<VideoEncoder>(vEncodeConfig, deviceId, channelId);
-    videoEncoderMap["CIF"][deviceId].push_back(videoEncoderCIF);
+    g_videoEncoderMap["CIF"][deviceId].push_back(videoEncoderCIF);
 }
 
 
@@ -500,17 +499,17 @@ APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const Con
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         // 初始化线程通信队列
         for (int channelId = 0; channelId < channelCount; channelId++) {
-            pullerToVdecQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
-            vdecToCaptionQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
-            captionToVencQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
-            captionToVencQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
-            vencToFileQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
-            vencToFileQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
+            g_pullerToVdecQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
+            g_vdecToCaptionQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+            g_captionToVencQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+            g_captionToVencQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+            g_vencToFileQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
+            g_vencToFileQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
         }
 
         // 初始化字幕贴图相关资源
         for (int channelId = 0; channelId < channelCount; channelId++) {
-            imageProcessorMap[deviceId].push_back(std::make_shared<MxBase::ImageProcessor>(deviceId));
+            g_imageProcessorMap[deviceId].push_back(std::make_shared<MxBase::ImageProcessor>(deviceId));
             auto captionImplForTime = std::make_shared<CaptionImpl>();
             auto captionImplForText = std::make_shared<CaptionImpl>();
             APP_ERROR ret = InitCaptionResource(*captionImplForTime, deviceId);
@@ -523,8 +522,8 @@ APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const Con
                 LogError << "Fail to init caption resource for text";
                 return APP_ERR_COMM_FAILURE;
             }
-            captionImplVecForTimeMap[deviceId].push_back(captionImplForTime);
-            captionImplVecForTextMap[deviceId].push_back(captionImplForText);
+            g_captionImplVecForTimeMap[deviceId].push_back(captionImplForTime);
+            g_captionImplVecForTextMap[deviceId].push_back(captionImplForText);
         }
 
         // 初始化视频编解码器资源
@@ -571,20 +570,20 @@ void StartThreads(ThreadPools &threadPools, std::map<int, std::vector<AVFormatCo
                     pFormatCtxsMap[deviceId][channelId], deviceId, channelId);
             // 启动解码线程
             threadPools.threadVdecPool[deviceId][channelId] =
-                    std::thread(VdecThread, videoDecoderMap[deviceId][channelId],
-                                                                          deviceId, channelId);
+                    std::thread(VdecThread, g_videoDecoderMap[deviceId][channelId],
+                                deviceId, channelId);
             // 启动视频帧处理线程
             threadPools.threadFrameProcessPool[deviceId][channelId] =
                     std::thread(FrameProcessThread, deviceId, channelId);
             // 启动CIF视频编码线程
             threadPools.threadVencCIFPool[deviceId][channelId] =
-                    std::thread(VencThread, videoEncoderMap["CIF"][deviceId][channelId],
-                    imageProcessorMap[deviceId][channelId],
-                    deviceId, channelId, "CIF");
+                    std::thread(VencThread, g_videoEncoderMap["CIF"][deviceId][channelId],
+                                g_imageProcessorMap[deviceId][channelId],
+                                deviceId, channelId, "CIF");
             // 启动1080P视频编码线程
             threadPools.threadVenc1080PPool[deviceId][channelId] =
-                    std::thread(VencThread, videoEncoderMap["1080P"][deviceId][channelId],
-                    imageProcessorMap[deviceId][channelId], deviceId, channelId, "1080P");
+                    std::thread(VencThread, g_videoEncoderMap["1080P"][deviceId][channelId],
+                                g_imageProcessorMap[deviceId][channelId], deviceId, channelId, "1080P");
             if (g_saveVIDEO) {
                 // 启动CIF视频保存线程
                 threadPools.threadCIFSavePool[deviceId][channelId] =
@@ -652,15 +651,15 @@ static void SignalHandler(int signal)
 
 void ClearGlobalContainers()
 {
-    imageProcessorMap.clear();
-    pullerToVdecQueueMap.clear();
-    vdecToCaptionQueueMap.clear();
-    captionToVencQueueMap.clear();
-    vencToFileQueueMap.clear();
-    captionImplVecForTimeMap.clear();
-    captionImplVecForTextMap.clear();
-    videoDecoderMap.clear();
-    videoEncoderMap.clear();
+    g_imageProcessorMap.clear();
+    g_pullerToVdecQueueMap.clear();
+    g_vdecToCaptionQueueMap.clear();
+    g_captionToVencQueueMap.clear();
+    g_vencToFileQueueMap.clear();
+    g_captionImplVecForTimeMap.clear();
+    g_captionImplVecForTextMap.clear();
+    g_videoDecoderMap.clear();
+    g_videoEncoderMap.clear();
 }
 
 int main(int argc, char *argv[])

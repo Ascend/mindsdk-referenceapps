@@ -18,19 +18,14 @@
 
 class ConfigParser {
 public:
-    // Read the config file and save the useful infomation with the key-value pairs format in configData_
     APP_ERROR ParseConfig(const std::string &fileName);
 
-    // Get the string value by key name
     APP_ERROR GetStringValue(const std::string &name, std::string &value) const;
 
-    // Get the unsigned int value by key name
     APP_ERROR GetUnsignedIntValue(const std::string &name, unsigned int &value) const;
 
-
 private:
-    std::map<std::string, std::string> configData_ = {}; // Variable to store key-value pairs
-    // Remove spaces from both left and right based on the string
+    std::map<std::string, std::string> configData_ = {};
     inline void Trim(std::string &str) const;
 };
 

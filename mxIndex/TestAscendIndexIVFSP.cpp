@@ -464,16 +464,10 @@ void MultiSearchAndMultiSearchFilter()
 
     std::vector<faiss::ascend::AscendIndex*> indexes;
     for (int i = 0; i < INDEX_NUM; ++i) {
-        faiss::ascend::AscendIndexIVFSP* index;
-        if (i == 0) {
-            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                codeBookPath.c_str(), faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                faiss::MetricType::METRIC_L2, conf);
-        } else {
-            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                faiss::MetricType::METRIC_L2, conf);
-        }
+        auto index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
+            codeBookPath.c_str(),
+            faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+            faiss::MetricType::METRIC_L2, conf);
         index->setVerbose(true);
         indexes.emplace_back(index);
         printf("create index:%d\n", i);

@@ -44,7 +44,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 # ffmpeg-lib-path: ffmpeg的lib库安装路径，通常为/usr/local/ffmpeg/lib
 ```
 
-##  4 编译与运行
+##  3 编译与运行
 **步骤1：下载贴字接口代码**
 
 根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/PutText)下载PutText参考设计，将PutText/PutText目录在本项目根目录下。

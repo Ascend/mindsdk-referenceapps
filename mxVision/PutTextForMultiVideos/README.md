@@ -67,7 +67,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 注意：
 
-_1. deviceNum 需为整数，取值范围为 [1, NPU设备个数]，`npu-smi info` 命令可以查看NPU设备个数。_
+_1. deviceNum 需为整数，取值范围为 [1, min(NPU设备个数, 5)]。`npu-smi info` 命令可以查看NPU设备个数；考虑到性能资源上限，推荐deviceNum数值不超过5。_
 
 _2. saveVideo 需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 

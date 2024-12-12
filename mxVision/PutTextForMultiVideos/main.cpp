@@ -39,11 +39,14 @@ namespace {
     using namespace chrono;
     using namespace std;
     using namespace MxBase;
-    bool SAVE_VIDEO = true;
+    bool g_saveVIDEO = true;
     static bool g_signalReceived = false;
     const int QUEUE_SIZE = 1000;
+    const float DEFAULT_OPACITY = 0.3;
     const int TIME_OUT = 3000;
     const uint32_t CHANNEL_COUNT = 25;
+    const int YEAR_OFFSET = 1900;
+    const int MONTH_OFFSET = 1;
     const int FULL_HD_WIDTH = 1920;
     const int FULL_HD_HEIGHT = 1080;
     const int CIF_WIDTH = 352;
@@ -83,8 +86,10 @@ namespace {
     std::map<int, std::vector<std::shared_ptr<MxBase::ImageProcessor>>> imageProcessorMap = {};
     std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>> pullerToVdecQueueMap = {};
     std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>> vdecToCaptionQueueMap = {};
-    std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>>> captionToVencQueueMap = {};
-    std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>>> vencToFileQueueMap = {};
+    std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<DecodedFrame>>>>>
+        captionToVencQueueMap = {};
+    std::map<std::string, std::map<int, std::vector<std::shared_ptr<BlockingQueue<EncodedFrame>>>>>
+        vencToFileQueueMap = {};
     std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> captionImplVecForTimeMap = {};
     std::map<int, std::vector<std::shared_ptr<CaptionImpl>>> captionImplVecForTextMap = {};
     std::map<int, std::vector<std::shared_ptr<VideoDecoder>>> videoDecoderMap = {};
@@ -195,13 +200,14 @@ void FrameProcessThread(const uint32_t deviceId, const int &channelId)
             continue;
         }
         MxBase::Image imageRGB;
-        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(decodedFrame.image, MxBase::ImageFormat::RGB_888, imageRGB);
+        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(
+            decodedFrame.image, MxBase::ImageFormat::RGB_888, imageRGB);
         if (ret != 0) {
             LogError << "Fail to convert format for decoded image into RGB format";
         }
         auto imageTensor = imageRGB.ConvertToTensor(true, false);
         ret = captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "位置信息1", "位置信息2",
-                                                  leftTop, 0.3);
+            leftTop, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the address text in the top left corner.";
         }
@@ -210,21 +216,22 @@ void FrameProcessThread(const uint32_t deviceId, const int &channelId)
         std::tm* t = std::localtime(&now);
         // 将信息输出到字符串流
         std::stringstream ss;
-        ss << t->tm_year + 1900 << "." << t->tm_mon + 1 << "." << t->tm_mday
+        ss << t->tm_year + YEAR_OFFSET << "." << t->tm_mon + MONTH_OFFSET << "." << t->tm_mday
            << " " << t->tm_hour << ":" << t->tm_min << ":" << t->tm_sec;
         ret = captionImplVecForTimeMap[deviceId][channelId]->putText(imageTensor, ss.str(), "",
-                                                  rightTop, 0.3);
+            rightTop, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the time text in the top right corner.";
         }
         ret = captionImplVecForTextMap[deviceId][channelId]->putText(imageTensor, "", "预留信息",
-                                                  leftButtom, 0.3);
+            leftButtom, DEFAULT_OPACITY);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put the reserved text in the left button corner.";
         }
 
         MxBase::Image imageYuv;
-        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(imageRGB, MxBase::ImageFormat::YUV_SP_420, imageYuv);
+        ret = imageProcessorMap[deviceId][channelId]->ConvertFormat(imageRGB,
+            MxBase::ImageFormat::YUV_SP_420, imageYuv);
         if (ret != 0) {
             LogError << "Fail to convert format for image";
         }
@@ -232,11 +239,11 @@ void FrameProcessThread(const uint32_t deviceId, const int &channelId)
 
         // 一路变两路
         ret = captionToVencQueueMap["CIF"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
-        if (ret != APP_ERR_OK ) {
+        if (ret != APP_ERR_OK) {
             std::cout << "Fail to push frame into vencQueue";
         }
         ret = captionToVencQueueMap["1080P"][deviceId][channelId]->Push(decodedFrame, TIME_OUT);
-        if (ret != APP_ERR_OK ) {
+        if (ret != APP_ERR_OK) {
             std::cout << "Fail to push frame into vencQueue";
         }
     }
@@ -253,7 +260,8 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
         LogError << "Fail to set device for vdecThread.";
         return;
     }
-    MxBase::MemoryData imgData(FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2, MxBase::MemoryData::MemoryType::MEMORY_DVPP, deviceId);
+    MxBase::MemoryData imgData(FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2,
+            MxBase::MemoryData::MemoryType::MEMORY_DVPP, deviceId);
     ret = MxBase::MemoryHelper::Malloc(imgData);
     if (ret != 0) {
         LogError << "malloc error" << std::endl;
@@ -261,7 +269,8 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
     }
     std::shared_ptr<uint8_t> pastedData((uint8_t*)imgData.ptrData, imgData.free);
     MxBase::Size imgSize(FULL_HD_WIDTH, FULL_HD_HEIGHT);
-    MxBase::Image psatedImgTmp(pastedData, FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2, deviceId, imgSize, MxBase::ImageFormat::YUV_SP_420);
+    MxBase::Image psatedImgTmp(pastedData, FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2,
+            deviceId, imgSize, MxBase::ImageFormat::YUV_SP_420);
 
     while (!g_signalReceived) {
         EncodedFrame encodedFrame;
@@ -269,7 +278,8 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
         if (ret != APP_ERR_OK) {
             continue;
         }
-        ret = videoDecoder->Decode(encodedFrame.data, encodedFrame.dataSize, frameId, psatedImgTmp, (void*)&(*vdecToCaptionQueueMap[deviceId][channelId]));
+        ret = videoDecoder->Decode(encodedFrame.data, encodedFrame.dataSize, frameId, psatedImgTmp,
+            (void*)&(*vdecToCaptionQueueMap[deviceId][channelId]));
         if (ret != APP_ERR_OK) {
             LogError << "VideoDecoder decode failed. Ret is: " << ret;
         }
@@ -303,7 +313,7 @@ APP_ERROR SetConfigValue(ConfigParser &configParser, uint32_t &deviceNum, std::v
         return APP_ERR_COMM_FAILURE;
     }
     if (saveVideo == 0) {
-        SAVE_VIDEO = false;
+        g_saveVIDEO = false;
     }
     streamNames = std::vector<std::string>(CHANNEL_COUNT * deviceNum);
     for (unsigned int i = 0; i < deviceNum * CHANNEL_COUNT; i++) {
@@ -322,11 +332,11 @@ APP_ERROR VencCallBack(std::shared_ptr<uint8_t>& outDataPtr, uint32_t& outDataSi
 {
     EncodedFrame encodedFrame {outDataPtr, outDataSize, channelId, frameId};
     auto encodedQueue = static_cast<BlockingQueue<EncodedFrame>*>(userData);
-    if (encodedQueue== nullptr) {
+    if (encodedQueue == nullptr) {
         LogError << "EncodedQueue has been released." << std::endl;
         return APP_ERR_DVPP_INVALID_FORMAT;
     }
-    if (SAVE_VIDEO == true) {
+    if (g_saveVIDEO) {
         encodedQueue->Push(encodedFrame);
     }
     return APP_ERR_OK;
@@ -334,11 +344,11 @@ APP_ERROR VencCallBack(std::shared_ptr<uint8_t>& outDataPtr, uint32_t& outDataSi
 
 
 // 视频帧编码线程
-void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<ImageProcessor> imageProcessor, int deviceId, int channelId,
-                std::string videoType)
+void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<ImageProcessor> imageProcessor,
+            int deviceId, int channelId, std::string videoType)
 {
     uint32_t frameId = 0;
-    while(!g_signalReceived) {
+    while (!g_signalReceived) {
         if (videoType == "CIF") {
             DecodedFrame decodedFrame;
             APP_ERROR ret = captionToVencQueueMap[videoType][deviceId][channelId]->Pop(decodedFrame, TIME_OUT);
@@ -348,20 +358,21 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
             Image resizedImage;
             Image resizedMidImage;
             ret = imageProcessorMap[deviceId][channelId]->Resize(
-                    decodedFrame.image, RESIZE_MIDDLE_IMAGE_SIZE, resizedMidImage, (MxBase::Interpolation)0);
+                decodedFrame.image, RESIZE_MIDDLE_IMAGE_SIZE, resizedMidImage, (MxBase::Interpolation)0);
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to resize middle image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
             }
 
             ret = imageProcessorMap[deviceId][channelId]->Resize(
-                    resizedMidImage, CIF_IMAGE_SIZE, resizedImage, (MxBase::Interpolation)0);
+                resizedMidImage, CIF_IMAGE_SIZE, resizedImage, (MxBase::Interpolation)0);
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to resize final image" << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
             }
             decodedFrame.image = resizedImage;
-            ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId, static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
+            ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId,
+                static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to encode 1080P image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
@@ -372,7 +383,8 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
             if (ret != APP_ERR_OK) {
                 continue;
             }
-            ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId, static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
+            ret = videoEncoder->Encode(decodedFrame.image, decodedFrame.frameId,
+                static_cast<void*>(&(*vencToFileQueueMap[videoType][deviceId][channelId])));
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to encode 1080P image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";
@@ -383,9 +395,10 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
 }
 
 // 编码后视频帧保存线程
-void SaveFrameThread(int deviceId, int channelId, std::string VideoType)
+void SaveFrameThread(int deviceId, int channelId, std::string videoType)
 {
-    string savePath = "../output/deviceId_" + to_string(deviceId) + " _channelId_" + to_string(channelId) + "_" + VideoType + ".h264";
+    string savePath = "../output/deviceId_" + to_string(deviceId) + " _channelId_" +
+        to_string(channelId) + "_" + videoType + ".h264";
     FILE *fp = fopen(savePath.c_str(), "wb");
     if (fp == nullptr) {
         LogError << "Failed to open file.";
@@ -394,9 +407,9 @@ void SaveFrameThread(int deviceId, int channelId, std::string VideoType)
 
     bool mbFoundFirstIDR = false;
     bool bIsIDR = false;
-    while(!g_signalReceived) {
+    while (!g_signalReceived) {
         EncodedFrame encodedFrame;
-        APP_ERROR ret = vencToFileQueueMap[VideoType][deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
+        APP_ERROR ret = vencToFileQueueMap[videoType][deviceId][channelId]->Pop(encodedFrame, TIME_OUT);
         if (ret != APP_ERR_OK) {
             continue;
         }
@@ -417,7 +430,8 @@ void SaveFrameThread(int deviceId, int channelId, std::string VideoType)
 }
 
 
-APP_ERROR InitCaptionResource(CaptionImpl &captionImpl, int deviceId) {
+APP_ERROR InitCaptionResource(CaptionImpl &captionImpl, int deviceId)
+{
     std::string fontSize = "60px";
     float fontScale = 1;
     MxBase::Color textColor = MxBase::Color(255, 255, 255);
@@ -437,7 +451,7 @@ APP_ERROR InitCaptionResource(CaptionImpl &captionImpl, int deviceId) {
 }
 
 APP_ERROR VdecCallBack(MxBase::Image &decodedImage, uint32_t channelId, uint32_t frameId,
-                                             void *userData)
+    void *userData)
 {
     DecodedFrame decodedFrame{decodedImage, channelId, frameId};
     BlockingQueue<DecodedFrame>* decodedVec = static_cast<BlockingQueue<DecodedFrame>*>(userData);
@@ -450,7 +464,8 @@ APP_ERROR VdecCallBack(MxBase::Image &decodedImage, uint32_t channelId, uint32_t
     return APP_ERR_OK;
 }
 
-APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId) {
+APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId)
+{
     VideoDecodeConfig vDecodeConfig;
     vDecodeConfig.width = FULL_HD_WIDTH;
     vDecodeConfig.height = FULL_HD_HEIGHT;
@@ -467,7 +482,8 @@ APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId) {
     vEncodeConfig.maxBitRate = 30000;
     vEncodeConfig.maxPicHeight = FULL_HD_HEIGHT;
     vEncodeConfig.maxPicWidth = FULL_HD_WIDTH;
-    std::shared_ptr<VideoEncoder> videoEncoder1080p = std::make_shared<VideoEncoder>(vEncodeConfig, deviceId, channelId);
+    std::shared_ptr<VideoEncoder> videoEncoder1080p =
+            std::make_shared<VideoEncoder>(vEncodeConfig, deviceId, channelId);
     videoEncoderMap["1080P"][deviceId].push_back(videoEncoder1080p);
 
     vEncodeConfig.height = CIF_HEIGHT;
@@ -538,7 +554,7 @@ void InitializeThreadPools(ThreadPools &threadPools, int deviceNum, int channelC
         threadPools.threadFrameProcessPool.emplace(deviceId, std::move(threadFrameProcess));
         threadPools.threadVenc1080PPool.emplace(deviceId, std::move(threadVenc1080P));
         threadPools.threadVencCIFPool.emplace(deviceId, std::move(threadVencCIF));
-        if (SAVE_VIDEO == true) {
+        if (g_saveVIDEO) {
             threadPools.threadCIFSavePool.emplace(deviceId, std::move(threadCIFSave));
             threadPools.thread1080PSavePool.emplace(deviceId, std::move(thread1080PSave));
         }
@@ -550,36 +566,42 @@ void StartThreads(ThreadPools &threadPools, std::map<int, std::vector<AVFormatCo
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         for (int channelId = 0; channelId < channelCount; channelId++) {
             // 启动拉流线程
-            threadPools.threadStreamPullerPool[deviceId][channelId] = std::thread(StreamPullerThread,
-                                                                                  streamNames[deviceId * channelCount + channelId],
-                                                                                  pFormatCtxsMap[deviceId][channelId],
-                                                                                  deviceId, channelId);
+            threadPools.threadStreamPullerPool[deviceId][channelId] =
+                    std::thread(StreamPullerThread, streamNames[deviceId * channelCount + channelId],
+                    pFormatCtxsMap[deviceId][channelId], deviceId, channelId);
             // 启动解码线程
-            threadPools.threadVdecPool[deviceId][channelId] = std::thread(VdecThread, videoDecoderMap[deviceId][channelId],
+            threadPools.threadVdecPool[deviceId][channelId] =
+                    std::thread(VdecThread, videoDecoderMap[deviceId][channelId],
                                                                           deviceId, channelId);
             // 启动视频帧处理线程
-            threadPools.threadFrameProcessPool[deviceId][channelId] = std::thread(FrameProcessThread, deviceId, channelId);
+            threadPools.threadFrameProcessPool[deviceId][channelId] =
+                    std::thread(FrameProcessThread, deviceId, channelId);
             // 启动CIF视频编码线程
-            threadPools.threadVencCIFPool[deviceId][channelId] = std::thread(VencThread,
-                                                                             videoEncoderMap["CIF"][deviceId][channelId],
-                                                                             imageProcessorMap[deviceId][channelId],
-                                                                             deviceId, channelId, "CIF");
+            threadPools.threadVencCIFPool[deviceId][channelId] =
+                    std::thread(VencThread, videoEncoderMap["CIF"][deviceId][channelId],
+                    imageProcessorMap[deviceId][channelId],
+                    deviceId, channelId, "CIF");
             // 启动1080P视频编码线程
-            threadPools.threadVenc1080PPool[deviceId][channelId] = std::thread(VencThread, videoEncoderMap["1080P"][deviceId][channelId],
-                                                                               imageProcessorMap[deviceId][channelId], deviceId, channelId, "1080P");
-            if (SAVE_VIDEO == true) {
+            threadPools.threadVenc1080PPool[deviceId][channelId] =
+                    std::thread(VencThread, videoEncoderMap["1080P"][deviceId][channelId],
+                    imageProcessorMap[deviceId][channelId], deviceId, channelId, "1080P");
+            if (g_saveVIDEO) {
                 // 启动CIF视频保存线程
-                threadPools.threadCIFSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "CIF");
+                threadPools.threadCIFSavePool[deviceId][channelId] =
+                        std::thread(SaveFrameThread, deviceId, channelId, "CIF");
                 // 启动1080P视频保存线程
-                threadPools.thread1080PSavePool[deviceId][channelId] = std::thread(SaveFrameThread, deviceId, channelId, "1080P");
+                threadPools.thread1080PSavePool[deviceId][channelId] =
+                        std::thread(SaveFrameThread, deviceId, channelId, "1080P");
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            LogInfo << "Succeed to start working threads for device " << deviceId << ", channelId " << channelId;
+            std::cout << "Succeed to start working threads for device " << deviceId
+                << ", channelId " << channelId << std::endl;
         }
     }
 }
 
-void JoinThreads(ThreadPools &threadPools, int deviceNum, int channelCount) {
+void JoinThreads(ThreadPools &threadPools, int deviceNum, int channelCount)
+{
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         for (int channelId = 0; channelId < channelCount; channelId++) {
             threadPools.threadStreamPullerPool[deviceId][channelId].join();
@@ -587,15 +609,16 @@ void JoinThreads(ThreadPools &threadPools, int deviceNum, int channelCount) {
             threadPools.threadFrameProcessPool[deviceId][channelId].join();
             threadPools.threadVencCIFPool[deviceId][channelId].join();
             threadPools.threadVenc1080PPool[deviceId][channelId].join();
-            if (SAVE_VIDEO == true) {
+            if (g_saveVIDEO) {
                 threadPools.threadCIFSavePool[deviceId][channelId].join();
                 threadPools.thread1080PSavePool[deviceId][channelId].join();
             }
-            LogInfo << "Succeed to join working threads for device " << deviceId << ", channelId " << channelId;
+            std::cout << "Succeed to join working threads for device " << deviceId << ", channelId " << channelId << std::endl;
         }
     }
 }
-APP_ERROR StartServices(int deviceNum, int channelCount, std::vector<std::string> &streamNames) {
+APP_ERROR StartServices(int deviceNum, int channelCount, std::vector<std::string> &streamNames)
+{
     // 创建线程池
     ThreadPools threadPools;
     InitializeThreadPools(threadPools, deviceNum, channelCount);
@@ -607,6 +630,7 @@ APP_ERROR StartServices(int deviceNum, int channelCount, std::vector<std::string
 
     // 启动线程
     StartThreads(threadPools, pFormatCtxsMap, streamNames, deviceNum, channelCount);
+    std::cout << "**************All working threads are started.**************" << std::endl;
 
     // 循环等待
     while (!g_signalReceived) {
@@ -615,6 +639,7 @@ APP_ERROR StartServices(int deviceNum, int channelCount, std::vector<std::string
 
     // 销毁线程
     JoinThreads(threadPools, deviceNum, channelCount);
+    std::cout << "**************All working threads are joined.**************" << std::endl;
     return APP_ERR_OK;
 }
 
@@ -625,7 +650,7 @@ static void SignalHandler(int signal)
     }
 }
 
-void clearGlobalContainers()
+void ClearGlobalContainers()
 {
     imageProcessorMap.clear();
     pullerToVdecQueueMap.clear();
@@ -638,7 +663,8 @@ void clearGlobalContainers()
     videoEncoderMap.clear();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     // 初始化全局资源
     signal(SIGINT, SignalHandler);
     avformat_network_init();
@@ -669,11 +695,13 @@ int main(int argc, char *argv[]) {
             return APP_ERR_COMM_FAILURE;
         }
         // 清理全局容器资源
-        clearGlobalContainers();
+        std::cout << "**************Begin clear global NPU resources.**************" << std::endl;
+        ClearGlobalContainers();
     }
     // 销毁资源
     CaptionGenManager::getInstance().DeInit();
     CaptionGeneration::getAscendStream().DestroyAscendStream();
     MxDeInit();
+    std::cout << "**************PutTextForMultiVideos end.**************" << std::endl;
     return 0;
 }

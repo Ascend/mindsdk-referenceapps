@@ -42,8 +42,12 @@ namespace {
     bool g_saveVIDEO = true;
     static bool g_signalReceived = false;
     const int QUEUE_SIZE = 1000;
+    const float YUV420_RATIO = 1.5;
     const float DEFAULT_OPACITY = 0.3;
     const int TIME_OUT = 3000;
+    const int INIT_INTERVAL = 100;
+    const int DEFAULT_SRC_RATE = 25;
+    const int DEFAULT_MAX_BIT_RATE = 30000;
     const uint32_t CHANNEL_COUNT = 25;
     const int YEAR_OFFSET = 1900;
     const int MONTH_OFFSET = 1;
@@ -259,7 +263,7 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
         LogError << "Fail to set device for vdecThread.";
         return;
     }
-    MxBase::MemoryData imgData(FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2,
+    MxBase::MemoryData imgData(FULL_HD_WIDTH * FULL_HD_HEIGHT * YUV420_RATIO,
             MxBase::MemoryData::MemoryType::MEMORY_DVPP, deviceId);
     ret = MxBase::MemoryHelper::Malloc(imgData);
     if (ret != 0) {
@@ -268,7 +272,7 @@ void VdecThread(std::shared_ptr<VideoDecoder> videoDecoder, int deviceId, int ch
     }
     std::shared_ptr<uint8_t> pastedData((uint8_t*)imgData.ptrData, imgData.free);
     MxBase::Size imgSize(FULL_HD_WIDTH, FULL_HD_HEIGHT);
-    MxBase::Image psatedImgTmp(pastedData, FULL_HD_WIDTH * FULL_HD_HEIGHT * 3 / 2,
+    MxBase::Image psatedImgTmp(pastedData, FULL_HD_WIDTH * FULL_HD_HEIGHT * YUV420_RATIO,
             deviceId, imgSize, MxBase::ImageFormat::YUV_SP_420);
 
     while (!g_signalReceived) {
@@ -344,7 +348,7 @@ APP_ERROR VencCallBack(std::shared_ptr<uint8_t>& outDataPtr, uint32_t& outDataSi
 
 // 视频帧编码线程
 void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<ImageProcessor> imageProcessor,
-            int deviceId, int channelId, std::string videoType)
+                int deviceId, int channelId, std::string videoType)
 {
     uint32_t frameId = 0;
     while (!g_signalReceived) {
@@ -425,7 +429,10 @@ void SaveFrameThread(int deviceId, int channelId, std::string videoType)
             LogError << "write frame to file fail" << std::endl;
         }
     }
-    fclose(fp);
+    if (fclose(fp) != 0) {
+        LogError << "Failed to close file for device " << deviceId << "  channel " << channelId << ".";
+    };
+
 }
 
 
@@ -477,8 +484,8 @@ APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId)
     vEncodeConfig.height = FULL_HD_HEIGHT;
     vEncodeConfig.width = FULL_HD_WIDTH;
     vEncodeConfig.keyFrameInterval = 1;
-    vEncodeConfig.srcRate = 25;
-    vEncodeConfig.maxBitRate = 30000;
+    vEncodeConfig.srcRate = DEFAULT_SRC_RATE;
+    vEncodeConfig.maxBitRate = DEFAULT_MAX_BIT_RATE;
     vEncodeConfig.maxPicHeight = FULL_HD_HEIGHT;
     vEncodeConfig.maxPicWidth = FULL_HD_WIDTH;
     std::shared_ptr<VideoEncoder> videoEncoder1080p =
@@ -493,18 +500,20 @@ APP_ERROR GeneratePairEncoderAndDecoder(int deviceId, int channelId)
     g_videoEncoderMap["CIF"][deviceId].push_back(videoEncoderCIF);
 }
 
-
-APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const ConfigParser &configParser) {
-
+APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const ConfigParser &configParser)
+{
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         // 初始化线程通信队列
         for (int channelId = 0; channelId < channelCount; channelId++) {
             g_pullerToVdecQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
             g_vdecToCaptionQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
-            g_captionToVencQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
-            g_captionToVencQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+            g_captionToVencQueueMap["CIF"][deviceId].push_back(
+                    std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+            g_captionToVencQueueMap["1080P"][deviceId].push_back(
+                    std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
             g_vencToFileQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
-            g_vencToFileQueueMap["1080P"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
+            g_vencToFileQueueMap["1080P"][deviceId].push_back(
+                    std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
         }
 
         // 初始化字幕贴图相关资源
@@ -538,7 +547,8 @@ APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const Con
     return APP_ERR_OK;
 }
 
-void InitializeThreadPools(ThreadPools &threadPools, int deviceNum, int channelCount) {
+void InitializeThreadPools(ThreadPools &threadPools, int deviceNum, int channelCount)
+{
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         std::vector<AVFormatContext *> pFormatCtxs(channelCount, nullptr);
         std::vector<std::thread> threadStreamPuller(channelCount);
@@ -561,7 +571,8 @@ void InitializeThreadPools(ThreadPools &threadPools, int deviceNum, int channelC
 }
 
 void StartThreads(ThreadPools &threadPools, std::map<int, std::vector<AVFormatContext *>> &pFormatCtxsMap,
-                  std::vector<std::string> &streamNames, int deviceNum, int channelCount) {
+                  std::vector<std::string> &streamNames, int deviceNum, int channelCount)
+{
     for (int deviceId = 0; deviceId < deviceNum; deviceId++) {
         for (int channelId = 0; channelId < channelCount; channelId++) {
             // 启动拉流线程
@@ -592,7 +603,7 @@ void StartThreads(ThreadPools &threadPools, std::map<int, std::vector<AVFormatCo
                 threadPools.thread1080PSavePool[deviceId][channelId] =
                         std::thread(SaveFrameThread, deviceId, channelId, "1080P");
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(INIT_INTERVAL));
             std::cout << "Succeed to start working threads for device " << deviceId
                 << ", channelId " << channelId << std::endl;
         }
@@ -612,7 +623,8 @@ void JoinThreads(ThreadPools &threadPools, int deviceNum, int channelCount)
                 threadPools.threadCIFSavePool[deviceId][channelId].join();
                 threadPools.thread1080PSavePool[deviceId][channelId].join();
             }
-            std::cout << "Succeed to join working threads for device " << deviceId << ", channelId " << channelId << std::endl;
+            std::cout << "Succeed to join working threads for device " << deviceId << ", channelId "
+            << channelId  << "." << std::endl;
         }
     }
 }
@@ -665,10 +677,20 @@ void ClearGlobalContainers()
 int main(int argc, char *argv[])
 {
     // 初始化全局资源
-    signal(SIGINT, SignalHandler);
     avformat_network_init();
-    MxInit();
-    CaptionGenManager::getInstance().Init();
+    if (MxInit() != APP_ERR_OK) {
+        LogError << "Fail to conduct MxInit.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (!CaptionGenManager::getInstance().Init()) {
+        LogError << "Fail to init CaptionGenManager.";
+        return APP_ERR_COMM_FAILURE;
+    }
+    if (signal(SIGINT, SignalHandler) == SIG_ERR) {
+        LogError << "Fail to register SignalHandler.";
+        return APP_ERR_COMM_FAILURE;
+    }
+
     {
         // 解析配置文件
         uint32_t deviceNum = 0;

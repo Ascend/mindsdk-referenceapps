@@ -36,7 +36,7 @@ try:
     from .swig_ascendfaiss import AscendIndexInt8FlatConfig, AscendIndexFlat
     from .swig_ascendfaiss import swig_ptr, AscendIndexInt8Flat
     from .swig_ascendfaiss import IDSelectorBatch, IDSelector
-    from .swig_ascendfaiss import IDSelectorRange, index__int8_ascend_to_cpu
+    from .swig_ascendfaiss import IDSelectorRange, index_int8_ascend_to_cpu
     from .swig_ascendfaiss import index_int8_cpu_to_ascend
 except ImportError as e:
     logger.error("Loading ascendfaiss error")

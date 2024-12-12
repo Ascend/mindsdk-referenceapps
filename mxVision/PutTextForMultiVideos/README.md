@@ -71,7 +71,7 @@ _1. deviceNum 需为整数，取值范围为 [1, min(NPU设备个数, 5)]。`npu
 
 _2. saveVideo 需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 
-_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值。第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i%25 个NPU设备上进行处理。_
+_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值。第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i % 25 个NPU设备上进行处理。_
 
 **步骤4： 编译**
 

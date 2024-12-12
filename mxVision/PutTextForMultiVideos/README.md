@@ -45,16 +45,16 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 ```
 
 ##  4 编译与运行
-步骤1：下载贴字接口代码
+**步骤1：下载贴字接口代码**
 
 根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/PutText)下载PutText参考设计，将PutText/PutText目录在本项目根目录下。
 
-步骤2： 下载字库文件
+**步骤2： 下载字库文件**
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/PutTextForMultiVideos/vocab.zip)下载贴字接口所需要的字库文件，解压缩后将其中的vocab目录放至在本项目根目录下。
 
 
-步骤3： 设置配置项
+**步骤3： 设置配置项**
 
 在setup.config文件中设置配置项，配置项含义如下表所示：
 
@@ -66,13 +66,14 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 
 注意：
-1. deviceNum 需为整数，取值范围为 [1, NPU设备个数]，`npu-smi info` 命令可以查看NPU设备个数
 
-2. saveVideo r需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。
+_1. deviceNum 需为整数，取值范围为 [1, NPU设备个数]，`npu-smi info` 命令可以查看NPU设备个数。_
 
-3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值。第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i%25 个NPU设备上进行处理。
+_2. saveVideo r需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 
-步骤4： 编译
+_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值。第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i%25 个NPU设备上进行处理。_
+
+**步骤4： 编译**
 
 在项目根目录下创建cmakeBuild目录后，进入cmakeBuild目录，执行以下指令：
 ```
@@ -81,23 +82,28 @@ make -j
 ```
 编译成功后会在当前文件夹输出main文件。
 
-步骤5： 运行
+**步骤5： 运行**
 
 在cmakeBuild目录，执行以下指令：
 
 ```
 ./main
 ```
-注意：1.由于本样例为多卡多路业务，因此业务的启动需要一些时间。用户可在标准输出中查看服务启动情况。
+注意：
 
-步骤6：停止服务
+_1.由于本样例为多卡多路业务，因此业务的启动需要一些时间。用户可在标准输出中查看服务启动情况_
+
+**步骤6：停止服务**
 
 命令行输入Ctrl+C组合键可手动停止服务。
 
-注意：1.当配置项中指定保存视频时，考虑到保存视频编码视频会占用较大存储空间，请用户合理控制服务运行时间，避免保存检测结果的视频文件过大、影响服务器正常工作；
-2.由于本样例为多卡多路业务，因此服务停止需要一些时间。用户可在标准输出中查看服务停止情况。
+注意：
 
-步骤7： 查看结果
+_1.当配置项中指定保存视频时，考虑到保存视频编码视频会占用较大存储空间，请用户合理控制服务运行时间，避免保存检测结果的视频文件过大、影响服务器正常工作。_
+
+_2.由于本样例为多卡多路业务，因此服务停止需要一些时间。用户可在标准输出中查看服务停止情况。_
+
+**步骤7： 查看结果**
 
 用户可通过npu-smi info指令查看NPU设备在运行前、运行时、运行后的NPU资源占用情况。
 

@@ -33,7 +33,6 @@ try:
     from .swig_ascendfaiss import Index, index_ascend_to_cpu
     from .swig_ascendfaiss import AscendIndexInt8, AscendIndexFlatL2
     from .swig_ascendfaiss import AscendIndexFlatConfig, index_cpu_to_ascend
-
 except ImportError as e:
     logger.error("Loading ascendfaiss error")
     logger.error(e)

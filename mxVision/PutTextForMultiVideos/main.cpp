@@ -507,12 +507,12 @@ APP_ERROR GenerateResourcesForDevices(int deviceNum, int channelCount, const Con
             g_pullerToVdecQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
             g_vdecToCaptionQueueMap[deviceId].push_back(std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
             g_captionToVencQueueMap["CIF"][deviceId].push_back(
-                    std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+                std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
             g_captionToVencQueueMap["1080P"][deviceId].push_back(
-                    std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
+                std::make_shared<BlockingQueue<DecodedFrame>>(QUEUE_SIZE));
             g_vencToFileQueueMap["CIF"][deviceId].push_back(std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
             g_vencToFileQueueMap["1080P"][deviceId].push_back(
-                    std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
+                std::make_shared<BlockingQueue<EncodedFrame>>(QUEUE_SIZE));
         }
 
         // 初始化字幕贴图相关资源

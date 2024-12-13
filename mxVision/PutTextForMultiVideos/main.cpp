@@ -361,7 +361,7 @@ void VencThread(std::shared_ptr<VideoEncoder> videoEncoder, std::shared_ptr<Imag
             Image resizedImage;
             Image resizedMidImage;
             ret = g_imageProcessorMap[deviceId][channelId]->Resize(decodedFrame.image, RESIZE_MIDDLE_IMAGE_SIZE,
-                  resizedMidImage, MxBase::Interpolation::HUAWEI_HIGH_ORDER_FILTER);
+                resizedMidImage, MxBase::Interpolation::HUAWEI_HIGH_ORDER_FILTER);
             if (ret != APP_ERR_OK) {
                 LogError << "Fail to resize middle image." << " [DeviceId: " << deviceId
                          << "  channelId: " << channelId << "].";

@@ -6,22 +6,24 @@
 #include "MxBase/Log/Log.h"
 
 using namespace MxBase;
-using namespace std;
 
-constexpr int MAX_FILE_SIZE = 20 * 1024 * 1024;
+namespace {
+    constexpr int MAX_FILE_SIZE = 20 * 1024 * 1024;
 
-constexpr int RESIZE_HEIGHT = 200;
-constexpr int RESIZE_WIDTH = 200;
-constexpr int CROP_SIZE = 200;
+    constexpr int RESIZE_HEIGHT = 200;
+    constexpr int RESIZE_WIDTH = 200;
+    constexpr int CROP_SIZE = 200;
 
-constexpr int EXPECTED_ARGC = 2;
-constexpr int DECODE_ENCODE_BY_PATH = 1;
-constexpr int DECODE_ENCODE_BY_PTR = 2;
-constexpr int CROP_IMAGE_SYNC = 3;
-constexpr int CROP_IMAGE_ASYNC = 4;
-constexpr int RESIZE_IMAGE = 5;
+    constexpr int EXPECTED_ARGC = 2;
+    constexpr int DECODE_ENCODE_BY_PATH = 1;
+    constexpr int DECODE_ENCODE_BY_PTR = 2;
+    constexpr int CROP_IMAGE_SYNC = 3;
+    constexpr int CROP_IMAGE_ASYNC = 4;
+    constexpr int RESIZE_IMAGE = 5;
+}
 
-APP_ERROR DecodeEncodeByPath(string inputPath, string outputPath, int deviceId)
+
+APP_ERROR DecodeEncodeByPath(const std::string& inputPath, const std::string& outputPath, int deviceId)
 {
     // 创建ImageProcessor对象
     ImageProcessor imageProcessor(deviceId);
@@ -48,27 +50,27 @@ APP_ERROR DecodeEncodeByPath(string inputPath, string outputPath, int deviceId)
     return APP_ERR_OK;
 }
 
-APP_ERROR DecodeEncodeByPtr(string inputPath, string outputPath, int deviceId)
+APP_ERROR DecodeEncodeByPtr(const std::string& inputPath, const std::string& outputPath, int deviceId)
 {
     // 打开图片文件
-    ifstream file(inputPath, ios::binary);
+    std::ifstream file(inputPath, std::ios::binary);
     if (!file.is_open()) {
         LogError << "Failed to open file: " << inputPath;
-        return ret;
+        return 1;
     }
 
     // 获取文件大小
-    file.seekg(0, ios::end);
-    streampos fileSize = file.tellg();
-    file.seekg(0, ios::beg);
+    file.seekg(0, std::ios::end);
+    std::streampos fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
 
     if (fileSize >= MAX_FILE_SIZE) {
         LogError << "Max image size is " << MAX_FILE_SIZE << "B, but actual size is " << fileSize << "B";
-        return ret;
+        return 1;
     }
 
     // 创建智能指针对象
-    shared_ptr<uint8_t> dataPtr(new uint8_t[fileSize], [](uint8_t * p) { delete[] p; });
+    std::shared_ptr<uint8_t> dataPtr(new uint8_t[fileSize], [](uint8_t * p) { delete[] p; });
 
     // 将图片文件对象读取到dataPtr中
     file.read(reinterpret_cast<char *>(dataPtr.get()), fileSize);
@@ -99,7 +101,7 @@ APP_ERROR DecodeEncodeByPtr(string inputPath, string outputPath, int deviceId)
     return APP_ERR_OK;
 }
 
-APP_ERROR CropImage(string inputPath, string outputPath, int deviceId)
+APP_ERROR CropImage(const std::string& inputPath, const std::string& outputPath, int deviceId)
 {
     // 创建ImageProcessor对象
     ImageProcessor imageProcessor(deviceId);
@@ -139,7 +141,7 @@ APP_ERROR CropImage(string inputPath, string outputPath, int deviceId)
     return APP_ERR_OK;
 }
 
-APP_ERROR CropImageAsync(string inputPath, string outputPath, int deviceId)
+APP_ERROR CropImageAsync(const std::string& inputPath, const std::string& outputPath, int deviceId)
 {
     // 创建ImageProcessor对象
     ImageProcessor imageProcessor(deviceId);
@@ -186,7 +188,7 @@ APP_ERROR CropImageAsync(string inputPath, string outputPath, int deviceId)
     return APP_ERR_OK;
 }
 
-APP_ERROR ResizeImage(string inputPath, string outputPath, int deviceId)
+APP_ERROR ResizeImage(const std::string& inputPath, const std::string& outputPath, int deviceId)
 {
     // 创建ImageProcessor对象
     ImageProcessor imageProcessor(deviceId);
@@ -235,8 +237,8 @@ int main(int argc, char *argv[])
     int deviceId = 0;
 
     // 源图片与输出图片保存的地址（仅支持jpg格式）
-    string inputPath = "./input.jpg";
-    string outputPath = "./output.jpg";
+    std::string inputPath = "./input.jpg";
+    std::string outputPath = "./output.jpg";
 
     // MxBase 初始化
     APP_ERROR ret = MxInit();
@@ -245,23 +247,25 @@ int main(int argc, char *argv[])
         return ret;
     }
 
-    if (argv[1] == "decode_path") {
+    if (strcmp(argv[1], "decode_path") == 0) {
         ret = DecodeEncodeByPath(inputPath, outputPath, deviceId);
-    } else if (argv[1] == "decode_ptr") {
+    } else if (strcmp(argv[1], "decode_ptr") == 0) {
         ret = DecodeEncodeByPtr(inputPath, outputPath, deviceId);
-    } else if (argv[1] == "crop") {
+    } else if (strcmp(argv[1], "crop") == 0) {
         ret = CropImage(inputPath, outputPath, deviceId);
-    } else if (argv[1] == "crop_async") {
+    } else if (strcmp(argv[1], "crop_async") == 0) {
         ret = CropImageAsync(inputPath, outputPath, deviceId);
-    } else if (argv[1] == "resize") {
+    } else if (strcmp(argv[1], "resize") == 0) {
         ret = ResizeImage(inputPath, outputPath, deviceId);
     } else {
-        LogError << "Please enter command in ( decode_path, decode_ptr, crop, cropAsync, resize )";
+        LogError << "Please enter command in ( decode_path, decode_ptr, crop, crop_async, resize )";
     }
     if (ret != APP_ERR_OK) {
-        LogError << "sample execute failed"
+        LogError << "sample execute failed";
     }
 
     // MxBase 反初始化
     MxDeInit();
+
+    return ret;
 }

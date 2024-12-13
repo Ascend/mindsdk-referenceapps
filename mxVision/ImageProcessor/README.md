@@ -26,12 +26,12 @@ ImageProcessor类，作为图像处理类，主要开放图像编解码、缩放
 
 ### 3.1 C++样例运行
 
-**步骤1：** 构建样例程序；进入/PATH/TO/ImageProcessor/C++文件夹中，执行以下命令；
+**步骤1：** 构建样例程序；进入/PATH/TO/ImageProcessor/C++文件夹中，执行以下命令:
 ```
 bash build.sh
 ```
 
-**步骤2：** 查看结果；如果构建成功，显示如下；
+**步骤2：** 查看结果；如果构建成功，显示如下:
 ```
 [100%] Linking CXX executable ../demo
 [100%] Built target demo
@@ -54,7 +54,7 @@ bash build.sh
 
 **步骤1：** 进入/PATH/TO/ImageProcessor/Python文件夹中。
 
-**步骤2：** 准备图片；准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于32 * 32。
+**步骤2：** 准备图片；准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于200 * 200。
 
 **步骤3：** 执行样例程序；样例主要提供下面3个功能，通过执行main.py来体验不同的功能
 | 功能 | Demo函数 | 描述 | 执行方式 |

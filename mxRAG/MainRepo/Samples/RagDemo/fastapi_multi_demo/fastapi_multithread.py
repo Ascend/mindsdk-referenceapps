@@ -15,13 +15,14 @@ from mx_rag.knowledge import KnowledgeDB
 from mx_rag.knowledge.knowledge import KnowledgeStore
 from mx_rag.llm import Text2TextLLM
 from mx_rag.reranker.local import LocalReranker
+from mx_rag.reranker.service import TEIReranker
 from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.llm.llm_parameter import LLMParameterConfig
 from mx_rag.storage.vectorstore.vectorstore import SimilarityStrategy
 from mx_rag.storage.vectorstore import MindFAISS, MilvusDB
 from mx_rag.knowledge.handler import upload_files, upload_dir, FilesLoadInfo
-from mx_rag.knowledge.doc_loader_mng import LoaderMng
+from mx_rag.document import LoaderMng
 from mx_rag.utils import ClientParam
 
 
@@ -42,12 +43,18 @@ def rag_init():
     parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
     parse.add_argument("--embedding_path", type=str, default="/home/mxaiagent/data/acge_text_embedding",
                        help="embedding模型本地路径")
+    parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed",
+                       help="使用TEI服务化的embedding模型url地址")
+    parse.add_argument("--tei_emb", type=bool, default=False, help="是否使用TEI服务化的embedding模型")
     parse.add_argument("--llm_url", type=str, default="http://127.0.0.1:1025/v1/chat/completions", help="大模型url地址")
     parse.add_argument("--model_name", type=str, default="Llama3-8B-Chinese-Chat", help="大模型名称")
     parse.add_argument("--score_threshold", type=float, default=0.5,
                        help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1]")
     parse.add_argument("--reranker_path", type=str,
                        default="/home/mxaiagent/data/bge-reranker-v2-m3", help="reranker模型本地路径")
+    parse.add_argument("--reranker_url", type=str, default="http://127.0.0.1:8080/rerank",
+                       help="使用TEI服务化的embedding模型url地址")
+    parse.add_argument("--tei_reranker", type=bool, default=False, help="是否使用TEI服务化的reranker模型")
     parse.add_argument("--white_path", type=str, nargs='+', default=["/home"], help="文件白名单路径")
     parse.add_argument("--up_files", type=str, nargs='+', default=None, help="要上传的文件路径，需在白名单路径下")
     parse.add_argument("--sql_path", type=str, nargs='+', default="./sql.db", help="关系数据库文件保存路径")
@@ -55,10 +62,14 @@ def rag_init():
     parse.add_argument("--question", type=str, default="描述一下地球的内部结构", help="用户问题")
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
+    embedding_url: str = args.pop('embedding_url')
+    tei_emb: bool = args.pop('tei_emb')
     llm_url: str = args.pop('llm_url')
     model_name: str = args.pop('model_name')
     score_threshold: int = args.pop('score_threshold')
     reranker_path: str = args.pop('reranker_path')
+    reranker_url: str = args.pop('reranker_url')
+    tei_reranker: bool = args.pop('tei_reranker')
     white_path:str = args.pop('white_path')
     up_files:List[str] = args.pop('up_files')
     sql_path:str = args.pop('sql_path')
@@ -67,7 +78,10 @@ def rag_init():
 
     dev = 0
     query_question = question
-    emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
+    if tei_emb:
+        emb = TEIEmbedding(url=embedding_url, client_param=ClientParam(use_http=True))
+    else:
+        emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
     chunk_store = SQLiteDocstore(db_path=sql_path)
     vector_store = MindFAISS(1024, SimilarityStrategy.FLAT_L2, [dev], load_local_index=vector_path)
     global text_retriever
@@ -90,7 +104,10 @@ def rag_init():
 
 
     global reranker
-    reranker = LocalReranker(reranker_path, dev_id=dev)
+    if tei_reranker:
+        reranker = TEIReranker(url=reranker_url, client_param=ClientParam(use_http=True))
+    else:
+        reranker = LocalReranker(reranker_path, dev_id=dev)
     global llm
     llm = Text2TextLLM(base_url=llm_url, model_name=model_name, client_param=ClientParam(use_http=True))
 

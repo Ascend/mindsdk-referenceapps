@@ -91,9 +91,9 @@
 2. Direction classifier model: [Mobilenet](https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar)
 3. Recognition model: [CRNN](https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_rec_infer.tar)
 
-**步骤2：** 将下载的3个模型tar包移动至data/model目录下。
+**步骤2：** 将下载的3个模型tar包移动至<Project_Root>/data/model目录下。其中，Project_Root为样例代码根目录。
 
-**步骤3：** 执行<Project_Root>/data/model下的run.sh脚本，等待片刻。其中，Project_Root为样例代码根目录。
+**步骤3：** 执行<Project_Root>/data/model下的run.sh脚本，等待片刻。
 ```bash
 bash run.sh
 ```
@@ -121,13 +121,9 @@ make -j
 make install
 ```
 
-**步骤3：** 环境变量设置及权限设置。
+**步骤3：** 权限设置。
 
-为了使得步骤1和步骤2的so文件生效，应设置对应环境变量，请执行如下命令：
-```bash
-export LD_LIBRARY_PATH=<Project_Root>/lib:$LD_LIBRARY_PATH
-```
-此外，DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等比例缩放`Resizer_KeepAspectRatio_Fit`。 因此，需要确保编译生成的libclipper.so和libDBPostProcess.so文件权限不高于640, 如果文件权限不满足要求, 
+DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等比例缩放`Resizer_KeepAspectRatio_Fit`。 因此，需要确保编译生成的libclipper.so和libDBPostProcess.so文件权限不高于640, 如果文件权限不满足要求, 
 进入到<Project_Root>/lib目录, 执行如下命令修改文件权限：
 ```bash
 chmod 640 libclipper.so libDBPostProcess.so
@@ -153,7 +149,7 @@ blank
 ```bash
 npu-smi info
 ```
-文本检测使用的DBNet，后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，示例如下：
+文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，将`<project_Root>`标识符更改为实际的路径，示例如下：
 ```bash
 "mxpi_textobjectpostprocessor0": {
       "props": {
@@ -164,33 +160,7 @@ npu-smi info
       "next": "mxpi_warpperspective0"
 },
 ```
-文本方向检测和文字识别的后处理在mxVision SDK安装目录，本例中mxVision SDK安装路径为/root/MindX_SDK，如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置：
-```bash
-"mxpi_classpostprocessor0": {
-      "props": {
-        "dataSource": "mxpi_tensorinfer1",
-        "postProcessConfigPath": "<Project_Root>/data/configs/cls/cls.cfg",
-        "labelPath": "<Project_Root>/data/configs/cls/ic15.names",
-        "postProcessLibPath": "/root/MindX_SDK/lib/modelpostprocessors/libresnet50postprocess.so"
-      },
-      "factory": "mxpi_classpostprocessor",
-      "next": "mxpi_rotation1:1"
-},
-.
-.
-.
-"mxpi_textgenerationpostprocessor0": {
-      "props": {
-        "dataSource": "crnn_recognition",
-        "postProcessConfigPath": "<Project_Root>/data/config/rec/rec_cfg.txt",
-        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
-        "postProcessLibPath": "/root/MindX_SDK/lib/modelpostprocessors/libcrnnpostprocess.so"
-      },
-      "factory": "mxpi_textgenerationpostprocessor",
-      "next": "mxpi_dataserialize0"
-},
-```
-最后，请将pipline下的所有**Project_Root**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt。
+最后，请将pipline下的所有**Project_Root**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 
 **步骤6：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下
 
@@ -203,7 +173,7 @@ bash run.sh
 
 ## 5 运行
 
-提供简易python运行样例，请参考第4小结中步骤1至步骤6完成配置准备，进入到<Project_Root>根目录，执行如下命令：
+提供简易python运行样例，请参考第4小结中步骤1至步骤6完成配置准备，进入到<Project_Root>/python目录，执行如下命令：
 ```bash
 python3 main_ocr.py
 ```

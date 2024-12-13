@@ -58,6 +58,7 @@
 |   |   |   |   |-- rec
 |   |   |   |       |-- rec_cfg.txt
 |   |   |   |-- model
+|   |   |       |-- MODEL.md
 |   |   |       |-- cls_aipp.cfg
 |   |   |       |-- det_aipp.cfg
 |   |   |       |-- rec_aipp.cfg
@@ -69,6 +70,7 @@
 |   |       |   |-- CMakeLists.txt
 |   |       |   |-- DBPostProcess.cpp
 |   |       |   |-- DBPostProcess.h
+|   |       |-- README.md
 ```
 
 ### 1.5 相关约束

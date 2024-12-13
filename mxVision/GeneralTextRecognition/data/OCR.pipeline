@@ -41,7 +41,7 @@
     "mxpi_tensorinfer0": {
       "props": {
         "dataSource": "mxpi_imageresizer0",
-        "modelPath": "./data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+        "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
       },
       "factory": "mxpi_tensorinfer",
       "next": "queue3"
@@ -52,8 +52,8 @@
     },
     "mxpi_textobjectpostprocessor0": {
       "props": {
-        "postProcessConfigPath": "./data/config/det/det.cfg",
-        "postProcessLibPath": "./lib/libDBPostProcess.so"
+        "postProcessConfigPath": "<Project_Root>/data/config/det/det.cfg",
+        "postProcessLibPath": "<Project_Root>/lib/libDBPostProcess.so"
        },
       "factory": "mxpi_textobjectpostprocessor",
       "next": "queue4"
@@ -124,7 +124,7 @@
     "mxpi_tensorinfer1": {
       "props": {
         "dataSource": "mxpi_imageresize1",
-        "modelPath": "./data/model/ch_ppocr_mobile_v2.0_cls_infer_3_48_192.om",
+        "modelPath": "<Project_Root>/data/model/ch_ppocr_mobile_v2.0_cls_infer_3_48_192.om",
         "waitingTime": "50",
         "singleBatchInfer": "0"
       },
@@ -137,8 +137,8 @@
     },
     "mxpi_classpostprocessor0": {
       "props": {
-        "postProcessConfigPath": "./data/config/cls/cls.cfg",
-        "labelPath": "./data/config/cls/ic15.names",
+        "postProcessConfigPath": "<Project_Root>/data/config/cls/cls.cfg",
+        "labelPath": "<Project_Root>/data/config/cls/ic15.names",
         "postProcessLibPath": "libresnet50postprocess.so"
       },
       "factory": "mxpi_classpostprocessor",
@@ -182,7 +182,7 @@
     "crnn_recognition": {
       "props": {
         "dataSource": "mxpi_imageresize2",
-        "modelPath": "./data/model/ch_ppocr_server_v2.0_rec_infer_3_32_320_bs_1_2_4_8_16.om",
+        "modelPath": "<Project_Root>/data/model/ch_ppocr_server_v2.0_rec_infer_3_32_320_bs_1_2_4_8_16.om",
         "waitingTime": "10",
         "singleBatchInfer": "0"
       },
@@ -195,8 +195,8 @@
     },
     "mxpi_textgenerationpostprocessor0": {
       "props": {
-        "postProcessConfigPath": "./data/config/rec/rec_cfg.txt",
-        "labelPath": "./data/config/rec/ppocr_keys_v1.txt",
+        "postProcessConfigPath": "<Project_Root>/data/config/rec/rec_cfg.txt",
+        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
         "postProcessLibPath": "libcrnnpostprocess.so"
       },
       "factory": "mxpi_textgenerationpostprocessor",

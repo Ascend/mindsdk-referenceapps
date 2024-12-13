@@ -432,7 +432,6 @@ void SaveFrameThread(int deviceId, int channelId, std::string videoType)
     if (fclose(fp) != 0) {
         LogError << "Failed to close file for device " << deviceId << "  channel " << channelId << ".";
     };
-
 }
 
 

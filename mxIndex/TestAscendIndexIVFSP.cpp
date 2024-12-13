@@ -474,6 +474,7 @@ void MultiSearchAndMultiSearchFilter()
                 *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
                 faiss::MetricType::METRIC_L2, conf);
         }
+
         index->setVerbose(true);
         indexes.emplace_back(index);
         printf("create index:%d\n", i);

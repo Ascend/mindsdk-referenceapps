@@ -8,6 +8,7 @@ project(Test)
 
 set(CMAKE_CXX_STANDARD 11)
 set(MX_SDK_HOME $ENV{MX_SDK_HOME})
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--copy-dt-needed-entries")
 
 if (NOT DEFINED ENV{MX_SDK_HOME})
     string(REGEX REPLACE "(.*)/(.*)/(.*)/(.*)" "\\1" MX_SDK_HOME  ${CMAKE_CURRENT_SOURCE_DIR})

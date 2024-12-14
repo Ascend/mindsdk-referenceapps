@@ -27,12 +27,11 @@
 
 ### 1.4 三方依赖
 
-| 软件名称                   | 版本      |
-|------------------------|---------|
-| python                 | 3.9.2   |
-| paddlepaddle（静态图）      | 大于1.8.0 |
-| paddlepaddle（动态图）      | 大于2.0.0 |
-| onnx                   | 大于1.7.0 |
+| 软件名称              | 版本     |
+|-------------------|--------|
+| paddlle2onnx      | 1.3.1  |
+| paddlepaddle      | 2.6.0  |
+| onnx              | 1.10.0 |
 
 ### 1.4 代码目录结构说明
 
@@ -97,6 +96,12 @@
 ```bash
 bash run.sh
 ```
+如果执行成功，界面上会显示3段如下内容（非连续显示），表示om模型已经转换完成：
+```bash
+ATC start working now, please wait for a moment.
+.....
+ATC run success, welcome to the next use.
+```
 
 ## 4 编译与运行
 **步骤1：** 编译clipper动态库。
@@ -130,6 +135,7 @@ chmod 640 libclipper.so libDBPostProcess.so
 ```
 
 **步骤4：** 准备字典数据。
+
 下载文字识别模型的[字典](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.1/ppocr/utils/ppocr_keys_v1.txt), 由于样例使用的CRNN模型，对应的字典从1开始，0代表为空，请在下载的字典首行添加一行"blank"，并将修改后的字典保存到<Project_Root>/data/config/rec目录，文件命名为ppocr_keys_v1.txt, 修改示例如下：
 ```bash
 blank
@@ -149,16 +155,25 @@ blank
 ```bash
 npu-smi info
 ```
-文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，将`<project_Root>`标识符更改为实际的路径，示例如下：
+文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，将<project_Root>标识符更改为实际的路径，OCR.pipeline示例如下：
 ```bash
-"mxpi_textobjectpostprocessor0": {
-      "props": {
-        "postProcessConfigPath": "<Project_Root>/data/config/det/det.cfg",
-        "postProcessLibPath": "<Project_Root>/lib/libDBpostprocess.so"
-       },
-      "factory": "mxpi_textobjectpostprocessor",
-      "next": "mxpi_warpperspective0"
-},
+# 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+.
+# 55行         "postProcessConfigPath": "<Project_Root>/data/config/det/det.cfg",
+# 56行         "postProcessLibPath": "<Project_Root>/lib/libDBPostProcess.so"
+.
+.
+# 199行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
+```
+OCR_multi3.pipeline示例如下：
+```bash
+# 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+# 265行        "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+.
+# 641行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
 ```
 最后，请将pipline下的所有**Project_Root**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 

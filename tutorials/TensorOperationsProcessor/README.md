@@ -64,8 +64,6 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 
 ## 3 编译与运行(C++)
 
-### 3.1 执行编译
-
 **步骤1：** 进入TensorOperationsProcessor文件夹中，执行以下命令：
 ```
 bash run.sh

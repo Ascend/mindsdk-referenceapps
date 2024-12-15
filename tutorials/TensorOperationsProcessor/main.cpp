@@ -52,11 +52,6 @@ enum class Command {
 
 
 void TensorOperationsProcessor(void* input1, void* input2, std::vector<uint32_t> shape, std::vector<uint32_t> outshape, int lens, Command command, AscendStream &stream, bool bit_op_flag, TensorDType tensor_dtype) {
-    //定义并打印张量类型
-    LogInfo << "TensorDType is " + std::to_string(tensor_dtype) +
-    " [ UNDEFINED(-1) FLOAT32(0) FLOAT16(1) INT8(2) INT32(3) UINT8(4) " +
-    "INT16(6) UINT16(7) UINT32(8) INT64(9) UINT64(10) DOUBLE64(11) BOOL(12) ] ";
-
     //定义输入张量并转移到Device侧
     const uint32_t deviceID = 0;
     Tensor inputTensor1(input1, shape, tensor_dtype);
@@ -222,7 +217,7 @@ void Tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     std::vector<uint32_t> shape{4};
     std::vector<uint32_t> outshape{4};
     int lens = 4;
-    TensorDType tensor_dtype = TensorDType::FLOAT32;
+    TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
         uint8_t input1[4] = {0, 1, 2, 3}; //位操作 1维张量 输入示例1
@@ -241,7 +236,7 @@ void Tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     std::vector<uint32_t> shape{2, 2};
     std::vector<uint32_t> outshape{2, 2};
     int lens = 4;
-    TensorDType tensor_dtype = TensorDType::FLOAT32;
+    TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
         uint8_t input1[2][2] = {{0, 1}, //位操作 2维张量 输入示例1
@@ -264,7 +259,7 @@ void Tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     std::vector<uint32_t> shape{3, 2, 2};
     std::vector<uint32_t> outshape{3, 2, 2};
     int lens = 12;
-    TensorDType tensor_dtype = TensorDType::FLOAT32;
+    TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
         uint8_t input1[3][2][2] = {{{0, 1}, //位操作 3维张量 输入示例1
@@ -303,7 +298,7 @@ void Tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     std::vector<uint32_t> shape{1, 3, 2, 2};
     std::vector<uint32_t> outshape{1, 3, 2, 2};
     int lens = 12;
-    TensorDType tensor_dtype = TensorDType::FLOAT32;
+    TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
         uint8_t input1[1][3][2][2] = {{{{0, 1}, //位操作 4维张量 输入示例1

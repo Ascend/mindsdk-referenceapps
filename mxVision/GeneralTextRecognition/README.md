@@ -60,6 +60,7 @@
 |   |   |       |-- cls_aipp.cfg
 |   |   |       |-- det_aipp.cfg
 |   |   |       |-- rec_aipp.cfg
+|   |   |       |-- run.sh
 |   |   |-- main_ocr.py
 |   |   |-- src
 |   |       |-- Clipper

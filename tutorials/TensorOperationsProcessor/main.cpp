@@ -55,8 +55,7 @@ enum class Command {
     BitwiseNotOp
 };
 
-template <template T>
-APP_ERROR TensorOperationsProcessor (
+template <typename T> APP_ERROR tensorOperationsProcessor(
     T *input1,
     T *input2,
     std::vector<uint32_t> shape,
@@ -231,7 +230,7 @@ APP_ERROR TensorOperationsProcessor (
     return ret;
 }
 
-APP_ERROR Tensor1DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 一维
     uint demension_1dim = 4;
@@ -243,19 +242,18 @@ APP_ERROR Tensor1DCase (AscendStream &stream, Command command, bool bit_op_flag)
         TensorDType tensor_dtype       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         uint8_t input1[demension_1dim] = {0, 1, 2, 3};       // 位操作 1维张量 输入示例1
         uint8_t input2[demension_1dim] = {3, 2, 1, 0};       // 位操作 1维张量 输入示例2
-        return TensorOperationsProcessor (
+        return tensorOperationsProcessor (
             input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
         );
     } else {
         float input1[demension_1dim] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
         float input2[demension_1dim] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
-        return TensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+        return tensorOperationsProcessor (
+            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
 }
 
-APP_ERROR Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 二维
     uint demension_1dim = 2;
@@ -274,7 +272,7 @@ APP_ERROR Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
             {3, 2}, // 位操作 2维张量 输入示例2
             {1, 0}
         };
-        return TensorOperationsProcessor (
+        return tensorOperationsProcessor (
             input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
         );
     } else {
@@ -286,13 +284,12 @@ APP_ERROR Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
             {-3, 2}, // 常规操作(除位操作以外) 2维张量 输入示例2
             {-1, 0}
         };
-        return TensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+        return tensorOperationsProcessor (
+            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
 }
 
-APP_ERROR Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 三维
     uint demension_1dim = 3;
@@ -316,7 +313,7 @@ APP_ERROR Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
             {{7, 6}, {5, 4}},
             {{3, 2}, {1, 0}}
         };
-        return TensorOperationsProcessor (
+        return tensorOperationsProcessor (
             input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
         );
     } else {
@@ -332,13 +329,12 @@ APP_ERROR Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
             {{-7, 6}, {-5, 4}},
             {{-3, 2}, {-1, 0}}
         };
-        return TensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+        return tensorOperationsProcessor (
+            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
 }
 
-APP_ERROR Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 四维
     uint demension_1dim = 1;
@@ -363,7 +359,7 @@ APP_ERROR Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
              {{7, 6}, {5, 4}},
              {{3, 2}, {1, 0}}}
         };
-        return TensorOperationsProcessor (
+        return tensorOperationsProcessor (
             input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
         );
     } else {
@@ -379,13 +375,12 @@ APP_ERROR Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
              {{-7, 6}, {-5, 4}},
              {{-3, 2}, {-1, 0}}}
         };
-        return TensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+        return tensorOperationsProcessor (
+            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
 }
 
-APP_ERROR main ()
+APP_ERROR main()
 {
     APP_ERROR ret = MxInit();
     if (ret != APP_ERR_OK) {
@@ -458,19 +453,19 @@ APP_ERROR main ()
             switch (set_tensor_shape) { // 选择输入张量维度
                 case TENSOR1D:
                     LogInfo << "Test1D Data";
-                    ret = Tensor1DCase (stream, command, bit_op_flag);
+                    ret = tensor1DCase (stream, command, bit_op_flag);
                     break;
                 case TENSOR2D:
                     LogInfo << "Test2D Data";
-                    ret = Tensor2DCase (stream, command, bit_op_flag);
+                    ret = tensor2DCase (stream, command, bit_op_flag);
                     break;
                 case TENSOR3D:
                     LogInfo << "Test3D Data";
-                    ret = Tensor3DCase (stream, command, bit_op_flag);
+                    ret = tensor3DCase (stream, command, bit_op_flag);
                     break;
                 case TENSOR4D:
                     LogInfo << "Test4D Data";
-                    ret = Tensor4DCase (stream, command, bit_op_flag);
+                    ret = tensor4DCase (stream, command, bit_op_flag);
                     break;
                 default:
                     LogInfo << "Not running";

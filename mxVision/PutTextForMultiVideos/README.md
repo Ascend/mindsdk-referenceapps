@@ -49,7 +49,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/PutText)下载PutText参考设计，将PutText/PutText目录放在本项目根目录下。
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载Blockingqueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
+根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载BlockingQueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
 
 **步骤2： 下载字库文件**
 

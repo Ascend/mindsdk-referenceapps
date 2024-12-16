@@ -84,7 +84,7 @@ APP_ERROR GetCallback(MxStreamManager& mxStreamManager, const std::string& strea
             return APP_ERR_COMM_FAILURE;
         }
         std::string dataStr = std::string((char *)output->dataPtr, output->dataSize);
-        LogInfo << "[" << streamName << "] GetResult: " << dataStr;
+        std::cout << "[" << streamName << "] GetResult: " << dataStr << std::endl;
     }
     return APP_ERR_OK;
 }
@@ -110,7 +110,7 @@ APP_ERROR SendCallback(MxStreamManager& mxStreamManager,
 }
 APP_ERROR TestMultiThread(const std::string& pipelinePath)
 {
-    LogDebug << "********case TestMultiThread********" << std::endl;
+    std::cout << "********case TestMultiThread********" << std::endl;
 
     MxStream::MxStreamManager mxStreamManager;
     APP_ERROR ret = mxStreamManager.InitManager();

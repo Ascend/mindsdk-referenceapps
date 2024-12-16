@@ -57,7 +57,7 @@ enum class Command
 };
 
 
-APP_ERROR TensorOperationsProcessor (const void* input1, const void* input2, std::vector<uint32_t> shape, 
+APP_ERROR TensorOperationsProcessor (void* input1, void* input2, std::vector<uint32_t> shape, 
                                     std::vector<uint32_t> outshape, int lens, Command command, 
                                     AscendStream &stream, bool bit_op_flag, TensorDType tensor_dtype) 
 {

@@ -55,10 +55,11 @@ enum class Command {
     BitwiseNotOp
 };
 
+template <template T>
 APP_ERROR
 TensorOperationsProcessor (
-    void *input1,
-    void *input2,
+    T *input1,
+    T *input2,
     std::vector<uint32_t> shape,
     std::vector<uint32_t> outshape,
     int lens,
@@ -200,7 +201,7 @@ TensorOperationsProcessor (
     outputTensor.ToHost();
 
     // ConvertTo操作结果类型UINT8判定
-    if (command == Command::ConvertToOp and outputTensor.GetDataType() == TensorDType::UINT8) {
+    if (command == Command::ConvertToOp && outputTensor.GetDataType() == TensorDType::UINT8) {
         LogInfo << "outputTensor type: UINT8";
         std::cout << "outputTensor type: UINT8";
         return ret;
@@ -437,25 +438,25 @@ main()
         Command::BitwiseNotOp
     };
 
-    int tensor_min_shape;
-    int tensor_max_shape;
+    int min_shape;
+    int max_shape;
     static int tensor_op_total = 27;
     for (int case_id = 0; case_id < tensor_op_total; ++case_id) { // 遍历27种操作
         Command command                    = commands[case_id];
         std::string commands_string_single = commands_string[case_id];
         LogInfo << "\n ########## TensorOperations " << commands_string_single << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commands_string_single.c_str());
-        if (command == Command::SortOp or command == Command::SortIdxOp) { // Sort 系列操作仅支持最多2维的张量
-            tensor_min_shape = 2;
-            tensor_max_shape = 2;
+        if (command == Command::SortOp || command == Command::SortIdxOp) { // Sort 系列操作仅支持最多2维的张量
+            min_shape = 2;
+            max_shape = 2;
         } else {
-            tensor_min_shape = 1;
-            tensor_max_shape = 4;
+            min_shape = 1;
+            max_shape = 4;
         }
-        for (int set_tensor_shape = tensor_min_shape; set_tensor_shape <= tensor_max_shape; ++set_tensor_shape) {
+        for (int set_tensor_shape = min_shape; set_tensor_shape <= max_shape; ++set_tensor_shape) {
             bool bit_op_flag = false;
-            if (command == Command::BitwiseAndOp or command == Command::BitwiseOrOp or
-                command == Command::BitwiseXorOp or
+            if (command == Command::BitwiseAndOp || command == Command::BitwiseOrOp ||
+                command == Command::BitwiseXorOp ||
                 command == Command::BitwiseNotOp) { // 位系列操作输入类型定义为uint8_t
                 bit_op_flag = true;
             }
@@ -480,10 +481,10 @@ main()
             default:
                 LogInfo << "Not running";
                 break;
-                if (ret != APP_ERR_OK) {
-                    LogError << "MxVision failed to initialize, error code:" << ret;
-                    return ret;
-                }
+            }
+            if (ret != APP_ERR_OK) {
+                LogError << "MxVision failed to initialize, error code:" << ret;
+                return ret;
             }
         }
     }

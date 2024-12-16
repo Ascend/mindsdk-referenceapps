@@ -336,7 +336,7 @@ APP_ERROR Tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag) 
 }
 
 
-int main() {
+APP_ERROR main() {
     APP_ERROR ret = MxInit();
     if (ret != APP_ERR_OK) {
         LogError << "MxVision failed to initialize, error code:" << ret;
@@ -394,12 +394,14 @@ int main() {
                 default:
                     LogInfo << "Not running" ;
                     break;
+                if (ret != APP_ERR_OK) {
+            LogError << "MxVision failed to initialize, error code:" << ret;
+                return ret;
+            }
             }
         }
     }
     stream.Synchronize();
     stream.DestroyAscendStream();
-
     MxDeInit();
-    return 1;
 }

@@ -63,7 +63,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     int lens,
     Command command,
     AscendStream &stream,
-    bool bit_op_flag,
+    bool bitOpFlag,
     TensorDType tensor_dtype
 )
 {
@@ -211,7 +211,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // 打印结果数值
     LogInfo << "result : ";
     for (int i = 0; i < lens; ++i) {
-        if (bit_op_flag) {
+        if (bitOpFlag) {
             printf ("%d ", reinterpret_cast<uint8_t *> (outputTensorData)[i]); // 位操作结果打印
         } else if (command == Command::SortIdxOp) {
             printf ("%d ", reinterpret_cast<int *> (outputTensorData)[i]); // 排序返回索引操作结果打印
@@ -230,153 +230,149 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     return ret;
 }
 
-APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 一维
-    uint demension_1dim = 4;
-    std::vector<uint32_t> shape {demension_1dim};
-    std::vector<uint32_t> outshape {demension_1dim};
-    int lens                 = demension_1dim;
+    uint demension1Dim = 4;
+    std::vector<uint32_t> shape {demension1Dim};
+    std::vector<uint32_t> outshape {demension1Dim};
+    int lens                 = demension1Dim;
     TensorDType tensor_dtype = TensorDType::FLOAT32; // 定义并张量类型
-    if (bit_op_flag) {
+    if (bitOpFlag) {
         TensorDType tensor_dtype       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
-        uint8_t input1[demension_1dim] = {0, 1, 2, 3};       // 位操作 1维张量 输入示例1
-        uint8_t input2[demension_1dim] = {3, 2, 1, 0};       // 位操作 1维张量 输入示例2
+        uint8_t input1[demension1Dim] = {0, 1, 2, 3};       // 位操作 1维张量 输入示例1
+        uint8_t input2[demension1Dim] = {3, 2, 1, 0};       // 位操作 1维张量 输入示例2
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
-        float input1[demension_1dim] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
-        float input2[demension_1dim] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
+        float input1[demension1Dim] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
+        float input2[demension1Dim] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
-APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 二维
-    uint demension_1dim = 2;
-    uint demension_2dim = 2;
-    std::vector<uint32_t> shape {demension_1dim, demension_2dim};
-    std::vector<uint32_t> outshape {demension_1dim, demension_2dim};
-    int lens                 = demension_1dim * demension_2dim;
+    uint demension1Dim = 2;
+    uint demension2Dim = 2;
+    std::vector<uint32_t> shape {demension1Dim, demension2Dim};
+    std::vector<uint32_t> outshape {demension1Dim, demension2Dim};
+    int lens                 = demension1Dim * demension2Dim;
     TensorDType tensor_dtype = TensorDType::FLOAT32; // 定义并张量类型
-    if (bit_op_flag) {
+    if (bitOpFlag) {
         TensorDType tensor_dtype                       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
-        uint8_t input1[demension_1dim][demension_2dim] = {
+        uint8_t input1[demension1Dim][demension2Dim] = {
             {0, 1}, // 位操作 2维张量 输入示例1
             {2, 3}
         };
-        uint8_t input2[demension_1dim][demension_2dim] = {
+        uint8_t input2[demension1Dim][demension2Dim] = {
             {3, 2}, // 位操作 2维张量 输入示例2
             {1, 0}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
-        float input1[demension_1dim][demension_2dim] = {
+        float input1[demension1Dim][demension2Dim] = {
             {0, 1}, // 常规操作(除位操作以外) 2维张量 输入示例1
             {-2, 3}
         };
-        float input2[demension_1dim][demension_2dim] = {
+        float input2[demension1Dim][demension2Dim] = {
             {-3, 2}, // 常规操作(除位操作以外) 2维张量 输入示例2
             {-1, 0}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
-APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 三维
-    uint demension_1dim = 3;
-    uint demension_2dim = 2;
-    uint demension_3dim = 2;
-    std::vector<uint32_t> shape {demension_1dim, demension_2dim, demension_3dim};
-    std::vector<uint32_t> outshape {demension_1dim, demension_2dim, demension_3dim};
-    int lens                 = demension_1dim * demension_2dim * demension_3dim;
+    uint demension1Dim = 3;
+    uint demension2Dim = 2;
+    uint demension3Dim = 2;
+    std::vector<uint32_t> shape {demension1Dim, demension2Dim, demension3Dim};
+    std::vector<uint32_t> outshape {demension1Dim, demension2Dim, demension3Dim};
+    int lens                 = demension1Dim * demension2Dim * demension3Dim;
     TensorDType tensor_dtype = TensorDType::FLOAT32; // 定义并张量类型
-    if (bit_op_flag) {
+    if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
-        uint8_t input1[demension_1dim][demension_2dim][demension_3dim] = {
+        uint8_t input1[demension1Dim][demension2Dim][demension3Dim] = {
             {{0, 1}, // 位操作 3维张量 输入示例1
              {2, 3}},
             {{4, 5}, {6, 7}},
             {{8, 9}, {10, 11}}
         };
-        uint8_t input2[demension_1dim][demension_2dim][demension_3dim] = {
+        uint8_t input2[demension1Dim][demension2Dim][demension3Dim] = {
             {{11, 10}, // 位操作 3维张量 输入示例2
              {9, 8}},
             {{7, 6}, {5, 4}},
             {{3, 2}, {1, 0}}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
-        float input1[demension_1dim][demension_2dim][demension_3dim] = {
+        float input1[demension1Dim][demension2Dim][demension3Dim] = {
             {{0, 1}, // 常规操作(除位操作以外) 3维张量 输入示例1
              {-2, 3}},
             {{-4, 5}, {-6, 7}},
             {{-8, 9}, {-10, 11}}
         };
-        float input2[demension_1dim][demension_2dim][demension_3dim] = {
+        float input2[demension1Dim][demension2Dim][demension3Dim] = {
             {{-11, 10}, // 常规操作(除位操作以外) 3维张量 输入示例2
              {-9, 8}},
             {{-7, 6}, {-5, 4}},
             {{-3, 2}, {-1, 0}}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
-APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 四维
-    uint demension_1dim = 1;
-    uint demension_2dim = 3;
-    uint demension_3dim = 2;
+    uint demension1Dim = 1;
+    uint demension2Dim = 3;
+    uint demension3Dim = 2;
     uint demension_4dim = 2;
-    std::vector<uint32_t> shape {demension_1dim, demension_2dim, demension_3dim, demension_4dim};
-    std::vector<uint32_t> outshape {demension_1dim, demension_2dim, demension_3dim, demension_4dim};
-    int lens                 = demension_1dim * demension_2dim * demension_3dim * demension_4dim;
+    std::vector<uint32_t> shape {demension1Dim, demension2Dim, demension3Dim, demension_4dim};
+    std::vector<uint32_t> outshape {demension1Dim, demension2Dim, demension3Dim, demension_4dim};
+    int lens                 = demension1Dim * demension2Dim * demension3Dim * demension_4dim;
     TensorDType tensor_dtype = TensorDType::FLOAT32; // 定义并张量类型
-    if (bit_op_flag) {
+    if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
-        uint8_t input1[demension_1dim][demension_2dim][demension_3dim][demension_4dim] = {
+        uint8_t input1[demension1Dim][demension2Dim][demension3Dim][demension_4dim] = {
             {{{0, 1}, // 位操作 4维张量 输入示例1
               {2, 3}},
              {{4, 5}, {6, 7}},
              {{8, 9}, {10, 11}}}
         };
-        uint8_t input2[demension_1dim][demension_2dim][demension_3dim][demension_4dim] = {
+        uint8_t input2[demension1Dim][demension2Dim][demension3Dim][demension_4dim] = {
             {{{11, 10}, // 位操作 4维张量 输入示例2
               {9, 8}},
              {{7, 6}, {5, 4}},
              {{3, 2}, {1, 0}}}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype
-        );
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
-        float input1[demension_1dim][demension_2dim][demension_3dim][demension_4dim] = {
+        float input1[demension1Dim][demension2Dim][demension3Dim][demension_4dim] = {
             {{{0, 1}, // 常规操作(除位操作以外) 4维张量 输入示例1
               {-2, 3}},
              {{-4, 5}, {-6, 7}},
              {{-8, 9}, {-10, 11}}}
         };
-        float input2[demension_1dim][demension_2dim][demension_3dim][demension_4dim] = {
+        float input2[demension1Dim][demension2Dim][demension3Dim][demension_4dim] = {
             {{{-11, 10}, // 常规操作(除位操作以外) 4维张量 输入示例2
               {-9, 8}},
              {{-7, 6}, {-5, 4}},
              {{-3, 2}, {-1, 0}}}
         };
         return tensorOperationsProcessor (
-            input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
+            input1, input2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
@@ -427,45 +423,45 @@ APP_ERROR main()
         Command::BitwiseNotOp
     };
 
-    int min_shape;
-    int max_shape;
-    static int tensor_op_total = 27;
-    for (int case_id = 0; case_id < tensor_op_total; ++case_id) { // 遍历27种操作
-        Command command                    = commands[case_id];
-        std::string commands_string_single = commands_string[case_id];
-        LogInfo << "\n ########## TensorOperations " << commands_string_single << " Start ########## \n ";
-        printf ("\n ########## TensorOperations %s Start ########## \n ", commands_string_single.c_str());
+    int minShape;
+    int maxShape;
+    static int tensorOpTotal = 27;
+    for (int caseId = 0; caseId < tensorOpTotal; ++caseId) { // 遍历27种操作
+        Command command                    = commands[caseId];
+        std::string commandsStringSingle = commands_string[caseId];
+        LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
+        printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
         if (command == Command::SortOp || command == Command::SortIdxOp) { // Sort 系列操作仅支持最多2维的张量
-            min_shape = 2;
-            max_shape = 2;
+            minShape = 2;
+            maxShape = 2;
         } else {
-            min_shape = 1;
-            max_shape = 4;
+            minShape = 1;
+            maxShape = 4;
         }
-        for (int set_tensor_shape = min_shape; set_tensor_shape <= max_shape; ++set_tensor_shape) {
-            bool bit_op_flag = false;
+        for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
+            bool bitOpFlag = false;
             if (command == Command::BitwiseAndOp || command == Command::BitwiseOrOp ||
                 command == Command::BitwiseXorOp ||
                 command == Command::BitwiseNotOp) { // 位系列操作输入类型定义为uint8_t
-                bit_op_flag = true;
+                bitOpFlag = true;
             }
 
-            switch (set_tensor_shape) { // 选择输入张量维度
+            switch (setTensorShape) { // 选择输入张量维度
                 case TENSOR1D:
                     LogInfo << "Test1D Data";
-                    ret = tensor1DCase (stream, command, bit_op_flag);
+                    ret = tensor1DCase (stream, command, bitOpFlag);
                     break;
                 case TENSOR2D:
                     LogInfo << "Test2D Data";
-                    ret = tensor2DCase (stream, command, bit_op_flag);
+                    ret = tensor2DCase (stream, command, bitOpFlag);
                     break;
                 case TENSOR3D:
                     LogInfo << "Test3D Data";
-                    ret = tensor3DCase (stream, command, bit_op_flag);
+                    ret = tensor3DCase (stream, command, bitOpFlag);
                     break;
                 case TENSOR4D:
                     LogInfo << "Test4D Data";
-                    ret = tensor4DCase (stream, command, bit_op_flag);
+                    ret = tensor4DCase (stream, command, bitOpFlag);
                     break;
                 default:
                     LogInfo << "Not running";

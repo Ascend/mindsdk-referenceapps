@@ -187,7 +187,7 @@ APP_ERROR TensorOperationsProcessor(void* input1, void* input2, std::vector<uint
     //ConvertTo操作结果类型UINT8判定
     if (command == Command::ConvertToOp and outputTensor.GetDataType() == TensorDType::UINT8) {
         LogInfo << "outputTensor type: UINT8" ;
-        printf << "outputTensor type: UINT8" ;
+        std::cout << "outputTensor type: UINT8" ;
         return ret;
     }
 
@@ -373,7 +373,7 @@ APP_ERROR main() {
             if (command == Command::BitwiseAndOp or command == Command::BitwiseOrOp or command == Command::BitwiseXorOp or command == Command::BitwiseNotOp) { //位系列操作输入类型定义为uint8_t
                 bit_op_flag = true;
             }
-
+            auto ret;
             switch (set_tensor_shape) { //选择输入张量维度
                 case 1:
                     LogInfo << "Test1D Data" ;

@@ -11,6 +11,7 @@ from agent_sdk.toolmngt.tool_manager import ToolManager
 from samples.tools.common import filter_website_keywords
 from samples.tools.web_summary_api import WebSummary
 
+
 @ToolManager.register_tool()
 class QueryAccommodations(API):
     name = "QueryAccommodations"

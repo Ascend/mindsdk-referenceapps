@@ -13,7 +13,7 @@ def filter_website_keywords(keys):
 
     if len(filtered) == 0:
         raise Exception("keywords has no been found")
-    return  filtered
+    return filtered
 
 
 def flatten(nested_list):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
-import tiktoken
 import json
+import tiktoken
 from loguru import logger
 
 from agent_sdk.toolmngt.api import API

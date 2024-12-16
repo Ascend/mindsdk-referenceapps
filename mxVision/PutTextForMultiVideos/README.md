@@ -113,7 +113,7 @@ _当第i个NPU设备的第j个视频通道相关线程销毁完成后，会在�
 
 _当所有NPU设备的所有视频通道相关线程都销毁完成后，会在标准测输出打印"All working threads are joined."_
 
-_当开始销毁全局NPU资源时，会在标准输出打印“Begin clear global NPU resources.”_
+_当开始销毁全局NPU资源时，会在标准输出打印“Begin clear global NPU resources.”（销毁全局NPU资源耗时较长，请用户耐心等待）_
 
 _当整个业务正常结束时，会在标准输出打印“PutTextForMultiVideos end.”。_
 

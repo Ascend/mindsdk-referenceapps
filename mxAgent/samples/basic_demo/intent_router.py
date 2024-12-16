@@ -40,7 +40,7 @@ if __name__ == "__main__":
     API_KEY = args.pop("api_key")
     LLM_NAME = args.pop("model_name")
     llm = get_llm_backend(backend=BACKEND_OPENAI_COMPATIBLE,
-                        api_base=API_BASE, api_key=API_KEY, llm_name=LLM_NAME).run
+                        base_url=API_BASE, api_key=API_KEY, llm_name=LLM_NAME).run
     agent = RouterAgent(llm=llm, intents=INTENT)
     for query in querys:
         response = agent.run(query)

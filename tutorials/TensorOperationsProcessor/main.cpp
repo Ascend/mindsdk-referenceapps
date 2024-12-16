@@ -20,10 +20,10 @@
 
 using namespace MxBase;
 
-const uint TENSOR1D = 1;
-const uint TENSOR2D = 2;
-const uint TENSOR3D = 3;
-const uint TENSOR4D = 4;
+const int TENSOR1D = 1;
+const int TENSOR2D = 2;
+const int TENSOR3D = 3;
+const int TENSOR4D = 4;
 
 enum class Command {
     AbsOp,
@@ -223,7 +223,7 @@ APP_ERROR TensorOperationsProcessor(void* input1, void* input2, std::vector<uint
 
 APP_ERROR Tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     // 一维
-    int demension_1dim = 4;
+    uint demension_1dim = 4;
     std::vector<uint32_t> shape{demension_1dim};
     std::vector<uint32_t> outshape{demension_1dim};
     int lens = demension_1dim;
@@ -243,8 +243,8 @@ APP_ERROR Tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag) 
 
 APP_ERROR Tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     // 二维
-    int demension_1dim = 2;
-    int demension_2dim = 2;
+    uint demension_1dim = 2;
+    uint demension_2dim = 2;
     std::vector<uint32_t> shape{demension_1dim, demension_2dim};
     std::vector<uint32_t> outshape{demension_1dim, demension_2dim};
     int lens = demension_1dim * demension_2dim;
@@ -268,9 +268,9 @@ APP_ERROR Tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag) 
 
 APP_ERROR Tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     // 三维
-    int demension_1dim = 3;
-    int demension_2dim = 2;
-    int demension_3dim = 2;
+    uint demension_1dim = 3;
+    uint demension_2dim = 2;
+    uint demension_3dim = 2;
     std::vector<uint32_t> shape{demension_1dim, demension_2dim, demension_3dim};
     std::vector<uint32_t> outshape{demension_1dim, demension_2dim, demension_3dim};
     int lens = demension_1dim * demension_2dim * demension_3dim;
@@ -310,10 +310,10 @@ APP_ERROR Tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag) 
 
 APP_ERROR Tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag) {
     // 四维
-    int demension_1dim = 1;
-    int demension_2dim = 3;
-    int demension_3dim = 2;
-    int demension_4dim = 2;
+    uint demension_1dim = 1;
+    uint demension_2dim = 3;
+    uint demension_3dim = 2;
+    uint demension_4dim = 2;
     std::vector<uint32_t> shape{demension_1dim, demension_2dim, demension_3dim, demension_4dim};
     std::vector<uint32_t> outshape{demension_1dim, demension_2dim, demension_3dim, demension_4dim};
     int lens = demension_1dim * demension_2dim * demension_3dim * demension_4dim;

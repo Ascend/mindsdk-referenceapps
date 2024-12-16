@@ -24,7 +24,7 @@ AlignOperands: true
 AlignTrailingComments: true
 
 # 不允许函数声明的所有参数在放在下一行
-AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
 
 # 不允许短的块放在同一行
 AllowShortBlocksOnASingleLine: true

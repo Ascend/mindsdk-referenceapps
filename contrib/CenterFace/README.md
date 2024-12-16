@@ -46,32 +46,30 @@
 项目名称为CenterFace，项目目录如下图所示：
 
 ```
-│  build.sh
-│  README.md
-│  run.sh
-│
-├─C++
-│      build.sh
-│      CMakeLists.txt
-│      main.cpp
-│
-├─model
-│      centerface.cfg
-│      CenterFace.pipeline
-│      centerface_aipp.cfg
-│
-├─plugins
-│  ├─FaceDetectPostProcessor
-│  │      build.sh
-│  │      CMakeLists.txt
-│  │      MxCenterfacePostProcessor.cpp
-│  │      MxCenterfacePostProcessor.h
-│  │
-│  └─KeyPointPostProcessor
-│          build.sh
-│          CMakeLists.txt
-│          MxCenterfaceKeyPointPostProcessor.cpp
-│          MxCenterfaceKeyPointPostProcessor.h
+.
+├── build.sh
+├── C++
+│   ├── build.sh
+│   ├── CMakeLists.txt
+│   ├── main.cpp
+│   └── run.sh
+├── model
+│   ├── centerface_aipp.cfg
+│   ├── centerface.cfg
+│   ├── CenterFace.pipeline
+│   └── person.names
+├── plugins
+│   ├── FaceDetectPostProcessor
+│   │   ├── build.sh
+│   │   ├── CMakeLists.txt
+│   │   ├── FaceDetectPostProcessor.cpp
+│   │   └── FaceDetectPostProcessor.h
+│   └── KeyPointPostProcessor
+│       ├── build.sh
+│       ├── CenterfaceKeyPointPostProcessor.cpp
+│       ├── CenterfaceKeyPointPostProcessor.h
+│       └── CMakeLists.txt
+└── README.md
 ```
 
 ## 2 设置环境变量
@@ -89,11 +87,11 @@
 ## 3 准备模型
 步骤1 下载模型相关文件
 
-根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterFaceWithDynamicResolution/centerface_offical.onnx)下载得到centerface_offical.onnx文件，将该文件放入convert目录。
+根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterFaceWithDynamicResolution/centerface_offical.onnx)下载得到centerface_offical.onnx文件，将该文件放入项目根目录下的model目录。
 
 步骤2 转换模型格式
 
-进入到convert目录，执行以下命令：
+进入到项目根目录的model目录下，执行以下命令：
 ```
 atc --model=centerface_offical.onnx --output=centerface_offical --dynamic_image_size="768,1024;800,800;1024,768;864,1120;1120,864;960,1216;1216,960;1056,1312;1312,1056;1152,1408;1408,1152;1248,1504;1504,1248;1344,1600;1600,1344;1440,1696;1696,1440;1536,1792;1792,1536;1632,1888;1888,1632;1728,1984;1984,1728;1824,2080;2080,1824"   --soc_version=Ascend310P3 --input_shape="input.1:1,3,-1,-1" --input_format=NCHW --framework=5 --insert_op_conf=centerface_aipp.cfg
 ```
@@ -126,4 +124,3 @@ bash generate_osd_om.sh
 **步骤3：** 查看结果  
 
 检测后的可视化结果图片保存在项目根目录的C++/result目录下，打开图片查看检测结果。
-

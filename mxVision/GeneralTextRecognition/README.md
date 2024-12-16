@@ -1,8 +1,10 @@
 # 通用文字识别（中英文）
 
-## 1 简介
+## 1 介绍
 
-通用文字识别样例基于mxVision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要支持以下功能：
+### 1.1 简介
+
+通用文字识别样例基于mxVision SDK进行开发，主要支持以下功能：
 
 1. 图片读取解码：本样例支持JPG及PNG格式图片，采用OpenCV进行解码、缩放等预处理。
 2. 文本检测：在输入图片中检测出文本框，本样例选用基于DBNet的文本检测模型，能达到快速精准检测。
@@ -11,41 +13,35 @@
 5. 文本方向检测：识别文本小图上文本的方向--[0°，180°]，如果为180°，则将文本小图进行180°旋转，本样例选用Mobilenet为方向识别模型。
 6. 文字识别：识别文本小图上中英文，本样例采用CRNN模型进行文字识别，能够识别中英文.
 
+### 1.2 支持的产品
 
-## 2 环境依赖
+本项目支持昇腾Atlas 300I pro、Atlas 300V pro。
 
-- 支持的硬件形态和操作系统版本
+### 1.3 支持的版本
 
-| 硬件形态                             | 操作系统版本   |
-| ----------------------------------- | -------------- |
-| x86_64+Atlas 300I 推理卡（型号3010） | Ubuntu 18.04.1 |
-| x86_64+Atlas 300I 推理卡 （型号3010）| CentOS 7.6     |
-| ARM+Atlas 300I 推理卡 （型号3000）   | Ubuntu 18.04.1 |
-| ARM+Atlas 300I 推理卡 （型号3000）   | CentOS 7.6     |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-- 软件依赖
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.5.1+ |
-| mxVision | 5.0.0   |
-| CANN     | 7.0.0   |
-| Python   | 3.7.5  |
+### 1.4 三方依赖
 
+| 软件名称              | 版本     |
+|-------------------|--------|
+| paddlle2onnx      | 1.3.1  |
+| paddlepaddle      | 2.6.0  |
+| onnx              | 1.10.0 |
 
-
-## 3 代码主要目录介绍
-
-本代码仓名称为mxSdkReferenceApps，工程目录如下图所示：
+### 1.4 代码目录结构说明
 
 ```
 |-- mxVision
-|   |-- AllObjectsStructuring
 |   |-- GeneralTextRecognition
 |   |   |-- C++
 |   |   |   |-- CMakeLists.txt
 |   |   |   |-- mainMultiThread.cpp
-|   |   |   `-- run.sh
+|   |   |   |-- run.sh
 |   |   |-- License.md
 |   |   |-- README.md
 |   |   |-- THIRD PARTY OPEN SOURCE SOFTWARE NOTICE.md
@@ -55,43 +51,93 @@
 |   |   |   |-- config
 |   |   |   |   |-- cls
 |   |   |   |   |   |-- cls.cfg
-|   |   |   |   |   `-- ic15.names
+|   |   |   |   |   |-- ic15.names
 |   |   |   |   |-- det
-|   |   |   |   |   `-- det.cfg
-|   |   |   |   `-- rec
-|   |   |   |       `-- rec_cfg.txt
-|   |   |   `-- model
-|   |   |       |-- MODEL.md
+|   |   |   |   |   |-- det.cfg
+|   |   |   |   |-- rec
+|   |   |   |       |-- rec_cfg.txt
+|   |   |   |-- model
 |   |   |       |-- cls_aipp.cfg
 |   |   |       |-- det_aipp.cfg
-|   |   |       `-- rec_aipp.cfg
+|   |   |       |-- rec_aipp.cfg
+|   |   |       |-- run.sh
 |   |   |-- main_ocr.py
-|   |   `-- src
+|   |   |-- src
 |   |       |-- Clipper
-|   |       |   `-- CMakeLists.txt
+|   |       |   |-- CMakeLists.txt
 |   |       |-- DBPostProcess
 |   |       |   |-- CMakeLists.txt
 |   |       |   |-- DBPostProcess.cpp
-|   |       |   `-- DBPostProcess.h
-|   |       `-- README.md
+|   |       |   |-- DBPostProcess.h
 ```
 
-## 4 准备
+### 1.5 相关约束
 
-**步骤1：** 参考安装教程《mxVision 用户指南》安装 mxVision SDK。
+本项目支持通用文字识别，支持图片格式为jpg、jpeg、png。
 
-**步骤2：** 配置 mxVision SDK 环境变量。
+## 2 设置环境变量
 
-`. {sdk_install_path}/mxVision/set_env.sh `
+```bash
+. /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh       # sdk安装路径，根据实际安装路径修改
+```
 
-注：本例中mxVision SDK安装路径为 /root/MindX_SDK。
+## 3 准备模型
 
-**步骤3：** 编译DBNet模型的后处理动态链接库，请根据./src/README.md, 编译相应的动态链接库。
+**步骤1：** 模型下载。
 
-**步骤4：** 准备模型，根据./data/model/MODEL.md文件转换样例需要的模型,并将模型保存到./data/model/目录下。
+本样例采用[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)的release/2.1分支作为基准，预训练模型请下载"PP-OCR 2.0 series model list（Update on Dec 15）"->"Chinese and English general OCR model (143.4M)" 对应的三个推理模型：
+1. Detection model: [DBNet](https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_det_infer.tar)
+2. Direction classifier model: [Mobilenet](https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar)
+3. Recognition model: [CRNN](https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_rec_infer.tar)
 
-**步骤5：** 下载文字识别模型的[字典](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.1/ppocr/utils/ppocr_keys_v1.txt), 由于样例使用的CRNN模型，对应的字典从1开始，0代表为空，请在下载的字典首行添加一行"blank"，并将修改后的字典保存到./data/config/rec/ppocr_keys_v1.txt, ：
+**步骤2：** 将下载的3个模型tar包移动至<Project_Root>/data/model目录下。其中，Project_Root为样例代码根目录。
 
+**步骤3：** 执行<Project_Root>/data/model下的run.sh脚本，等待片刻。
+```bash
+bash run.sh
+```
+如果执行成功，界面上会显示3段如下内容（非连续显示），表示om模型已经转换完成：
+```bash
+ATC start working now, please wait for a moment.
+.....
+ATC run success, welcome to the next use.
+```
+
+## 4 编译与运行
+**步骤1：** 编译clipper动态库。
+
+在[Clipper网站](https://sourceforge.net/projects/polyclipping/files/)下载`clipper_ver6.4.2.zip`压缩包，解压后将路径cpp下的 `clipper.hpp、clipper.cpp` 到<Project_Root>/src/Clipper目录下。依次执行如下命令：
+```bash
+mkdir build
+cd build
+cmake ..
+make -j
+make install
+```
+
+**步骤2：** 编译后处理动态库DBPostProcess。
+
+进入到<Project_Root>/src/DBPostProcess路径目录下。依次执行如下命令：
+```bash
+mkdir build
+cd build
+cmake ..
+make -j
+make install
+```
+
+**步骤3：** 权限设置。
+
+DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等比例缩放`Resizer_KeepAspectRatio_Fit`。 因此，需要确保编译生成的libclipper.so和libDBPostProcess.so文件权限不高于640, 如果文件权限不满足要求, 
+进入到<Project_Root>/lib目录, 执行如下命令修改文件权限：
+```bash
+chmod 640 libclipper.so libDBPostProcess.so
+```
+
+**步骤4：** 准备字典数据。
+
+下载文字识别模型的[字典](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.1/ppocr/utils/ppocr_keys_v1.txt), 由于样例使用的CRNN模型，对应的字典从1开始，0代表为空，请在下载的字典首行添加一行"blank"，并将修改后的字典保存到<Project_Root>/data/config/rec目录，文件命名为ppocr_keys_v1.txt, 修改示例如下：
 ```bash
 blank
 '
@@ -104,60 +150,46 @@ blank
 .
 ```
 
-**步骤6：** 修改配置根目录下的配置文件./data/OCR.pipeline文件：
+**步骤5：** 修改配置根目录下的配置文件。
 
-1. 将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
+将所有`deviceId`字段值替换为实际使用的device的id值，可用的`deviceId`值可以使用如下命令查看：
+```bash
+npu-smi info
+```
+文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，将<project_Root>标识符更改为实际的路径，OCR.pipeline示例如下：
+```bash
+# 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+.
+# 55行         "postProcessConfigPath": "<Project_Root>/data/config/det/det.cfg",
+# 56行         "postProcessLibPath": "<Project_Root>/lib/libDBPostProcess.so"
+.
+.
+# 199行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
+```
+OCR_multi3.pipeline示例如下：
+```bash
+# 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+# 265行        "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
+.
+.
+# 641行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
+```
+最后，请将pipline下的所有**Project_Root**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 
-    `npu-smi info`
+**步骤6：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下
 
-2. 文本检测使用的DBNet，后处理由步骤三编译得到，默认生成到"./lib/libDBpostprocess.so", 如有修改，请修改./data/OCR.pipeline的对应配置：
-   
-    ```bash
-        "mxpi_textobjectpostprocessor0": {
-          "props": {
-            "postProcessConfigPath": "./data/config/det/det.cfg",
-            "postProcessLibPath": "./lib/libDBpostprocess.so"
-           },
-          "factory": "mxpi_textobjectpostprocessor",
-          "next": "mxpi_warpperspective0"
-        },
-    ```
+**步骤7：** 运行多线程高性能c++样例
 
-3. 文本方向检测和文字识别的后处理在mxVision SDK安装目录，本例中mxVision SDK安装路径为 /root/MindX_SDK，如有修改，请修改./data/OCR.pipeline的对应配置：
-   
-    ```bash
-        "mxpi_classpostprocessor0": {
-          "props": {
-            "dataSource": "mxpi_tensorinfer1",
-            "postProcessConfigPath": "./data/configs/cls/cls.cfg",
-            "labelPath": "./data/configs/cls/ic15.names",
-            "postProcessLibPath": "/root/MindX_SDK/lib/modelpostprocessors/libresnet50postprocess.so"
-          },
-          "factory": "mxpi_classpostprocessor",
-          "next": "mxpi_rotation1:1"
-        },
-        .
-        .
-        .
-        "mxpi_textgenerationpostprocessor0": {
-          "props": {
-            "dataSource": "crnn_recognition",
-            "postProcessConfigPath": "./data/config/rec/rec_cfg.txt",
-            "labelPath": "./data/config/rec/ppocr_keys_v1.txt",
-            "postProcessLibPath": "/root/MindX_SDK/lib/modelpostprocessors/libcrnnpostprocess.so"
-          },
-          "factory": "mxpi_textgenerationpostprocessor",
-          "next": "mxpi_dataserialize0"
-        },
-    ```
-
-**步骤7：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下：
+多线程高性能c++样例输入与输出解耦，多线程发送与读取数据。运行前确保<Project_Root>/data/OCR_multi3.pipeline已完成修改，而后进入到<Project_Root>/C++目录，执行如下命令：
+```bash
+bash run.sh
+```
 
 ## 5 运行
 
-- 简易python运行样例
-  - `python3 main_ocr.py`
-<br>
-- 多线程高性能c++样例：输入与输出解耦，多线程发送与读取数据；
-  - 源文件 `./C++/mainMultiThread.cpp`, 配置 `./data/OCR_multi3.pipeline` 和 `input_data`
-  - 运行 `bash run.sh`
+提供简易python运行样例，请参考第4小结中步骤1至步骤6完成配置准备，进入到<Project_Root>/python目录，执行如下命令：
+```bash
+python3 main_ocr.py
+```

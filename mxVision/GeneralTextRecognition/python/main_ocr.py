@@ -33,7 +33,7 @@ if __name__ == '__main__':
         exit()
 
     # create streams by pipeline config file
-    with open("./data/OCR.pipeline", 'rb') as f:
+    with open("../data/OCR.pipeline", 'rb') as f:
         pipelineStr = f.read()
     ret = streamManagerApi.CreateMultipleStreams(pipelineStr)
     if ret != 0:
@@ -41,12 +41,11 @@ if __name__ == '__main__':
         exit()
 
     # Inputs data to a specified stream based on streamName.
-
-    IN_PLUGIN_ID  = 0
+    IN_PLUGIN_ID = 0
     # Construct the input of the stream
     dataInput = MxDataInput()
 
-    DIR_NAME = './input_data/'
+    DIR_NAME = '../input_data/'
 
     file_list = os.listdir(DIR_NAME)
     file_list.sort()

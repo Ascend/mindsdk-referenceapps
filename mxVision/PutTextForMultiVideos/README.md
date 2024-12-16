@@ -95,7 +95,7 @@ make -j
 
 _1.由于本样例为多卡多路服务，因此服务的启动需要一些时间。用户可在标准输出中查看服务启动情况：_
 
-_当第i个NPU设备的第j个视频通道相关线程初始化完成后，会在标准输出打印”Succeed to start working threads for device ${i} , channelId ${j} .”_
+_当第i个NPU设备的第j个视频通道相关线程初始化完成后，会在标准输出打印”Succeed to start working threads for device i, channelId j.”_
 
 _当所有NPU设备的所有视频通道相关线程都初始化完成后，会在标准测输出打印"All working threads are started."。_
 
@@ -109,7 +109,7 @@ _1.考虑到保存视频会占用较大存储空间，当配置项中指定保�
 
 _2.由于本样例为多卡多路业务，因此服务停止需要一些时间。用户可在标准输出中查看服务停止情况：_
 
-_当第i个NPU设备的第j个视频通道相关线程销毁完成后，会在标准输出打印”Succeed to join working threads for device ${i} , channelId ${j} .”_
+_当第i个NPU设备的第j个视频通道相关线程销毁完成后，会在标准输出打印”Succeed to join working threads for device i, channelId j.”_
 
 _当所有NPU设备的所有视频通道相关线程都销毁完成后，会在标准测输出打印"All working threads are joined."_
 

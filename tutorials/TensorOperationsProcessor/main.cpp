@@ -56,8 +56,7 @@ enum class Command {
 };
 
 template <template T>
-APP_ERROR
-TensorOperationsProcessor (
+APP_ERROR TensorOperationsProcessor (
     T *input1,
     T *input2,
     std::vector<uint32_t> shape,
@@ -106,89 +105,89 @@ TensorOperationsProcessor (
     // 迭代执行27种操作
     APP_ERROR ret;
     switch (command) {
-    case Command::AbsOp:
-        ret = Abs (inputTensor1, outputTensor, stream);
-        break;
-    case Command::SqrOp:
-        ret = Sqr (inputTensor1, outputTensor, stream);
-        break;
-    case Command::SqrtOp:
-        ret = Sqrt (inputTensor1, outputTensor, stream);
-        break;
-    case Command::ExpOp:
-        ret = Exp (inputTensor1, outputTensor, stream);
-        break;
-    case Command::LogOp:
-        ret = Log (inputTensor1, outputTensor, stream);
-        break;
-    case Command::RescaleOp:
-        ret = Rescale (inputTensor1, outputTensor, scale, bias, stream);
-        break;
-    case Command::ThresholdBinaryOp:
-        ret = ThresholdBinary (inputTensor1, outputTensor, thresh, maxVal, stream);
-        break;
-    case Command::ThresholdOp:
-        ret = Threshold (inputTensor1, outputTensor, thresh, maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
-        break;
-    case Command::ClipOp:
-        ret = Clip (inputTensor1, outputTensor, minVal, maxVal, stream);
-        break;
-    case Command::SortOp:
-        ret = Sort (inputTensor1, outputTensor, axis, descending, stream);
-        break;
-    case Command::SortIdxOp:
-        ret = SortIdx (inputTensor1, outputTensor, axis, descending, stream);
-        break;
-    case Command::ConvertToOp:
-        ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
-        break;
-    case Command::AddOp:
-        ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::ScaleAddOp:
-        ret = ScaleAdd (inputTensor1, scale, inputTensor2, outputTensor, stream);
-        break;
-    case Command::AddWeightedOp:
-        ret = AddWeighted (inputTensor1, alpha, inputTensor2, beta, gamma, outputTensor, stream);
-        break;
-    case Command::SubtractOp:
-        ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::AbsDiffOp:
-        ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::MultiplyOp:
-        ret = Multiply (inputTensor1, inputTensor2, outputTensor, scale, stream);
-        break;
-    case Command::DivideOp:
-        ret = Divide (inputTensor1, inputTensor2, outputTensor, scale, stream);
-        break;
-    case Command::PowOp:
-        ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::MinOp:
-        ret = Min (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::MaxOp:
-        ret = Max (inputTensor1, inputTensor2, outputTensor, stream);
-        break;
-    case Command::CompareOp:
-        ret = Compare (inputTensor1, inputTensor2, outputTensor, CmpOp::CMP_LE, stream);
-        break;
-    case Command::BitwiseAndOp:
-        ret = BitwiseAnd (inputTensor1, inputTensor2, outputTensor);
-        break;
-    case Command::BitwiseOrOp:
-        ret = BitwiseOr (inputTensor1, inputTensor2, outputTensor);
-        break;
-    case Command::BitwiseXorOp:
-        ret = BitwiseXor (inputTensor1, inputTensor2, outputTensor);
-        break;
-    case Command::BitwiseNotOp:
-        ret = BitwiseNot (inputTensor1, outputTensor);
-        break;
-    default:
-        break;
+        case Command::AbsOp:
+            ret = Abs (inputTensor1, outputTensor, stream);
+            break;
+        case Command::SqrOp:
+            ret = Sqr (inputTensor1, outputTensor, stream);
+            break;
+        case Command::SqrtOp:
+            ret = Sqrt (inputTensor1, outputTensor, stream);
+            break;
+        case Command::ExpOp:
+            ret = Exp (inputTensor1, outputTensor, stream);
+            break;
+        case Command::LogOp:
+            ret = Log (inputTensor1, outputTensor, stream);
+            break;
+        case Command::RescaleOp:
+            ret = Rescale (inputTensor1, outputTensor, scale, bias, stream);
+            break;
+        case Command::ThresholdBinaryOp:
+            ret = ThresholdBinary (inputTensor1, outputTensor, thresh, maxVal, stream);
+            break;
+        case Command::ThresholdOp:
+            ret = Threshold (inputTensor1, outputTensor, thresh, maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
+            break;
+        case Command::ClipOp:
+            ret = Clip (inputTensor1, outputTensor, minVal, maxVal, stream);
+            break;
+        case Command::SortOp:
+            ret = Sort (inputTensor1, outputTensor, axis, descending, stream);
+            break;
+        case Command::SortIdxOp:
+            ret = SortIdx (inputTensor1, outputTensor, axis, descending, stream);
+            break;
+        case Command::ConvertToOp:
+            ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
+            break;
+        case Command::AddOp:
+            ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::ScaleAddOp:
+            ret = ScaleAdd (inputTensor1, scale, inputTensor2, outputTensor, stream);
+            break;
+        case Command::AddWeightedOp:
+            ret = AddWeighted (inputTensor1, alpha, inputTensor2, beta, gamma, outputTensor, stream);
+            break;
+        case Command::SubtractOp:
+            ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::AbsDiffOp:
+            ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::MultiplyOp:
+            ret = Multiply (inputTensor1, inputTensor2, outputTensor, scale, stream);
+            break;
+        case Command::DivideOp:
+            ret = Divide (inputTensor1, inputTensor2, outputTensor, scale, stream);
+            break;
+        case Command::PowOp:
+            ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::MinOp:
+            ret = Min (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::MaxOp:
+            ret = Max (inputTensor1, inputTensor2, outputTensor, stream);
+            break;
+        case Command::CompareOp:
+            ret = Compare (inputTensor1, inputTensor2, outputTensor, CmpOp::CMP_LE, stream);
+            break;
+        case Command::BitwiseAndOp:
+            ret = BitwiseAnd (inputTensor1, inputTensor2, outputTensor);
+            break;
+        case Command::BitwiseOrOp:
+            ret = BitwiseOr (inputTensor1, inputTensor2, outputTensor);
+            break;
+        case Command::BitwiseXorOp:
+            ret = BitwiseXor (inputTensor1, inputTensor2, outputTensor);
+            break;
+        case Command::BitwiseNotOp:
+            ret = BitwiseNot (inputTensor1, outputTensor);
+            break;
+        default:
+            break;
     }
 
     if (ret != APP_ERR_OK) {
@@ -232,8 +231,7 @@ TensorOperationsProcessor (
     return ret;
 }
 
-APP_ERROR
-Tensor1DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR Tensor1DCase (AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 一维
     uint demension_1dim = 4;
@@ -257,8 +255,7 @@ Tensor1DCase (AscendStream &stream, Command command, bool bit_op_flag)
     }
 }
 
-APP_ERROR
-Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 二维
     uint demension_1dim = 2;
@@ -295,8 +292,7 @@ Tensor2DCase (AscendStream &stream, Command command, bool bit_op_flag)
     }
 }
 
-APP_ERROR
-Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 三维
     uint demension_1dim = 3;
@@ -342,8 +338,7 @@ Tensor3DCase (AscendStream &stream, Command command, bool bit_op_flag)
     }
 }
 
-APP_ERROR
-Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
+APP_ERROR Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
 {
     // 四维
     uint demension_1dim = 1;
@@ -390,8 +385,7 @@ Tensor4DCase (AscendStream &stream, Command command, bool bit_op_flag)
     }
 }
 
-APP_ERROR
-main()
+APP_ERROR main ()
 {
     APP_ERROR ret = MxInit();
     if (ret != APP_ERR_OK) {
@@ -462,25 +456,25 @@ main()
             }
 
             switch (set_tensor_shape) { // 选择输入张量维度
-            case TENSOR1D:
-                LogInfo << "Test1D Data";
-                ret = Tensor1DCase (stream, command, bit_op_flag);
-                break;
-            case TENSOR2D:
-                LogInfo << "Test2D Data";
-                ret = Tensor2DCase (stream, command, bit_op_flag);
-                break;
-            case TENSOR3D:
-                LogInfo << "Test3D Data";
-                ret = Tensor3DCase (stream, command, bit_op_flag);
-                break;
-            case TENSOR4D:
-                LogInfo << "Test4D Data";
-                ret = Tensor4DCase (stream, command, bit_op_flag);
-                break;
-            default:
-                LogInfo << "Not running";
-                break;
+                case TENSOR1D:
+                    LogInfo << "Test1D Data";
+                    ret = Tensor1DCase (stream, command, bit_op_flag);
+                    break;
+                case TENSOR2D:
+                    LogInfo << "Test2D Data";
+                    ret = Tensor2DCase (stream, command, bit_op_flag);
+                    break;
+                case TENSOR3D:
+                    LogInfo << "Test3D Data";
+                    ret = Tensor3DCase (stream, command, bit_op_flag);
+                    break;
+                case TENSOR4D:
+                    LogInfo << "Test4D Data";
+                    ret = Tensor4DCase (stream, command, bit_op_flag);
+                    break;
+                default:
+                    LogInfo << "Not running";
+                    break;
             }
             if (ret != APP_ERR_OK) {
                 LogError << "MxVision failed to initialize, error code:" << ret;

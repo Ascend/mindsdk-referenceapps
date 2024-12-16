@@ -73,7 +73,7 @@ _1. deviceNum 需为整数，取值范围为 [1, min(NPU设备个数, 5)]。`npu
 
 _2. saveVideo 需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 
-_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值。第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理。_
+_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值；第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理；rtsp流视频格式需为H264，推流教程可参考[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)。_
 
 **步骤4： 编译**
 
@@ -122,3 +122,4 @@ _当整个业务正常结束时，会在标准输出打印“PutTextForMultiVide
 用户可通过`npu-smi info`指令查看NPU设备在运行前、运行时、运行后的NPU资源占用情况。
 
 除此之外，当配置项中指定保存视频时，贴字后的视频会保存在项目根目录的output目录下。用户可打开相关视频文件查看结果。
+

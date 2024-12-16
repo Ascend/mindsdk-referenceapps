@@ -223,13 +223,13 @@ APP_ERROR Tensor1DCase(AscendStream &stream, Command command, bool bit_op_flag) 
     TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
-        uint8_t input1[4] = {0, 1, 2, 3}; //位操作 1维张量 输入示例1
-        uint8_t input2[4] = {3, 2, 1, 0}; //位操作 1维张量 输入示例2
+        uint8_t input1[] = {0, 1, 2, 3}; //位操作 1维张量 输入示例1
+        uint8_t input2[] = {3, 2, 1, 0}; //位操作 1维张量 输入示例2
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
     else {
-        float input1[4] = {0, -1, 2, -3}; //常规操作(除位操作以外) 1维张量 输入示例1
-        float input2[4] = {3, -2, 1, 0}; //常规操作(除位操作以外) 1维张量 输入示例2
+        float input1[] = {0, -1, 2, -3}; //常规操作(除位操作以外) 1维张量 输入示例1
+        float input2[] = {3, -2, 1, 0}; //常规操作(除位操作以外) 1维张量 输入示例2
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
 }
@@ -242,16 +242,16 @@ APP_ERROR Tensor2DCase(AscendStream &stream, Command command, bool bit_op_flag) 
     TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
-        uint8_t input1[2][2] = {{0, 1}, //位操作 2维张量 输入示例1
+        uint8_t input1[][] = {{0, 1}, //位操作 2维张量 输入示例1
                                 {2, 3}};
-        uint8_t input2[2][2] = {{3, 2}, //位操作 2维张量 输入示例2
+        uint8_t input2[][] = {{3, 2}, //位操作 2维张量 输入示例2
                                 {1, 0}};
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
     else {
-        float input1[2][2] = {{0, 1}, //常规操作(除位操作以外) 2维张量 输入示例1
+        float input1[][] = {{0, 1}, //常规操作(除位操作以外) 2维张量 输入示例1
                               {-2, 3}};
-        float input2[2][2] = {{-3, 2},
+        float input2[][] = {{-3, 2},
                               {-1, 0}}; //常规操作(除位操作以外) 2维张量 输入示例2
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
@@ -265,13 +265,13 @@ APP_ERROR Tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag) 
     TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
-        uint8_t input1[3][2][2] = {{{0, 1}, //位操作 3维张量 输入示例1
+        uint8_t input1[][][] = {{{0, 1}, //位操作 3维张量 输入示例1
                                     {2, 3}},
                                    {{4, 5},
                                     {6, 7}},
                                    {{8, 9},
                                     {10, 11}}};
-        uint8_t input2[3][2][2] = {{{11, 10}, //位操作 3维张量 输入示例2
+        uint8_t input2[][][] = {{{11, 10}, //位操作 3维张量 输入示例2
                                     {9, 8}},
                                    {{7, 6},
                                     {5, 4}},
@@ -280,13 +280,13 @@ APP_ERROR Tensor3DCase(AscendStream &stream, Command command, bool bit_op_flag) 
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
     else {
-        float input1[3][2][2] = {{{0, 1}, //常规操作(除位操作以外) 3维张量 输入示例1
+        float input1[][][] = {{{0, 1}, //常规操作(除位操作以外) 3维张量 输入示例1
                                   {-2, 3}},
                                  {{-4, 5},
                                   {-6, 7}},
                                  {{-8, 9},
                                   {-10, 11}}};
-        float input2[3][2][2] = {{{-11, 10}, //常规操作(除位操作以外) 3维张量 输入示例2
+        float input2[][][] = {{{-11, 10}, //常规操作(除位操作以外) 3维张量 输入示例2
                                   {-9, 8}},
                                  {{-7, 6},
                                   {-5, 4}},
@@ -304,13 +304,13 @@ APP_ERROR Tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag) 
     TensorDType tensor_dtype = TensorDType::FLOAT32; //定义并张量类型
     if (bit_op_flag) {
         TensorDType tensor_dtype = TensorDType::UINT8; //位操作张量输入类型为UINT8
-        uint8_t input1[1][3][2][2] = {{{{0, 1}, //位操作 4维张量 输入示例1
+        uint8_t input1[][][][] = {{{{0, 1}, //位操作 4维张量 输入示例1
                                         {2, 3}},
                                        {{4, 5},
                                         {6, 7}},
                                        {{8, 9},
                                         {10, 11}}}};
-        uint8_t input2[1][3][2][2] = {{{{11, 10}, //位操作 4维张量 输入示例2
+        uint8_t input2[][][][] = {{{{11, 10}, //位操作 4维张量 输入示例2
                                         {9, 8}},
                                        {{7, 6},
                                         {5, 4}},
@@ -319,13 +319,13 @@ APP_ERROR Tensor4DCase(AscendStream &stream, Command command, bool bit_op_flag) 
         return TensorOperationsProcessor(input1, input2, shape, outshape, lens, command, stream, bit_op_flag, tensor_dtype);
     }
     else {
-        float input1[1][3][2][2] = {{{{0, 1}, //常规操作(除位操作以外) 4维张量 输入示例1
+        float input1[][][][] = {{{{0, 1}, //常规操作(除位操作以外) 4维张量 输入示例1
                                       {-2, 3}},
                                      {{-4, 5},
                                       {-6, 7}},
                                      {{-8, 9},
                                       {-10, 11}}}};
-        float input2[1][3][2][2] = {{{{-11, 10}, //常规操作(除位操作以外) 4维张量 输入示例2
+        float input2[][][][] = {{{{-11, 10}, //常规操作(除位操作以外) 4维张量 输入示例2
                                       {-9, 8}},
                                      {{-7, 6},
                                       {-5, 4}},

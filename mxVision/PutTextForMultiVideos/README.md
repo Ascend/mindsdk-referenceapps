@@ -45,9 +45,11 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 ```
 
 ##  3 编译与运行
-**步骤1：下载贴字接口代码**
+**步骤1：下载贴字接口代码、和BlockingQueue.h文件**
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/PutText)下载PutText参考设计，将PutText/PutText目录在本项目根目录下。
+根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/mxVision/PutText)下载PutText参考设计，将PutText/PutText目录放在本项目根目录下。
+
+根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载Blockingqueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
 
 **步骤2： 下载字库文件**
 
@@ -99,7 +101,7 @@ _当所有NPU设备的所有视频通道相关线程都初始化完成后，会�
 
 **步骤6：停止服务**
 
-命令行输入Ctrl+C组合键可以手动停止服务。
+命令行输入Ctrl+C组合键可手动停止服务。
 
 注意：
 
@@ -120,6 +122,3 @@ _当整个业务正常结束时，会在标准输出打印“PutTextForMultiVide
 用户可通过`npu-smi info`指令查看NPU设备在运行前、运行时、运行后的NPU资源占用情况。
 
 除此之外，当配置项中指定保存视频时，贴字后的视频会保存在项目根目录的output目录下。用户可打开相关视频文件查看结果。
-
-
-

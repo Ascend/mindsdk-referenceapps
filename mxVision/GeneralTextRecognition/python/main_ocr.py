@@ -41,8 +41,7 @@ if __name__ == '__main__':
         exit()
 
     # Inputs data to a specified stream based on streamName.
-
-    IN_PLUGIN_ID  = 0
+    IN_PLUGIN_ID = 0
     # Construct the input of the stream
     dataInput = MxDataInput()
 

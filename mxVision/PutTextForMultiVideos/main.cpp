@@ -29,7 +29,7 @@
 #include "MxBase/E2eInfer/VideoEncoder/VideoEncoder.h"
 #include "MxBase/MxBase.h"
 #include "ConfigParser/ConfigParser.h"
-#include "BlockingQueue/BlockingQueue.h"
+#include "BlockingQueue.h"
 #include "PutText/CaptionImpl.h"
 extern "C" {
 #include <libavformat/avformat.h>

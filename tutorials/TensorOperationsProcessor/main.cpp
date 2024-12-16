@@ -20,10 +20,10 @@
 
 using namespace MxBase;
 
-const int TENSOR1D = 1;
-const int TENSOR2D = 2;
-const int TENSOR3D = 3;
-const int TENSOR4D = 4;
+const uint TENSOR1D = 1;
+const uint TENSOR2D = 2;
+const uint TENSOR3D = 3;
+const uint TENSOR4D = 4;
 
 enum class Command {
     AbsOp,

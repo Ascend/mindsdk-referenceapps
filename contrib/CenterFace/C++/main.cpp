@@ -256,74 +256,75 @@ int main(int argc, char *argv[]) {
     return ret;
   }
   // 加载pipeline得到的信息，创建一个新的stream业务流
-  ret = mxStreamManager->CreateMultipleStreams(pipelineConfig);
-  if (ret != APP_ERR_OK) {
-    LogError << GetError(ret) << "Fail to creat Stream.";
-    return ret;
-  }
+    {
+      ret = mxStreamManager->CreateMultipleStreams(pipelineConfig);
+      if (ret != APP_ERR_OK) {
+        LogError << GetError(ret) << "Fail to creat Stream.";
+        return ret;
+      }
 
-  // 获取图片名
-  std::vector<std::string> arguments = {};
-  for (int i = 0; i < argc; i++) {
-    arguments.emplace_back(argv[i]);
-  }
-  std::string fileName;
-  if (arguments.size() > 1) {
-    fileName = arguments[1];
-  } else {
-    LogError << "file path is null, please set your picture file path .";
-    return 0;
-  }
+      // 获取图片名
+      std::vector<std::string> arguments = {};
+      for (int i = 0; i < argc; i++) {
+        arguments.emplace_back(argv[i]);
+      }
+      std::string fileName;
+      if (arguments.size() > 1) {
+        fileName = arguments[1];
+      } else {
+        LogError << "file path is null, please set your picture file path .";
+        return 0;
+      }
 
-  // 将图片的信息读取到dataBuffer中
-  MxStream::MxstDataInput dataBuffer;
-  ret = readfile(fileName, dataBuffer);
-  if (ret != APP_ERR_OK) {
-    LogError << "Fail to read image file, ret = " << ret << ".";
-    return ret;
-  }
-  // 通过SendData函数传递输入信息到指定的工作元件模块
-  // streamName是pipeline文件中业务流名称；inPluginId为输入端口编号，对应输入元件的编号
-  ret = mxStreamManager->SendData(streamName, 0, dataBuffer);
-  if (ret != APP_ERR_OK) {
-    delete dataBuffer.dataPtr;
-    LogError << "Fail to send data to stream, ret = " << ret << ".";
-    return ret;
-  }
-  delete dataBuffer.dataPtr;
-  // 获得Stream上输出原件的protobuf结果
-  std::vector<std::string> keyVec = {"mxpi_opencvosd0",
-                                     "mxpi_objectpostprocessor0",
-                                     "mxpi_objectpostprocessor1"};
-  std::vector<MxStream::MxstProtobufOut> output =
-      mxStreamManager->GetProtobuf(streamName, 0, keyVec);
-  ret = PrintInfo(output);
-  if (ret != APP_ERR_OK) {
-    LogError << "Fail to print the info of output, ret = " << ret << ".";
-    LogError << "Fail to detect face.";
-    fileName =  "./" + fileName;
-    int findIndex1 = fileName.rfind("/");
-    int findIndex2 = fileName.rfind(".");
-    if (ret == APP_ERR_MXPLUGINS_METADATA_IS_NULL) {
-      std::string fileNameNew = fileName.substr(findIndex1, findIndex2-findIndex1);
-      MkdirRecursive("./result");
-      std::string desFile = "./result/"+fileNameNew+"_result.jpg";
-      CopyFile(fileName, desFile);
+      // 将图片的信息读取到dataBuffer中
+      MxStream::MxstDataInput dataBuffer;
+      ret = readfile(fileName, dataBuffer);
+      if (ret != APP_ERR_OK) {
+        LogError << "Fail to read image file, ret = " << ret << ".";
+        return ret;
+      }
+      // 通过SendData函数传递输入信息到指定的工作元件模块
+      // streamName是pipeline文件中业务流名称；inPluginId为输入端口编号，对应输入元件的编号
+      ret = mxStreamManager->SendData(streamName, 0, dataBuffer);
+      if (ret != APP_ERR_OK) {
+        delete dataBuffer.dataPtr;
+        LogError << "Fail to send data to stream, ret = " << ret << ".";
+        return ret;
+      }
+      delete dataBuffer.dataPtr;
+      // 获得Stream上输出原件的protobuf结果
+      std::vector<std::string> keyVec = {"mxpi_opencvosd0",
+                                         "mxpi_objectpostprocessor0",
+                                         "mxpi_objectpostprocessor1"};
+      std::vector<MxStream::MxstProtobufOut> output =
+          mxStreamManager->GetProtobuf(streamName, 0, keyVec);
+      ret = PrintInfo(output);
+      if (ret != APP_ERR_OK) {
+        LogError << "Fail to print the info of output, ret = " << ret << ".";
+        LogError << "Fail to detect face.";
+        fileName =  "./" + fileName;
+        int findIndex1 = fileName.rfind("/");
+        int findIndex2 = fileName.rfind(".");
+        if (ret == APP_ERR_MXPLUGINS_METADATA_IS_NULL) {
+          std::string fileNameNew = fileName.substr(findIndex1, findIndex2-findIndex1);
+          MkdirRecursive("./result");
+          std::string desFile = "./result/"+fileNameNew+"_result.jpg";
+          CopyFile(fileName, desFile);
+        }
+        return ret;
+      }
+
+      // mxpi_objectpostprocessor0模型后处理插件输出信息
+      auto objectList =
+          std::static_pointer_cast<MxTools::MxpiObjectList>(output[1].messagePtr);
+      // mxpi_imagedecoder0图片解码插件输出信息
+      auto mxpiVision =
+          std::static_pointer_cast<MxTools::MxpiVisionList>(output[0].messagePtr);
+      auto keypointList =
+          std::static_pointer_cast<MxTools::MxpiPoseList>(output[2].messagePtr);
+      // 将结果写入本地图片中
+      SaveResult(mxpiVision, objectList, keypointList, fileName);
     }
-    return ret;
-  }
-
-  // mxpi_objectpostprocessor0模型后处理插件输出信息
-  auto objectList =
-      std::static_pointer_cast<MxTools::MxpiObjectList>(output[1].messagePtr);
-  // mxpi_imagedecoder0图片解码插件输出信息
-  auto mxpiVision =
-      std::static_pointer_cast<MxTools::MxpiVisionList>(output[0].messagePtr);
-  auto keypointList =
-      std::static_pointer_cast<MxTools::MxpiPoseList>(output[2].messagePtr);
-  // 将结果写入本地图片中
-  SaveResult(mxpiVision, objectList, keypointList, fileName);
-
   mxStreamManager->DestroyAllStreams();
 
   return 0;

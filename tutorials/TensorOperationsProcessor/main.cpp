@@ -20,6 +20,11 @@
 
 using namespace MxBase;
 
+const TENSOR1D = 1;
+const TENSOR2D = 2;
+const TENSOR3D = 3;
+const TENSOR4D = 4;
+
 enum class Command {
     AbsOp,
     SqrOp,
@@ -375,27 +380,27 @@ APP_ERROR main() {
             }
             
             switch (set_tensor_shape) { //选择输入张量维度
-                case 1:
+                case TENSOR1D:
                     LogInfo << "Test1D Data" ;
                     ret = Tensor1DCase(stream, command, bit_op_flag);
                     break;
-                case 2:
+                case TENSOR2D:
                     LogInfo << "Test2D Data" ;
                     ret = Tensor2DCase(stream, command, bit_op_flag);
                     break;
-                case 3:
+                case TENSOR3D:
                     LogInfo << "Test3D Data" ;
                     ret = Tensor3DCase(stream, command, bit_op_flag);
                     break;
-                case 4:
+                case TENSOR4D:
                     LogInfo << "Test4D Data" ;
                     ret = Tensor4DCase(stream, command, bit_op_flag);
                     break;
                 default:
                     LogInfo << "Not running" ;
                     break;
-                if (ret != APP_ERR_OK) {
-            LogError << "MxVision failed to initialize, error code:" << ret;
+            if (ret != APP_ERR_OK) {
+                LogError << "MxVision failed to initialize, error code:" << ret;
                 return ret;
             }
             }

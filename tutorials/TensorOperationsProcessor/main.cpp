@@ -205,11 +205,7 @@ Command commands[] = {
 };
 }
 
-template <typename T> void tensor_printf(
-    T *outputTensor, 
-    int lens, 
-    Command command, 
-    bool bitOpFlag)
+void tensor_printf (Tensor outputTensor, int lens, Command command, bool bitOpFlag)
 {
     // ConvertTo操作结果类型UINT8判定
     if (command == Command::CONVERT_TO_OP && outputTensor.GetDataType() == TensorDType::UINT8) {

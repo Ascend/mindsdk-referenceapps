@@ -31,7 +31,7 @@ Atlas 300I pro、Atlas 300V pro
 
 **步骤2**：进入FaceBoxes/models 目录下执行以下命令
 ```
-atc --framework=5 --model=faceboxes-b0_bs1.onnx --output=faceboxes-b0_bs1 --input_format=NCHW --input_shape="image:1,3,1024,1024" --log=debug --soc_version=Ascend310 --insert_op_conf=./FaceBoxes.aippconfig
+atc --framework=5 --model=faceboxes-b0_bs1.onnx --output=faceboxes-b0_bs1 --input_format=NCHW --input_shape="image:1,3,1024,1024" --log=debug --soc_version=Ascend310P3 --insert_op_conf=./FaceBoxes.aippconfig
 ```
 
 ## 4 编译与运行

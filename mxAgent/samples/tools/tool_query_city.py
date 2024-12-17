@@ -25,13 +25,6 @@ class CitySearch(API):
         "city": {'type': 'str', 'description': "the name of the city in the state"}
     }
 
-    usage = f"""{name}[state]:
-    Description: This api can be used to retrieve cities in your target state.
-    Parameter:
-        state: The name of the state where you're finding cities.
-    Example: {name}[state: New York] would return cities in New York.
-    """
-
     example = (
         """
          {

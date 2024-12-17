@@ -8,7 +8,8 @@ from loguru import logger
 
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
-from samples.tools.common import get_website_summary
+from samples.tools.common import filter_website_keywords
+from samples.tools.web_summary_api import WebSummary
 
 
 @ToolManager.register_tool()
@@ -44,7 +45,7 @@ class QueryAccommodations(API):
         position = input_parameter.get("position")
         rank = input_parameter.get("rank")
         llm = kwargs.get("llm", None)
-        keys = [destination, position, rank, "住宿"]
+        keys = [destination, position, rank]
         logger.debug(f"search accommodation key words: {','.join(keys)}")
 
         prompt = """你是一个擅长文字处理和信息总结的智能助手，你的任务是将提供的网页信息进行总结，并以精简的文本的形式进行返回，
@@ -59,8 +60,11 @@ class QueryAccommodations(API):
             请生成总结：
             """
         try:
-            content = get_website_summary(keys, prompt, llm)
-            res = {"accommodation": content}
+            filtered = filter_website_keywords(keys)
+            filtered.append("住宿")
+            webs = WebSummary.web_summary(
+                filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
+            res = {"accommodation": json.dumps(webs)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

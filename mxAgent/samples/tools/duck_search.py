@@ -5,7 +5,7 @@ import re
 from langchain_community.tools import DuckDuckGoSearchResults
 from loguru import logger
 
-from toolmngt.api import API
+from agent_sdk.toolmngt.api import API
 
 
 class DuckDuckGoSearch(API):

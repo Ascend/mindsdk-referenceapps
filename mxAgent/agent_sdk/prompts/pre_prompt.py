@@ -178,7 +178,7 @@ single_action_agent_prompt = PromptTemplate(
     template=SINGLE_AGENT_ACTION_INSTRUCTION,
 )
 
-final_prompt = PromptTemplate(
+single_action_final_prompt = PromptTemplate(
     input_variables=["query", "answer"],
     template=FINAL_PROMPT,
 )

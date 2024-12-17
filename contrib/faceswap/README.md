@@ -57,11 +57,15 @@ faceswap应用基于MindX SDK开发，在昇腾芯片上进行目标检测，脸
 **步骤1**：模型文件下载
 
 目标检测采用提供的离线模型yolov4_detection.om进行推理。
+
 [模型下载链接](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/faceswap/yolov4_detection.om) 。
+
 下载后,将yolov4_detection.om模型存放在工程/model目录下。
 
 下载脸部特征点检测onnx模型
+
 [模型下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/faceswap/v3.onnx)。
+
 下载后,将v3.onnx模型存放在工程/model目录下。
 
 **步骤2**：模型转换
@@ -81,14 +85,15 @@ ATC run success, welcome to the next use.
 
 **步骤1**：准备两张需要的测试图片  
 
-在项目根目录下新建data文件夹，将准备好的测试图片放在data文件夹下并分别命名为face1.jpg，face2.jpg。
+在项目根目录下执行以下命令新建`data`文件夹。
 ```
 mkdir data
 ```
+将准备好的测试图片放在`data`文件夹下并分别命名为`face1.jpg`，`face2.jpg`。
 
 **步骤2**：创建输出文件夹
 
-在项目根目录下新建result文件夹，用于存放推理结果。
+在项目根目录下执行以下命令新建`result`文件夹，用于存放推理结果。
 ```
 mkdir result
 ```

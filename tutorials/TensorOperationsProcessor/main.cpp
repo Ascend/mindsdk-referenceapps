@@ -21,10 +21,10 @@ using namespace MxBase;
 
 namespace {
 
-const int TENSOR1D = 1;
-const int TENSOR2D = 2;
-const int TENSOR3D = 3;
-const int TENSOR4D = 4;
+const int g_tensor1d = 1;
+const int g_tensor2d = 2;
+const int g_tensor3d = 3;
+const int g_tensor4d = 4;
 
 const uint demension1Dim1 = 4;
 
@@ -40,9 +40,9 @@ const uint demension4Dim2 = 3;
 const uint demension4Dim3 = 2;
 const uint demension4Dim4 = 2;
 
-const int ShapeDim1     = 1;
-const int ShapeDim2     = 2;
-const int ShapeDim4     = 4;
+const int g_shape_dim1     = 1;
+const int g_shape_dim2     = 2;
+const int g_shape_dim4     = 4;
 const int g_tensorOpTotal = 27;
 
 uint8_t g_input1ForD1Unit8[demension1Dim1]  = {0, 1, 2, 3}; // 位操作 1维张量 输入示例1
@@ -124,21 +124,21 @@ float g_input2For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Di
 const uint32_t deviceID = 0;
 
 // 定义部分操作额外参数的示例
-const float g_Thresh  = 2.0;
-const float g_MinVal  = 1.0;
-const float g_MaxVal  = 3.0;
+const float g_thresh  = 2.0;
+const float g_minVal  = 1.0;
+const float g_maxVal  = 3.0;
 
-const float g_Alpha  = 1.1;
-const float gBeta   = 1.1;
-const float gGammaValue  = 1.1;
+const float g_alpha  = 1.1;
+const float g_beta   = 1.1;
+const float g_gammaValue  = 1.1;
 
-const uint8_t gAxis     = 0;
-const bool gDescending  = true;
+const uint8_t g_axis     = 0;
+const bool g_descending  = true;
 
-const float gBias   = 1.1;
-const float gScale  = 2.2;
+const float g_bias   = 1.1;
+const float g_scale  = 2.2;
 
-const std::string commands_string[] = {
+const std::string g_commandString[] = {
     "Abs",    "Sqr",     "Sqrt",      "Exp", "Log",      "Rescale",     "ThresholdBinary", "Threshold",  "Clip",
     "Sort",   "SortIdx", "ConvertTo", "Add", "ScaleAdd", "AddWeighted", "Subtract",        "AbsDiff",    "Multiply",
     "Divide", "Pow",     "Min",       "Max", "Compare",  "BitwiseAnd",  "BitwiseOr",       "BitwiseXor", "BitwiseNot"
@@ -174,7 +174,7 @@ enum class Command {
     BITWISE_NOT_OP
 };
 
-Command gCommands[] = {
+Command g_commands[] = {
     Command::ABS_OP,
     Command::SQR_OP,
     Command::SQRT_OP,
@@ -260,22 +260,23 @@ APP_ERROR opSwitch(
             ret = Log (inputTensor1, outputTensor, stream);
             break;
         case Command::RESCALE_OP:
-            ret = Rescale (inputTensor1, outputTensor, gScale, gBias, stream);
+            ret = Rescale (inputTensor1, outputTensor, g_scale, g_bias, stream);
             break;
         case Command::THRESHOLD_BINARY_OP:
-            ret = ThresholdBinary (inputTensor1, outputTensor, g_Thresh, g_MaxVal, stream);
+            ret = ThresholdBinary (inputTensor1, outputTensor, g_thresh, g_maxVal, stream);
             break;
         case Command::THRESHOLD_OP:
-            ret = Threshold (inputTensor1, outputTensor, g_Thresh, g_MaxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
+            ret =
+                Threshold (inputTensor1, outputTensor, g_thresh, g_maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
         case Command::CLIP_OP:
-            ret = Clip (inputTensor1, outputTensor, g_MinVal, g_MaxVal, stream);
+            ret = Clip (inputTensor1, outputTensor, g_minVal, g_maxVal, stream);
             break;
         case Command::SORT_OP:
-            ret = Sort (inputTensor1, outputTensor, gAxis, gDescending, stream);
+            ret = Sort (inputTensor1, outputTensor, g_axis, g_descending, stream);
             break;
         case Command::SORT_IDX_OP:
-            ret = SortIdx (inputTensor1, outputTensor, gAxis, gDescending, stream);
+            ret = SortIdx (inputTensor1, outputTensor, g_axis, g_descending, stream);
             break;
         case Command::CONVERT_TO_OP:
             ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
@@ -284,10 +285,10 @@ APP_ERROR opSwitch(
             ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::SCALE_ADD_OP:
-            ret = ScaleAdd (inputTensor1, gScale, inputTensor2, outputTensor, stream);
+            ret = ScaleAdd (inputTensor1, g_scale, inputTensor2, outputTensor, stream);
             break;
         case Command::ADD_WEIGHTED_OP:
-            ret = AddWeighted (inputTensor1, g_Alpha, inputTensor2, gBeta, gGammaValue, outputTensor, stream);
+            ret = AddWeighted (inputTensor1, g_alpha, inputTensor2, g_beta, g_gammaValue, outputTensor, stream);
             break;
         case Command::SUBTRACT_OP:
             ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
@@ -296,10 +297,10 @@ APP_ERROR opSwitch(
             ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::MULTIPLY_OP:
-            ret = Multiply (inputTensor1, inputTensor2, outputTensor, gScale, stream);
+            ret = Multiply (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
             break;
         case Command::DIVIDE_OP:
-            ret = Divide (inputTensor1, inputTensor2, outputTensor, gScale, stream);
+            ret = Divide (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
             break;
         case Command::POW_OP:
             ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
@@ -447,19 +448,19 @@ APP_ERROR opTensorShape(int setTensorShape, Command command, AscendStream &strea
     }
     APP_ERROR ret = APP_ERR_OK;
     switch (setTensorShape) { // 选择输入张量维度
-        case TENSOR1D:
+        case g_tensor1d:
             LogInfo << "Test1D Data";
             ret = tensor1DCase (stream, command, bitOpFlag);
             break;
-        case TENSOR2D:
+        case g_tensor2d:
             LogInfo << "Test2D Data";
             ret = tensor2DCase (stream, command, bitOpFlag);
             break;
-        case TENSOR3D:
+        case g_tensor3d:
             LogInfo << "Test3D Data";
             ret = tensor3DCase (stream, command, bitOpFlag);
             break;
-        case TENSOR4D:
+        case g_tensor4d:
             LogInfo << "Test4D Data";
             ret = tensor4DCase (stream, command, bitOpFlag);
             break;
@@ -479,19 +480,19 @@ APP_ERROR main()
     }
     AscendStream stream (0);
     stream.CreateAscendStream();
-    int minShape = ShapeDim1;
-    int maxShape = ShapeDim4;
+    int minShape = g_shape_dim1;
+    int maxShape = g_shape_dim4;
     for (int caseId = 0; caseId < g_tensorOpTotal; ++caseId) { // 遍历27种操作
-        Command command                  = gCommands[caseId];
-        std::string commandsStringSingle = commands_string[caseId];
+        Command command                  = g_commands[caseId];
+        std::string commandsStringSingle = g_commandString[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
         if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
-            minShape = ShapeDim2;
-            maxShape = ShapeDim2;
+            minShape = g_shape_dim2;
+            maxShape = g_shape_dim2;
         } else {
-            minShape = ShapeDim1;
-            maxShape = ShapeDim4;
+            minShape = g_shape_dim1;
+            maxShape = g_shape_dim4;
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             ret = opTensorShape (setTensorShape, command, stream);

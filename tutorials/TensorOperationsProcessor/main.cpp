@@ -332,32 +332,6 @@ APP_ERROR opSwitch(
     return ret;
 }
 
-APP_ERROR opTensorShape (int setTensorShape, Command command, AscendStream &stream, bool bitOpFlag)
-{
-    switch (setTensorShape) { // 选择输入张量维度
-        case TENSOR1D:
-            LogInfo << "Test1D Data";
-            ret = tensor1DCase (stream, command, bitOpFlag);
-            break;
-        case TENSOR2D:
-            LogInfo << "Test2D Data";
-            ret = tensor2DCase (stream, command, bitOpFlag);
-            break;
-        case TENSOR3D:
-            LogInfo << "Test3D Data";
-            ret = tensor3DCase (stream, command, bitOpFlag);
-            break;
-        case TENSOR4D:
-            LogInfo << "Test4D Data";
-            ret = tensor4DCase (stream, command, bitOpFlag);
-            break;
-        default:
-            LogInfo << "Not running";
-            break;
-    }
-    return ret;
-}
-
 template <typename T> APP_ERROR tensorOperationsProcessor(
     T *input1,
     T *input2,
@@ -475,6 +449,32 @@ APP_ERROR tensor4DCase (AscendStream &stream, Command command, bool bitOpFlag)
             g_input1For4D, g_input2For4D, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     }
+}
+
+APP_ERROR opTensorShape (int setTensorShape, Command command, AscendStream &stream, bool bitOpFlag)
+{
+    switch (setTensorShape) { // 选择输入张量维度
+        case TENSOR1D:
+            LogInfo << "Test1D Data";
+            ret = tensor1DCase (stream, command, bitOpFlag);
+            break;
+        case TENSOR2D:
+            LogInfo << "Test2D Data";
+            ret = tensor2DCase (stream, command, bitOpFlag);
+            break;
+        case TENSOR3D:
+            LogInfo << "Test3D Data";
+            ret = tensor3DCase (stream, command, bitOpFlag);
+            break;
+        case TENSOR4D:
+            LogInfo << "Test4D Data";
+            ret = tensor4DCase (stream, command, bitOpFlag);
+            break;
+        default:
+            LogInfo << "Not running";
+            break;
+    }
+    return ret;
 }
 
 APP_ERROR main()

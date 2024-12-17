@@ -4,14 +4,7 @@
 
 ### 1.1 简介
 
-通用文字识别样例基于mxVision SDK进行开发，主要支持以下功能：
-
-1. 图片读取解码：本样例支持JPG及PNG格式图片，采用OpenCV进行解码、缩放等预处理。
-2. 文本检测：在输入图片中检测出文本框，本样例选用基于DBNet的文本检测模型，能达到快速精准检测。
-3. 投射变换：将识别的四边形文本框，进行投射变换得到矩形的文本小图。
-4. 竖排文字旋转：根据文本框的高宽比，大于阈值（默认为1.5），将文本框旋转90°，从竖排文本转换为横排文本。
-5. 文本方向检测：识别文本小图上文本的方向--[0°，180°]，如果为180°，则将文本小图进行180°旋转，本样例选用Mobilenet为方向识别模型。
-6. 文字识别：识别文本小图上中英文，本样例采用CRNN模型进行文字识别，能够识别中英文.
+通用文字识别样例基于mxVision SDK进行开发，主要支持识别文本小图上的中英文字样。
 
 ### 1.2 支持的产品
 
@@ -105,6 +98,7 @@ ATC run success, welcome to the next use.
 ```
 
 ## 4 编译与运行
+### 4.1 编译准备
 **步骤1：** 编译clipper动态库。
 
 在[Clipper网站](https://sourceforge.net/projects/polyclipping/files/)下载`clipper_ver6.4.2.zip`压缩包，解压后将路径cpp下的 `clipper.hpp、clipper.cpp` 到<Project_Root>/src/Clipper目录下。依次执行如下命令：
@@ -152,11 +146,11 @@ blank
 
 **步骤5：** 修改配置根目录下的配置文件。
 
-将所有`deviceId`字段值替换为实际使用的device的id值，可用的`deviceId`值可以使用如下命令查看：
+将<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline内所有`deviceId`字段值替换为实际使用的device的id值，可用的`deviceId`值可以使用如下命令查看：
 ```bash
 npu-smi info
 ```
-文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so", 如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，将<project_Root>标识符更改为实际的路径，OCR.pipeline示例如下：
+文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so"，如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，OCR.pipeline示例如下：
 ```bash
 # 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
 .
@@ -176,20 +170,42 @@ OCR_multi3.pipeline示例如下：
 .
 # 641行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
 ```
-最后，请将pipline下的所有**Project_Root**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
+最后，请将pipline下的所有<Project_Root>路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 
 **步骤6：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下
 
-**步骤7：** 运行多线程高性能c++样例
+### 4.2 多线程高性能c++样例运行
 
-多线程高性能c++样例输入与输出解耦，多线程发送与读取数据。运行前确保<Project_Root>/data/OCR_multi3.pipeline已完成修改，而后进入到<Project_Root>/C++目录，执行如下命令：
+**步骤1：** 按照4.1小节中完成编译准备。
+
+**步骤2：** 执行样例程序。
+
+多线程高性能c++样例输入与输出解耦，多线程发送与读取数据。进入到<Project_Root>/C++目录，执行如下命令：
 ```bash
 bash run.sh
 ```
 
-## 5 运行
+**步骤3：** 查看结果。
 
-提供简易python运行样例，请参考第4小结中步骤1至步骤6完成配置准备，进入到<Project_Root>/python目录，执行如下命令：
+运行完成后，会通过屏幕输出文字识别结果，示例如下：
+```bash
+[OCR0] GetResult ... {"MxpiTextsInfo": [{"text":["识别结果111"]}]} ..
+```
+
+### 4.2 Python样例运行
+
+**步骤1：** 按照4.1小节中完成编译准备。
+
+**步骤2：** 执行样例程序。
+
+提供简易python运行样例，进入到<Project_Root>/python目录，执行如下命令：
 ```bash
 python3 main_ocr.py
+```
+
+**步骤3：** 查看结果。
+
+运行完成后，会通过屏幕输出文字识别结果，示例如下：
+```bash
+... {"MxpiTextsInfo": [{"text":["识别结果111"]}]} ..
 ```

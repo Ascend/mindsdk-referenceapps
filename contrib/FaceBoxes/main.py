@@ -78,7 +78,7 @@ if __name__ == '__main__':
         conf = tensorList.objectVec[j].classVec[0].confidence
         # Visualization of results
         cv2.rectangle(img, (int(x0), int(y0)), (int(x1), int(y1)), (0, 0, 255), 2)
-        cv2.putText(img, str(conf), (int(x0), int(y0)+10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
+        cv2.putText(img, str(conf), (int(x0), int(y0) + 10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
         w = x1 - x0 + 1.0
         h = y1 - y0 + 1.0
     cv2.imwrite("./result.jpg", img)

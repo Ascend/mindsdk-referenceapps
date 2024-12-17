@@ -174,16 +174,16 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
             ret = Compare (inputTensor1, inputTensor2, outputTensor, CmpOp::CMP_LE, stream);
             break;
         case Command::BITWISE_AND_OP:
-            ret = BitwiseAnd (inputTensor1, inputTensor2, outputTensor);
+            ret = BitwiseAnd (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::BITWISE_OR_OP:
-            ret = BitwiseOr (inputTensor1, inputTensor2, outputTensor);
+            ret = BitwiseOr (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::BITWISE_XOR_OP:
-            ret = BitwiseXor (inputTensor1, inputTensor2, outputTensor);
+            ret = BitwiseXor (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::BITWISE_NOT_OP:
-            ret = BitwiseNot (inputTensor1, outputTensor);
+            ret = BitwiseNot (inputTensor1, outputTensor, stream);
             break;
         default:
             break;

@@ -124,19 +124,19 @@ float g_input2For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Di
 const uint32_t deviceID = 0;
 
 // 定义部分操作额外参数的示例
-const float g_thresh  = 2.0;
-const float g_minVal  = 1.0;
-const float g_maxVal  = 3.0;
+const float gThresh  = 2.0;
+const float gMinVal  = 1.0;
+const float gMaxVal  = 3.0;
 
-const float g_alpha  = 1.1;
-const float g_beta   = 1.1;
-const float g_gamma_value  = 1.1;
+const float gAlpha  = 1.1;
+const float gBeta   = 1.1;
+const float gGammaValue  = 1.1;
 
-const uint8_t g_axis     = 0;
-const bool g_descending  = true;
+const uint8_t gAxis     = 0;
+const bool gDescending  = true;
 
-const float g_bias   = 1.1;
-const float g_scale  = 2.2;
+const float gBias   = 1.1;
+const float gScale  = 2.2;
 
 const std::string commands_string[] = {
     "Abs",    "Sqr",     "Sqrt",      "Exp", "Log",      "Rescale",     "ThresholdBinary", "Threshold",  "Clip",
@@ -174,7 +174,7 @@ enum class Command {
     BITWISE_NOT_OP
 };
 
-Command commands[] = {
+Command gCommands[] = {
     Command::ABS_OP,
     Command::SQR_OP,
     Command::SQRT_OP,
@@ -237,36 +237,10 @@ void tensor_printf(Tensor outputTensor, int lens, Command command, bool bitOpFla
     LogInfo << "\n";
 }
 
-template <typename T> APP_ERROR tensorOperationsProcessor (
-    T *input1,
-    T *input2,
-    std::vector<uint32_t> shape,
-    std::vector<uint32_t> outshape,
-    int lens,
-    Command command,
-    AscendStream &stream,
-    bool bitOpFlag,
-    TensorDType tensor_dtype
+APP_ERROR opSwitch(
+    Tensor inputTensor1, Tensor inputTensor2, Tensor outputTensor, Command command, AscendStream &stream,
 )
 {
-    // 定义输入张量并转移到Device侧
-    Tensor inputTensor1 (input1, shape, tensor_dtype);
-    inputTensor1.ToDevice (deviceID);
-    Tensor inputTensor2 (input2, shape, tensor_dtype);
-    inputTensor2.ToDevice (deviceID);
-
-    TensorDType output_tensor_dtype = tensor_dtype;
-    if (command == Command::CONVERT_TO_OP) { // 与ConvertTo设置输出参数类型一致
-        output_tensor_dtype = TensorDType::UINT8;
-    }
-    if (command == Command::SORT_IDX_OP) { // SortIdx输出参数类型需为INT32
-        output_tensor_dtype = TensorDType::INT32;
-    }
-
-    // 定义输出张量并申请内存
-    Tensor outputTensor (outshape, output_tensor_dtype, deviceID);
-    Tensor::TensorMalloc (outputTensor);
-
     // 迭代执行27种操作
     APP_ERROR ret = APP_ERR_OK;
     switch (command) {
@@ -286,22 +260,23 @@ template <typename T> APP_ERROR tensorOperationsProcessor (
             ret = Log (inputTensor1, outputTensor, stream);
             break;
         case Command::RESCALE_OP:
-            ret = Rescale (inputTensor1, outputTensor, g_scale, g_bias, stream);
+            ret = Rescale (inputTensor1, outputTensor, gScale, gBias, stream);
             break;
         case Command::THRESHOLD_BINARY_OP:
-            ret = ThresholdBinary (inputTensor1, outputTensor, g_thresh, g_maxVal, stream);
+            ret = ThresholdBinary (inputTensor1, outputTensor, gThresh, gMaxVal, stream);
             break;
         case Command::THRESHOLD_OP:
-            ret = Threshold (inputTensor1, outputTensor, g_thresh, g_maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
+            ret = 
+                Threshold (inputTensor1, outputTensor, gThresh, gMaxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
         case Command::CLIP_OP:
-            ret = Clip (inputTensor1, outputTensor, g_minVal, g_maxVal, stream);
+            ret = Clip (inputTensor1, outputTensor, gMinVal, gMaxVal, stream);
             break;
         case Command::SORT_OP:
-            ret = Sort (inputTensor1, outputTensor, g_axis, g_descending, stream);
+            ret = Sort (inputTensor1, outputTensor, gAxis, gDescending, stream);
             break;
         case Command::SORT_IDX_OP:
-            ret = SortIdx (inputTensor1, outputTensor, g_axis, g_descending, stream);
+            ret = SortIdx (inputTensor1, outputTensor, gAxis, gDescending, stream);
             break;
         case Command::CONVERT_TO_OP:
             ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
@@ -310,10 +285,10 @@ template <typename T> APP_ERROR tensorOperationsProcessor (
             ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::SCALE_ADD_OP:
-            ret = ScaleAdd (inputTensor1, g_scale, inputTensor2, outputTensor, stream);
+            ret = ScaleAdd (inputTensor1, gScale, inputTensor2, outputTensor, stream);
             break;
         case Command::ADD_WEIGHTED_OP:
-            ret = AddWeighted (inputTensor1, g_alpha, inputTensor2, g_beta, g_gamma_value, outputTensor, stream);
+            ret = AddWeighted (inputTensor1, gAlpha, inputTensor2, gBeta, gGammaValue, outputTensor, stream);
             break;
         case Command::SUBTRACT_OP:
             ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
@@ -322,10 +297,10 @@ template <typename T> APP_ERROR tensorOperationsProcessor (
             ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::MULTIPLY_OP:
-            ret = Multiply (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
+            ret = Multiply (inputTensor1, inputTensor2, outputTensor, gScale, stream);
             break;
         case Command::DIVIDE_OP:
-            ret = Divide (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
+            ret = Divide (inputTensor1, inputTensor2, outputTensor, gScale, stream);
             break;
         case Command::POW_OP:
             ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
@@ -355,6 +330,40 @@ template <typename T> APP_ERROR tensorOperationsProcessor (
             break;
     }
     stream.Synchronize(); // 进行流同步以等待计算结果
+    return ret;
+}
+template <typename T> APP_ERROR tensorOperationsProcessor(
+    T *input1,
+    T *input2,
+    std::vector<uint32_t> shape,
+    std::vector<uint32_t> outshape,
+    int lens,
+    Command command,
+    AscendStream &stream,
+    bool bitOpFlag,
+    TensorDType tensor_dtype
+)
+{
+    // 定义输入张量并转移到Device侧
+    Tensor inputTensor1 (input1, shape, tensor_dtype);
+    inputTensor1.ToDevice (deviceID);
+    Tensor inputTensor2 (input2, shape, tensor_dtype);
+    inputTensor2.ToDevice (deviceID);
+
+    TensorDType output_tensor_dtype = tensor_dtype;
+    if (command == Command::CONVERT_TO_OP) { // 与ConvertTo设置输出参数类型一致
+        output_tensor_dtype = TensorDType::UINT8;
+    }
+    if (command == Command::SORT_IDX_OP) { // SortIdx输出参数类型需为INT32
+        output_tensor_dtype = TensorDType::INT32;
+    }
+
+    // 定义输出张量并申请内存
+    Tensor outputTensor (outshape, output_tensor_dtype, deviceID);
+    Tensor::TensorMalloc (outputTensor);
+    
+    ret = opSwitch (inputTensor1, inputTensor2, outputTensor, command, stream);
+
     if (ret != APP_ERR_OK) {
         LogError << "TensorOperations failed.";
     } else {
@@ -449,7 +458,7 @@ APP_ERROR main()
     int minShape;
     int maxShape;
     for (int caseId = 0; caseId < g_tensorOpTotal; ++caseId) { // 遍历27种操作
-        Command command                    = commands[caseId];
+        Command command                  = gCommands[caseId];
         std::string commandsStringSingle = commands_string[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());

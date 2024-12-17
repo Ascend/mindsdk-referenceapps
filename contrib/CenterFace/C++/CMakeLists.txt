@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.2)
 project(CenterFace)
-add_compile_options(-fPIC -fstack-protector-all -g -Wl,-z,relro,-z,now,-z -pie -Wall)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -g -Wl,-z,relro,-z,now,-z -pie -Wall)
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 set(CMAKE_BUILD_TYPE Debug)
 set(MX_SDK_HOME $ENV{MX_SDK_HOME})

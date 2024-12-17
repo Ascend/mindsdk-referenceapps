@@ -134,7 +134,7 @@ if __name__ == '__main__':
         exit()
 
     # create streams by pipeline config file
-    with open("pipeline/EfficientDet-d6.pipeline", "rb") as f:
+    with open("pipeline/EfficientDet-d0.pipeline", "rb") as f:
         pipeline_str = f.read()
     ret = streamManagerApi.CreateMultipleStreams(pipeline_str)
     if ret != 0:

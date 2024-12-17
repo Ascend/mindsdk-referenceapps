@@ -239,8 +239,8 @@ void tensor_printf (Tensor outputTensor, int lens, Command command, bool bitOpFl
 
 template <typename T>
 APP_ERROR tensorOperationsProcessor (
-    const T *input1,
-    const T *input2,
+    T *input1,
+    T *input2,
     std::vector<uint32_t> shape,
     std::vector<uint32_t> outshape,
     int lens,
@@ -379,12 +379,12 @@ APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            input1ForD1Unit8, input2ForD1Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD1Unit8, *input2ForD1Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     } else {
 
         return tensorOperationsProcessor (
-            input1ForD1, input2ForD1, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD1, *input2ForD1, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     }
 }
@@ -399,11 +399,11 @@ APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype                       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            input1ForD2Unit8, input2ForD2Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD2Unit8, *input2ForD2Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     } else {
         return tensorOperationsProcessor (
-            input1ForD2, input2ForD2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD2, *input2ForD2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     }
 }
@@ -418,11 +418,11 @@ APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            input1ForD3Unit8, input2ForD3Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD3Unit8, *input2ForD3Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     } else {
         return tensorOperationsProcessor (
-            input1ForD3, input2ForD3, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1ForD3, *input2ForD3, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     }
 }
@@ -438,11 +438,11 @@ APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            input1For4DUnit8, input2For4DUnit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
+            *input1For4DUnit8, *input2For4DUnit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
         );
     } else {
         return tensorOperationsProcessor (
-            input1For4D, input2For4D, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
+            *input1For4D, *input2For4D, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 

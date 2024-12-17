@@ -34,7 +34,7 @@ CHANL_NUM = 2
 IMG_CHW_NUM = 3
 IMG_CHW_MAX = 255
 L_CHANL_DATA = 50 
-OUTPUT_DIR = '../out/'
+OUTPUT_DIR = './'
 
 def preprocess(picPath):
     # 抽取黑白图像L通道
@@ -68,21 +68,16 @@ def postprocess(result_list, pic, orig_shape, orig_l):
 
     result_list = result_list.reshape(1, CHANL_NUM, OUT_W, OUT_H).transpose(0, CHANL_NUM, IMG_CHW_NUM, 1)
     result_array = result_list[0]
-
+    print(result_array)
     ab_data = cv.resize(result_array, orig_shape[::-1])
     result_lab = np.concatenate((orig_l[:, :, np.newaxis], ab_data), axis=2)
     result_bgr = (IMG_CHW_MAX * np.clip(cv.cvtColor(result_lab, cv.COLOR_Lab2BGR), 0, 1)).astype('uint8')
-
     file_name = os.path.join(OUTPUT_DIR, "out_" + os.path.basename(pic))
     cv.imwrite(file_name, result_bgr)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 1:
-        print("Please enter external parameters.")
-        exit()
-    else:
-        inputPic = sys.argv[1]
+    inputPic = "../data/dog.png"
 
     # 新建一个流管理StreamManager对象并初始化
     streamManagerApi = StreamManagerApi()

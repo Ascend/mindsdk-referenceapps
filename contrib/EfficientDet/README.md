@@ -63,11 +63,11 @@ EfficientDet 目标检测后处理插件基于 mxVision 开发，对图片中的
 
 
 ## 3 准备模型
-步骤1 下载模型相关文件
+**步骤1：下载模型相关文件**
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/EfficientDet/models.zip)下载得到simplified-efficient-det-d0-mindxsdk-order.onnx文件，将该文件放入项目根目录的python/models目录下。
 
-步骤2 转换模型格式
+**步骤2：转换模型格式**
 
 进入到项目根目录的python/models目录下，执行以下命令：
 ```

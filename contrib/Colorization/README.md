@@ -8,10 +8,6 @@
 
 本项目是黑白图像上色应用，旨在华为Atlas300推理芯片上实现输入黑白图像，自动对黑白图像进行上色，还原彩色图像。
 
-### 1.1 支持的产品
-
-Atlas300推理芯片
-
 ### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
@@ -69,7 +65,7 @@ wget https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/C
 unzip model.zip
 ```
 
-**步骤2:**模型转换
+**步骤2:** 模型转换
 下载并解压完毕后，在项目根目录下进入scripts目录执行模型转换脚本
 
 ```
@@ -97,8 +93,8 @@ wget https://c7xcode.obs.cn-north-4.myhuaweicloud.com/models/colorization_pictur
 根据使用的设备id，修改项目根目录下pipeline/colorization.pipeline中第四行的deviceId：
 ```
 "deviceId": "0"                # 根据实际使用的设备id修改
+```
 **步骤3:** 执行程序
-
 ```
 cd src
 python3 main.cpp

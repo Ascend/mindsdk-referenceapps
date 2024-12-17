@@ -81,7 +81,7 @@ ATC run success, welcome to the next use.
 
 **步骤1**：准备两张需要的测试图片  
 
-在项目根目录下新建data文件夹，将准备好的测试图片放在data文件夹下并分别命名为face1.jpg, face2.jpg。
+在项目根目录下新建data文件夹，将准备好的测试图片放在data文件夹下并分别命名为face1.jpg，face2.jpg。
 ```
 mkdir data
 ```

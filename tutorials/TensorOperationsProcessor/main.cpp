@@ -233,7 +233,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
 APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 一维
-    uint demension1Dim = 4;
+    #define demension1Dim 4
     std::vector<uint32_t> shape {demension1Dim};
     std::vector<uint32_t> outshape {demension1Dim};
     int lens                 = demension1Dim;
@@ -255,8 +255,8 @@ APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bitOpFlag)
 APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 二维
-    uint demension1Dim = 2;
-    uint demension2Dim = 2;
+    #define demension1Dim= 2
+    #define demension2Dim= 2
     std::vector<uint32_t> shape {demension1Dim, demension2Dim};
     std::vector<uint32_t> outshape {demension1Dim, demension2Dim};
     int lens                 = demension1Dim * demension2Dim;
@@ -290,9 +290,9 @@ APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bitOpFlag)
 APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 三维
-    uint demension1Dim = 3;
-    uint demension2Dim = 2;
-    uint demension3Dim = 2;
+    #define demension1Dim 3
+    #define demension2Dim 2
+    #define demension3Dim 2
     std::vector<uint32_t> shape {demension1Dim, demension2Dim, demension3Dim};
     std::vector<uint32_t> outshape {demension1Dim, demension2Dim, demension3Dim};
     int lens                 = demension1Dim * demension2Dim * demension3Dim;
@@ -334,10 +334,10 @@ APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
 APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 四维
-    uint demension1Dim = 1;
-    uint demension2Dim = 3;
-    uint demension3Dim = 2;
-    uint demension_4dim = 2;
+    #define demension1Dim  1
+    #define demension2Dim  3
+    #define demension3Dim  2
+    #define demension_4dim 2
     std::vector<uint32_t> shape {demension1Dim, demension2Dim, demension3Dim, demension_4dim};
     std::vector<uint32_t> outshape {demension1Dim, demension2Dim, demension3Dim, demension_4dim};
     int lens                 = demension1Dim * demension2Dim * demension3Dim * demension_4dim;

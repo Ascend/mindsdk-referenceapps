@@ -38,7 +38,7 @@ const uint demension3Dim3  = 2;
 const uint demension4Dim1 = 1;
 const uint demension4Dim2 = 3;
 const uint demension4Dim3 = 2;
-const uint demension4dim4 = 2;
+const uint demension4Dim4 = 2;
 
 const int shapeDim1     = 1;
 const int shapeDim2     = 2;
@@ -46,10 +46,10 @@ const int shapeDim4     = 4;
 const int tensorOpTotal = 27;
 
 const uint8_t input1ForD1Unit8[demension1Dim1]  = {0, 1, 2, 3}; // 位操作 1维张量 输入示例1
-const uint8_t input1ForD2Unit8[demension1Dim1]  = {3, 2, 1, 0}; // 位操作 1维张量 输入示例2
+const uint8_t input2ForD1Unit8[demension1Dim1]  = {3, 2, 1, 0}; // 位操作 1维张量 输入示例2
 
 const float input1ForD1[demension1Dim1] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
-const float input1ForD2[demension1Dim1] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
+const float input2ForD1[demension1Dim1] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
 
 const uint8_t input1ForD2Unit8[demension2Dim1][demension2Dim2] = {
     {0, 1}, // 位操作 2维张量 输入示例1
@@ -207,9 +207,9 @@ Command commands[] = {
 
 template <typename T> void tensor_printf(
     T *outputTensor, 
+    int lens, 
     Command command, 
-    bool bitOpFlag
-    )
+    bool bitOpFlag)
 {
     // ConvertTo操作结果类型UINT8判定
     if (command == Command::CONVERT_TO_OP && outputTensor.GetDataType() == TensorDType::UINT8) {
@@ -367,7 +367,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
 
     // 结果转移到Host侧
     outputTensor.ToHost();
-    tensor_printf(outputTensor, Command, bitOpFlag);
+    tensor_printf(outputTensor, lens, command, bitOpFlag);
 
     return ret;
 }

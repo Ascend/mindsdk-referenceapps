@@ -327,5 +327,5 @@ int main(int argc, char *argv[]) {
     }
     mxStreamManager->DestroyAllStreams();
 
-  return 0;
+    return 0;
 }

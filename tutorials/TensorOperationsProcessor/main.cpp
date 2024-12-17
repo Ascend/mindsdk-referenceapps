@@ -201,6 +201,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // ConvertTo操作结果类型UINT8判定
     if (command == Command::CONVERT_TO_OP && outputTensor.GetDataType() == TensorDType::UINT8) {
         LogInfo << "outputTensor type: UINT8";
+        std::cout << "outputTensor type: UINT8 \n";
         return ret;
     }
 

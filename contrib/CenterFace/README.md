@@ -85,11 +85,11 @@
 # ascend-toolkit-path: CANN安装路径
 ```
 ## 3 准备模型
-步骤1 下载模型相关文件
+**步骤1：下载模型相关文件**
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterFaceWithDynamicResolution/centerface_offical.onnx)下载得到centerface_offical.onnx文件，将该文件放入项目根目录下的model目录。
 
-步骤2 转换模型格式
+**步骤2：转换模型格式**
 
 进入到项目根目录的model目录下，执行以下命令：
 ```

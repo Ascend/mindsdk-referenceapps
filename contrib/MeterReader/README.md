@@ -93,23 +93,8 @@
 | 11    | 读数后处理 | 开发mxpi_process3插件，读出工业表的数字|
 
 
-### 1.6 技术实现流程图
+### 1.7 技术实现流程图
 <ol>
-<li>基础环境：Ascend 310、mxVision、Ascend-CANN-toolkit、Ascend Driver
-<li>模型转换：
-
-PyTorch模型转昇腾离线模型：yolov5.onnx  -->  yolov5.om
-
-onnx模型转昇腾离线模型：DeepLabv3.onnx  -->  DeepLabv3.om
-
-<li>业务流程编排与配置
-
-<li>yolov5后处理开发
-
-<li>mxpi_process3插件的后处理开发
-
-<li>python推理流程代码开发:
-  YOLOv5的pipeline流程图:
   <center>
       <img src="./images/README_img/YOLOv5_pipeline.png">
       <br>
@@ -118,7 +103,7 @@ onnx模型转昇腾离线模型：DeepLabv3.onnx  -->  DeepLabv3.om
       color: #999;
       padding: 2px;">图1. YOLOv5的pipeline流程图 </div>
   </center>
-  DeepLabv3的pipeline流程图:
+
   <center>
         <img src="./images/README_img/DeepLabv3_pipeline.png">
         <br>

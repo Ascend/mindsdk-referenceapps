@@ -99,7 +99,7 @@ wget https://c7xcode.obs.cn-north-4.myhuaweicloud.com/models/colorization_pictur
 **步骤3:** 执行程序
 ```
 cd src
-python3 main.cpp
+python3 main.py
 ```
 **步骤4:** 查看结果
 

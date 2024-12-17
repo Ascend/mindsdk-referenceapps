@@ -170,7 +170,7 @@ OCR_multi3.pipeline示例如下：
 .
 # 641行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
 ```
-最后，请将pipline下的所有**<Project_Root>**路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
+最后，请将pipline下的所有<Project_Root>路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 
 **步骤6：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下
 

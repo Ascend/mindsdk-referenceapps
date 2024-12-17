@@ -237,9 +237,10 @@ void tensor_printf (Tensor outputTensor, int lens, Command command, bool bitOpFl
     LogInfo << "\n";
 }
 
-template <typename T> APP_ERROR tensorOperationsProcessor(
-    T *input1,
-    T *input2,
+template <typename T>
+APP_ERROR tensorOperationsProcessor (
+    const T *input1,
+    const T *input2,
     std::vector<uint32_t> shape,
     std::vector<uint32_t> outshape,
     int lens,

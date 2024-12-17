@@ -18,10 +18,7 @@ limitations under the License.
 """
 import cv2
 from StreamManagerApi import StreamManagerApi, MxDataInput, StringVector
-import numpy as np
 import MxpiDataType_pb2 as MxpiDataType
-import os
-import argparse
 
 if __name__ == '__main__':
     # init stream manager

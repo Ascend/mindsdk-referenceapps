@@ -8,11 +8,11 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 
 本项目能够针对人像清晰的图像完成人像分割任务并实现可视化。对于大部分人像图片，在图像清晰且人像在图片中占据较大比例的情况下都可以进行正确识别。但由于MMNET原算法的局限性，在部分情况下识别效果较差，具体如下：
 
-1.人像在图片中比例过小，会出现漏检的情况；
+* 人像在图片中比例过小，会出现漏检的情况。
 
-2.对于存在多张人物目标的图片，会无法正确识别并分割；
+* 对于存在多张人物目标的图片，会无法正确识别并分割。
 
-3.对于环境杂乱颜色过多的图片，分割效果较差，建议使用纯色的背景。
+* 对于环境杂乱颜色过多的图片，分割效果较差。
 
 建议使用纯色的背景，且目标在图片中占比较大的图片进行测试。
 
@@ -64,40 +64,16 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 ```
 
 ## 3 准备模型
-人像分割采用提供的mmnet.pb模型。由于原模型是基于tensorflow的人像分割模型，因此我们需要借助于ATC工具将其转化为对应的om模型。
+人像分割采用mmnet.pb模型。由于原模型是基于tensorflow的人像分割模型，因此我们需要借助于ATC工具将其转化为对应的om模型。
 
 具体步骤如下：
+
 **步骤1:** 获取模型pb文件
 ，下载链接为https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/MMNET/mmnet.pb
 
 **步骤2:** 将获取到的mmnet模型pb文件存放至：“项目所在目录/model”
 
 **步骤3:** 模型转换
-
-在pb文件所在目录下存放aipp配置文件，文件名为，具体内容如下：
-
-```python
-aipp_op {
-    aipp_mode: static
-    src_image_size_w :256
-    src_image_size_h :256
-    input_format : YUV420SP_U8
-    csc_switch : true
-    rbuv_swap_switch : false
-    matrix_r0c0 : 256
-    matrix_r0c1 : 0
-    matrix_r0c2 : 359
-    matrix_r1c0 : 256
-    matrix_r1c1 : -88
-    matrix_r1c2 : -183
-    matrix_r2c0 : 256
-    matrix_r2c1 : 454
-    matrix_r2c2 : 0
-    input_bias_0 : 0
-    input_bias_1 : 128
-    input_bias_2 : 128
-}
-```
 
 在确保环境变量设置正确后，在pb文件所在目录下执行以下命令：
 
@@ -119,6 +95,10 @@ ATC run success, welcome to the next use.
 **步骤1:** 参照第3章节中的模型转换步骤，将mmnet的离线模型转换成功。
 
 **步骤2:** 将main.py中第45行修改为真实的输入人像图片路径。
+
+```python
+45:    filepath = "test.jpg"
+```
 
 **步骤3:** 执行命令：
 

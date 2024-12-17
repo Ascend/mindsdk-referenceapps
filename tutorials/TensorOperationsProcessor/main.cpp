@@ -40,10 +40,10 @@ const uint demension4Dim2 = 3;
 const uint demension4Dim3 = 2;
 const uint demension4Dim4 = 2;
 
-const int shapeDim1     = 1;
-const int shapeDim2     = 2;
-const int shapeDim4     = 4;
-const int tensorOpTotal = 27;
+const int g_shapeDim1     = 1;
+const int g_shapeDim2     = 2;
+const int g_shapeDim4     = 4;
+const int g_tensorOpTotal = 27;
 
 uint8_t g_input1ForD1Unit8[demension1Dim1]  = {0, 1, 2, 3}; // 位操作 1维张量 输入示例1
 uint8_t g_input2ForD1Unit8[demension1Dim1]  = {3, 2, 1, 0}; // 位操作 1维张量 输入示例2
@@ -124,19 +124,19 @@ float g_input2For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Di
 const uint32_t deviceID = 0;
 
 // 定义部分操作额外参数的示例
-const float thresh  = 2.0;
-const float minVal  = 1.0;
-const float maxVal  = 3.0;
+const float g_thresh  = 2.0;
+const float g_minVal  = 1.0;
+const float g_maxVal  = 3.0;
 
-const float alpha  = 1.1;
-const float beta   = 1.1;
-const float gamma_value  = 1.1;
+const float g_alpha  = 1.1;
+const float g_beta   = 1.1;
+const float g_gamma_value  = 1.1;
 
-const uint8_t axis     = 0;
-const bool descending  = true;
+const uint8_t g_axis     = 0;
+const bool g_descending  = true;
 
-const float bias   = 1.1;
-const float scale  = 2.2;
+const float g_bias   = 1.1;
+const float g_scale  = 2.2;
 
 const std::string commands_string[] = {
     "Abs",    "Sqr",     "Sqrt",      "Exp", "Log",      "Rescale",     "ThresholdBinary", "Threshold",  "Clip",
@@ -205,7 +205,7 @@ Command commands[] = {
 };
 }
 
-void tensor_printf (Tensor outputTensor, int lens, Command command, bool bitOpFlag)
+void tensor_printf(Tensor outputTensor, int lens, Command command, bool bitOpFlag)
 {
     // ConvertTo操作结果类型UINT8判定
     if (command == Command::CONVERT_TO_OP && outputTensor.GetDataType() == TensorDType::UINT8) {
@@ -237,8 +237,7 @@ void tensor_printf (Tensor outputTensor, int lens, Command command, bool bitOpFl
     LogInfo << "\n";
 }
 
-template <typename T>
-APP_ERROR tensorOperationsProcessor (
+template <typename T> APP_ERROR tensorOperationsProcessor (
     T *input1,
     T *input2,
     std::vector<uint32_t> shape,
@@ -287,22 +286,22 @@ APP_ERROR tensorOperationsProcessor (
             ret = Log (inputTensor1, outputTensor, stream);
             break;
         case Command::RESCALE_OP:
-            ret = Rescale (inputTensor1, outputTensor, scale, bias, stream);
+            ret = Rescale (inputTensor1, outputTensor, g_scale, g_bias, stream);
             break;
         case Command::THRESHOLD_BINARY_OP:
-            ret = ThresholdBinary (inputTensor1, outputTensor, thresh, maxVal, stream);
+            ret = ThresholdBinary (inputTensor1, outputTensor, g_thresh, g_maxVal, stream);
             break;
         case Command::THRESHOLD_OP:
-            ret = Threshold (inputTensor1, outputTensor, thresh, maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
+            ret = Threshold (inputTensor1, outputTensor, g_thresh, g_maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
         case Command::CLIP_OP:
-            ret = Clip (inputTensor1, outputTensor, minVal, maxVal, stream);
+            ret = Clip (inputTensor1, outputTensor, g_minVal, g_maxVal, stream);
             break;
         case Command::SORT_OP:
-            ret = Sort (inputTensor1, outputTensor, axis, descending, stream);
+            ret = Sort (inputTensor1, outputTensor, g_axis, g_descending, stream);
             break;
         case Command::SORT_IDX_OP:
-            ret = SortIdx (inputTensor1, outputTensor, axis, descending, stream);
+            ret = SortIdx (inputTensor1, outputTensor, g_axis, g_descending, stream);
             break;
         case Command::CONVERT_TO_OP:
             ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
@@ -311,10 +310,10 @@ APP_ERROR tensorOperationsProcessor (
             ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::SCALE_ADD_OP:
-            ret = ScaleAdd (inputTensor1, scale, inputTensor2, outputTensor, stream);
+            ret = ScaleAdd (inputTensor1, g_scale, inputTensor2, outputTensor, stream);
             break;
         case Command::ADD_WEIGHTED_OP:
-            ret = AddWeighted (inputTensor1, alpha, inputTensor2, beta, gamma_value, outputTensor, stream);
+            ret = AddWeighted (inputTensor1, g_alpha, inputTensor2, g_beta, g_gamma_value, outputTensor, stream);
             break;
         case Command::SUBTRACT_OP:
             ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
@@ -323,10 +322,10 @@ APP_ERROR tensorOperationsProcessor (
             ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
             break;
         case Command::MULTIPLY_OP:
-            ret = Multiply (inputTensor1, inputTensor2, outputTensor, scale, stream);
+            ret = Multiply (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
             break;
         case Command::DIVIDE_OP:
-            ret = Divide (inputTensor1, inputTensor2, outputTensor, scale, stream);
+            ret = Divide (inputTensor1, inputTensor2, outputTensor, g_scale, stream);
             break;
         case Command::POW_OP:
             ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
@@ -379,13 +378,10 @@ APP_ERROR tensor1DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            g_input1ForD1Unit8, g_input2ForD1Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD1Unit8, g_input2ForD1Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
-
         return tensorOperationsProcessor (
-            g_input1ForD1, g_input2ForD1, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD1, g_input2ForD1, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
@@ -399,12 +395,10 @@ APP_ERROR tensor2DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype                       = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            g_input1ForD2Unit8, g_input2ForD2Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD2Unit8, g_input2ForD2Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
         return tensorOperationsProcessor (
-            g_input1ForD2, g_input2ForD2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD2, g_input2ForD2, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
@@ -418,12 +412,10 @@ APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            g_input1ForD3Unit8, g_input2ForD3Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD3Unit8, g_input2ForD3Unit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
         return tensorOperationsProcessor (
-            g_input1ForD3, g_input2ForD3, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1ForD3, g_input2ForD3, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     }
 }
 
@@ -438,8 +430,7 @@ APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bitOpFlag)
     if (bitOpFlag) {
         TensorDType tensor_dtype = TensorDType::UINT8; // 位操作张量输入类型为UINT8
         return tensorOperationsProcessor (
-            g_input1For4DUnit8, g_input2For4DUnit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype
-        );
+            g_input1For4DUnit8, g_input2For4DUnit8, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
     } else {
         return tensorOperationsProcessor (
             g_input1For4D, g_input2For4D, shape, outshape, lens, command, stream, bitOpFlag, tensor_dtype);
@@ -457,17 +448,17 @@ APP_ERROR main()
     stream.CreateAscendStream();
     int minShape;
     int maxShape;
-    for (int caseId = 0; caseId < tensorOpTotal; ++caseId) { // 遍历27种操作
+    for (int caseId = 0; caseId < g_tensorOpTotal; ++caseId) { // 遍历27种操作
         Command command                    = commands[caseId];
         std::string commandsStringSingle = commands_string[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
         if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
-            minShape = shapeDim2;
-            maxShape = shapeDim2;
+            minShape = g_shapeDim2;
+            maxShape = g_shapeDim2;
         } else {
-            minShape = shapeDim1;
-            maxShape = shapeDim4;
+            minShape = g_shapeDim1;
+            maxShape = g_shapeDim4;
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             bool bitOpFlag = false;

@@ -238,7 +238,7 @@ void tensor_printf(Tensor outputTensor, int lens, Command command, bool bitOpFla
 }
 
 APP_ERROR opSwitch(
-    Tensor inputTensor1, Tensor inputTensor2, Tensor outputTensor, Command command, AscendStream &stream,
+    Tensor inputTensor1, Tensor inputTensor2, Tensor outputTensor, Command command, AscendStream &stream
 )
 {
     // 迭代执行27种操作
@@ -266,8 +266,7 @@ APP_ERROR opSwitch(
             ret = ThresholdBinary (inputTensor1, outputTensor, gThresh, gMaxVal, stream);
             break;
         case Command::THRESHOLD_OP:
-            ret = 
-                Threshold (inputTensor1, outputTensor, gThresh, gMaxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
+            ret = Threshold (inputTensor1, outputTensor, gThresh, gMaxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
         case Command::CLIP_OP:
             ret = Clip (inputTensor1, outputTensor, gMinVal, gMaxVal, stream);
@@ -332,6 +331,7 @@ APP_ERROR opSwitch(
     stream.Synchronize(); // 进行流同步以等待计算结果
     return ret;
 }
+
 template <typename T> APP_ERROR tensorOperationsProcessor(
     T *input1,
     T *input2,
@@ -361,9 +361,8 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // 定义输出张量并申请内存
     Tensor outputTensor (outshape, output_tensor_dtype, deviceID);
     Tensor::TensorMalloc (outputTensor);
-    
+    APP_ERROR ret = APP_ERR_OK;
     ret = opSwitch (inputTensor1, inputTensor2, outputTensor, command, stream);
-
     if (ret != APP_ERR_OK) {
         LogError << "TensorOperations failed.";
     } else {
@@ -373,7 +372,6 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // 结果转移到Host侧
     outputTensor.ToHost();
     tensor_printf(outputTensor, lens, command, bitOpFlag);
-
     return ret;
 }
 
@@ -431,7 +429,6 @@ APP_ERROR tensor3DCase(AscendStream &stream, Command command, bool bitOpFlag)
 APP_ERROR tensor4DCase(AscendStream &stream, Command command, bool bitOpFlag)
 {
     // 四维
-
     std::vector<uint32_t> shape {demension4Dim1, demension4Dim2, demension4Dim3, demension4Dim4};
     std::vector<uint32_t> outshape {demension4Dim1, demension4Dim2, demension4Dim3, demension4Dim4};
     int lens                 = demension4Dim1 * demension4Dim2 * demension4Dim3 * demension4Dim4;
@@ -455,8 +452,8 @@ APP_ERROR main()
     }
     AscendStream stream (0);
     stream.CreateAscendStream();
-    int minShape;
-    int maxShape;
+    int minShape = g_shapeDim1;
+    int maxShape = g_shapeDim4;
     for (int caseId = 0; caseId < g_tensorOpTotal; ++caseId) { // 遍历27种操作
         Command command                  = gCommands[caseId];
         std::string commandsStringSingle = commands_string[caseId];
@@ -465,9 +462,6 @@ APP_ERROR main()
         if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
             minShape = g_shapeDim2;
             maxShape = g_shapeDim2;
-        } else {
-            minShape = g_shapeDim1;
-            maxShape = g_shapeDim4;
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             bool bitOpFlag = false;

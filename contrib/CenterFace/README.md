@@ -100,7 +100,7 @@ atc --model=centerface_offical.onnx --output=centerface_offical --dynamic_image_
 
 ## 4 编译与运行
 
-**步骤1：** 编译
+**步骤1：编译**
 
 进入mxVision安装目录的`operators/opencvosd`目录下执行以下命令：
 
@@ -113,7 +113,7 @@ bash generate_osd_om.sh
   bash build.sh
   ```
 
-**步骤2：** 运行  
+**步骤2：运行**  
 
 进入项目根目录的C++目录下，执行以下命令：
 
@@ -121,6 +121,6 @@ bash generate_osd_om.sh
   ./Main ${jpg图片路径}  # ${jpg图片路径}为待检测图片的真实路径
   ```
 
-**步骤3：** 查看结果  
+**步骤3：查看结果  **
 
 检测后的可视化结果图片保存在项目根目录的C++/result目录下，打开图片查看检测结果。

@@ -325,7 +325,7 @@ int main(int argc, char *argv[]) {
         // 将结果写入本地图片中
         SaveResult(mxpiVision, objectList, keypointList, fileName);
     }
-  mxStreamManager->DestroyAllStreams();
+    mxStreamManager->DestroyAllStreams();
 
   return 0;
 }

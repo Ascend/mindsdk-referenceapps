@@ -26,33 +26,33 @@ const int TENSOR3D = 3;
 const int TENSOR4D = 4;
 
 enum class Command {
-    absOp,
-    sqrOp,
-    sqrtOp,
-    expOp,
-    logOp,
-    rescaleOp,
-    thresholdBinaryOp,
-    thresholdOp,
-    clipOp,
-    sortOp,
-    sortIdxOp,
-    ConvertToOp,
-    AddOp,
-    ScaleAddOp,
-    AddWeightedOp,
-    SubtractOp,
-    AbsDiffOp,
-    MultiplyOp,
-    DivideOp,
-    PowOp,
-    MinOp,
-    MaxOp,
-    CompareOp,
-    BitwiseAndOp,
-    BitwiseOrOp,
-    BitwiseXorOp,
-    BitwiseNotOp
+    ABS_OP,
+    SQR_OP,
+    SQRT_OP,
+    EXP_OP,
+    LOG_OP,
+    RESCALE_OP,
+    THRESHOLD_BINARY_OP,
+    THRESHOLD_OP,
+    CLIP_OP,
+    SORT_OP,
+    SORT_IDX_OP,
+    CONVERT_TO_OP,
+    ADD_OP,
+    SCALE_ADD_OP,
+    ADD_WEIGHTED_OP,
+    SUBTRACT_OP,
+    ABS_DIFF_OP,
+    MULTIPLY_OP,
+    DIVIDE_OP,
+    POW_OP,
+    MIN_OP,
+    MAX_OP,
+    COMPARE_OP,
+    BITWISE_AND_OP,
+    BITWISE_OR_OP,
+    BITWISE_XOR_OP,
+    BITWISE_NOT_OP
 };
 
 template <typename T> APP_ERROR tensorOperationsProcessor(
@@ -75,10 +75,10 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     inputTensor2.ToDevice (deviceID);
 
     TensorDType output_tensor_dtype = tensor_dtype;
-    if (command == Command::ConvertToOp) { // 与ConvertTo设置输出参数类型一致
+    if (command == Command::CONVERT_TO_OP) { // 与ConvertTo设置输出参数类型一致
         output_tensor_dtype = TensorDType::UINT8;
     }
-    if (command == Command::sortIdxOp) { // SortIdx输出参数类型需为INT32
+    if (command == Command::SORT_IDX_OP) { // SortIdx输出参数类型需为INT32
         output_tensor_dtype = TensorDType::INT32;
     }
 
@@ -104,85 +104,85 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // 迭代执行27种操作
     APP_ERROR ret;
     switch (command) {
-        case Command::absOp:
+        case Command::ABS_OP:
             ret = Abs (inputTensor1, outputTensor, stream);
             break;
-        case Command::sqrOp:
+        case Command::SQR_OP:
             ret = Sqr (inputTensor1, outputTensor, stream);
             break;
-        case Command::sqrtOp:
+        case Command::SQRT_OP:
             ret = Sqrt (inputTensor1, outputTensor, stream);
             break;
-        case Command::expOp:
+        case Command::EXP_OP:
             ret = Exp (inputTensor1, outputTensor, stream);
             break;
-        case Command::logOp:
+        case Command::LOG_OP:
             ret = Log (inputTensor1, outputTensor, stream);
             break;
-        case Command::rescaleOp:
+        case Command::RESCALE_OP:
             ret = Rescale (inputTensor1, outputTensor, scale, bias, stream);
             break;
-        case Command::thresholdBinaryOp:
+        case Command::THRESHOLD_BINARY_OP:
             ret = ThresholdBinary (inputTensor1, outputTensor, thresh, maxVal, stream);
             break;
-        case Command::thresholdOp:
+        case Command::THRESHOLD_OP:
             ret = Threshold (inputTensor1, outputTensor, thresh, maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
-        case Command::clipOp:
+        case Command::CLIP_OP:
             ret = Clip (inputTensor1, outputTensor, minVal, maxVal, stream);
             break;
-        case Command::sortOp:
+        case Command::SORT_OP:
             ret = Sort (inputTensor1, outputTensor, axis, descending, stream);
             break;
-        case Command::sortIdxOp:
+        case Command::SORT_IDX_OP:
             ret = SortIdx (inputTensor1, outputTensor, axis, descending, stream);
             break;
-        case Command::ConvertToOp:
+        case Command::CONVERT_TO_OP:
             ret = ConvertTo (inputTensor1, outputTensor, TensorDType::UINT8, stream);
             break;
-        case Command::AddOp:
+        case Command::ADD_OP:
             ret = Add (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::ScaleAddOp:
+        case Command::SCALE_ADD_OP:
             ret = ScaleAdd (inputTensor1, scale, inputTensor2, outputTensor, stream);
             break;
-        case Command::AddWeightedOp:
+        case Command::ADD_WEIGHTED_OP:
             ret = AddWeighted (inputTensor1, alpha, inputTensor2, beta, gamma, outputTensor, stream);
             break;
-        case Command::SubtractOp:
+        case Command::SUBTRACT_OP:
             ret = Subtract (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::AbsDiffOp:
+        case Command::ABS_DIFF_OP:
             ret = AbsDiff (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::MultiplyOp:
+        case Command::MULTIPLY_OP:
             ret = Multiply (inputTensor1, inputTensor2, outputTensor, scale, stream);
             break;
-        case Command::DivideOp:
+        case Command::DIVIDE_OP:
             ret = Divide (inputTensor1, inputTensor2, outputTensor, scale, stream);
             break;
-        case Command::PowOp:
+        case Command::POW_OP:
             ret = Pow (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::MinOp:
+        case Command::MIN_OP:
             ret = Min (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::MaxOp:
+        case Command::MAX_OP:
             ret = Max (inputTensor1, inputTensor2, outputTensor, stream);
             break;
-        case Command::CompareOp:
+        case Command::COMPARE_OP:
             ret = Compare (inputTensor1, inputTensor2, outputTensor, CmpOp::CMP_LE, stream);
             break;
-        case Command::BitwiseAndOp:
+        case Command::BITWISE_AND_OP:
             ret = BitwiseAnd (inputTensor1, inputTensor2, outputTensor);
             break;
-        case Command::BitwiseOrOp:
+        case Command::BITWISE_OR_OP:
             ret = BitwiseOr (inputTensor1, inputTensor2, outputTensor);
             break;
-        case Command::BitwiseXorOp:
+        case Command::BITWISE_XOR_OP:
             ret = BitwiseXor (inputTensor1, inputTensor2, outputTensor);
             break;
-        case Command::BitwiseNotOp:
+        case Command::BITWISE_NOT_OP:
             ret = BitwiseNot (inputTensor1, outputTensor);
             break;
         default:
@@ -199,7 +199,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     outputTensor.ToHost();
 
     // ConvertTo操作结果类型UINT8判定
-    if (command == Command::ConvertToOp && outputTensor.GetDataType() == TensorDType::UINT8) {
+    if (command == Command::CONVERT_TO_OP && outputTensor.GetDataType() == TensorDType::UINT8) {
         LogInfo << "outputTensor type: UINT8";
         std::cout << "outputTensor type: UINT8";
         return ret;
@@ -213,7 +213,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     for (int i = 0; i < lens; ++i) {
         if (bitOpFlag) {
             printf ("%d ", reinterpret_cast<uint8_t *> (outputTensorData)[i]); // 位操作结果打印
-        } else if (command == Command::sortIdxOp) {
+        } else if (command == Command::SORT_IDX_OP) {
             printf ("%d ", reinterpret_cast<int *> (outputTensorData)[i]); // 排序返回索引操作结果打印
         } else {
             printf ("%.3f ", reinterpret_cast<float *> (outputTensorData)[i]);
@@ -394,33 +394,33 @@ APP_ERROR main()
         "Max",         "Compare",  "BitwiseAnd", "BitwiseOr", "BitwiseXor", "BitwiseNot"
     };
     Command commands[] = {
-        Command::absOp,
-        Command::sqrOp,
-        Command::sqrtOp,
-        Command::expOp,
-        Command::logOp,
-        Command::rescaleOp,
-        Command::thresholdBinaryOp,
-        Command::thresholdOp,
-        Command::clipOp,
-        Command::sortOp,
-        Command::sortIdxOp,
-        Command::ConvertToOp,
-        Command::AddOp,
-        Command::ScaleAddOp,
-        Command::AddWeightedOp,
-        Command::SubtractOp,
-        Command::AbsDiffOp,
-        Command::MultiplyOp,
-        Command::DivideOp,
-        Command::PowOp,
-        Command::MinOp,
-        Command::MaxOp,
-        Command::CompareOp,
-        Command::BitwiseAndOp,
-        Command::BitwiseOrOp,
-        Command::BitwiseXorOp,
-        Command::BitwiseNotOp
+        Command::ABS_OP,
+        Command::SQR_OP,
+        Command::SQRT_OP,
+        Command::EXP_OP,
+        Command::LOG_OP,
+        Command::RESCALE_OP,
+        Command::THRESHOLD_BINARY_OP,
+        Command::THRESHOLD_OP,
+        Command::CLIP_OP,
+        Command::SORT_OP,
+        Command::SORT_IDX_OP,
+        Command::CONVERT_TO_OP,
+        Command::ADD_OP,
+        Command::SCALE_ADD_OP,
+        Command::ADD_WEIGHTED_OP,
+        Command::SUBTRACT_OP,
+        Command::ABS_DIFF_OP,
+        Command::MULTIPLY_OP,
+        Command::DIVIDE_OP,
+        Command::POW_OP,
+        Command::MIN_OP,
+        Command::MAX_OP,
+        Command::COMPARE_OP,
+        Command::BITWISE_AND_OP,
+        Command::BITWISE_OR_OP,
+        Command::BITWISE_XOR_OP,
+        Command::BITWISE_NOT_OP
     };
 
     int minShape;
@@ -431,7 +431,7 @@ APP_ERROR main()
         std::string commandsStringSingle = commands_string[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
-        if (command == Command::sortOp || command == Command::sortIdxOp) { // Sort 系列操作仅支持最多2维的张量
+        if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
             minShape = 2;
             maxShape = 2;
         } else {
@@ -440,9 +440,9 @@ APP_ERROR main()
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             bool bitOpFlag = false;
-            if (command == Command::BitwiseAndOp || command == Command::BitwiseOrOp ||
-                command == Command::BitwiseXorOp ||
-                command == Command::BitwiseNotOp) { // 位系列操作输入类型定义为uint8_t
+            if (command == Command::BITWISE_AND_OP || command == Command::BITWISE_OR_OP ||
+                command == Command::BITWISE_XOR_OP ||
+                command == Command::BITWISE_NOT_OP) { // 位系列操作输入类型定义为uint8_t
                 bitOpFlag = true;
             }
 

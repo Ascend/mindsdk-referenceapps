@@ -188,7 +188,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
         default:
             break;
     }
-    stream.Synchronize();
+    stream.Synchronize(); // 进行流同步以等待计算结果
     if (ret != APP_ERR_OK) {
         LogError << "TensorOperations failed.";
     } else {
@@ -427,17 +427,20 @@ APP_ERROR main()
     const int shapeDim2 = 2;
     const int shapeDim4 = 4;
     static int tensorOpTotal = 27;
+    int minShape;
+    int maxShape;
+
     for (int caseId = 0; caseId < tensorOpTotal; ++caseId) { // 遍历27种操作
         Command command                    = commands[caseId];
         std::string commandsStringSingle = commands_string[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
         if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
-            int minShape = shapeDim2;
-            int maxShape = shapeDim2;
+            minShape = shapeDim2;
+            maxShape = shapeDim2;
         } else {
-            int minShape = shapeDim1;
-            int maxShape = shapeDim4;
+            minShape = shapeDim1;
+            maxShape = shapeDim4;
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             bool bitOpFlag = false;

@@ -90,21 +90,17 @@ ATC run success, welcome to the next use.
 
 ## 4 运行
 
-接下来进行模型的安装运行，具体步骤如下：
-
-**步骤1:** 参照第3章节中的模型转换步骤，将mmnet的离线模型转换成功。
-
-**步骤2:** 将main.py中第45行修改为真实的输入人像图片路径。
+**步骤1:** 将main.py中第45行修改为真实的输入人像图片路径。
 
 ```python
-45:    filepath = "test.jpg"
+45    filepath = "test.jpg"
 ```
 
-**步骤3:** 执行命令：
+**步骤2:** 执行命令：
 
 ```
 python3 main.py
 ```
 
-**步骤4:** 查看结果，输出的test_out.jpg即为样例的人像分割后的图片。
+**步骤3:** 查看结果，输出的test_out.jpg即为样例的人像分割后的图片。
 

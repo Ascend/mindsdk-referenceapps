@@ -45,50 +45,50 @@ const int shapeDim2     = 2;
 const int shapeDim4     = 4;
 const int tensorOpTotal = 27;
 
-uint8_t* g_input1ForD1Unit8[demension1Dim1]  = {0, 1, 2, 3}; // 位操作 1维张量 输入示例1
-uint8_t* g_input2ForD1Unit8[demension1Dim1]  = {3, 2, 1, 0}; // 位操作 1维张量 输入示例2
+uint8_t g_input1ForD1Unit8[demension1Dim1]  = {0, 1, 2, 3}; // 位操作 1维张量 输入示例1
+uint8_t g_input2ForD1Unit8[demension1Dim1]  = {3, 2, 1, 0}; // 位操作 1维张量 输入示例2
 
-float* g_input1ForD1[demension1Dim1] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
-float* g_input2ForD1[demension1Dim1] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
+float g_input1ForD1[demension1Dim1] = {0, -1, 2, -3}; // 常规操作(除位操作以外) 1维张量 输入示例1
+float g_input2ForD1[demension1Dim1] = {3, -2, 1, 0};  // 常规操作(除位操作以外) 1维张量 输入示例2
 
-uint8_t* g_input1ForD2Unit8[demension2Dim1][demension2Dim2] = {
+uint8_t g_input1ForD2Unit8[demension2Dim1][demension2Dim2] = {
     {0, 1}, // 位操作 2维张量 输入示例1
     {2, 3}
 };
-uint8_t* g_input2ForD2Unit8[demension2Dim1][demension2Dim2] = {
+uint8_t g_input2ForD2Unit8[demension2Dim1][demension2Dim2] = {
     {3, 2}, // 位操作 2维张量 输入示例2
     {1, 0}
 };
 
-float* g_input1ForD2[demension2Dim1][demension2Dim2] = {
+float g_input1ForD2[demension2Dim1][demension2Dim2] = {
     {0, 1}, // 常规操作(除位操作以外) 2维张量 输入示例1
     {-2, 3}
 };
-float* g_input2ForD2[demension2Dim1][demension2Dim2] = {
+float g_input2ForD2[demension2Dim1][demension2Dim2] = {
     {-3, 2}, // 常规操作(除位操作以外) 2维张量 输入示例2
     {-1, 0}
 };
 
-uint8_t* g_input1ForD3Unit8[demension3Dim1][demension3Dim2][demension3Dim3] = {
+uint8_t g_input1ForD3Unit8[demension3Dim1][demension3Dim2][demension3Dim3] = {
     {{0, 1}, // 位操作 3维张量 输入示例1
      {2, 3}},
     {{4, 5}, {6, 7}},
     {{8, 9}, {10, 11}}
 };
-uint8_t* g_input2ForD3Unit8[demension3Dim1][demension3Dim2][demension3Dim3] = {
+uint8_t g_input2ForD3Unit8[demension3Dim1][demension3Dim2][demension3Dim3] = {
     {{11, 10}, // 位操作 3维张量 输入示例2
      {9, 8}},
     {{7, 6}, {5, 4}},
     {{3, 2}, {1, 0}}
 };
 
-float* g_input1ForD3[demension3Dim1][demension3Dim2][demension3Dim3] = {
+float g_input1ForD3[demension3Dim1][demension3Dim2][demension3Dim3] = {
     {{0, 1}, // 常规操作(除位操作以外) 3维张量 输入示例1
      {-2, 3}},
     {{-4, 5}, {-6, 7}},
     {{-8, 9}, {-10, 11}}
 };
-float* g_input2ForD3[demension3Dim1][demension3Dim2][demension3Dim3] = {
+float g_input2ForD3[demension3Dim1][demension3Dim2][demension3Dim3] = {
     {{-11, 10}, // 常规操作(除位操作以外) 3维张量 输入示例2
      {-9, 8}},
     {{-7, 6}, {-5, 4}},
@@ -101,20 +101,20 @@ uint8_t g_input1For4DUnit8[demension4Dim1][demension4Dim2][demension4Dim3][demen
      {{4, 5}, {6, 7}},
      {{8, 9}, {10, 11}}}
 };
-uint8_t* g_input2For4DUnit8[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
+uint8_t g_input2For4DUnit8[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
     {{{11, 10}, // 位操作 4维张量 输入示例2
       {9, 8}},
      {{7, 6}, {5, 4}},
      {{3, 2}, {1, 0}}}
 };
 
-float* g_input1For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
+float g_input1For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
     {{{0, 1}, // 常规操作(除位操作以外) 4维张量 输入示例1
       {-2, 3}},
      {{-4, 5}, {-6, 7}},
      {{-8, 9}, {-10, 11}}}
 };
-float* g_input2For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
+float g_input2For4D[demension4Dim1][demension4Dim2][demension4Dim3][demension4Dim4] = {
     {{{-11, 10}, // 常规操作(除位操作以外) 4维张量 输入示例2
       {-9, 8}},
      {{-7, 6}, {-5, 4}},

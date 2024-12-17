@@ -26,17 +26,17 @@ const int TENSOR3D = 3;
 const int TENSOR4D = 4;
 
 enum class Command {
-    AbsOp,
-    SqrOp,
-    SqrtOp,
-    ExpOp,
-    LogOp,
-    RescaleOp,
-    ThresholdBinaryOp,
-    ThresholdOp,
-    ClipOp,
-    SortOp,
-    SortIdxOp,
+    absOp,
+    sqrOp,
+    sqrtOp,
+    expOp,
+    logOp,
+    rescaleOp,
+    thresholdBinaryOp,
+    thresholdOp,
+    clipOp,
+    sortOp,
+    sortIdxOp,
     ConvertToOp,
     AddOp,
     ScaleAddOp,
@@ -78,7 +78,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     if (command == Command::ConvertToOp) { // 与ConvertTo设置输出参数类型一致
         output_tensor_dtype = TensorDType::UINT8;
     }
-    if (command == Command::SortIdxOp) { // SortIdx输出参数类型需为INT32
+    if (command == Command::sortIdxOp) { // SortIdx输出参数类型需为INT32
         output_tensor_dtype = TensorDType::INT32;
     }
 
@@ -104,37 +104,37 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     // 迭代执行27种操作
     APP_ERROR ret;
     switch (command) {
-        case Command::AbsOp:
+        case Command::absOp:
             ret = Abs (inputTensor1, outputTensor, stream);
             break;
-        case Command::SqrOp:
+        case Command::sqrOp:
             ret = Sqr (inputTensor1, outputTensor, stream);
             break;
-        case Command::SqrtOp:
+        case Command::sqrtOp:
             ret = Sqrt (inputTensor1, outputTensor, stream);
             break;
-        case Command::ExpOp:
+        case Command::expOp:
             ret = Exp (inputTensor1, outputTensor, stream);
             break;
-        case Command::LogOp:
+        case Command::logOp:
             ret = Log (inputTensor1, outputTensor, stream);
             break;
-        case Command::RescaleOp:
+        case Command::rescaleOp:
             ret = Rescale (inputTensor1, outputTensor, scale, bias, stream);
             break;
-        case Command::ThresholdBinaryOp:
+        case Command::thresholdBinaryOp:
             ret = ThresholdBinary (inputTensor1, outputTensor, thresh, maxVal, stream);
             break;
-        case Command::ThresholdOp:
+        case Command::thresholdOp:
             ret = Threshold (inputTensor1, outputTensor, thresh, maxVal, ThresholdType::THRESHOLD_BINARY_INV, stream);
             break;
-        case Command::ClipOp:
+        case Command::clipOp:
             ret = Clip (inputTensor1, outputTensor, minVal, maxVal, stream);
             break;
-        case Command::SortOp:
+        case Command::sortOp:
             ret = Sort (inputTensor1, outputTensor, axis, descending, stream);
             break;
-        case Command::SortIdxOp:
+        case Command::sortIdxOp:
             ret = SortIdx (inputTensor1, outputTensor, axis, descending, stream);
             break;
         case Command::ConvertToOp:
@@ -213,7 +213,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
     for (int i = 0; i < lens; ++i) {
         if (bitOpFlag) {
             printf ("%d ", reinterpret_cast<uint8_t *> (outputTensorData)[i]); // 位操作结果打印
-        } else if (command == Command::SortIdxOp) {
+        } else if (command == Command::sortIdxOp) {
             printf ("%d ", reinterpret_cast<int *> (outputTensorData)[i]); // 排序返回索引操作结果打印
         } else {
             printf ("%.3f ", reinterpret_cast<float *> (outputTensorData)[i]);
@@ -394,17 +394,17 @@ APP_ERROR main()
         "Max",         "Compare",  "BitwiseAnd", "BitwiseOr", "BitwiseXor", "BitwiseNot"
     };
     Command commands[] = {
-        Command::AbsOp,
-        Command::SqrOp,
-        Command::SqrtOp,
-        Command::ExpOp,
-        Command::LogOp,
-        Command::RescaleOp,
-        Command::ThresholdBinaryOp,
-        Command::ThresholdOp,
-        Command::ClipOp,
-        Command::SortOp,
-        Command::SortIdxOp,
+        Command::absOp,
+        Command::sqrOp,
+        Command::sqrtOp,
+        Command::expOp,
+        Command::logOp,
+        Command::rescaleOp,
+        Command::thresholdBinaryOp,
+        Command::thresholdOp,
+        Command::clipOp,
+        Command::sortOp,
+        Command::sortIdxOp,
         Command::ConvertToOp,
         Command::AddOp,
         Command::ScaleAddOp,
@@ -431,7 +431,7 @@ APP_ERROR main()
         std::string commandsStringSingle = commands_string[caseId];
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
-        if (command == Command::SortOp || command == Command::SortIdxOp) { // Sort 系列操作仅支持最多2维的张量
+        if (command == Command::sortOp || command == Command::sortIdxOp) { // Sort 系列操作仅支持最多2维的张量
             minShape = 2;
             maxShape = 2;
         } else {

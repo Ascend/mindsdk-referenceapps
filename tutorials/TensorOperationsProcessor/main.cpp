@@ -188,7 +188,7 @@ template <typename T> APP_ERROR tensorOperationsProcessor(
         default:
             break;
     }
-
+    stream.Synchronize();
     if (ret != APP_ERR_OK) {
         LogError << "TensorOperations failed.";
     } else {
@@ -473,7 +473,6 @@ APP_ERROR main()
             }
         }
     }
-    stream.Synchronize();
     stream.DestroyAscendStream();
     MxDeInit();
 }

@@ -18,7 +18,7 @@ include_directories(${MX_SDK_HOME}/opensource/include/opencv4)
 link_directories(${MX_SDK_HOME}/opensource/lib/)
 link_directories(${MX_SDK_HOME}/lib)
 
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 
 add_definitions(-DENABLE_DVPP_INTERFACE)
@@ -28,4 +28,4 @@ target_link_libraries(${TARGET_LIBRARY} glib-2.0 gstreamer-1.0 gobject-2.0 gstba
 target_link_libraries(${TARGET_LIBRARY} plugintoolkit mxpidatatype mxbase opencv_world)
 target_link_libraries(${TARGET_LIBRARY} -Wl,-z,relro,-z,now,-z,noexecstack -s)
 
-install(TARGETS ${TARGET_LIBRARY} LIBRARY DESTINATION ${MX_SDK_HOME}/lib/modelpostprocessors)
+install(TARGETS ${TARGET_LIBRARY} PERMISSIONS OWNER_READ GROUP_READ LIBRARY DESTINATION ${MX_SDK_HOME}/lib/modelpostprocessors)

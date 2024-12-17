@@ -20,6 +20,8 @@ EfficientDet 目标检测后处理插件基于 mxVision 开发，对图片中的
 | 软件名称 | 版本   |
 | -------- | ------ |
 | webcolors| 1.11.1 |
+| opencv-python| 4.10.0.84 |
+| numpy| 1.26.4 |
 
 ### 1.5 代码目录结构与说明
 
@@ -27,8 +29,6 @@ EfficientDet 目标检测后处理插件基于 mxVision 开发，对图片中的
 ```
 .
 ├── build.sh
-├── images
-│   └── DetectionPipeline.png
 ├── postprocess
 │   ├── build.sh
 │   ├── CMakeLists.txt
@@ -44,6 +44,7 @@ EfficientDet 目标检测后处理插件基于 mxVision 开发，对图片中的
 │   └── pipeline
 │       └── EfficientDet-d0.pipeline
 └── README.md
+
 ```
 
 ## 2 设置环境变量
@@ -80,8 +81,7 @@ atc --model=./simplified-efficient-det-d0-mindxsdk-order.onnx --framework=5 --ou
 
 **步骤1：编译**
 
-在项目目录下执行bash build.sh命令。
-
+在项目根目录下执行bash build.sh命令。
 
 
 **步骤2：运行**

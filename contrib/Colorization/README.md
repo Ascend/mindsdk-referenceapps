@@ -91,6 +91,7 @@ wget https://c7xcode.obs.cn-north-4.myhuaweicloud.com/models/colorization_pictur
 ```
 
 **步骤2:** 修改pipeline文件
+
 根据使用的设备id，修改项目根目录下pipeline/colorization.pipeline中第四行的deviceId：
 ```
 "deviceId": "0"                # 根据实际使用的设备id修改

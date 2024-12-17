@@ -423,8 +423,9 @@ APP_ERROR main()
         Command::BITWISE_NOT_OP
     };
 
-    int minShape = 1;
-    int maxShape = 4;
+    const int shapeDim1 = 1;
+    const int shapeDim2 = 2;
+    const int shapeDim4 = 4;
     static int tensorOpTotal = 27;
     for (int caseId = 0; caseId < tensorOpTotal; ++caseId) { // 遍历27种操作
         Command command                    = commands[caseId];
@@ -432,8 +433,11 @@ APP_ERROR main()
         LogInfo << "\n ########## TensorOperations " << commandsStringSingle << " Start ########## \n ";
         printf ("\n ########## TensorOperations %s Start ########## \n ", commandsStringSingle.c_str());
         if (command == Command::SORT_OP || command == Command::SORT_IDX_OP) { // Sort 系列操作仅支持最多2维的张量
-            minShape = 2;
-            maxShape = 2;
+            int minShape = shapeDim2;
+            int maxShape = shapeDim2;
+        } else {
+            int minShape = shapeDim1;
+            int maxShape = shapeDim4;
         }
         for (int setTensorShape = minShape; setTensorShape <= maxShape; ++setTensorShape) {
             bool bitOpFlag = false;

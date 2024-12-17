@@ -2,8 +2,8 @@
 
 ## 1 介绍
 
-## 1.1 简介
-本开发项目基于mxVision SDK，实现Faceboxes模型检测。
+### 1.1 简介
+本开发项目基于mxVision SDK，用Faceboxes模型实现目标检测。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro

@@ -128,12 +128,12 @@ class WebSummary:
         cls.llm = llm
         try:
             mommt = time.time()
-            logger.debug(f"start google search: {mommt}")
+            logger.debug(f"start duck duck go search: {mommt}")
             if isinstance(keys, list):
                 keys = ",".join(keys)
             search_result = call_duck_duck_go_search(keys, search_num)
             mommt = time.time()
-            logger.debug(f"finish google search: {mommt}")
+            logger.debug(f"finish duck duck go search: {mommt}")
         except Exception as e:
             logger.error(e)
             return []

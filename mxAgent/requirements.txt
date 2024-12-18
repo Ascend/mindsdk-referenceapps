@@ -1,6 +1,5 @@
-requests=2.27.1
+requests==2.27.1
 tqdm
-selenium=4.9.0
 bs4
 transformers
 openai
@@ -9,11 +8,11 @@ datasets
 peft
 fschat
 langchain
-vllm
 rouge
 langchain_openai
 colorlog
 rouge-score
-langchain-community=0.38
+langchain-community==0.3.8
 loguru
 tiktoken
+duckduckgo-search==6.3.7

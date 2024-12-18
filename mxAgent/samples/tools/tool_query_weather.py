@@ -59,10 +59,6 @@ class QueryWeather(API):
         }
         """)
 
-    def __init__(self, ):
-        os.environ['CURL_CA_BUNDLE'] = ''  # 关闭SSL证书验证
-        urllib3.disable_warnings()
-
     def get_forecast(self, url, param, city=""):
         headers = REQUEST_HEADERS
         response = requests.get(url, params=param, headers=headers, timeout=5)
@@ -123,6 +119,8 @@ class QueryWeather(API):
         return params
 
     def call(self, input_parameter, **kwargs):
+        os.environ['CURL_CA_BUNDLE'] = ''
+        urllib3.disable_warnings()
         des = input_parameter.get('destination_city')
         departure_date = input_parameter.get("date")
         weather_type = "forecast_24h"
@@ -133,6 +131,7 @@ class QueryWeather(API):
             try:
                 data = self.get_city2province("https://wis.qq.com/city/like", des)
             except Exception as e:
+                logger.error(e)
                 e = str(e)
                 return self.make_response(input_parameter, results=e, success=False, exception=e)
             if len(data) == 0:
@@ -158,7 +157,7 @@ class QueryWeather(API):
                 formated_departure = datetime.datetime.strptime(
                     departure_date, "%Y-%m-%d").date()
             except ValueError as e:
-                logger.warning(e)
+                logger.warning(str(e)+"默认将从当日起查询天气情况")
                 formated_departure = datetime.date.today()
             gaps = (formated_departure - datetime.date.today()).days
             weather_summary = summary_copy[gaps + 1:]

@@ -3,7 +3,7 @@ from typing import List
 import re
 import time
 
-from langchain_community.tools import DuckDuckGoSearchResults
+from duckduckgo_search import DDGS
 from loguru import logger
 
 from agent_sdk.toolmngt.api import API
@@ -56,10 +56,11 @@ def call_duck_duck_go_search(query: str, count: int) -> List[str]:
     while retry <= 3:
         try:
             logger.debug(f"search DuckDuckGo({query}, {count})")
-            search = DuckDuckGoSearchResults(output_format="list", max_results=count)
-            return search.invoke(query)
+            results = DDGS().text(query, max_results=count)
+            return results
         except Exception as e:
             retry += 1
+            logger.warning("duck search error. will retry")
             time.sleep(1)
             if retry > 3:
                 logger.error(e)

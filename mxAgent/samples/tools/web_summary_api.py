@@ -103,8 +103,8 @@ class WebSummary:
     @classmethod
     def summary_call(cls, web, max_summary_number, summary_prompt):
         title = web.get("title", "")
-        url = web.get("link")
-        snippet = web.get("snippet", "")
+        url = web.get("href")
+        snippet = web.get("body", "")
         web_summary = {}
         if url is None:
             return web_summary

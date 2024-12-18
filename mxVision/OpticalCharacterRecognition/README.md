@@ -85,7 +85,7 @@
 │       │   ├── dbnet
 ├── README.md
 ```
-**注意**：代码目录中的`src/AscendBase/Base/Framework/ModuleProcessors/TextDetectionPost/`下的`lipper.cpp`、`clipper.hpp`为开源第三方模块，需用户自行下载这两个文件，然后放在对应位置。
+**注意**：代码目录中的`src/AscendBase/Base/Framework/ModuleProcessors/TextDetectionPost/`下的`clipper.cpp`、`clipper.hpp`为开源第三方模块，需用户自行下载这两个文件，然后放在对应位置。
 
 - clipper.cpp、clipper.hpp文件[下载链接](https://sourceforge.net/projects/polyclipping/files/clipper_ver6.4.2.zip/download)， 在文件夹`cpp`下可以找到。
 

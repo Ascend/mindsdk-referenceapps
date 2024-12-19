@@ -1,18 +1,18 @@
-# 全目标结构化
+t# 全目标结构化
 
 ## 1 介绍
 ### 1.1 简介
 
 全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要支持以下功能：
 
-1. 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
-2. 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
-3. 人体属性分类+PersonReID：能够根据人体属性和PersonReID进行分类.
-4. 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类.
-5. 车辆属性分类：能够对车辆的属性进行分类。
+* 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
+* 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
+* 人体属性分类+PersonReID：能够根据人体属性和PersonReID进行分类。
+* 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类。 
+* 车辆属性分类：能够对车辆的属性进行分类。
 
 ### 1.2 支持的产品
-本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
 本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
@@ -99,9 +99,6 @@
 . ${SDK-path}/set_env.sh
 ```
 
-
-
-
 ## 3 准备模型
 
 **步骤1：** 在项目根目录下 AllObjectStructuring/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuring/AllObjectsStructuring_models.zip)，并放到项目根目录下 AllObjectStructuring/models/ 目录下。
@@ -136,7 +133,11 @@ ATC run success, welcome to the next use.
 
 `pip3 install -r requirements.txt`
 
-**步骤2：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
+**步骤2：** 根据下面的文档，创建视频流：
+
+[创建视频流](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+
+**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
 
 1、将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
 ```bash
@@ -148,41 +149,30 @@ rstp流格式为rtsp://${ip_addres}:${port}/${h264_file}
 
 `npu-smi info`
 
-**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
+**步骤4：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
 
-1、将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
+将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
 
 `npu-smi info`
 
-**步骤4：** 编译mxSdkReferenceApps库中的插件：
+**步骤5：** 编译插件：
 
 在当前目录下，执行如下命令：
 
 `bash build.sh`
 
+**步骤6：** 
 
-
-
-
-## 5 运行
-
-运行
 `bash run.sh`
+
+**步骤7：** 查看结果
 
 正常启动后，控制台会输出检测到各类目标的对应信息。
 
 
+## 5 FAQ
 
-
-## 6 参考链接
-
-MindX SDK社区链接：https://www.hiascend.com/software/mindx-sdk
-
-
-
-## 7 FAQ
-
-### 7.1 运行程序时,LibGL.so.1缺失导致导入cv2报错 
+### 5.1 运行程序时，LibGL.so.1缺失导致导入cv2报错 
 
 **问题描述：**
 运行程序时报错："ImportError: libGL.so.1: cannot open shared object file: No such file or directory"
@@ -198,4 +188,16 @@ sudo apt install libgl1-mesa-glx
 如果服务器系统是RedHat系列，如Centos，执行下列语句：
 ```bash
 yum install mesa-libGL
+```
+
+### 5.2 运行程序时，导入MxpiDataType_pb2.py中的数据结构时报错
+
+**问题描述：**
+运行程序时报错：“Type Error: Descriptors cannot be created directly.”
+
+**解决方案：**
+
+执行以下命令：
+```bash
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 ```

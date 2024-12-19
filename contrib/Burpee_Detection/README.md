@@ -7,6 +7,8 @@
 基于昇腾硬件和MindX SDK 实现波比跳运动检测，并将检测结果保存成视频。
 主要流程：通过 live555 服务器进行拉流输入视频，然后进行视频解码，将H.264格式的视频解码为图片，图片缩放后经过模型推理进行波比跳检测，识别结果经过后处理后利用 cv 可视化识别框，以视频的形式输出，同时生成文本文件记录视频中完成的波比跳个数。
 
+注意：本样例主要针对侧面拍摄的波比跳视频进行识别。
+
 ### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas300V pro
@@ -60,7 +62,7 @@
 
 **步骤2**：模型转换
 
-将步骤1中下载的models.zpi压缩包放到项目目录的modle文件夹并解压。拷贝其中的burpee_detection.onnx，yolov5.cfg，yolov5.names文件到modle文件夹。执行以下命令：
+将步骤1中下载的models.zpi压缩包放到项目目录的modle文件夹并解压。拷贝其中的burpee_detection.onnx，yolov5.cfg，yolov5.names，aipp_yolov5.cfg文件到modle文件夹。执行以下命令：
 
 ```bash
 bash ./atc.sh

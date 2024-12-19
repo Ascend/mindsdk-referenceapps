@@ -51,11 +51,11 @@ class WebSummary:
         }
         try:
             mommt = datetime.now(tz=timezone.utc)
-            logger.info(f"start request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+            logger.info(f"start request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
             response = requests.get(
                 url, headers=headers, timeout=(3, 3), stream=True)
             mommt = datetime.now(tz=timezone.utc)
-            logger.info(f"finish request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+            logger.info(f"finish request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
             if response.status_code != 200:
                 logger.error(f"获取网页{url}内容失败")
                 return '', f"获取网页{url}内容失败"
@@ -70,7 +70,7 @@ class WebSummary:
             return '', e
         res = cls.generate_content(text, summary_prompt)
         mommt = datetime.now(tz=timezone.utc)
-        logger.info(f"finish summary website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+        logger.info(f"finish summary website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
         return res, None
 
     @classmethod
@@ -79,10 +79,10 @@ class WebSummary:
         urllib3.disable_warnings()
         try:
             mommt = datetime.now(tz=timezone.utc)
-            logger.info(f"start request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+            logger.info(f"start request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
             response = await bai_du(url)
             mommt = datetime.now(tz=timezone.utc)
-            logger.debug(f"finish request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+            logger.debug(f"finish request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
             content = response
             bsobj = BeautifulSoup(content, 'html.parser')
             txt = bsobj.get_text()
@@ -97,7 +97,7 @@ class WebSummary:
             return "", "no valid website content"
         res = cls.generate_content(text, summary_prompt)
         mommt = datetime.now(tz=timezone.utc)
-        logger.info(f"finish summary website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
+        logger.info(f"finish summary website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
         return res, None
 
     @classmethod
@@ -128,12 +128,12 @@ class WebSummary:
         cls.llm = llm
         try:
             mommt = datetime.now(tz=timezone.utc)
-            logger.debug(f"start duck duck go search: {mommt.strftime("%Y-%m-%d %H:%M:%S")}")
+            logger.debug(f"start duck duck go search: {mommt.strftime('%Y-%m-%d %H:%M:%S')}")
             if isinstance(keys, list):
                 keys = ",".join(keys)
             search_result = call_duck_duck_go_search(keys, search_num)
             mommt = datetime.now(tz=timezone.utc)
-            logger.debug(f"finish duck duck go search: {mommt.strftime("%Y-%m-%d %H:%M:%S")}")
+            logger.debug(f"finish duck duck go search: {mommt.strftime('%Y-%m-%d %H:%M:%S')}")
         except Exception as e:
             logger.error(e)
             return []

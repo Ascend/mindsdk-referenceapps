@@ -5,13 +5,6 @@
 
 基于 MindX SDK 实现 SLT-Net 模型的推理。输入连续几帧伪装物体的视频序列，输出伪装物体掩膜 Mask 图。
 
-技术实现：
-
-![Flowchart](./flowchart.jpeg)
-
-图1 视频伪装物体检测流程图
-
-
 ### 1.1 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
@@ -31,7 +24,6 @@
 
 ```
 ──VCOD_SLTNet
-    ├── flowchart.jpeg
     ├── inference.py   # 推理文件
     └── README.md
 ```
@@ -41,8 +33,8 @@
 | 软件名称      | 版本     |
 |-----------|--------|
 | Python    | 3.9.2  |
-| numpy     | 1.21.5 |
-| imageio   | 2.22.3 | 
+| numpy     | 1.23.1 |
+| imageio   | 2.27.0 | 
 | Pillow    | 9.3.0  | 
 | cv2       | 4.5.5  |
 | timm      | 0.4.12 |
@@ -65,10 +57,10 @@
 
 **步骤1:** 模型下载
 
-下载 [models.zip 备份模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.pth`、`sltnet.onnx`、`sltnet.om` 三个模型文件
+下载 [models.zip 模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.onnx` 模型文件
 
 注意：
-sltnet.om不能直接使用
+模型压缩包解压之后会获得"sltnet.om"，但是该模型不能直接使用，需要通过步骤2利用atc工具将onnx模型重新转换为om模型
 
 **步骤2:** 模型转换
 
@@ -87,7 +79,7 @@ ATC run success, welcome to the next use.
 
 **步骤1:** 数据下载
 
-通过访问[MoCA官方链接](https://xueliancheng.github.io/SLT-Net-project/)下载 `MoCA_Video` 数据集，或者通过[数据集备份链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/MoCA_Video.zip)来下载 `MoCA_Video.zip` 数据集压缩包并解压；数据集文件目录如下所示：
+通过[数据集链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/MoCA_Video.zip)下载 `MoCA_Video.zip` 数据集压缩包并解压；数据集文件目录如下所示：
 
 ```
 --data
@@ -113,15 +105,15 @@ python inference.py --datapath ${MoCA_Video数据集路径} --save_root ./result
 
 参数说明：
 
-datapath：下载解压数据MoCA_Video以后，目录中 `TestDataset_per_sq` 的上一级目录，
+datapath：下载解压数据MoCA_Video以后，目录中 `TestDataset_per_sq` 的上一级目录。
 
-save_root：结果保存路径
+save_root：结果保存路径。
 
-om_path：om 模型路径
+om_path：om 模型路径。
 
-testsize：图片 resize 的大小，当前固定为 352
+testsize：图片 resize 的大小，当前固定为 352。
 
-device_id：设备编号
+device_id：设备编号。
 
 
 运行输出如下：
@@ -139,4 +131,4 @@ device_id：设备编号
 
 **步骤3:** 查看结果
 
-在results目录下存放着伪装物体掩膜 Mask 图
+在步骤2中设置的结果保存路径下存放着伪装物体掩膜 Mask 图。

@@ -109,7 +109,7 @@ namespace protocol_example {
 namespace {
     constexpr int COS_LEN_VALUE = 416;
     constexpr int COS_FORMAT_VALUE = 12;
-    constexpr bool USE_SENDDATA = false; // switch different send data method
+    constexpr bool USE_SENDDATA = true; // switch different send data method
 
     // read data File to MxstDataInput structure
     APP_ERROR ReadFile(const std::string& filePath, MxStream::MxstDataInput& dataBuffer)

@@ -4,7 +4,7 @@
 from typing import Dict
 import asyncio
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 import re
 import traceback
 import json
@@ -144,7 +144,7 @@ class AgentExecutor():
     def run_task(self, action, executor_state, llm):
         graph = executor_state.sop_graph.actions
         sop_handler = self.operation_handler
-        mommt = datetime.now()
+        mommt = datetime.now(tz=timezone.utc)
         logger.debug(f'{action.name} start: {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
         output = sop_handler.invoke(action, llm=llm)
 
@@ -157,7 +157,7 @@ class AgentExecutor():
             "history": history
         }
 
-        mommt = datetime.now()
+        mommt = datetime.now(tz=timezone.utc)
         logger.debug(f'step {action.step}. action: {action.name} has finished. {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
         return res
 

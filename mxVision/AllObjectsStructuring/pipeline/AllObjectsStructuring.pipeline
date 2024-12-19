@@ -1766,7 +1766,7 @@
             "props":{
                 "dataSource":"mxpi_imageresize3",
                 "modelPath":"./models/motorattr/vehicle_attribute.om",
-                "postProcessConfigPath":"./models/motorattr/vehicle_attribute.cfg",
+                "postProcessConfigPath":"./models/faceattr/yolov3-tiny-addpad.cfg",
                 "labelPath":"./models/motorattr/vehicle_attribute_coco.names",
                 "postProcessLibPath":"libresnetattrpostprocessor.so"
             },

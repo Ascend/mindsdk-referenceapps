@@ -24,7 +24,6 @@
 
 ```
 ──VCOD_SLTNet
-    ├── flowchart.jpeg
     ├── inference.py   # 推理文件
     └── README.md
 ```
@@ -58,10 +57,10 @@
 
 **步骤1:** 模型下载
 
-下载 [models.zip 模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.pth`、`sltnet.onnx`、`sltnet.om` 三个模型文件
+下载 [models.zip 模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.onnx` 模型文件
 
 注意：
-sltnet.om不能直接使用
+模型压缩包解压之后会获得"sltnet.om"，但是该模型不能直接使用，需要通过步骤2利用atc工具将onnx模型重新转换为om模型
 
 **步骤2:** 模型转换
 
@@ -106,15 +105,15 @@ python inference.py --datapath ${MoCA_Video数据集路径} --save_root ./result
 
 参数说明：
 
-datapath：下载解压数据MoCA_Video以后，目录中 `TestDataset_per_sq` 的上一级目录，
+datapath：下载解压数据MoCA_Video以后，目录中 `TestDataset_per_sq` 的上一级目录。
 
-save_root：结果保存路径
+save_root：结果保存路径。
 
-om_path：om 模型路径
+om_path：om 模型路径。
 
-testsize：图片 resize 的大小，当前固定为 352
+testsize：图片 resize 的大小，当前固定为 352。
 
-device_id：设备编号
+device_id：设备编号。
 
 
 运行输出如下：
@@ -132,4 +131,4 @@ device_id：设备编号
 
 **步骤3:** 查看结果
 
-在步骤2中设置的结果保存路径下存放着伪装物体掩膜 Mask 图
+在步骤2中设置的结果保存路径下存放着伪装物体掩膜 Mask 图。

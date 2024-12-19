@@ -4,6 +4,7 @@
 from typing import Dict
 import asyncio
 import time
+from datetime import datetime, timezone
 import re
 import traceback
 import json
@@ -143,8 +144,8 @@ class AgentExecutor():
     def run_task(self, action, executor_state, llm):
         graph = executor_state.sop_graph.actions
         sop_handler = self.operation_handler
-        mommt = time.time()
-        logger.debug(f'{action.name} start:{mommt}')
+        mommt = datetime.now(tz=timezone.utc)
+        logger.debug(f'{action.name} start: {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
         output = sop_handler.invoke(action, llm=llm)
 
         parsed_out, history = self.parser_output(output, action)
@@ -156,8 +157,8 @@ class AgentExecutor():
             "history": history
         }
 
-        mommt = time.time()
-        logger.debug(f'step {action.step}. action: {action.name} has finished')
+        mommt = datetime.now(tz=timezone.utc)
+        logger.debug(f'step {action.step}. action: {action.name} has finished. {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
         return res
 
 
@@ -187,9 +188,8 @@ class AgentExecutor():
         executor_state.activate_actions = activate_actions
         while executor_state.activate_actions:  # 活跃的
 
-            cur_operation = executor_state.activate_actions.pop(
-                0)  # starts from right
-            mommt = time.time()
+            cur_operation = executor_state.activate_actions.pop(0)
+            # starts from right
             logger.error("start run step %d, action [%s]", cur_operation.step, cur_operation.name)
             output = sop_handler.invoke(cur_operation)
             parsed_out, history = self.parser_output(output, cur_operation)

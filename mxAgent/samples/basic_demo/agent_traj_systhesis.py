@@ -10,11 +10,11 @@ from loguru import logger
 from tqdm import tqdm
 
 from agent_sdk.agentchain.react_agent import ReactAgent
-from agent_sdk.common.enum_type import AgentRunStatus
+from agent_sdk.common.constant import AgentRunStatus
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from samples.tools import QueryAttractions, QueryTransports, QueryAccommodations, \
     QueryRestaurants, QueryGoogleDistanceMatrix
-from mxAgent.samples.basic_demo.agent_test import EXAMPLE
+from samples.basic_demo.agent_test import EXAMPLE
 
 
 warnings.filterwarnings('ignore')

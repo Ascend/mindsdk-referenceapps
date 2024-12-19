@@ -5,7 +5,7 @@
 import asyncio
 import os
 import re
-import time
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, wait, as_completed
 
 import aiohttp
@@ -50,12 +50,12 @@ class WebSummary:
                Chrome/126.0.0.0 Safari/537.36"
         }
         try:
-            mommt = time.time()
-            logger.info(f"start request website: {mommt},{url}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.info(f"start request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
             response = requests.get(
                 url, headers=headers, timeout=(3, 3), stream=True)
-            mommt = time.time()
-            logger.info(f"finish request website: {mommt},{url}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.info(f"finish request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
             if response.status_code != 200:
                 logger.error(f"获取网页{url}内容失败")
                 return '', f"获取网页{url}内容失败"
@@ -69,8 +69,8 @@ class WebSummary:
             logger.error(e)
             return '', e
         res = cls.generate_content(text, summary_prompt)
-        mommt = time.time()
-        logger.info(f"finish summary website: {mommt},{url}")
+        mommt = datetime.now(tz=timezone.utc)
+        logger.info(f"finish summary website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
         return res, None
 
     @classmethod
@@ -78,11 +78,11 @@ class WebSummary:
         os.environ['CURL_CA_BUNDLE'] = ''
         urllib3.disable_warnings()
         try:
-            mommt = time.time()
-            logger.info(f"start request website: {mommt},{url}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.info(f"start request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
             response = await bai_du(url)
-            mommt = time.time()
-            logger.debug(f"finish request website: {mommt},{url}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.debug(f"finish request website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
             content = response
             bsobj = BeautifulSoup(content, 'html.parser')
             txt = bsobj.get_text()
@@ -96,15 +96,15 @@ class WebSummary:
         if len(text) == 0:
             return "", "no valid website content"
         res = cls.generate_content(text, summary_prompt)
-        mommt = time.time()
-        logger.info(f"finish summary website: {mommt},{url}")
+        mommt = datetime.now(tz=timezone.utc)
+        logger.info(f"finish summary website: {mommt.strftime("%Y-%m-%d %H:%M:%S")},{url}")
         return res, None
 
     @classmethod
     def summary_call(cls, web, max_summary_number, summary_prompt):
         title = web.get("title", "")
-        url = web.get("link")
-        snippet = web.get("snippet", "")
+        url = web.get("href")
+        snippet = web.get("body", "")
         web_summary = {}
         if url is None:
             return web_summary
@@ -127,13 +127,13 @@ class WebSummary:
         logger.add('app.log', level='DEBUG')
         cls.llm = llm
         try:
-            mommt = time.time()
-            logger.debug(f"start google search: {mommt}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.debug(f"start duck duck go search: {mommt.strftime("%Y-%m-%d %H:%M:%S")}")
             if isinstance(keys, list):
                 keys = ",".join(keys)
             search_result = call_duck_duck_go_search(keys, search_num)
-            mommt = time.time()
-            logger.debug(f"finish google search: {mommt}")
+            mommt = datetime.now(tz=timezone.utc)
+            logger.debug(f"finish duck duck go search: {mommt.strftime("%Y-%m-%d %H:%M:%S")}")
         except Exception as e:
             logger.error(e)
             return []

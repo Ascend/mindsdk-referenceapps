@@ -88,7 +88,7 @@ def get_default_react_reflect_agent(api_base, api_key, llm_name, max_context_len
 def test_react_agent():
     a = get_default_react_agent_fewshot(API_BASE, API_KEY, LLM_NAME, MAX_CONTEXT_LEN)
     response = a.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.")
-    
+    a.save_agent_status("./react_execution_log.jsonl")
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 
 

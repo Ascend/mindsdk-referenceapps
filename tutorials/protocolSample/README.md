@@ -60,8 +60,7 @@
 
 执行以下命令：
 ```bash
-bash run.sh    # 编译 
-./main         # 执行
+bash run.sh
 ```
 
 **步骤3**：查看结果

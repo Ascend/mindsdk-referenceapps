@@ -102,68 +102,15 @@ rstp流格式为rtsp://${ip_addres}:${port}/${h264_file}
 
 `pip3.9.2 install -r requirements.txt`
 
-**步骤9：** 请在昇腾社区下载特征检索源码包https://www.hiascend.com/software/mindx-sdk/mxindex，并根据readme来搭建特征检索库。如果不需要接入特征检索功能，此步骤可忽略。
-
-注：当前版本特征检索库缺少本例中目标检索所需部分算子（Flat，IVFSQ8），需自行生成，请参考特征检索readme 4.2.2：
-
-首先进入特征检索 src/ascendfaiss/tools 目录，
-
-在该目录下执行生成算子命令，当前特征检索版本算子生成命令如下：
-
-`python flat_min64_generate_model.py -d 256`
-
-`python ivfsq8_generate_model.py -d 256 -c 8192`
-
-生成算子后将算子模型文件移动到上级目录的modelpath目录下：
-
-`mv op_models/* ../modelpath`
-
-重新执行环境部署：
-
-`bash install.sh <driver-untar-path>`
-
-`<driver-untar-path>`为“`Ascend310-driver-{software version}-minios.aarch64-src.tar.gz`”文件解压后的目录，例如文件在“`/usr/local/software/`”目录解压，则`<driver-untar-path>`为“`/usr/local/software/`” 。本步命令用于实现将device侧检索daemon进程文件分发到多个device，执行命令后Ascend Driver中device的文件系统会被修改，所以需要执行**“`reboot`”**命令生效。
-
-准确的算子生成方式需以特征检索 readme 4.2.2 为准。
-
 
 
 ## 5 运行
-
-### 不带检索
 
 运行
 `bash run.sh`
 
 正常启动后，控制台会输出检测到各类目标的对应信息。
 
-
-### 带检索
-需要在项目根目录下 AllObjectsStructuring/util/arguments.py 配置检索大小库运行的芯片id
-
-配置检索小库运行芯片id，根据实际情况修改`default`值，勿与注册目标、全目标结构化pipeline使用同一芯片
-```bash
-    parser.add_argument('-index-little-device-ids',
-                        type=int,
-                        nargs="+",
-                        default=[2],
-                        help='specify the device assignment for little index.',
-                        dest='index_little_device_ids')
-```
-配置检索大库运行芯片id，根据实际情况修改`default`值，勿与注册目标、全目标结构化pipeline使用同一芯片
-```bash
-    parser.add_argument('-index-large-device-ids',
-                        type=int,
-                        nargs="+",
-                        default=[3],
-                        help='specify the device assignment for large index.',
-                        dest='index_large_device_ids')
-```
-
-运行
-`bash run.sh index`
-
-正常启动后，控制台会输出检测到目标目标的对应索引信息。
 
 
 

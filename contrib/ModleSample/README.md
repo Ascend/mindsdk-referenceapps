@@ -1,9 +1,29 @@
-## 基于MindX SDK的faceswap应用开发
+## MxVision快速入门--Model接口基本使用教程
 
 ## 1、 介绍
 
 ### 1.1 简介
-faceswap应用基于MindX SDK开发，在昇腾芯片上进行目标检测，脸部关键点推理以及目标替换，将替换结果可视化并保存。  
+Model类，作为模型的抽象，持有模型推理的资源，并主要开放推理接口。
+
+本文主要使用C++和python接口的方式，根据传入的模型文件构造Model，然后调用相关接口输出模型信息。使用到的接口主要有：
+- C++：
+```
+Model::GetInputFormat(); // 获得模型输入的数据组织形式(NHWC 或者 NCHW)。
+Model::GetInputTensorNum(); // 获得模型的输入个数。
+Model::GetOutputTensorNum(); // 获得模型的输出个数。
+Model::GetInputTensorShape(uint32_t index = 0); // 获得模型的输入个数。
+Model::GetOutputTensorShape(uint32_t index = 0); // 获得模型输出的对应Tensor的数据shape信息。
+Model::Infer(std::vector<Tensor>& inputTensors, std::vector<Tensor>& outputTensors, AscendStream &stream = AscendStream::DefaultStream()); // 推理接口
+```
+
+- python：
+```
+input_shape(index: int) # 获得模型输入的对应Tensor的数据shape信息
+output_shape(index: int) # 获得模型输出的对应Tensor的数据shape信息。
+input_dtype(index: int) # 获得模型输入的对应Tensor的数据类型信息。
+infer(tensorList: List) # 通过输入Tensor列表进行模型推理
+```
+python部分还使用了numpy相关接口实现了Tensor与numpy数组之间的生成和转换。
 
 ### 1.2 支持的产品
 
@@ -20,26 +40,19 @@ faceswap应用基于MindX SDK开发，在昇腾芯片上进行目标检测，脸
 
 | 软件名称      | 版本             |
 | ------------- | ---------------- |
-| numpy         | 1.19.5           |
-| opencv-python | 4.10.0.84       |
-| Pillow       | 9.3.0           |
+| numpy         | 2.0.2           |
 
 ### 1.5 三方依赖
 
-本Sample工程名称为faceswap,工程目录如下图所示：
+本项目工程目录如下图所示：
 ```angular2html
-|-------- data                                 // 输入存放文件夹（需手动创建）
-|-------- models
-|           |---- yolov4.cfg                   // yolov4后处理配置文件（用于目标检测）
-|           |---- coco.names                   // yolov4模型所有可识别类
-|           |---- yolov4_detection.om          // yolov4离线推理模型
-|           |---- V3ONNX.cfg                   // 脸部特征点检测模型转换配置文件（用于检测脸部特征点）
-|           |---- V3ONNXX.om                   // 脸部特征点检测离线模型
-|-------- pipline
-|           |---- faceswap.pipeline            // 目标替换流水线配置文件
-|-------- result                               // 存放结果文件（需手动创建）
-|-------- faceswap_main.py                              
-|-------- faceswap_post.py                     // 后处理模块
+|-------- C++
+|           |---- main.cpp
+|           |---- CMakeLists.txt     
+|           |---- run.sh 
+|-------- python
+|           |---- main.py
+|-------- model
 |-------- README.md
 ```  
 
@@ -56,64 +69,61 @@ faceswap应用基于MindX SDK开发，在昇腾芯片上进行目标检测，脸
 
 **步骤1**：模型文件下载
 
-目标检测采用提供的离线模型yolov4_detection.om进行推理。
-
-[模型下载链接](https://mindx.sdk.obs.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/faceswap/yolov4_detection.om) 。
-
-下载后,将yolov4_detection.om模型存放在工程/model目录下。
-
-下载脸部特征点检测onnx模型
-
-[模型下载链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/faceswap/v3.onnx)。
-
-下载后,将v3.onnx模型存放在工程/model目录下。
+本项目意在为开发者介绍使用mxVision软件包中Model相关的C++、python接口使用样例。使用的模型为[RGB图像的夜间增强参考设计](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/IAT)中用到的模型。
+原始pth模型源码[地址](https://github.com/cuiziteng/illumination-adaptive-transformer)
+本文提供已从pth模型转换好的onnx模型直接使用：[IAT_lol-sim.onnx](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/IAT/IAT_lol-sim.onnx)
+下载后放到项目根目录的model文件夹下。
 
 **步骤2**：模型转换
 
-在项目的model“文件夹下执行以下命令：
+将模型转换为om模型，在model文件夹下，执行以下命令生成om模型：
 ```
-atc --model=v3.onnx --framework=5 --output=V3ONNXX --soc_version=Ascend310P3 --insert_op_conf=V3ONNX.cfg --out_nodes="Gemm_169:0"
+atc --framework=5 --model=./IAT_lol-sim.onnx --input_shape="input_1:1,3,400,600" --output=IAT_lol-sim --soc_version=Ascend310P3
 ```
+执行完模型转换脚本后，会生成相应的IAT_lol-sim.om模型文件。 执行后终端输出为（模型转换时出现的warn日志可忽略）：
 
-执行完模型转换脚本后，会生成相应的V3ONNXX.om模型文件。执行命令后终端输出为：
 ```bash
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 
-## 4、 运行
+## 4、 编译与运行
 
-**步骤1**：准备两张需要的测试图片  
+### 4.1 C++样例运行
 
-在项目根目录下执行以下命令新建`data`文件夹。
+**步骤1**：进入`C++`文件夹，执行以下命令：
 ```
-mkdir data
-```
-将准备好的测试图片放在`data`文件夹下并分别命名为`face1.jpg`，`face2.jpg`。
-
-**步骤2**：创建输出文件夹
-
-在项目根目录下执行以下命令新建`result`文件夹，用于存放推理结果。
-```
-mkdir result
+bash run.sh
 ```
 
-**步骤3**：执行程序
-
-在项目根目录下，执行以下命令运行样例。
+**步骤2**：查看结果
+命令执行成功后可在屏幕看到模型信息输出
 ```
-python3 faceswap_main.py data/face1.jpg data/face2.jpg
+Input format: NCHW
+model input tensor num: 1
+model output tensor num: 1
+inputShape: 1 3 400 600
+ouputShape: 1 3 400 600 
 ```
 
-**步骤4**：查看结果
+### 4.2 python样例运行
 
-执行完成后，可在`result`目录中查看目标替换结果`face_swap_result.jpg`。
+**步骤1**：进入`python`文件夹，执行以下命令：
+```
+python3 main.py
+```
 
+**步骤2**：查看结果
+命令执行成功后可在屏幕看到模型信息输出
+```
+input num: 1
+output num: 1
+input Tensor shape list: [1, 3, 400, 600]
+output Tensor shape list: [1, 3, 400, 600]
+Input dtype: dtype.float32
+output numpy array shape (1, 3, 400, 600)
+```
 
-## 5、 常见问题  
-- 在目标检测阶段，由于yolov4_detection.om模型的coco.names标签集中同时存在people，face两类标签。当对输入图片的检测结果为people时，无法进行后续的换脸操作，故输入图片应尽可能体现脸部特征，建议输入图片为类似于证件照的半身人像。否则，当输入为全身人像时候，图片标签为people，无法进行后续换脸操作；  
-- 在特征点检测阶段，由于特征点检测模型限制，输入目标应尽可能采用脸部清晰，轮廓完整的正面图像，即应尽可能输入2D目标图像，且脸部应尽可能避免眼镜等一类装饰物。若图片中存在3D特征，如输入侧脸时，可能会由于脸部特征点检测存在偏差导致换脸效果不佳；  
-- 针对MindX SDK固有插件的输入限制，输入目标图片的宽高均应限制在[32, 8192]区间内，否则会导致图片入流失败。当输入图片尺寸不符合要求时，系统会提示相应的错误信息。
 
 
 

@@ -7,5 +7,4 @@ make -C ./build -j
 # run
 ./main
 
-
 exit 0

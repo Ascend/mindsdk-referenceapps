@@ -18,26 +18,40 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include "acl/acl.h"
 #include "MxBase/E2eInfer/Model/Model.h"
 #include "MxBase/E2eInfer/Tensor/Tensor.h"
 #include "MxBase/E2eInfer/GlobalInit/GlobalInit.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include "MxBase/Asynchron/AscendStream.h"
 
-
 using namespace MxBase;
 using namespace std;
 
-std::string g_mindIrModelPath = "../model/yolov4_bs.mindir"; // mindir模型路径
-std::string g_OmModelPath = "../model/yolov4_detection.om"; // mindir模型路径
+std::string g_OmModelPath = "../model/IAT_lol-sim.om"; // mindir模型路径
 
 void ModelInfer(){
     int32_t deviceId = 0; // 模型部署的芯片
     Model model(g_OmModelPath, deviceId);
+
+    MxBase::VisionDataFormat inputFormat = model.GetInputFormat(); // 获得模型输入的数据组织形式(NHWC 或者 NCHW)。
+    switch (inputFormat) {
+        case MxBase::VisionDataFormat::NCHW:
+            std::cout << "Input format: NCHW" << std::endl;
+            break;
+        case MxBase::VisionDataFormat::NHWC:
+            std::cout << "Input format: NHWC" << std::endl;
+            break;
+        default:
+            std::cout << "Unknown input format" << std::endl;
+            break;
+    }
+
+    std::cout << "model input tensor num: " << model.GetInputTensorNum() << std::endl;
+    std::cout << "model output tensor num: " << model.GetOutputTensorNum() << std::endl;
+    
     std::vector<int64_t> inShape64 = model.GetInputTensorShape(); // 获得模型输入的对应Tensor的数据shape信息。
     std::vector<uint32_t> inShape;
-    std::cout<< "inShape:";
+    std::cout<< "inputShape:";
     for (auto s: inShape64) {
         std::cout<< " " << s ;
         inShape.push_back(static_cast<uint32_t>(s)); // 动态模型场景下对应的动态维度查询结果为-1。如果要使用查询的结果直接传入Tensor构造函数构造Tensor，需要将int64_t数据转换为uint32_t数据。
@@ -46,14 +60,13 @@ void ModelInfer(){
     TensorDType dtype = model.GetInputTensorDataType(0); // 获得模型输入的对应Tensor的数据类型信息。
     std::vector<MxBase::Tensor> input; // 输入
     std::vector<MxBase::Tensor> output; // 输出
-    auto n = model.GetOutputTensorNum(); // 获得模型的输出个数。
-    std::cout<< "n:" << n << std::endl;
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < model.GetOutputTensorNum(); i++) {
         std::vector<uint32_t> ouputShape = model.GetOutputTensorShape(i); // 获得模型输出的对应Tensor的数据shape信息。查询的结果可直接传入Tensor构造函数用来构造Tensor。
-        std::cout << "ouputShape size: " << ouputShape.size() << std::endl;
+        std::cout << "ouputShape: " ;
         for (size_t j = 0; j < ouputShape.size(); ++j) {
-            std::cout << "ouputShape[" << j << "] " << ouputShape[j] << std::endl;
+            std::cout << ouputShape[j] << " ";
         }
+        std::cout << std::endl;
         MxBase::TensorDType outputDType = model.GetOutputTensorDataType(i); // 获得模型输出的对应Tensor的数据类型信息。
         Tensor dst(ouputShape, outputDType);
         dst.Malloc();
@@ -70,7 +83,6 @@ void ModelInfer(){
     stream.Synchronize();
     stream.DestroyAscendStream();
 }
-
 
 int main(){
     MxBase::MxInit();

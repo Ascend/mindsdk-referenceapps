@@ -23,7 +23,7 @@ output_shape(index: int) # 获得模型输出的对应Tensor的数据shape信息
 input_dtype(index: int) # 获得模型输入的对应Tensor的数据类型信息。
 infer(tensorList: List) # 通过输入Tensor列表进行模型推理
 ```
-python部分还使用了numpy相关接口实现了Tensor与numpy数组之间的生成和转换。
+- python部分还使用了numpy相关接口实现了Tensor与numpy数组之间的生成和转换。
 
 ### 1.2 支持的产品
 

@@ -60,7 +60,7 @@
 
 **步骤2**：模型转换
 
-将步骤1中下载的models.zpi压缩包放到项目目录的modle文件夹并解压。拷贝其中的burpee_detection.onnx，yolov5.cfg，yolov5.names文件到modle文件夹。执行以下命令：
+将步骤1中下载的models.zpi压缩包放到项目目录的modle文件夹并解压。拷贝其中的burpee_detection.onnx，yolov5.cfg，yolov5.names，aipp_yolov5.cfg文件到modle文件夹。执行以下命令：
 
 ```bash
 bash ./atc.sh

@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-* 本样例构建一个metadata的protocol数据并送入stream，随后输出至log
+本样例构建一个metadata的protocol数据并送入stream，随后输出至log
 
 ### 1.2 支持的产品
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro

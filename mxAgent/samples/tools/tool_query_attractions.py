@@ -73,7 +73,7 @@ class QueryAttractions(API):
             filtered.append("景点")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=summary_prompt, llm=llm)
-            res = {'attractions': json.dumps(webs)}
+            res = {'attractions': json.dumps(webs, ensure_ascii=False)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

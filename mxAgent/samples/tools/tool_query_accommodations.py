@@ -64,7 +64,7 @@ class QueryAccommodations(API):
             filtered.append("住宿")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
-            res = {"accommodation": json.dumps(webs)}
+            res = {"accommodation": json.dumps(webs, ensure_ascii=False)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

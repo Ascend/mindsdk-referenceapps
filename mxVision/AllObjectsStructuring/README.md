@@ -1,6 +1,7 @@
 # 全目标结构化
 
-## 1 简介
+## 1 介绍
+### 1.1 简介
 
 全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要支持以下功能：
 
@@ -10,53 +11,114 @@
 4. 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类.
 5. 车辆属性分类：能够对车辆的属性进行分类。
 
+### 1.2 支持的产品
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
-## 2 环境依赖
+### 1.3 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
 
-- 支持的硬件形态和操作系统版本
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
-| 硬件形态                             | 操作系统版本   |
-| ----------------------------------- | -------------- |
-| x86_64+Atlas 300I 推理卡（型号3010） | Ubuntu 18.04.1 |
-| x86_64+Atlas 300I 推理卡 （型号3010）| CentOS 7.6     |
-| ARM+Atlas 300I 推理卡 （型号3000）   | Ubuntu 18.04.1 |
-| ARM+Atlas 300I 推理卡 （型号3000）   | CentOS 7.6     |
+### 1.4 三方依赖
 
-- 软件依赖
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.5.1+ |
-| mxVision | 0.2    |
-| Python   | 3.9.2  |
-
+| 软件名称 | 版本        |
+| -------- |-----------|
+| cmake    | 3.5.1+    |
+| Python   | 3.9.2     |
+| numpy   | 1.23.1    |
+| opencv-python   | 4.10.0.84 |
+| Pillow   | 8.0.1     |
+| protobuf   | 4.24.4    |
+| websocket-server   | 0.4       |
 
 
-## 3 代码主要目录介绍
-
-本代码仓名称为mxSdkReferenceApps，工程目录如下图所示：
+### 1.5 代码目录结构说明
 
 ```
 ├── mxVision
 │   ├── AllObjectsStructuring
+│   |   ├── main_pipeline
+│   |   │   └── __init__.py
+│   |   │   └── main_pipeline.py
 │   |   ├── pipeline
 │   |   │   └── AllObjectsStructuring.pipeline
+│   |   │   └── face_registry.pipeline
 │   |   ├── plugins
 │   |   │   ├── MpObjectSelection
 |   |   |   |   ├── CMakeLists.txt
 |   |   |   |   ├── MpObjectSelection.cpp
 |   |   |   |   └── MpObjectSelection.h
 │   |   │   └── MxpiFaceSelection
+│   |   |   |   ├── CMakeLists.txt
+│   |   |   │   ├── MxpiFaceSelection.cpp
+│   |   │   |   └── MxpiFaceSelection.h
+│   |   │   └── MxpiFrameAlign
+│   |   |   |   ├── BlockingMap.h
+│   |   |   │   ├── CMakeLists.txt
+│   |   |   │   ├── MxpiFrameAlign.cpp
+│   |   |   │   └── MxpiFrameAlign.h
+│   |   │   └── MxpiSkipFrame
 │   |   |       ├── CMakeLists.txt
-│   |   │       ├── MxpiFaceSelection.cpp
-│   |   │       └── MxpiFaceSelection.h
-│   |   ├── models
-│   |   ├── CMakeLists.txt
-│   |   ├── README.zh.md
+│   |   │       ├── MxpiSkipFrame.cpp
+│   |   │       └── MxpiSkipFrame.h
+│   |   ├── Proto
+│   |   │   ├── CMakeLists.txt
+│   |   │   ├── MxpiAllObjectsStructuringDataType.proto
+│   |   ├── retrieval
+│   |   │   ├── __init__.py
+│   |   │   ├── feature_retrieval.py
+│   |   │   ├── register.py
+│   |   ├── util
+│   |   │   ├── __init__.py
+│   |   │   ├── channel_status.py
+│   |   │   ├── checker.py
+│   |   │   ├── display.py
+│   |   │   ├── main_entry.py
+│   |   │   ├── multi_process.py
+│   |   │   ├── pipeline.py
+│   |   │   ├── yuv.py
+│   |   ├── models                  # 需用户创建
 │   |   ├── build.sh
+│   |   ├── CMakeLists.txt
 │   |   ├── main.py
+│   |   ├── README.md
+│   |   ├── requirements.txt
 │   |   └── run.sh
 ```
+
+
+## 2 设置环境变量
+
+```bash
+#设置CANN环境变量，ascend-toolkit-path为cann安装路径
+. ${ascend-toolkit-path}/set_env.sh
+
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
+```
+
+
+
+
+## 3 准备模型
+
+**步骤1：** 在项目根目录下 AllObjectStructuring/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuring/AllObjectsStructuring_models.zip)，并放到项目根目录下 AllObjectStructuring/models/ 目录下。
+
+**步骤2：** 进入到AllObjectStructuring/models目录下，执行以下命令：
+
+atc --model=./yolov4_improve/yolov4-tiny-customized.pb --framework=3 -output=./yolov4_improve/yolov4_detection --insert_op_conf=./yolov4_improve/aipp_yolov4.cfg --soc_version=Ascend310P3
+atc --model=./facequality/face_quality_batch_8.prototxt --weight=./facequality/face_quality.caffemodel --framework=0 -output=./facequality/face_quality_improve --insert_op_conf=./facequality/aipp.cfg --soc_version=Ascend310
+atc --model=./faceembedding/face_embedding_batch_8.prototxt --weight=./faceembedding/face_embedding.caffemodel --framework=0 -output=./faceembedding/face_embedding --insert_op_conf=./faceembedding/aipp.cfg --soc_version=Ascend310
+atc --model=./faceattr/face_attribute_batch_4.prototxt --weight=./faceattr/face_attribute.caffemodel --framework=0 -output=./faceattr/face_attribute_batch_4 --insert_op_conf=./faceattr/aipp.cfg --soc_version=Ascend310
+atc --model=./facefeature/face_feature_batch_1.prototxt --weight=./facefeature/face_feature.caffemodel --framework=0 -output=./facefeature/face_feature_batch_1 --insert_op_conf=./facefeature/aipp.cfg --soc_version=Ascend310
+atc --model=./motorattr/car_color.prototxt --weight=./motorattr/car_color.caffemodel --framework=0 -output=./motorattr/car_color --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310
+atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/vehicle_attribute --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310
+atc --model=./pedestrianattribute/pedestrian_attribute.prototxt --weight=./pedestrianattribute/pedestrian_attribute.caffemodel --framework=0 -output=./pedestrianattribute/pede_attr --insert_op_conf=./pedestrianattribute/aipp.cfg --soc_version=Ascend310
+atc --model=./pedereid/pedestrian_reid.prototxt --weight=./pedereid/pedestrian_reid.caffemodel --framework=0 -output=./pedereid/pede_reid --insert_op_conf=./pedereid/aipp.cfg --soc_version=Ascend310
+atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310
+atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310
 
 
 

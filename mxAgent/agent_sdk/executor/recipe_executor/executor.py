@@ -145,7 +145,7 @@ class AgentExecutor():
         graph = executor_state.sop_graph.actions
         sop_handler = self.operation_handler
         mommt = datetime.now(tz=timezone.utc)
-        logger.debug(f'{action.name} start: {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
+        logger.debug(f'{action.name} start: {mommt.strftime('%Y-%m-%d %H:%M:%S')}')
         output = sop_handler.invoke(action, llm=llm)
 
         parsed_out, history = self.parser_output(output, action)
@@ -158,7 +158,7 @@ class AgentExecutor():
         }
 
         mommt = datetime.now(tz=timezone.utc)
-        logger.debug(f'step {action.step}. action: {action.name} has finished. {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
+        logger.debug(f'step {action.step}. action: {action.name} has finished. {mommt.strftime('%Y-%m-%d %H:%M:%S')}')
         return res
 
 

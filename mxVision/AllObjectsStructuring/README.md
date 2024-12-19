@@ -108,61 +108,59 @@
 
 **步骤2：** 进入到AllObjectStructuring/models目录下，执行以下命令：
 
+```bash
 atc --model=./yolov4_improve/yolov4-tiny-customized.pb --framework=3 -output=./yolov4_improve/yolov4_detection --insert_op_conf=./yolov4_improve/aipp_yolov4.cfg --soc_version=Ascend310P3
-atc --model=./facequality/face_quality_batch_8.prototxt --weight=./facequality/face_quality.caffemodel --framework=0 -output=./facequality/face_quality_improve --insert_op_conf=./facequality/aipp.cfg --soc_version=Ascend310
-atc --model=./faceembedding/face_embedding_batch_8.prototxt --weight=./faceembedding/face_embedding.caffemodel --framework=0 -output=./faceembedding/face_embedding --insert_op_conf=./faceembedding/aipp.cfg --soc_version=Ascend310
-atc --model=./faceattr/face_attribute_batch_4.prototxt --weight=./faceattr/face_attribute.caffemodel --framework=0 -output=./faceattr/face_attribute_batch_4 --insert_op_conf=./faceattr/aipp.cfg --soc_version=Ascend310
-atc --model=./facefeature/face_feature_batch_1.prototxt --weight=./facefeature/face_feature.caffemodel --framework=0 -output=./facefeature/face_feature_batch_1 --insert_op_conf=./facefeature/aipp.cfg --soc_version=Ascend310
-atc --model=./motorattr/car_color.prototxt --weight=./motorattr/car_color.caffemodel --framework=0 -output=./motorattr/car_color --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310
-atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/vehicle_attribute --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310
-atc --model=./pedestrianattribute/pedestrian_attribute.prototxt --weight=./pedestrianattribute/pedestrian_attribute.caffemodel --framework=0 -output=./pedestrianattribute/pede_attr --insert_op_conf=./pedestrianattribute/aipp.cfg --soc_version=Ascend310
-atc --model=./pedereid/pedestrian_reid.prototxt --weight=./pedereid/pedestrian_reid.caffemodel --framework=0 -output=./pedereid/pede_reid --insert_op_conf=./pedereid/aipp.cfg --soc_version=Ascend310
-atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310
-atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310
+atc --model=./facequality/face_quality_batch_8.prototxt --weight=./facequality/face_quality.caffemodel --framework=0 -output=./facequality/face_quality_improve --insert_op_conf=./facequality/aipp.cfg --soc_version=Ascend310P3
+atc --model=./faceembedding/face_embedding_batch_8.prototxt --weight=./faceembedding/face_embedding.caffemodel --framework=0 -output=./faceembedding/face_embedding --insert_op_conf=./faceembedding/aipp.cfg --soc_version=Ascend310P3
+atc --model=./faceattr/face_attribute_batch_4.prototxt --weight=./faceattr/face_attribute.caffemodel --framework=0 -output=./faceattr/face_attribute_batch_4 --insert_op_conf=./faceattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./facefeature/face_feature_batch_1.prototxt --weight=./facefeature/face_feature.caffemodel --framework=0 -output=./facefeature/face_feature_batch_1 --insert_op_conf=./facefeature/aipp.cfg --soc_version=Ascend310P3
+atc --model=./motorattr/car_color.prototxt --weight=./motorattr/car_color.caffemodel --framework=0 -output=./motorattr/car_color --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/vehicle_attribute --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./pedestrianattribute/pedestrian_attribute.prototxt --weight=./pedestrianattribute/pedestrian_attribute.caffemodel --framework=0 -output=./pedestrianattribute/pede_attr --insert_op_conf=./pedestrianattribute/aipp.cfg --soc_version=Ascend310P3
+atc --model=./pedereid/pedestrian_reid.prototxt --weight=./pedereid/pedestrian_reid.caffemodel --framework=0 -output=./pedereid/pede_reid --insert_op_conf=./pedereid/aipp.cfg --soc_version=Ascend310P3
+atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310P3
+atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310P3
+```
+**步骤3：** 查看結果 
+
+执行完模型转换后，若提示如下信息说明模型转换成功。
+
+```
+ATC run success, welcome to the next use.
+```
+
+## 4 编译与运行
 
 
+**步骤1：** 在当前目录下，安装必要python库：
 
-## 4 准备
+`pip3 install -r requirements.txt`
 
-**步骤1：** 参考安装教程《mxVision 用户指南》安装 mxVision SDK。
+**步骤2：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
 
-**步骤2：** 配置 mxVision SDK 环境变量。
-
-`export MX_SDK_HOME=${安装路径}/mxVision `
-
-注：本例中mxVision SDK安装路径为 /root/MindX_SDK。
-
-**步骤3：** 在项目根目录下 AllObjectStructuring/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuring/AllObjectsStructuring_models.zip)，并放到项目根目录下 AllObjectStructuring/models/ 目录下。
-
-**步骤4：** 在项目根目录下 AllObjectStructuring/ 创建目录faces_to_register `mkdir faces_to_register` ，将用来注册入库的目标照片放到项目根目录下 AllObjectStructuring/faces_to_register/ 目录下。faces_to_register目录中可以存放子文件夹，照片格式必须为.jpg，且子文件夹名称必须为英文字符。如果不需要接入特征检索功能，此步骤可忽略。
-
-**步骤5：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
-
-①：将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
+1、将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
 ```bash
 rstp流格式为rtsp://${ip_addres}:${port}/${h264_file}
 例：rtsp://xxx.xxx.xxx.xxx:xxxx/xxxx.264
 ```
 
-②：将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
+2、将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
 
 `npu-smi info`
 
-**步骤6：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
+**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
 
-①：将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
+1、将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
 
 `npu-smi info`
 
-**步骤7：** 编译mxSdkReferenceApps库中的插件：
+**步骤4：** 编译mxSdkReferenceApps库中的插件：
 
 在当前目录下，执行如下命令：
 
 `bash build.sh`
 
-**步骤8：** 在当前目录下，安装必要python库：
 
-`pip3.9.2 install -r requirements.txt`
 
 
 

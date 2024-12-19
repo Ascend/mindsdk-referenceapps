@@ -157,7 +157,7 @@ class QueryWeather(API):
                 formated_departure = datetime.datetime.strptime(
                     departure_date, "%Y-%m-%d").date()
             except ValueError as e:
-                logger.warning(str(e)+"默认将从当日起查询天气情况")
+                # 默认当前日期
                 formated_departure = datetime.date.today()
             gaps = (formated_departure - datetime.date.today()).days
             weather_summary = summary_copy[gaps + 1:]

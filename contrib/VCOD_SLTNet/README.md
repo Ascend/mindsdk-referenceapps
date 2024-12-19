@@ -5,13 +5,6 @@
 
 基于 MindX SDK 实现 SLT-Net 模型的推理。输入连续几帧伪装物体的视频序列，输出伪装物体掩膜 Mask 图。
 
-技术实现：
-
-![Flowchart](./flowchart.jpeg)
-
-图1 视频伪装物体检测流程图
-
-
 ### 1.1 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。

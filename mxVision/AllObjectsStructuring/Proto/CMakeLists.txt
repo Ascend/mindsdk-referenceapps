@@ -4,7 +4,7 @@ project(ProtoFile)
 set(TARGET_LIBRARY mxpiallobjectsstructuringdatatype)
 
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 
 if(EXISTS ${MX_SDK_HOME})
     set(PROTOBUF_FOUND TRUE)

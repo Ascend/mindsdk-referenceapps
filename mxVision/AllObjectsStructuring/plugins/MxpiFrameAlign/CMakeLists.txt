@@ -5,7 +5,7 @@ add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 include_directories(${PROJECT_DIR}/Proto)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 
 add_library(${TARGET_LIBRARY} SHARED MxpiFrameAlign.cpp)

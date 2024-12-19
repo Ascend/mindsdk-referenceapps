@@ -3,7 +3,7 @@ project(AllObjectsStructuring)
 
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 add_definitions(-Dgoogle=mindxsdk_private)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(PROJECT_DIR ${PROJECT_SOURCE_DIR})
 
 if(NOT DEFINED ENV{MX_SDK_HOME})

@@ -65,7 +65,7 @@
 
 **步骤1:** 模型下载
 
-下载 [models.zip 备份模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.pth`、`sltnet.onnx`、`sltnet.om` 三个模型文件
+下载 [models.zip 模型压缩包](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/models.zip) ，在项目工程目录下解压获得 `sltnet.pth`、`sltnet.onnx`、`sltnet.om` 三个模型文件
 
 注意：
 sltnet.om不能直接使用
@@ -87,7 +87,7 @@ ATC run success, welcome to the next use.
 
 **步骤1:** 数据下载
 
-通过访问[MoCA官方链接](https://xueliancheng.github.io/SLT-Net-project/)下载 `MoCA_Video` 数据集，或者通过[数据集备份链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/MoCA_Video.zip)来下载 `MoCA_Video.zip` 数据集压缩包并解压；数据集文件目录如下所示：
+通过[数据集链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/sltnet/MoCA_Video.zip)下载 `MoCA_Video.zip` 数据集压缩包并解压；数据集文件目录如下所示：
 
 ```
 --data
@@ -139,4 +139,4 @@ device_id：设备编号
 
 **步骤3:** 查看结果
 
-在results目录下存放着伪装物体掩膜 Mask 图
+在步骤2中设置的结果保存路径下存放着伪装物体掩膜 Mask 图

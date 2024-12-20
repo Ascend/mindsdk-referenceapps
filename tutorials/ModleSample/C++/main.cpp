@@ -27,14 +27,14 @@
 using namespace MxBase;
 using namespace std;
 
-std::string g_OmModelPath = "../model/IAT_lol-sim.om"; // mindir模型路径
+std::string g_omModelPath = "../model/IAT_lol-sim.om"; // mindir模型路径
 
 void ModelInfer()
 {
     int32_t deviceId = 0; // 模型部署的芯片
-    Model model(g_OmModelPath, deviceId);
+    Model model(g_omModelPath, deviceId);
 
-    MxBase::VisionDataFormat inputFormat = model.GetInputFormat(); // 获得模型输入的数据组织形式(NHWC 或者 NCHW)。
+    MxBase::VisionDataFormat inputFormat = model.GetInputFormat(); // 获得模型输入的数据组织形式(NHWC 或者 NCHW)
     switch (inputFormat) {
         case MxBase::VisionDataFormat::NCHW:
             std::cout << "Input format: NCHW" << std::endl;
@@ -50,28 +50,28 @@ void ModelInfer()
     std::cout << "model input tensor num: " << model.GetInputTensorNum() << std::endl;
     std::cout << "model output tensor num: " << model.GetOutputTensorNum() << std::endl;
     
-    std::vector<int64_t> inShape64 = model.GetInputTensorShape(); // 获得模型输入的对应Tensor的数据shape信息。
+    std::vector<int64_t> inShape64 = model.GetInputTensorShape(); // 获得模型输入的对应Tensor的数据shape信息
     std::vector<uint32_t> inShape;
-    std::cout<< "inputShape:";
-    for (auto s: inShape64) {
-        std::cout<< " " << s ;
-        //使用查询的结果直接传入Tensor构造函数构造Tensor，需要将int64_t数据转换为uint32_t数据。
-        inShape.push_back(static_cast<uint32_t>(s)); 
+    std::cout << "inputShape:";
+    for (auto s : inShape64) {
+        std::cout << " " << s;
+        // 使用查询的结果直接传入Tensor构造函数构造Tensor，需要将int64_t数据转换为uint32_t数据
+        inShape.push_back(static_cast<uint32_t>(s));
     }
     std::cout << std::endl;
-    TensorDType dtype = model.GetInputTensorDataType(0); // 获得模型输入的对应Tensor的数据类型信息。
+    TensorDType dtype = model.GetInputTensorDataType(0); // 获得模型输入的对应Tensor的数据类型信息
     std::vector<MxBase::Tensor> input; // 输入
     std::vector<MxBase::Tensor> output; // 输出
     for (size_t i = 0; i < model.GetOutputTensorNum(); i++) {
-        // 获得模型输出的对应Tensor的数据shape信息。查询的结果可直接传入Tensor构造函数用来构造Tensor。
-        std::vector<uint32_t> ouputShape = model.GetOutputTensorShape(i); 
-        std::cout << "ouputShape: " ;
-        for (size_t j = 0; j < ouputShape.size(); ++j) {
-            std::cout << ouputShape[j] << " ";
+        // 获得模型输出的对应Tensor的数据shape信息 查询的结果可直接传入Tensor构造函数用来构造Tensor
+        std::vector<uint32_t> outputShape = model.GetOutputTensorShape(i);
+        std::cout << "outputShape: " ;
+        for (size_t j = 0; j < outputShape.size(); ++j) {
+            std::cout << outputShape[j] << " ";
         }
         std::cout << std::endl;
-        MxBase::TensorDType outputDType = model.GetOutputTensorDataType(i); // 获得模型输出的对应Tensor的数据类型信息。
-        Tensor dst(ouputShape, outputDType);
+        MxBase::TensorDType outputDType = model.GetOutputTensorDataType(i); // 获得模型输出的对应Tensor的数据类型信息
+        Tensor dst(outputShape, outputDType);
         dst.Malloc();
         dst.ToDevice(0);
         output.push_back(dst);

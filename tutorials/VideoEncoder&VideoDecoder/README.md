@@ -80,6 +80,7 @@ bash build.sh
 ```
 
 **步骤5：运行**
+
 进入项目根目录的C++目录下，执行以下命令:
 ```
 ./main
@@ -98,6 +99,7 @@ bash build.sh
 
 准备一个H264格式的视频文件，并放至在本项目路径下。
 
+
 **步骤2：修改main.py文件，指定VideoDecoder和VideoEncoder的基本初始化参数**
 
 第**149**行到第**175**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
@@ -115,6 +117,7 @@ bash build.sh
 
 
 **步骤3：运行**
+
 进入项目根目录的Python目录下，执行以下命令:
 ```
 python3 main.py

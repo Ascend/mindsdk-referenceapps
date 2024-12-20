@@ -336,13 +336,13 @@ int main(int argc, char *argv[])
     }
     {
         // 设置输入视频路径和该视频宽、高
-        std::string filePath = "./xx.264";
-        int width = 1920;
-        int height = 1080;
+        std::string filePath = ${filePath};
+        int width = ${width}
+        int height = ${height}
         // 设置解码器主要配置项，根据配置项初始化解码器
         VideoDecodeConfig vDecodeConfig;
-        vDecodeConfig.width = width;  // 指定视频宽
-        vDecodeConfig.height = height;  // 指定视频高
+        vDecodeConfig.width = ${width};  // 指定视频宽
+        vDecodeConfig.height = ${height};  // 指定视频高
         vDecodeConfig.inputVideoFormat = StreamFormat::H264_MAIN_LEVEL;  // 指定待解码的输入视频格式
         vDecodeConfig.outputImageFormat = ImageFormat::YUV_SP_420;  // 指定解码后的输出图片格式
         vDecodeConfig.callbackFunc = VdecCallBack;  // 指定解码后、用于取解码结果的回调函数
@@ -353,26 +353,26 @@ int main(int argc, char *argv[])
         vEncodeConfig.width = width;  // 指定视频宽
         vEncodeConfig.height = height;  // 指定视频高
         vEncodeConfig.inputImageFormat = ImageFormat::YUV_SP_420; // 指定待编码的输入图片格式
-        vEncodeConfig.srcRate = 10; // 指定待编码的输入图片帧率
+        vEncodeConfig.srcRate = ${fps}; // 指定待编码的输入图片帧率
         vEncodeConfig.outputVideoFormat = StreamFormat::H264_MAIN_LEVEL; // 指定编码后的输出视频格式
-        vEncodeConfig.displayRate = 25; // 指定编码后的输出视频帧率
+        vEncodeConfig.displayRate = ${fps}; // 指定编码后的输出视频帧率
         vEncodeConfig.callbackFunc = VencCallBack; // 指定编码后，用于取编码结果的回调函数
         VideoEncoder videoEncoder = VideoEncoder(vEncodeConfig, DEFAULT_DEVICE_ID, DEFAULT_CHANNEL_ID); // 初始化编码器
 
         // 启动拉流线程
-        std::cout << "*********************StreamPullerThread start*********************" << std::endl;
         std::thread streamPullerThread = std::thread(StreamPullerThread, filePath, width, height);
-        // 启动解码线程
-        std::cout << "*********************VdecThread start*********************" << std::endl;
+        std::cout << "*********************StreamPullerThread start*********************" << std::endl;
+        // 启动视频解码线程
         std::thread vdecThread = std::thread(VdecThread, std::ref(videoDecoder));
+        std::cout << "*********************VdecThread start*********************" << std::endl;
         // 启动视频编码线程
-        std::cout << "*********************VencThread start*********************" << std::endl;
         std::thread vencThread = std::thread(VencThread, std::ref(videoEncoder));
+        std::cout << "*********************VencThread start*********************" << std::endl;
         // 启动视频文件保存线程
-        std::cout << "*********************SaveFrameThread start*********************" << std::endl;
         std::thread saveFrameThread = std::thread(SaveFrameThread, vEncodeConfig.outputVideoFormat);
+        std::cout << "*********************SaveFrameThread start*********************" << std::endl;
 
-        // 销毁线程
+        // 等待执行完毕
         streamPullerThread.join();
         vdecThread.join();
         vencThread.join();

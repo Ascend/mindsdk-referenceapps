@@ -15,19 +15,6 @@
 
 set -e
 
-function check_index() {
-    run_with_index=false
-    if [ ${param_num} -gt 0 ]; then
-        for param in ${params};
-        do
-            if [ "${param}" == "index" ]; then
-                run_with_index=true
-                break
-            fi
-        done
-    fi
-}
-
 # Simple log helper functions
 info() { echo -e "\033[1;34m[INFO ][MxStream] $1\033[1;37m" ; }
 warn() { echo >&2 -e "\033[1;31m[WARN ][MxStream] $1\033[1;37m" ; }
@@ -42,13 +29,4 @@ export GST_PLUGIN_SCANNER=${MX_SDK_HOME}/opensource/libexec/gstreamer-1.0/gst-pl
 export GST_PLUGIN_PATH=${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOME}/lib/plugins:$PWD/dist/lib
 export PYTHONPATH=${MX_SDK_HOME}/python:$PWD/dist/python:$PYTHONPATH
 
-param_num=$#
-params=$@
-check_index
-if [ "${run_with_index}" == true ]; then
-    echo "run with index"
-    python3 main.py
-else
-    echo "run main pipeline"
-    python3 main.py -main-pipeline-only=True
-fi
+python3 main.py -main-pipeline-only=True

@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要支持以下功能：
+全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas 300I pro、 Atlas 300V pro卡为主要的硬件平台，主要支持以下功能：
 
 * 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
 * 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
@@ -91,6 +91,11 @@
 
 ## 2 设置环境变量
 
+**步骤1：** 在当前目录下，安装必要python库：
+
+`pip3 install -r requirements.txt`
+
+**步骤2：** 设置环境变量 
 ```bash
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh
@@ -128,16 +133,11 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-
-**步骤1：** 在当前目录下，安装必要python库：
-
-`pip3 install -r requirements.txt`
-
-**步骤2：** 根据下面的文档，创建视频流：
+**步骤1：** 根据下面的文档，创建视频流：
 
 [创建视频流](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
-**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
+**步骤2：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
 
 1、将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
 ```bash
@@ -147,23 +147,38 @@ rstp流格式为rtsp://${ip_addres}:${port}/${h264_file}
 
 2、将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
 
-`npu-smi info`
+```bash
+npu-smi info
+```
 
-**步骤4：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
+**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
 
 将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
 
-`npu-smi info`
+```bash
+npu-smi info
+```
 
-**步骤5：** 编译插件：
+**步骤4：** 编译插件：
 
 在当前目录下，执行如下命令：
 
-`bash build.sh`
+```bash
+bash build.sh
+```
 
-**步骤6：** 
+**步骤5：** 修改插件so文件权限：
 
-`bash run.sh`
+进入到AllObjectStructuring/dist/lib目录下执行以下命令，将插件so权限修改为440：
+```bash
+chmod 440 libmxpi*
+```
+
+**步骤6：** 运行程序 
+
+```bash
+python3 main.py -main-pipeline-only=True
+```
 
 **步骤7：** 查看结果
 

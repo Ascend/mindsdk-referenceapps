@@ -61,7 +61,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 第**332**行到第**354**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
 
-第**333**行 `"std::string filePath = ${filePath}"`中的${filePath}替换为步骤2中视频文件实际的路径。
+第**333**行 `"std::string filePath = "${filePath}"`中的${filePath}替换为步骤2中视频文件实际的路径。
 
 第**334**行 `"int width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
 
@@ -104,7 +104,7 @@ bash build.sh
 
 第**149**行到第**175**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
 
-第**150**行 `"file_path = ${file_path}"`中的${file_path}替换为步骤1中视频文件实际的路径。
+第**150**行 `"file_path = "${file_path}”"`中的${file_path}替换为步骤1中视频文件实际的路径。
 
 第**151**行 `"width = ${width}"`中的${width}替换为步骤1中视频帧实际的宽。
 

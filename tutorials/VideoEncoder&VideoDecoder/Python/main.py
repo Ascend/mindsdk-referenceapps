@@ -147,9 +147,9 @@ def save_frame_thread(stream_format):
 
 def start_service():
     # 设置输入视频路径和该视频宽、高
-    file_path = "./fireDetection.264"
-    width = 1920
-    height = 1080
+    file_path = ${file_path}
+    width = ${width}
+    height = ${height}
 
     # 设置解码器主要配置项，根据配置项初始化解码器
     vdec_conf = VideoDecodeConfig()
@@ -167,9 +167,9 @@ def start_service():
     venc_conf.width = width  # 指定视频宽
     venc_conf.height = height  # 指定视频高
     venc_conf.inputImageFormat = base.nv12  # 指定待编码的输入图片格式
-    venc_conf.srcRate = 30  # 指定待编码的输入图片帧率
+    venc_conf.srcRate = ${fps}  # 指定待编码的输入图片帧率
     venc_conf.outputVideoFormat = base.h264_main_level  # 指定编码后的输出视频格式
-    venc_conf.displayRate = 25 # 指定编码后的输出视频帧率
+    venc_conf.displayRate = ${fps} # 指定编码后的输出视频帧率
     venc_callbacker = VencCallBacker()
     venc_callbacker.registerVencCallBack(venc_callback_func) # 指定编码后，用于取编码结果的回调函数
     video_encoder = VideoEncoder(venc_conf, venc_callbacker, DEFAULT_DEVICE_ID) # 初始化编码器

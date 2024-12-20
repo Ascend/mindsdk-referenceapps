@@ -39,6 +39,7 @@ def stop_handler(signum, frame):
 # 线程1：用于拉流
 def stream_puller_thread(file_path, width, height):
     global SEND_SIGNAL
+    global READ_VIDEO_ENDED
     with av.open(file_path) as container:
         frame_id = 0
         # 校验视频宽高是否符合编码器要求
@@ -92,12 +93,12 @@ def vdec_thread(video_decoder):
 def vdec_callback_func(decoded_image, channel_id, frame_id):
     VDEC_TO_VENC_QUEUE.append(DecodedFrame(decoded_image, frame_id, channel_id))
 
-    #                                   |获取解码结果|
-    #                                        |
-    #                                        |
-    #                                        V
-    #                                   |下发编码指令|
-    # 线程4：用于下发编码指令
+#                                   |获取解码结果|
+#                                        |
+#                                        |
+#                                        V
+#                                   |下发编码指令|
+# 线程4：用于下发编码指令
 def venc_thread(video_encoder):
     global VENC_ENDED
     while True:
@@ -207,4 +208,3 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, stop_handler)
     start_service()
     base.mx_deinit()
-

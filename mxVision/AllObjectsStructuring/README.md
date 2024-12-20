@@ -6,7 +6,7 @@
 全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas 300I pro、 Atlas 300V pro卡为主要的硬件平台，主要支持以下功能：
 
 * 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
-* 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
+* 动态目标识别和属性分析：能够识别检测出的目标类别，并对其属性进行分析。
 * 人体属性分类+PersonReID：能够根据人体属性和PersonReID进行分类。
 * 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类。 
 * 车辆属性分类：能够对车辆的属性进行分类。
@@ -84,18 +84,12 @@
 │   |   ├── CMakeLists.txt
 │   |   ├── main.py
 │   |   ├── README.md
-│   |   ├── requirements.txt
 │   |   └── run.sh
 ```
 
 
 ## 2 设置环境变量
 
-**步骤1：** 在当前目录下，安装必要python库：
-
-`pip3 install -r requirements.txt`
-
-**步骤2：** 设置环境变量 
 ```bash
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh

@@ -25,7 +25,6 @@
 #include "MxBase/Asynchron/AscendStream.h"
 
 using namespace MxBase;
-using namespace std;
 
 std::string g_omModelPath = "../model/IAT_lol-sim.om"; // mindir模型路径
 

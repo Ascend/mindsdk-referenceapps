@@ -14,7 +14,7 @@ def process():
     # 方式一
     model = base.model(modelPath=model_path, deviceId=device_id)  # 函数返回参数为Model对象
 
-    # 方式二
+    # 方式二 开发者也可尝试使用该方式构建Model，使用时注释15行
     # model = Model(model_path, 0)  # 直接使用Model类构造对象
 
     print("input num:", model.input_num)  # 获得模型的输入个数 

@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
     }
     {
         // 设置输入视频路径和该视频宽、高
-        std::string filePath = ${filePath};
+        std::string filePath = "${filePath}";
         int width = ${width};
         int height = ${height};
         // 设置解码器主要配置项，根据配置项初始化解码器

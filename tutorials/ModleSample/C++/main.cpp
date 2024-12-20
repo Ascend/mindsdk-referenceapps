@@ -29,7 +29,8 @@ using namespace std;
 
 std::string g_OmModelPath = "../model/IAT_lol-sim.om"; // mindir模型路径
 
-void ModelInfer(){
+void ModelInfer()
+{
     int32_t deviceId = 0; // 模型部署的芯片
     Model model(g_OmModelPath, deviceId);
 
@@ -54,14 +55,16 @@ void ModelInfer(){
     std::cout<< "inputShape:";
     for (auto s: inShape64) {
         std::cout<< " " << s ;
-        inShape.push_back(static_cast<uint32_t>(s)); // 动态模型场景下对应的动态维度查询结果为-1。如果要使用查询的结果直接传入Tensor构造函数构造Tensor，需要将int64_t数据转换为uint32_t数据。
+        //使用查询的结果直接传入Tensor构造函数构造Tensor，需要将int64_t数据转换为uint32_t数据。
+        inShape.push_back(static_cast<uint32_t>(s)); 
     }
     std::cout << std::endl;
     TensorDType dtype = model.GetInputTensorDataType(0); // 获得模型输入的对应Tensor的数据类型信息。
     std::vector<MxBase::Tensor> input; // 输入
     std::vector<MxBase::Tensor> output; // 输出
     for (size_t i = 0; i < model.GetOutputTensorNum(); i++) {
-        std::vector<uint32_t> ouputShape = model.GetOutputTensorShape(i); // 获得模型输出的对应Tensor的数据shape信息。查询的结果可直接传入Tensor构造函数用来构造Tensor。
+        // 获得模型输出的对应Tensor的数据shape信息。查询的结果可直接传入Tensor构造函数用来构造Tensor。
+        std::vector<uint32_t> ouputShape = model.GetOutputTensorShape(i); 
         std::cout << "ouputShape: " ;
         for (size_t j = 0; j < ouputShape.size(); ++j) {
             std::cout << ouputShape[j] << " ";
@@ -84,7 +87,8 @@ void ModelInfer(){
     stream.DestroyAscendStream();
 }
 
-int main(){
+int main()
+{
     MxBase::MxInit();
     ModelInfer();
     MxBase::MxDeInit();

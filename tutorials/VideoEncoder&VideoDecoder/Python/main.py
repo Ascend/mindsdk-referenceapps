@@ -147,7 +147,7 @@ def save_frame_thread(stream_format):
 
 def start_service():
     # 设置输入视频路径和该视频宽、高
-    file_path = ${file_path}
+    file_path = "${file_path}"
     width = ${width}
     height = ${height}
 

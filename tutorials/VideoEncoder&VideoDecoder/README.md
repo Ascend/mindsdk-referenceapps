@@ -59,17 +59,17 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 **步骤3：修改main.cpp文件，指定VideoDecoder和VideoEncoder的基本初始化参数**  
 
 
-第**338**行到第**360**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
+第**332**行到第**354**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
 
-第**339**行 `"std::string filePath = ${filePath}"`中的${filePath}替换为步骤2中视频文件实际的路径。
+第**333**行 `"std::string filePath = ${filePath}"`中的${filePath}替换为步骤2中视频文件实际的路径。
 
-第**340**行 `"int width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
+第**334**行 `"int width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
 
-第**341**行 `"int height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
+第**335**行 `"int height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
 
-第**356**行 `"vEncodeConfig.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**350**行 `"vEncodeConfig.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
 
-第**358**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**352**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
 
 
 **步骤4：编译**
@@ -126,6 +126,4 @@ python3 main.py
 **步骤4：查看结果**
 
 保存后的视频文件（命令为output.264）会在同级目录下，打开该文件即可查看编码结果。
-
-
 

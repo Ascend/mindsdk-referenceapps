@@ -104,15 +104,15 @@ bash build.sh
 
 第**149**行到第**175**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
 
-第**150**行 `"file_path = ${file_path}"`中的${file_path}替换为步骤2中视频文件实际的路径。
+第**150**行 `"file_path = ${file_path}"`中的${file_path}替换为步骤1中视频文件实际的路径。
 
-第**151**行 `"width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
+第**151**行 `"width = ${width}"`中的${width}替换为步骤1中视频帧实际的宽。
 
-第**152**行 `"height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
+第**152**行 `"height = ${height}"`中的${height}替换为步骤1中视频帧实际的高。
 
-第**170**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**170**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频帧实际的帧率。
 
-第**172**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**172**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频帧实际的帧率。
 
 
 

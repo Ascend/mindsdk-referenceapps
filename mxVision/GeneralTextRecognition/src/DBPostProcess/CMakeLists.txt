@@ -24,7 +24,7 @@ link_directories($ENV{MX_SDK_HOME}/opensource/lib)
 link_directories(${PROJECT_SOURCE_DIR}/../../lib)
 link_directories($ENV{MX_SDK_HOME}/lib)
 
-add_compile_options(-std=c++11 -fPIE -fstack-protector-all -fPIC -Wall -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIE -fstack-protector-all -fPIC -Wall -Wno-deprecated-declarations)
 add_definitions(-DENABLE_DVPP_INTERFACE -Dgoogle=mindxsdk_private)
 add_library(${TARGET_LIBRARY} SHARED DBPostProcess.cpp)
 

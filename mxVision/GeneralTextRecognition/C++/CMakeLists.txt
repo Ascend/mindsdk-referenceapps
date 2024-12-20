@@ -21,7 +21,7 @@ set(TARGET_NAME MultiThread)
 # Compile options
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 add_definitions(-Dgoogle=mindxsdk_private)
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -Wall)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -Wall)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS_DEBUG "-g -std=c++11 ${CMAKE_CXX_FLAGS} -pthread")

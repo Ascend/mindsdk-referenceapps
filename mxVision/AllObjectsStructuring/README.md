@@ -161,25 +161,18 @@ npu-smi info
 bash build.sh
 ```
 
-**步骤5：** 修改插件so文件权限：
-
-进入到AllObjectStructuring/dist/lib目录下执行以下命令，将插件so权限修改为440：
-```bash
-chmod 440 libmxpi*
-```
-
-**步骤6：** 运行程序 
+**步骤5：** 运行程序 
 
 ```bash
 python3 main.py -main-pipeline-only=True
 ```
 
-**步骤7：** 查看结果
+**步骤6：** 查看结果
 
 正常启动后，控制台会输出检测到各类目标的对应信息。
 
 
-## 5 FAQ
+## 5 常见问题
 
 ### 5.1 运行程序时，LibGL.so.1缺失导致导入cv2报错 
 

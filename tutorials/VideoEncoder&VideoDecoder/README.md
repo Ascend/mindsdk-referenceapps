@@ -67,9 +67,9 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 第**335**行 `"int height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
 
-第**350**行 `"vEncodeConfig.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**350**行 `"vEncodeConfig.srcRate = ${fps}"`中的${fps}替换为步骤2中视频实际的帧率。
 
-第**352**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+第**352**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频实际的帧率。
 
 
 **步骤4：编译**
@@ -110,9 +110,9 @@ bash build.sh
 
 第**152**行 `"height = ${height}"`中的${height}替换为步骤1中视频帧实际的高。
 
-第**170**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频帧实际的帧率。
+第**170**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频实际的帧率。
 
-第**172**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频帧实际的帧率。
+第**172**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤1中视频实际的帧率。
 
 
 
@@ -126,4 +126,3 @@ python3 main.py
 **步骤4：查看结果**
 
 保存后的视频文件（命令为output.264）会在同级目录下，打开该文件即可查看编码结果。
-

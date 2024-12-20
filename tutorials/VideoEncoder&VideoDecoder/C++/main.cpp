@@ -6,20 +6,12 @@
  * History: NA
  */
 
-#include <ctime>
 #include <csignal>
 #include <iostream>
-#include <sstream>
-#include <map>
-#include <fstream>
-#include <memory>
 #include <chrono>
 #include <sys/time.h>
 #include <thread>
-#include <queue>
 #include <thread>
-#include <algorithm>
-#include "unistd.h"
 #include "acl/acl.h"
 #include "acl/acl_rt.h"
 #include "MxBase/Log/Log.h"
@@ -146,18 +138,20 @@ void StreamPullerThread(const std::string filePath, const uint32_t width, const 
             streamHeight = inStream->codecpar->height;
             streamWidth = inStream->codecpar->width;
             if (streamHeight != height) {
-                LogError << "Video height " << streamHeight << " is not equal to the configuration height " << height << ".";
+                LogError << "Video height " << streamHeight << " is not equal to the configuration height "
+                         << height << ".";
                 g_readVideoEnded = true;
                 return;
             }
             if (streamWidth != width) {
-                LogError << "Video width " << streamWidth << " is not equal to the configuration width " << width << ".";
+                LogError << "Video width " << streamWidth << " is not equal to the configuration width "
+                         << width << ".";
                 g_readVideoEnded = true;
                 return;
             }
         }
     }
-    while (g_sendSignial == false && g_readVideoEnded == false) {
+    while (!g_sendSignial && !g_readVideoEnded) {
         EncodedFrame encodedFrame;
         encodedFrame.channelId = channelId;
         encodedFrame.frameId = frameId;
@@ -177,8 +171,8 @@ void StreamPullerThread(const std::string filePath, const uint32_t width, const 
 // 线程2：用于下发解码指令
 void VdecThread(VideoDecoder& videoDecoder)
 {
-    while (true) {
-        if (g_sendSignial || (g_readVideoEnded && g_pullerToVdecQueue.GetSize() ==0)) {
+    while (!g_sendSignial) {
+        if (g_readVideoEnded && g_pullerToVdecQueue.GetSize() ==0) {
             break;
         }
         // 获取待解码的视频帧数据
@@ -227,8 +221,8 @@ APP_ERROR VdecCallBack(MxBase::Image &decodedImage, uint32_t channelId, uint32_t
 // 线程4：用于下发编码指令
 void VencThread(VideoEncoder& videoEncoder)
 {
-    while(true) {
-        if (g_sendSignial || (g_vdecEnded && g_vdecToVencQueue.GetSize() ==0)) {
+    while (!g_sendSignial) {
+        if (g_vdecEnded && g_vdecToVencQueue.GetSize() ==0) {
             break;
         }
         // 获取解码后的视频帧
@@ -291,8 +285,8 @@ void SaveFrameThread(StreamFormat streamFormat)
 
     bool mbFoundFirstIDR = false;
     bool bIsIDR = false;
-    while (true) {
-        if (g_sendSignial || (g_vencEnded && g_vencToFileSaveQueue.GetSize() == 0)) {
+    while (!g_sendSignial) {
+        if (g_vencEnded && g_vencToFileSaveQueue.GetSize() == 0) {
             break;
         }
         // 获取编码后的视频帧
@@ -337,12 +331,12 @@ int main(int argc, char *argv[])
     {
         // 设置输入视频路径和该视频宽、高
         std::string filePath = ${filePath};
-        int width = ${width}
-        int height = ${height}
+        int width = ${width};
+        int height = ${height};
         // 设置解码器主要配置项，根据配置项初始化解码器
         VideoDecodeConfig vDecodeConfig;
-        vDecodeConfig.width = ${width};  // 指定视频宽
-        vDecodeConfig.height = ${height};  // 指定视频高
+        vDecodeConfig.width = width;  // 指定视频宽
+        vDecodeConfig.height = height;  // 指定视频高
         vDecodeConfig.inputVideoFormat = StreamFormat::H264_MAIN_LEVEL;  // 指定待解码的输入视频格式
         vDecodeConfig.outputImageFormat = ImageFormat::YUV_SP_420;  // 指定解码后的输出图片格式
         vDecodeConfig.callbackFunc = VdecCallBack;  // 指定解码后、用于取解码结果的回调函数

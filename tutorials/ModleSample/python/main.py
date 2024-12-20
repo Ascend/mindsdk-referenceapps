@@ -21,12 +21,10 @@ def process():
     print("output num:", model.output_num)  # 获得模型的输出个数 
 
     input_shape_vector = model.input_shape(0)  # 获得模型输入的对应Tensor的数据shape信息 
-    input_shape_list = list(input_shape_vector)
-    print("input Tensor shape list:", input_shape_list)
+    print("input Tensor shape list:", input_shape_vector)
 
     output_shape_vector = model.output_shape(0)  # 获得模型输出的对应Tensor的数据shape信息  
-    output_shape_list = list(output_shape_vector)
-    print("output Tensor shape list:", output_shape_list)
+    print("output Tensor shape list:", output_shape_vector)
 
     input_dtype = model.input_dtype(0)
     print("Input dtype:", input_dtype)
@@ -34,7 +32,7 @@ def process():
     # 使用numpy生成输入数据 真实情况下读入图片进行推理也可以通过numpy转换为Tensor类型
     img = np.random.randint(\
         0, 255, \
-        size=(input_shape_list[0], input_shape_list[1], input_shape_list[2], input_shape_list[3]), \
+        size=(input_shape_vector[0], input_shape_vector[1], input_shape_vector[2], input_shape_vector[3]), \
         dtype=np.uint8\
     ).astype(np.float32)  # 这里的size根据模型输入的要求确定
     img = Tensor(img)  # 将numpy转为转为Tensor类

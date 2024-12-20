@@ -24,6 +24,7 @@
 
 | 软件名称   | 版本   |
 |--------| ------ |
+| av | 10.0.0 |
 | ffmpeg | 3.4.11 |
 
 注意：ffmpeg需要用户自行到相关网站下载源码进行编译安装。
@@ -58,13 +59,17 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 **步骤3：修改main.cpp文件，指定VideoDecoder和VideoEncoder的基本初始化参数**  
 
 
-第**339**行到第**359**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅修改必要配置项，如下所示：
+第**338**行到第**360**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
 
 第**339**行 `"std::string filePath = ${filePath}"`中的${filePath}替换为步骤2中视频文件实际的路径。
 
-第**343**行 `"vDecodeConfig.width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
+第**340**行 `"int width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
 
-第**344**行 `"vDecodeConfig.height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
+第**341**行 `"int height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
+
+第**356**行 `"vEncodeConfig.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+
+第**358**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
 
 
 **步骤4：编译**
@@ -94,6 +99,18 @@ bash build.sh
 准备一个H264格式的视频文件，并放至在本项目路径下。
 
 **步骤2：修改main.py文件，指定VideoDecoder和VideoEncoder的基本初始化参数**
+
+第**149**行到第**175**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合mxVision官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
+
+第**150**行 `"file_path = ${file_path}"`中的${file_path}替换为步骤2中视频文件实际的路径。
+
+第**151**行 `"width = ${width}"`中的${width}替换为步骤2中视频帧实际的宽。
+
+第**152**行 `"height = ${height}"`中的${height}替换为步骤2中视频帧实际的高。
+
+第**170**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
+
+第**172**行 `"venc_conf.srcRate = ${fps}"`中的${fps}替换为步骤2中视频帧实际的帧率。
 
 
 

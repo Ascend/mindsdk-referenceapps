@@ -27,7 +27,7 @@ class MainPipeline(Process):
 
     def run(self):
         out_plugin_id = 0
-        out_stream_bbox_plugin_id = 1
+        out_stream_bbox_plugin_id = 0
         pipeline = Pipeline(pipeline_cfg_file=self.args.main_pipeline_path,
                             stream_name=self.args.main_pipeline_name,
                             out_plugin_id=out_plugin_id,

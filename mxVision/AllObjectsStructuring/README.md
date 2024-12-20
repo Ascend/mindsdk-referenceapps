@@ -1,181 +1,180 @@
 # 全目标结构化
 
-## 1 简介
+## 1 介绍
+### 1.1 简介
 
-全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要支持以下功能：
+全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas 300I pro、 Atlas 300V pro卡为主要的硬件平台，主要支持以下功能：
 
-1. 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
-2. 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
-3. 人体属性分类+PersonReID：能够根据人体属性和PersonReID进行分类.
-4. 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类.
-5. 车辆属性分类：能够对车辆的属性进行分类。
+* 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
+* 动态目标识别和属性分析：能够识别检测出的目标类别，并对其属性进行分析。
+* 人体属性分类+PersonReID：能够根据人体属性和PersonReID进行分类。
+* 目标属性分类+FaceReID：能够根据目标属性和FaceReID进行分类。 
+* 车辆属性分类：能够对车辆的属性进行分类。
+
+### 1.2 支持的产品
+本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
+
+### 1.3 支持的版本
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+
+### 1.4 三方依赖
+
+| 软件名称 | 版本        |
+| -------- |-----------|
+| cmake    | 3.5.1+    |
+| Python   | 3.9.2     |
+| numpy   | 1.23.1    |
+| opencv-python   | 4.10.0.84 |
+| Pillow   | 8.0.1     |
+| protobuf   | 4.24.4    |
+| websocket-server   | 0.4       |
 
 
-## 2 环境依赖
-
-- 支持的硬件形态和操作系统版本
-
-| 硬件形态                             | 操作系统版本   |
-| ----------------------------------- | -------------- |
-| x86_64+Atlas 300I 推理卡（型号3010） | Ubuntu 18.04.1 |
-| x86_64+Atlas 300I 推理卡 （型号3010）| CentOS 7.6     |
-| ARM+Atlas 300I 推理卡 （型号3000）   | Ubuntu 18.04.1 |
-| ARM+Atlas 300I 推理卡 （型号3000）   | CentOS 7.6     |
-
-- 软件依赖
-
-| 软件名称 | 版本   |
-| -------- | ------ |
-| cmake    | 3.5.1+ |
-| mxVision | 0.2    |
-| Python   | 3.9.2  |
-
-
-
-## 3 代码主要目录介绍
-
-本代码仓名称为mxSdkReferenceApps，工程目录如下图所示：
+### 1.5 代码目录结构说明
 
 ```
 ├── mxVision
 │   ├── AllObjectsStructuring
+│   |   ├── main_pipeline
+│   |   │   └── __init__.py
+│   |   │   └── main_pipeline.py
 │   |   ├── pipeline
 │   |   │   └── AllObjectsStructuring.pipeline
+│   |   │   └── face_registry.pipeline
 │   |   ├── plugins
 │   |   │   ├── MpObjectSelection
 |   |   |   |   ├── CMakeLists.txt
 |   |   |   |   ├── MpObjectSelection.cpp
 |   |   |   |   └── MpObjectSelection.h
 │   |   │   └── MxpiFaceSelection
+│   |   |   |   ├── CMakeLists.txt
+│   |   |   │   ├── MxpiFaceSelection.cpp
+│   |   │   |   └── MxpiFaceSelection.h
+│   |   │   └── MxpiFrameAlign
+│   |   |   |   ├── BlockingMap.h
+│   |   |   │   ├── CMakeLists.txt
+│   |   |   │   ├── MxpiFrameAlign.cpp
+│   |   |   │   └── MxpiFrameAlign.h
+│   |   │   └── MxpiSkipFrame
 │   |   |       ├── CMakeLists.txt
-│   |   │       ├── MxpiFaceSelection.cpp
-│   |   │       └── MxpiFaceSelection.h
-│   |   ├── models
-│   |   ├── CMakeLists.txt
-│   |   ├── README.zh.md
+│   |   │       ├── MxpiSkipFrame.cpp
+│   |   │       └── MxpiSkipFrame.h
+│   |   ├── Proto
+│   |   │   ├── CMakeLists.txt
+│   |   │   ├── MxpiAllObjectsStructuringDataType.proto
+│   |   ├── retrieval
+│   |   │   ├── __init__.py
+│   |   │   ├── feature_retrieval.py
+│   |   │   ├── register.py
+│   |   ├── util
+│   |   │   ├── __init__.py
+│   |   │   ├── channel_status.py
+│   |   │   ├── checker.py
+│   |   │   ├── display.py
+│   |   │   ├── main_entry.py
+│   |   │   ├── multi_process.py
+│   |   │   ├── pipeline.py
+│   |   │   ├── yuv.py
+│   |   ├── models                  # 需用户创建
 │   |   ├── build.sh
+│   |   ├── CMakeLists.txt
 │   |   ├── main.py
+│   |   ├── README.md
 │   |   └── run.sh
 ```
 
 
+## 2 设置环境变量
 
-## 4 准备
+```bash
+#设置CANN环境变量，ascend-toolkit-path为cann安装路径
+. ${ascend-toolkit-path}/set_env.sh
 
-**步骤1：** 参考安装教程《mxVision 用户指南》安装 mxVision SDK。
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh
+```
 
-**步骤2：** 配置 mxVision SDK 环境变量。
+## 3 准备模型
 
-`export MX_SDK_HOME=${安装路径}/mxVision `
+**步骤1：** 在项目根目录下 AllObjectStructuring/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuring/AllObjectsStructuring_models.zip)，并放到项目根目录下 AllObjectStructuring/models/ 目录下。
 
-注：本例中mxVision SDK安装路径为 /root/MindX_SDK。
+**步骤2：** 进入到AllObjectStructuring/models目录下，执行以下命令：
 
-**步骤3：** 在项目根目录下 AllObjectStructuring/ 创建目录models `mkdir models` ，获取[模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/AllObjectsStructuring/AllObjectsStructuring_models.zip)，并放到项目根目录下 AllObjectStructuring/models/ 目录下。
+```bash
+atc --model=./yolov4_improve/yolov4-tiny-customized.pb --framework=3 -output=./yolov4_improve/yolov4_detection --insert_op_conf=./yolov4_improve/aipp_yolov4.cfg --soc_version=Ascend310P3
+atc --model=./facequality/face_quality_batch_8.prototxt --weight=./facequality/face_quality.caffemodel --framework=0 -output=./facequality/face_quality_improve --insert_op_conf=./facequality/aipp.cfg --soc_version=Ascend310P3
+atc --model=./faceembedding/face_embedding_batch_8.prototxt --weight=./faceembedding/face_embedding.caffemodel --framework=0 -output=./faceembedding/face_embedding --insert_op_conf=./faceembedding/aipp.cfg --soc_version=Ascend310P3
+atc --model=./faceattr/face_attribute_batch_4.prototxt --weight=./faceattr/face_attribute.caffemodel --framework=0 -output=./faceattr/face_attribute_batch_4 --insert_op_conf=./faceattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./facefeature/face_feature_batch_1.prototxt --weight=./facefeature/face_feature.caffemodel --framework=0 -output=./facefeature/face_feature_batch_1 --insert_op_conf=./facefeature/aipp.cfg --soc_version=Ascend310P3
+atc --model=./motorattr/car_color.prototxt --weight=./motorattr/car_color.caffemodel --framework=0 -output=./motorattr/car_color --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./motorattr/vehicle_attribute.pb --framework=3 -output=./motorattr/vehicle_attribute --insert_op_conf=./motorattr/aipp.cfg --soc_version=Ascend310P3
+atc --model=./pedestrianattribute/pedestrian_attribute.prototxt --weight=./pedestrianattribute/pedestrian_attribute.caffemodel --framework=0 -output=./pedestrianattribute/pede_attr --insert_op_conf=./pedestrianattribute/aipp.cfg --soc_version=Ascend310P3
+atc --model=./pedereid/pedestrian_reid.prototxt --weight=./pedereid/pedestrian_reid.caffemodel --framework=0 -output=./pedereid/pede_reid --insert_op_conf=./pedereid/aipp.cfg --soc_version=Ascend310P3
+atc --model=./car_plate_detection/car_plate_detection.prototxt --weight=./car_plate_detection/car_plate_detection.caffemodel --framework=0 -output=./car_plate_detection/car_plate_detection --insert_op_conf=./car_plate_detection/aipp.cfg --soc_version=Ascend310P3
+atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./car_plate_recognition/car_plate_recognition.caffemodel --framework=0 -output=./car_plate_recognition/car_plate_recognition --insert_op_conf=./car_plate_recognition/aipp.cfg --soc_version=Ascend310P3
+```
+**步骤3：** 查看結果 
 
-**步骤4：** 在项目根目录下 AllObjectStructuring/ 创建目录faces_to_register `mkdir faces_to_register` ，将用来注册入库的目标照片放到项目根目录下 AllObjectStructuring/faces_to_register/ 目录下。faces_to_register目录中可以存放子文件夹，照片格式必须为.jpg，且子文件夹名称必须为英文字符。如果不需要接入特征检索功能，此步骤可忽略。
+执行完模型转换后，若提示如下信息说明模型转换成功。
 
-**步骤5：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
+```
+ATC run success, welcome to the next use.
+```
 
-①：将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
+## 4 编译与运行
+
+**步骤1：** 根据下面的文档，创建视频流：
+
+[创建视频流](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+
+**步骤2：** 修改项目根目录下 AllObjectStructuring/pipeline/AllObjectsStructuring.pipeline文件：
+
+1、将所有“rtspUrl”字段值替换为可用的 rtsp 流源地址（需要自行准备可用的视频流，目前只支持264格式的rtsp流，264视频的分辨率范围最小为128 * 128，最大为4096 * 4096，不支持本地视频），配置参考如下：
 ```bash
 rstp流格式为rtsp://${ip_addres}:${port}/${h264_file}
 例：rtsp://xxx.xxx.xxx.xxx:xxxx/xxxx.264
 ```
 
-②：将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
+2、将所有“deviceId”字段值替换为实际使用的device的id值，可用的 device id 值可以使用如下命令查看：
 
-`npu-smi info`
+```bash
+npu-smi info
+```
 
-**步骤6：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
+**步骤3：** 修改项目根目录下 AllObjectStructuring/pipeline/face_registry.pipeline文件：
 
-①：将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
+将所有“deviceId”字段值替换为实际使用的device的id值，勿与AllObjectStructuring.pipeline使用同一个deviceId。可用的 device id 值可以使用如下命令查看：
 
-`npu-smi info`
+```bash
+npu-smi info
+```
 
-**步骤7：** 编译mxSdkReferenceApps库中的插件：
+**步骤4：** 编译插件：
 
 在当前目录下，执行如下命令：
 
-`bash build.sh`
+```bash
+bash build.sh
+```
 
-**步骤8：** 在当前目录下，安装必要python库：
+**步骤5：** 运行程序 
 
-`pip3.9.2 install -r requirements.txt`
+```bash
+python3 main.py -main-pipeline-only=True
+```
 
-**步骤9：** 请在昇腾社区下载特征检索源码包https://www.hiascend.com/software/mindx-sdk/mxindex，并根据readme来搭建特征检索库。如果不需要接入特征检索功能，此步骤可忽略。
-
-注：当前版本特征检索库缺少本例中目标检索所需部分算子（Flat，IVFSQ8），需自行生成，请参考特征检索readme 4.2.2：
-
-首先进入特征检索 src/ascendfaiss/tools 目录，
-
-在该目录下执行生成算子命令，当前特征检索版本算子生成命令如下：
-
-`python flat_min64_generate_model.py -d 256`
-
-`python ivfsq8_generate_model.py -d 256 -c 8192`
-
-生成算子后将算子模型文件移动到上级目录的modelpath目录下：
-
-`mv op_models/* ../modelpath`
-
-重新执行环境部署：
-
-`bash install.sh <driver-untar-path>`
-
-`<driver-untar-path>`为“`Ascend310-driver-{software version}-minios.aarch64-src.tar.gz`”文件解压后的目录，例如文件在“`/usr/local/software/`”目录解压，则`<driver-untar-path>`为“`/usr/local/software/`” 。本步命令用于实现将device侧检索daemon进程文件分发到多个device，执行命令后Ascend Driver中device的文件系统会被修改，所以需要执行**“`reboot`”**命令生效。
-
-准确的算子生成方式需以特征检索 readme 4.2.2 为准。
-
-
-
-## 5 运行
-
-### 不带检索
-
-运行
-`bash run.sh`
+**步骤6：** 查看结果
 
 正常启动后，控制台会输出检测到各类目标的对应信息。
 
 
-### 带检索
-需要在项目根目录下 AllObjectsStructuring/util/arguments.py 配置检索大小库运行的芯片id
+## 5 常见问题
 
-配置检索小库运行芯片id，根据实际情况修改`default`值，勿与注册目标、全目标结构化pipeline使用同一芯片
-```bash
-    parser.add_argument('-index-little-device-ids',
-                        type=int,
-                        nargs="+",
-                        default=[2],
-                        help='specify the device assignment for little index.',
-                        dest='index_little_device_ids')
-```
-配置检索大库运行芯片id，根据实际情况修改`default`值，勿与注册目标、全目标结构化pipeline使用同一芯片
-```bash
-    parser.add_argument('-index-large-device-ids',
-                        type=int,
-                        nargs="+",
-                        default=[3],
-                        help='specify the device assignment for large index.',
-                        dest='index_large_device_ids')
-```
-
-运行
-`bash run.sh index`
-
-正常启动后，控制台会输出检测到目标目标的对应索引信息。
-
-
-
-## 6 参考链接
-
-MindX SDK社区链接：https://www.hiascend.com/software/mindx-sdk
-
-
-
-## 7 FAQ
-
-### 7.1 运行程序时,LibGL.so.1缺失导致导入cv2报错 
+### 5.1 运行程序时，LibGL.so.1缺失导致导入cv2报错 
 
 **问题描述：**
 运行程序时报错："ImportError: libGL.so.1: cannot open shared object file: No such file or directory"
@@ -191,4 +190,16 @@ sudo apt install libgl1-mesa-glx
 如果服务器系统是RedHat系列，如Centos，执行下列语句：
 ```bash
 yum install mesa-libGL
+```
+
+### 5.2 运行程序时，导入MxpiDataType_pb2.py中的数据结构时报错
+
+**问题描述：**
+运行程序时报错：“Type Error: Descriptors cannot be created directly.”
+
+**解决方案：**
+
+执行以下命令：
+```bash
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 ```

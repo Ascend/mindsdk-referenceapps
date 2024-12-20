@@ -1766,8 +1766,8 @@
             "props":{
                 "dataSource":"mxpi_imageresize3",
                 "modelPath":"./models/motorattr/vehicle_attribute.om",
-                "postProcessConfigPath":"./models/motorattr/yolov3-tiny-addpad.cfg",
-                "labelPath":"./models/motorattr/coco.names",
+                "postProcessConfigPath":"./models/faceattr/yolov3-tiny-addpad.cfg",
+                "labelPath":"./models/motorattr/vehicle_attribute_coco.names",
                 "postProcessLibPath":"libresnetattrpostprocessor.so"
             },
             "factory":"mxpi_modelinfer",
@@ -1800,8 +1800,8 @@
             "props": {
                 "parentName": "mxpi_imageresize6",
                 "modelPath": "./models/car_plate_detection/car_plate_detection.om",
-                "postProcessConfigPath": "./models/car_plate_detection/ssd_vgg16_caffe_glue_hole.cfg",
-                "labelPath": "./models/car_plate_detection/ssd_vgg16_caffe_glue_hole.names",
+                "postProcessConfigPath": "./models/car_plate_detection/car_plate_detection.cfg",
+                "labelPath": "./models/car_plate_detection/car_plate_detection.names",
 	            "postProcessLibPath": "libssdvggpostprocessor.so"
             },
             "factory": "mxpi_modelinfer",
@@ -1892,7 +1892,7 @@
         "pedestrian_attribute":{
             "props":{
                 "dataSource":"mxpi_imageresize4",
-                "modelPath":"./models/pedestrianattribute/pede_attr_4_batch.om",
+                "modelPath":"./models/pedestrianattribute/pede_attr.om",
                 "postProcessConfigPath":"./models/pedestrianattribute/pedes_attr.cfg",
                 "labelPath":"./models/pedestrianattribute/coco.names",
                 "postProcessLibPath":"libresnetattrpostprocessor.so"
@@ -1926,7 +1926,7 @@
         "pedestrian_reid":{
             "props":{
                 "dataSource":"mxpi_imageresize5",
-                "modelPath":"./models/pedereid/pede_reid_4_batch.om",
+                "modelPath":"./models/pedereid/pede_reid.om",
                 "postProcessConfigPath":"./models/pedereid/pedereid.cfg",
                 "labelPath":"./models/pedereid/coco.names",
                 "postProcessLibPath":"libresnetfeaturepostprocessor.so"

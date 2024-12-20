@@ -2,7 +2,7 @@ set(PLUGIN_NAME "mxpi_skipframe")
 set(TARGET_LIBRARY ${PLUGIN_NAME})
 
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 
 add_library(${TARGET_LIBRARY} SHARED MxpiSkipFrame.cpp)
@@ -11,4 +11,4 @@ target_link_libraries(${TARGET_LIBRARY} glib-2.0 gstreamer-1.0 gobject-2.0 gstba
 target_link_libraries(${TARGET_LIBRARY} plugintoolkit mxbase mxpidatatype)
 target_link_libraries(${TARGET_LIBRARY} -Wl,-z,relro,-z,now,-z,noexecstack -s)
 
-install(TARGETS ${TARGET_LIBRARY} LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/dist/lib)
+install(TARGETS ${TARGET_LIBRARY} PERMISSION OWNER_READ GROUP_READ LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/dist/lib)

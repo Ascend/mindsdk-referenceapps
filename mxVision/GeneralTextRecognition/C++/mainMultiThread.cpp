@@ -108,7 +108,7 @@ APP_ERROR SendCallback(MxStreamManager& mxStreamManager,
     }
     return APP_ERR_OK;
 }
-APP_ERROR TestMultiThread(const std::string& pipelinePath)
+APP_ERROR TestMain(const std::string& pipelinePath)
 {
     std::cout << "********case TestMultiThread********" << std::endl;
 
@@ -131,21 +131,9 @@ APP_ERROR TestMultiThread(const std::string& pipelinePath)
         return ret;
     }
 
-    int threadCount = 3;
-    std::thread threadSendData[threadCount];
-    std::thread threadGetData[threadCount];
-    std::string streamName[threadCount];
-
-    for (int i = 0; i < threadCount; ++i) {
-        streamName[i] = "OCR" + std::to_string(i);
-        threadGetData[i] = std::thread(GetCallback, std::ref(mxStreamManager), streamName[i], pictureName.size());
-        threadSendData[i] = std::thread(SendCallback, std::ref(mxStreamManager), streamName[i], std::ref(pictureName));
-    }
-
-    for (int j = 0; j < threadCount; ++j) {
-        threadSendData[j].join();
-        threadGetData[j].join();
-    }
+    std::string streamName = "OCR";
+    GetCallback(mxStreamManager, streamName, pictureName.size());
+    SendCallback(mxStreamManager, streamName, pictureName);
 
     ret = mxStreamManager.DestroyAllStreams();
     if (ret != APP_ERR_OK) {
@@ -160,10 +148,10 @@ int main(int argc, char *argv[])
     struct timeval inferEndTime = { 0 };
     gettimeofday(&inferStartTime, nullptr);
     // read pipeline config file
-    std::string pipelineConfigPath = "../data/OCR_multi3.pipeline";
+    std::string pipelineConfigPath = "../data/OCR.pipeline";
 
     APP_ERROR ret = APP_ERR_OK;
-    ret = TestMultiThread(pipelineConfigPath);
+    ret = TestMain(pipelineConfigPath);
     if (ret == APP_ERR_OK) {
         gettimeofday(&inferEndTime, nullptr);
         double inferCostTime = SEC2MS * (inferEndTime.tv_sec - inferStartTime.tv_sec) +

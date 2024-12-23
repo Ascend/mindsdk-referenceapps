@@ -1,8 +1,7 @@
 #!/bin/bash
-# 定义要检查的目录名
-dir_name="build"
 
 # 检查目录是否存在
+dir_name="build"
 if [ -d "$dir_name" ]; then
   # 删除目录及其内容
   rm -rf "$dir_name"

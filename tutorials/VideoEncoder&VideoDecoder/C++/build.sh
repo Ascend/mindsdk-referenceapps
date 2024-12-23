@@ -11,3 +11,5 @@ cd build
 # 执行编译
 cmake ..
 make
+
+echo “finish buulding”

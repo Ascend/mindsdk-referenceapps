@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # 检查目录是否存在
 dir_name="build"
 if [ -d "$dir_name" ]; then

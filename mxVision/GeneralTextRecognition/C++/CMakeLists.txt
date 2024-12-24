@@ -40,5 +40,5 @@ link_directories(
         ${MX_SDK_HOME}/opensource/lib64/
 )
 
-add_executable(${TARGET_NAME} mainMultiThread.cpp)
+add_executable(${TARGET_NAME} main.cpp)
 target_link_libraries(${TARGET_NAME} glog mxbase plugintoolkit mxpidatatype streammanager mindxsdk_protobuf)

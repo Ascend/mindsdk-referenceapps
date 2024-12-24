@@ -1,7 +1,7 @@
 # Index SDK-test
 
 #### 介绍
-**本仓库提供了昇腾Mind Index SDK 组件实现的几种常见检索算法的demo**
+**本仓库提供了昇腾Index SDK 组件实现的几种常见检索算法的demo**
 
 #### 版本配套表
 | Mind SDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
@@ -20,7 +20,7 @@ mxIndex-faiss1.7.1分支对应版本Index SDK 5.0.0、Index SDK 5.0.1，依赖fa
 
 #### 安装教程
 
-1.  Mind Index SDK [安装文档](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc1/featureretrieval/mxindexfrug/mxindexfrug_0001.html)
+1.  Index SDK [安装文档](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc1/featureretrieval/mxindexfrug/mxindexfrug_0001.html)
 2. gtest安装教程
 ``` shell
 wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \

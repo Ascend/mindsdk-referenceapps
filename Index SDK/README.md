@@ -1,26 +1,26 @@
-# mxIndex-test
+# Index SDK-test
 
 #### 介绍
-**本仓库提供了昇腾MindX SDK index组件实现的几种常见检索算法的demo**
+**本仓库提供了昇腾Mind Index SDK 组件实现的几种常见检索算法的demo**
 
 #### 版本配套表
-| MindX SDK版本  | mxIndex版本  | CANN版本  | HDK版本 | 硬件形态  |
+| Mind SDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
 | -------------- | ------------ | -------- | -------- | --------- |
 | master | 6.0.RC3 | 8.0.RC3  | 24.1.RC2 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
 
 之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/mxIndex_samples
 
-master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为1.7.4
+master分支对应版本Index SDK 6.0.RC2、Index SDK 6.0.RC1，依赖faiss版本为1.7.4
 
-mxIndex-faiss1.7.1分支对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
+mxIndex-faiss1.7.1分支对应版本Index SDK 5.0.0、Index SDK 5.0.1，依赖faiss版本为1.7.1
 
-#### 关于MindX SDK 更多信息
-请关注昇腾社区[MindX SDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
+#### 关于Mind SDK 更多信息
+请关注昇腾社区[Mind SDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
 
 
 #### 安装教程
 
-1.  MindX SDK index [安装文档](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc1/featureretrieval/mxindexfrug/mxindexfrug_0001.html)
+1.  Mind Index SDK [安装文档](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc1/featureretrieval/mxindexfrug/mxindexfrug_0001.html)
 2. gtest安装教程
 ``` shell
 wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \
@@ -61,13 +61,13 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 
 #### Demo使用说明
 
-1.  请先正确安装MindSDK Index组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss
+1.  请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss
 
 2.  修改dependencies.cmake 中的 MXINDEX_HOME
 ```
 SET(MXINDEX_HOME /home/work/FeatureRetrieval/mxIndex/    CACHE STRING "")
 ```
-本例中mxIndex默认安装路径为 /home/work/FeatureRetrieval/mxIndex/，可将其修改为mxIndex实际安装路径。
+本例中Index SDK默认安装路径为 /home/work/FeatureRetrieval/mxIndex/，可将其修改为Index SDK实际安装路径。
 
 3.  执行一下命令编译demo
 ``` shell

@@ -15,7 +15,7 @@
 | [docs](./docs) | mxVision文档目录            |
 | [mxVision](./mxVision) | mxVision官方应用样例目录        |
 | [tutorials](./tutorials) | mxVision官方开发样例和文档参考工程目录 | 
-| [Index SDK](./mxIndex)        | Index SDK参考样例目录             |
+| [Index SDK](./Index SDK)        | Index SDK参考样例目录             |
 
 ## 相关网站
 

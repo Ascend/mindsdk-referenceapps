@@ -128,6 +128,10 @@ DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等
 ```bash
 chmod 640 libclipper.so libDBPostProcess.so
 ```
+执行命令，添加环境变量，其中<Project_Root>需替换为实际项目路径：
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<Project_Root>/lib
+```
 
 **步骤4：** 准备字典数据。
 

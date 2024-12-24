@@ -10,9 +10,9 @@
 
 之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/IndexSDK_samples
 
-master分支对应版本Index SDK 6.0.RC2、Index SDK 6.0.RC1，依赖faiss版本为1.7.4
+master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为1.7.4
 
-mxIndex-faiss1.7.1分支对应版本Index SDK 5.0.0、Index SDK 5.0.1，依赖faiss版本为1.7.1
+mxIndex-faiss1.7.1分支对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
 
 #### 关于MindSDK 更多信息
 请关注昇腾社区[MindSDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本

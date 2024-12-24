@@ -82,7 +82,7 @@ source /usr/local/Ascend/ascend-toolkit/set_env.sh
 export LD_LIBRARY_PATH=${MXINDEX_INSTALL_PATH}/host/lib:$LD_LIBRARY_PATH
 ``` 
 
-MXINDEX_INSTALL_PATH为mxIndex实际安装路径，本例中为/home/work/FeatureRetrieval/mxIndex/
+MXINDEX_INSTALL_PATH为Index SDK实际安装路径，本例中为/home/work/FeatureRetrieval/mxIndex/
 
 生成算子：
 

@@ -12,7 +12,7 @@ Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
 
-| MxVision版本 | CANN版本  | Driver/Firmware版本 |
+| VisionSDK版本 | CANN版本  | Driver/Firmware版本 |
 |------------|---------|-------------------|
 | 6.0.RC2    | 8.0.RC2 | 24.1.RC2          |
 | 6.0.RC3    | 8.0.RC3 | 24.1.RC3          |

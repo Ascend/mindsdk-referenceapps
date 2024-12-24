@@ -14,7 +14,7 @@
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
@@ -23,7 +23,7 @@
 
 
 ### 1.4 三方依赖
-本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需依赖以下组件：
+本项目除了依赖昇腾Driver、Firmware、CANN和VisionSDK及其要求的配套软件外，还需依赖以下组件：
 
 | 软件名称 | 版本   |
 | :--------: | :------: |

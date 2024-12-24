@@ -1,7 +1,7 @@
 
 
 
-# MxVision快速入门——开发opencv的均一化插件
+# VisionSDK快速入门——开发opencv的均一化插件
 
 ## 1 介绍
 
@@ -15,7 +15,7 @@ opencv的均一化插件开发样例基于c++代码，生成SDK插件，以用�
 
 ### 1.3 支持的版本
 
-| MxVision版本 | CANN版本  | Driver/Firmware版本 |
+| VisionSDK版本 | CANN版本  | Driver/Firmware版本 |
 |------------|---------|-------------------|
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

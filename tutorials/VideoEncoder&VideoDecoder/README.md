@@ -1,9 +1,9 @@
-# MxVision快速入门——mxBaseV2视频编解码接口使用
+# VisionSDK快速入门——mxBaseV2视频编解码接口使用
 
 ## 1 介绍
 
 ### 1.1 简介
-本样例属于mxVision快速入门样例，用于向用户介绍mxBaseV2系列视频编解码接口的基本使用。本系统以昇腾Atlas 300V，Atlas 300I pro和 Atlas300V pro为主要的硬件平台。
+本样例属于VisionSDK快速入门样例，用于向用户介绍mxBaseV2系列视频编解码接口的基本使用。本系统以昇腾Atlas 300V，Atlas 300I pro和 Atlas300V pro为主要的硬件平台。
 
 本样例以本地视频拉流、解码、编码、编码结果保存为例子，着重介绍解码接口VideoDecoder和编码接口VideoEncoder的实例化和功能接口（Decode接口、Encode接口）使用。
 
@@ -14,13 +14,13 @@
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
 ### 1.4 三方依赖
 
-本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需额外依赖以下软件：
+本项目除了依赖昇腾Driver、Firmware、CANN和VisionSDK及其要求的配套软件外，还需额外依赖以下软件：
 
 | 软件名称   | 版本   |
 |--------| ------ |

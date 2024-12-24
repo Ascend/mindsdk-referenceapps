@@ -77,9 +77,9 @@
 
 ## 4 配置
 
-**步骤1：** 参考安装教程《mxVision 用户指南》安装 mxVision SDK。
+**步骤1：** 参考安装教程《VisionSDK 用户指南》安装 VisionSDK。
 
-**步骤2：** 配置 mxVision SDK 环境变量。
+**步骤2：** 配置 VisionSDK 环境变量。
 
 ```
 vi ~/.bashrc

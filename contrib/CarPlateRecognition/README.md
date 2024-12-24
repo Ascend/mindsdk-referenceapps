@@ -16,9 +16,9 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 ### 1.4 三方依赖
@@ -29,7 +29,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | OpenCV              | 4.7.0                                                        | 用于结果可视化                                     |
 | FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
-**注**：OpenCV已在MxVision软件包中包含。
+**注**：OpenCV已在VisionSDK软件包中包含。
 
 FreeType编译安装流程如下：
 

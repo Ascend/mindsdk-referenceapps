@@ -1,4 +1,4 @@
-# MxVision快速入门——ImageProcessor类基本使用教程
+# VisionSDK快速入门——ImageProcessor类基本使用教程
 
 ## 1 介绍
 
@@ -9,7 +9,7 @@ ImageProcessor类，作为图像处理类，主要开放图像编解码、缩放
 本教程支持昇腾Atlas 300I Pro、Atlas 300V Pro。
 
 ### 1.3 支持的版本
-| MxVision版本 | CANN版本 | Driver/Firmware版本 |
+| VisionSDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
 

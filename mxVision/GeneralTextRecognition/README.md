@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-通用文字识别样例基于mxVision SDK进行开发，主要支持识别文本小图上的中英文字样。
+通用文字识别样例基于VisionSDK进行开发，主要支持识别文本小图上的中英文字样。
 
 ### 1.2 支持的产品
 
@@ -12,9 +12,9 @@
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

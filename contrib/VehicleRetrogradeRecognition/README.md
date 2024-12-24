@@ -36,8 +36,8 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于VisionSDK开�
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -193,7 +193,7 @@ bash build.sh
 
 命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
 
-**步骤6**进入mxVision安装目录的`operators/opencvosd`目录下执行命令：
+**步骤6**进入VisionSDK安装目录的`operators/opencvosd`目录下执行命令：
 ```
 bash generate_osd_om.sh
 ```

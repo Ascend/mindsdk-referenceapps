@@ -27,7 +27,7 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

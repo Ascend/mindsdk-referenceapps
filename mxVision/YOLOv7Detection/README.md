@@ -147,7 +147,7 @@ atc --framework=5 --model=${onnx_model} --output={output_name} --input_format=NC
 
 **步骤1**   
 编译后处理插件so：  
-后处理插件编译步骤参考《mxVision用户指南》中 深入开发->推理模型后处理开发介绍->新框架模型后处理->编译，其中"samplepostprocess"和"SamplePostProcess.cpp"分别代表生成的后处理动态库名和生成后处理的目标文件，对应到yolov7则yolov7postprocess和Yolov7PostProcess.cpp，
+后处理插件编译步骤参考《VisionSDK用户指南》中 深入开发->推理模型后处理开发介绍->新框架模型后处理->编译，其中"samplepostprocess"和"SamplePostProcess.cpp"分别代表生成的后处理动态库名和生成后处理的目标文件，对应到yolov7则yolov7postprocess和Yolov7PostProcess.cpp，
 
 注意：  
 修改CMakeLists.txt中 ```set(PLUGIN_NAME "samplepostprocess")``` 一行中插件名称，为 ```set(PLUGIN_NAME "yolov7postprocess")```    
@@ -168,4 +168,4 @@ bash run.sh -m model_path -c model_config_path -l model_label_path -i image_path
 ```     
 ### 4.2 pipeline推理业务流程
 
-请参考《mxVision用户指南》中 使用命令行开发->样例介绍->C++运行步骤 章节，使用senddata和getresult方式进行推理，请配置样例中pipeline路径为当前项目下pipeline/Sample.pipeline文件，并对该pipeline文件中的模型及其配置文件路径进行合理配置。
+请参考《VisionSDK用户指南》中 使用命令行开发->样例介绍->C++运行步骤 章节，使用senddata和getresult方式进行推理，请配置样例中pipeline路径为当前项目下pipeline/Sample.pipeline文件，并对该pipeline文件中的模型及其配置文件路径进行合理配置。

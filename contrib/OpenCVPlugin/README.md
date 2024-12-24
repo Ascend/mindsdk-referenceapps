@@ -105,10 +105,10 @@ OpenCVPlugin 插件流程图。
 | 软件名称 | 版本  |
 | -------- | ----- |
 | cmake    | 3.5+  |
-| mxVision | 2.0.4 |
+| VisionSDK | 2.0.4 |
 | python   | 3.9.2 |
 
-确保环境中正确安装mxVision SDK。
+确保环境中正确安装VisionSDK。
 
 在编译运行项目前，需要设置环境变量：
 

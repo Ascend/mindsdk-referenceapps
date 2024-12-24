@@ -14,9 +14,9 @@
 本项目支持昇腾Atlas 500 A2。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- |---------| -------------- |
 | 5.0.0   |7.0.0 |  23.0.0  |
 | 6.0.RC3   | 8.0.RC3 |  24.1.RC3  |

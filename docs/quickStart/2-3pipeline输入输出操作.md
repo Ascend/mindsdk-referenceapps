@@ -1,5 +1,4 @@
 # 2.3 pipeline输入输出操作
-**本章节中mxManufacture和mxVision可互相替换**
 
 ## 2.3.1 业务流程对接接口介绍
 ### 2.3.1.1 SendData-GetResult 数据流图

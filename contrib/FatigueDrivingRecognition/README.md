@@ -3,7 +3,7 @@
 ## 1 介绍
 
 ### 1.1 简介
-本开发样例演示驾驶人员疲劳状态识别系统（Fatigue driving recognition），供用户参考。本系统基于mxVision SDK进行开发，实现在驾驶环境下驾驶人员疲劳状态识别与预警。项目的整体流程如下：
+本开发样例演示驾驶人员疲劳状态识别系统（Fatigue driving recognition），供用户参考。本系统基于VisionSDK进行开发，实现在驾驶环境下驾驶人员疲劳状态识别与预警。项目的整体流程如下：
 1. 利用目标检测模型采集视频中的目标图像
 2. 利用PFLD模型进行目标关键点检测，获取眼部位置信息
 3. 通过计算度量疲劳/瞌睡的物理量识别驾驶人员的疲劳状态
@@ -12,8 +12,8 @@
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

@@ -2,7 +2,7 @@
 
 ![image.png](img/1623748262037.png 'image.png')
 
-## mxManufacture & mxVision特性介绍
+## VisionSDK特性介绍
 
 关键特性：
 - 配置文件快速构建AI推理业务。
@@ -17,7 +17,7 @@
 典型推理业务流程如图中人体特征识别所示，先通过目标检测获取目标坐标，然后通过图像分类识别人体属性。流程中有两次图像缩放的操作，两者主要区别在于设置的缩放宽高参数不同。
 ![image.png](img/1623748862495.png 'image.png')
 
-## mxManufacture & mxVision基本概念
+## VisionSDK基本概念
 通过Stream配置文件，Stream manager可识别需要构建的Element，以及它们之间的连接关系，并启动业务流程。Stream manager对外提供接口，用于向Stream发送数据和获取结果，令用户实现业务对接。
 Element表示业务流程中的基础模块，通过Element的串接构建Stream。Buffer用于内部挂载解码后的视频/图像数据，是Element之间传递的数据结构，同时也可挂载元数据（Metadata），用于存放结构化数据（如目标检测结果）或过程数据（如缩放后的图像）。
 

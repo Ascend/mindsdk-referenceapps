@@ -1,4 +1,4 @@
-# 基于MxVision的AdaBins单目深度估计
+# 基于VisionSDK的AdaBins单目深度估计
 
 ## 1 介绍
 
@@ -9,8 +9,8 @@
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

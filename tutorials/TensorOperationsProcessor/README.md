@@ -1,4 +1,4 @@
-# MxVision快速入门——TensorOperations接口基本使用教程
+# VisionSDK快速入门——TensorOperations接口基本使用教程
 
 ## 1 介绍
 
@@ -48,7 +48,7 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 本教程支持昇腾Atlas 300I Pro、Atlas 300V Pro。
 
 ### 1.3 支持的版本
-| MxVision版本 | CANN版本 | Driver/Firmware版本 |
+| VisionSDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
 

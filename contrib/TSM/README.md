@@ -17,8 +17,8 @@
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -54,7 +54,7 @@
 
 ## 2、 设置环境变量
 
-**步骤1**：设置CANN和mxVision相关环境变量
+**步骤1**：设置CANN和VisionSDK相关环境变量
 
 ```bash
 . /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改

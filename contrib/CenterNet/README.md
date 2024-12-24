@@ -11,13 +11,13 @@ CenterNet 目标检测后处理插件基于 VisionSDK 开发，对图片中的�
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
 ### 1.4 三方依赖
 
-本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需额外依赖以下软件：
+本项目除了依赖昇腾Driver、Firmware、CANN和VisionSDK及其要求的配套软件外，还需额外依赖以下软件：
 
 | 软件名称   | 版本       |
 |--------|----------|

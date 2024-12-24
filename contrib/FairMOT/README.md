@@ -34,9 +34,9 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 
@@ -111,7 +111,7 @@ ATC run success, welcome to the next use.
 
 ### 3.2 osd相关的模型转换
 
-请执行mxVision软件包安装目录下operators/opencvosd/generate_osd_om.sh脚本生成所需模型文件。执行后终端输出为：
+请执行VisionSDK软件包安装目录下operators/opencvosd/generate_osd_om.sh脚本生成所需模型文件。执行后终端输出为：
 
 ```
 ATC start working now, please wait for a moment.

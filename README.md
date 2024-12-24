@@ -1,7 +1,7 @@
 EN|[CN](README.zh.md)
-# Mind SDK Reference Apps
+# MindSDK Reference Apps
 
-[Mind SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as mxVision (visual analysis), Index SDK(feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
+[MindSDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as mxVision (visual analysis), Index SDK(feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
 
 To help developers quickly master the use of mxVision and Index SDK interfaces and rapidly implement business functions, this code repository (mxSdkReferenceApps) provides various reference samples developed based on mxVision and Index SDK. Users can select the appropriate sample code according to their needs.
 ## Main Directory Structure and Description
@@ -15,7 +15,7 @@ To help developers quickly master the use of mxVision and Index SDK interfaces a
 
 
 ## Related Websites
-The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest Mind SDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
+The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest MindSDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
 
 Ascend Community Website: https://www.hiascend.com/
 

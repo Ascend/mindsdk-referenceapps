@@ -4,7 +4,7 @@
 **本仓库提供了昇腾Index SDK 组件实现的几种常见检索算法的demo**
 
 #### 版本配套表
-| Mind SDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
+| MindSDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
 | -------------- | ------------ | -------- | -------- | --------- |
 | master | 6.0.RC3 | 8.0.RC3  | 24.1.RC2 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
 
@@ -14,8 +14,8 @@ master分支对应版本Index SDK 6.0.RC2、Index SDK 6.0.RC1，依赖faiss版�
 
 mxIndex-faiss1.7.1分支对应版本Index SDK 5.0.0、Index SDK 5.0.1，依赖faiss版本为1.7.1
 
-#### 关于Mind SDK 更多信息
-请关注昇腾社区[Mind SDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
+#### 关于MindSDK 更多信息
+请关注昇腾社区[MindSDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
 
 
 #### 安装教程

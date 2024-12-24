@@ -8,7 +8,7 @@
 | -------------- | ------------ | -------- | -------- | --------- |
 | master | 6.0.RC3 | 8.0.RC3  | 24.1.RC2 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
 
-之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/mxIndex_samples
+之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/Index SDK samples
 
 master分支对应版本Index SDK 6.0.RC2、Index SDK 6.0.RC1，依赖faiss版本为1.7.4
 

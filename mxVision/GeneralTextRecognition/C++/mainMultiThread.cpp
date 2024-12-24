@@ -26,7 +26,7 @@ using namespace MxTools;
 using namespace MxStream;
 
 namespace {
-    const int TIME_OUT = 5000;
+    const int TIME_OUT = 20000;
     const float SEC2MS = 1000.0;
     const std::string PICTURE_PATH = "../input_data/";
 }

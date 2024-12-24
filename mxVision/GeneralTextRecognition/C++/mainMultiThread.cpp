@@ -18,7 +18,6 @@
 #include <dirent.h>
 #include <cstring>
 #include <unistd.h>
-#include <thread>
 #include <sys/time.h>
 #include "MxBase/Log/Log.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
@@ -132,8 +131,8 @@ APP_ERROR TestMain(const std::string& pipelinePath)
     }
 
     std::string streamName = "OCR";
-    GetCallback(mxStreamManager, streamName, pictureName.size());
     SendCallback(mxStreamManager, streamName, pictureName);
+    GetCallback(mxStreamManager, streamName, pictureName.size());
 
     ret = mxStreamManager.DestroyAllStreams();
     if (ret != APP_ERR_OK) {

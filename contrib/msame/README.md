@@ -3,7 +3,7 @@
 ## 1 介绍
 
 ### 1.1 简介
-基于MindX SDK实现开发模型推理工具，本例为msame的python版本实现，适用于单输入或多输入的om模型推理。[msame-C++工具链接](https://gitee.com/ascend/tools/tree/master/msame)
+基于VisionSDK实现开发模型推理工具，本例为msame的python版本实现，适用于单输入或多输入的om模型推理。[msame-C++工具链接](https://gitee.com/ascend/tools/tree/master/msame)
 
 技术实现流程图如下：
 

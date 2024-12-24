@@ -3,7 +3,7 @@
 ## 1 介绍
 
 ### 1.1 简介
-人体关键点检测是指在输入图像上对指定的 18 类人体骨骼关键点位置进行检测，然后将关键点正确配对组成相应的人体骨架，展示人体姿态。本项目基于MindX SDK，在昇腾平台上，实现了对RTSP视频流进行人体关键点检测并连接成人体骨架，最后将检测结果可视化并保存。
+人体关键点检测是指在输入图像上对指定的 18 类人体骨骼关键点位置进行检测，然后将关键点正确配对组成相应的人体骨架，展示人体姿态。本项目基于VisionSDK，在昇腾平台上，实现了对RTSP视频流进行人体关键点检测并连接成人体骨架，最后将检测结果可视化并保存。
 本系统技术流程图如下所示：
 
 ![pipeline](image/pipeline.png)
@@ -13,14 +13,14 @@
 
 | 序号 | 子系统     | 功能描述                                                     |
 | :--- | :--------- | :----------------------------------------------------------- |
-| 1    | 视频拉流   | 调用MindX SDK的 **mxpi_rtspsrc**接收外部调用接口的输入视频路径，对视频进行拉流 |
-| 2    | 视频解码   | 调用MindX SDK的**mxpi_videodecoder**                         |
+| 1    | 视频拉流   | 调用VisionSDK的 **mxpi_rtspsrc**接收外部调用接口的输入视频路径，对视频进行拉流 |
+| 2    | 视频解码   | 调用VisionSDK的**mxpi_videodecoder**                         |
 | 3    | 图像缩放   | 调用**mxpi_imageresize**对解码后的YUV格式的图像进行指定宽高的缩放 |
 | 4    | 检测推理   | 使用已经训练好的OpenPose模型，检测出图像中的车辆信息。插件：**mxpi_tensorinfer** |
 | 5    | 模型后处理 | 使用自己编译的**mxpi_rtmopenposepostprocess**插件的后处理库libmxpi_rtmopenposepostprocess.so，进行人体关键点检测的后处理 |
 | 6    | 绘图       | 调用OSD基础功能在YUV图片上绘制直线。插件：**mxpi_opencvosd** |
-| 7    | 视频编码   | 调用MindX SDK的**mxpi_videoencoder**进行视频编码             |
-| 8    | 输出       | 调用MindX SDK的**appsink**进行业务流结果的输出               |
+| 7    | 视频编码   | 调用VisionSDK的**mxpi_videoencoder**进行视频编码             |
+| 8    | 输出       | 调用VisionSDK的**appsink**进行业务流结果的输出               |
 
 
 

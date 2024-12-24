@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-  本开发样例基于MindX SDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
+  本开发样例基于VisionSDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
   ASR主要分为两个步骤：<br/>
 
   **步骤1**  将语音转换成对应的拼音 <br/>

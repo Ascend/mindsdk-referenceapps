@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例基于MindX SDK实现了端到端的行人重识别（Person Re-identification, ReID），支持检索给定照片中的行人ID。
+本开发样例基于VisionSDK实现了端到端的行人重识别（Person Re-identification, ReID），支持检索给定照片中的行人ID。
 
 其主要流程为：    
 1. 程序入口分别接收查询图片和行人底库所在的文件路径。    

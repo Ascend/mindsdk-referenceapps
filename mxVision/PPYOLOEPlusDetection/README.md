@@ -7,7 +7,7 @@
 
 
 
-PPYOLOE+ 目标检测后处理插件基于 MindX SDK 开发，对图片中的不同类目标进行检测。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案基于 paddlepaddle 版本原始 ppyoloe_plus_crn_l_80e_coco_w_nms 模型所剪枝并转换的 om 模型进行目标检测，默认模型包含 80 个目标类。
+PPYOLOE+ 目标检测后处理插件基于 VisionSDK 开发，对图片中的不同类目标进行检测。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案基于 paddlepaddle 版本原始 ppyoloe_plus_crn_l_80e_coco_w_nms 模型所剪枝并转换的 om 模型进行目标检测，默认模型包含 80 个目标类。
 
 paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR->拉伸缩放->转换为RGB，main.cpp中通过在310P场景下通过dvpp对应方法进行了相应的处理。
 
@@ -204,7 +204,7 @@ make install
 
 将一张图片放项目根路径`PPYOLOEPlusDetection`下，命名为 `test.jpg`。
 
-**步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindxsdk-referenceapps安装路径：
+**步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindsdk-referenceapps安装路径：
 ```bash
 14  ${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
 ```

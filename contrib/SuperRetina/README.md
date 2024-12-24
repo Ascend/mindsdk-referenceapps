@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-基于深度学习的图像配准基于 MindXSDK 开发，在晟腾芯片上进行图像配准。输入两幅图片，可以匹配两幅图像中的特征点。
+基于深度学习的图像配准基于 VisionSDK 开发，在晟腾芯片上进行图像配准。输入两幅图片，可以匹配两幅图像中的特征点。
 图像配准的业务流程为：将输入的两幅图片进行归一化等预处理操作后，输入到模型中进行推理，对输出的关键点，进行极大值抑制去除相近的关键点，再进一步去除靠近边界的关键点，最后利用knn聚类算法得到可能性最大的关键点。本系统的各模块及功能描述如下：
 
 | 序号 | 子系统   | 功能描述                   |
@@ -63,7 +63,7 @@ export install_path=${install_path}
 ```
 
 注：
-**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
+**${MX_SDK_HOME}** 替换为用户自己的VisionSDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
 
 **${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 

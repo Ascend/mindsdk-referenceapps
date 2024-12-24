@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例是基于MindX SDK开发的端到端推理的C++应用程序，可进行人群计数目标检测，并把可视化结果保存到本地。
+本开发样例是基于VisionSDK开发的端到端推理的C++应用程序，可进行人群计数目标检测，并把可视化结果保存到本地。
 该Sample的主要处理流程为： Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
 技术实现流程图：

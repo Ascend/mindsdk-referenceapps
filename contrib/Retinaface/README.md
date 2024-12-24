@@ -2,7 +2,7 @@
 
 ## 1介绍
 
-Retinaface基于MindX_SDK开发，在昇腾芯片上进行目标检测，并实现可视化呈现。输入单张图片，对其进行推理，输出推理结果。
+Retinaface基于VisionSDK开发，在昇腾芯片上进行目标检测，并实现可视化呈现。输入单张图片，对其进行推理，输出推理结果。
 
 ### 1.1 支持的产品
 
@@ -77,7 +77,7 @@ Retinaface基于MindX_SDK开发，在昇腾芯片上进行目标检测，并实�
 
 | 软件名称            | 版本  | 说明                          | 获取方式                                                  |
 | ------------------- | ----- | ----------------------------- | :-------------------------------------------------------- |
-| MindX SDK           | 2.0.4 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
+| VisionSDK           | 2.0.4 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
 | ubuntu              | 18.04 | 操作系统                      | 请上ubuntu官网获取                                        |
 | Ascend-CANN-toolkit | 5.0.4 | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial) |
 

@@ -1,6 +1,6 @@
 
 
-# MindXSDK 行人重识别v2
+# VisionSDK 行人重识别v2
 
 ## 1 介绍
 ### 1.1 简介

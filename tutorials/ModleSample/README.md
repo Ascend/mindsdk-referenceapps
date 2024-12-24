@@ -69,7 +69,7 @@ infer(tensorList: List) # 通过输入Tensor列表进行模型推理
 
 **步骤1**：模型文件下载
 
-本项目意在为开发者介绍使用mxVision软件包中Model相关的C++、python接口使用样例。使用的模型为[RGB图像的夜间增强参考设计](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/IAT)中用到的模型。
+本项目意在为开发者介绍使用VisionSDK软件包中Model相关的C++、python接口使用样例。使用的模型为[RGB图像的夜间增强参考设计](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/IAT)中用到的模型。
 原始pth模型源码[地址](https://github.com/cuiziteng/illumination-adaptive-transformer)
 本文提供已从pth模型转换好的onnx模型直接使用：[IAT_lol-sim.onnx](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/IAT/IAT_lol-sim.onnx)
 下载后放到项目根目录的model文件夹下。

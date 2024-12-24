@@ -1,4 +1,4 @@
-# MindX SDK总体结构
+# VisionSDK总体结构
 
 ![image.png](img/1623748262037.png 'image.png')
 

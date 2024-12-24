@@ -4,8 +4,8 @@
 
 随着各种AI应用加速“嵌入”到各行各业，AI算力已经成为现代文明的重要基础设施，并成为“新基建”的重要方向。但任何有望变革人类社会的新技术都必然会带来广泛的关注，只有确保AI是安全的、可信的，人们才能信任它的决策建议，AI才能得到更广泛的应用。
 2021年，随着欧盟《人工智能法规（AI Regulation）》草案的发布，揭开了世界各国对AI可信监管的序幕。在《人工智能法案》中，对高风险AI系统明确提出了数据治理，责任追溯，准确性、健壮性和网络完全方面的要求。其中，在AI整个生命周期中实现日志记录与责任追溯，成为推动可信AI相关各方明确责任的重要抓手。但AI在训练、部署、运行过程中产生的日志数量巨大，并且往往涉及到不同的利益相关方，如何保障海量的训练、推理日志不被篡改而丧失责任追溯的能力，成果为了一个重要的技术挑战。
-为解决该问题，本开发样例基于Mindx SDK实现了面向AI监管要求的可信日志（完整性保护）。核心思想是允许将海量的日志原文存储于普通数据库，但在接收日志的过程中同步生成日志的完整性证据，而将日志的密码学（完整性）证据存储到高安数据库。具体而言，是基于用户行为产生的日志，采用区块链中的Merkle tree机制，生成其对应的密码学完整性证据，将日志原文和Merkle存储于低安全区数据库（如elasticsearch数据库）；而将作为完整性证据的Merkle树树根存储于高安全区数据库（如Gauss数据库）。平台管理员可通过比较低安全区的原始日志、验证路径，和高安全区的Merkle树树根，判断原始日志是否被篡改。本样例以昇腾Atlas310卡为主要的硬件平台，主要支持以下功能：
-1）MindX日志管理与处理：管理MindX日志文件，发送给可信审计服务端
+为解决该问题，本开发样例基于VisionSDK实现了面向AI监管要求的可信日志（完整性保护）。核心思想是允许将海量的日志原文存储于普通数据库，但在接收日志的过程中同步生成日志的完整性证据，而将日志的密码学（完整性）证据存储到高安数据库。具体而言，是基于用户行为产生的日志，采用区块链中的Merkle tree机制，生成其对应的密码学完整性证据，将日志原文和Merkle存储于低安全区数据库（如elasticsearch数据库）；而将作为完整性证据的Merkle树树根存储于高安全区数据库（如Gauss数据库）。平台管理员可通过比较低安全区的原始日志、验证路径，和高安全区的Merkle树树根，判断原始日志是否被篡改。本样例以昇腾Atlas310卡为主要的硬件平台，主要支持以下功能：
+1）VisionSDK日志管理与处理：管理VisionSDK日志文件，发送给可信审计服务端
 2）其他日志源（如网关）处理：支持其他日志源日志发送给可信审计服务端
 3）日志可信存储与审计：可信审计服务端为日志构造Merkle树，分别存储原始日志、对应的完整性证据至低、高安全区数据库
 
@@ -22,7 +22,7 @@
 
 | 软件名称                     |   版本   |
 | --------------------------- | ---------|
-| MindX SDK                   | 3.0RC2    |
+| VisionSDK                   | 3.0RC2    |
 | docker                      | 20.10.12 |
 | Python                      | 3.7.2    |
 | python扩展包psutil          | 5.8.0    |
@@ -91,12 +91,12 @@ export GST_PULGIN_PATH="${MX_SDK_HOME}/opensource/lib/gstreamer-1.0:${MX_SDK_HOM
 source ~/.bashrc
 ```
 
-注：本例中mxVision SDK安装路径为 /work/MindX_SDK。环境变量介绍：
+注：本例中VisionSDK安装路径为 /work/MindX_SDK。环境变量介绍：
 - MX_SDK_HOME为SDK安装路径
 - LD_LIBRARY_PATH为lib库路径
 - PYTHONPATH为python环境路径
 
-***步骤3***:确保mindx的日志层级为Info
+***步骤3***:确保VisionSDK的日志层级为Info
 修改${MX_SDK_HOME}/config/logging.conf文件的global_level变量为0
 
 
@@ -128,7 +128,7 @@ bash build.sh
 （编译脚本会自动复制编译好的libmxpi_trustedauditplugin.so文件到${MX_SDK_HOME}/lib/plugins/路径）
 
 ### 5.3 插件配置
-用户可根据Mindx安装路径更改Mindx源日志输出路径，配置文件为：项目所在目录/trusted_audit/TrustedAudit.pipeline
+用户可根据VisionSDK安装路径更改VisionSDK源日志输出路径，配置文件为：项目所在目录/trusted_audit/TrustedAudit.pipeline
 ```
 "mxpi_trustedauditplugin":{
     "props":{
@@ -137,7 +137,7 @@ bash build.sh
     }
 }
 ```
-originalLogsPath字段表示mindx源日志文件所在位置，默认为/root/log/mindxsdk/logs
+originalLogsPath字段表示VisionSDK源日志文件所在位置，默认为/root/log/mindxsdk/logs
 
 同时修改，项目所在目录/trusted_audit/mindx/mindx_watcher_and_sender.py，全局变量FOLDER_NAME，默认为"/root/log/mindxsdk/logs"
 
@@ -149,7 +149,7 @@ originalLogsPath字段表示mindx源日志文件所在位置，默认为/root/lo
 cd 项目所在目录/trusted_audit/
 python main_trusted_audit.py
 ```
-（该程序会启动gauss数据库、elastic数据库、python环境所在的三个docker环境；启动python环境中的可信日志主服务；启动watcher管理mindx源日志文件夹；该文件的命令行输出类似下述内容后**暂停**，注意每条输出之间有若干秒延迟，等待各组件初始化完毕，最终输出Creates streams successfully）
+（该程序会启动gauss数据库、elastic数据库、python环境所在的三个docker环境；启动python环境中的可信日志主服务；启动watcher管理VisionSDK源日志文件夹；该文件的命令行输出类似下述内容后**暂停**，注意每条输出之间有若干秒延迟，等待各组件初始化完毕，最终输出Creates streams successfully）
 
 ```
 MxpiTrustedAuditPlugin::Init start.
@@ -282,7 +282,7 @@ python test_c.py 2021-12-17 15:09:17.364057 2021-12-17 15:09:41.364057 1 10
 ```
 Destroys the stream successfully.
 ```
-主程序停止插件时会自动关闭watcher管理mindx源日志的程序，并清空mindx源日志文件夹；可如下检查管理器关闭情况；执行
+主程序停止插件时会自动关闭watcher管理VisionSDK源日志的程序，并清空VisionSDK源日志文件夹；可如下检查管理器关闭情况；执行
 ```
 cat /tmp/kill_watcher.log
 ```

@@ -17,9 +17,9 @@
 
 项目的主要流程：
 （1）输入类型是图片数据（jpg图片序列）
-（2）通过调用MindX SDK提供的图像解码接口mxpi_imagedecoder，解码后获取图像数据。
-（3）然后进行图像尺寸大小变换，调用MindX SDK提供的图像尺寸大小变换接口mxpi_imageresize插件，输入图像大小要求高256，宽256。
-（4）模型后处理，调用MindX SDK提供的模型推理插件mxpi_modelinfer。然后调用MindX SDK提供的appsink将结果取出。
+（2）通过调用VisionSDK提供的图像解码接口mxpi_imagedecoder，解码后获取图像数据。
+（3）然后进行图像尺寸大小变换，调用VisionSDK提供的图像尺寸大小变换接口mxpi_imageresize插件，输入图像大小要求高256，宽256。
+（4）模型后处理，调用VisionSDK提供的模型推理插件mxpi_modelinfer。然后调用VisionSDK提供的appsink将结果取出。
 （5）模型输出经过后处理后，得到图片数组并写入图片。
 场景限制：
 输入的图像应为卫星航拍图，在清晰度较好的情况下，能取得较好的推理效果。
@@ -121,8 +121,8 @@ PyYAML == 5.4.1
 
 **步骤2** 设置环境变量
 
-运行MindXSDK与ascend-toolkit下的set_env.sh设置环境变量
-MindXSDK：${MX_SDK_HOME}/set_env.sh
+运行VisionSDK与ascend-toolkit下的set_env.sh设置环境变量
+VisionSDK：${MX_SDK_HOME}/set_env.sh
 
 ascend-toolkit：/usr/local/Ascend/ascend-toolkit/set_env.sh
 ```

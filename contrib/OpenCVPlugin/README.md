@@ -112,7 +112,7 @@ OpenCVPlugin 插件流程图。
 
 在编译运行项目前，需要设置环境变量：
 
-MindX SDK 环境变量:
+VisionSDK 环境变量:
 
 ```
 . ${SDK-path}/set_env.sh

@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例是基于MindX SDK基础模块（MxBase）开发的端到端推理的小麦检测程序，实现对图像中的小麦进行识别检测的功能，并把可视化结果保存到本地。其中包含yolov5的后处理模块开发。
+本开发样例是基于VisionSDK基础模块（MxBase）开发的端到端推理的小麦检测程序，实现对图像中的小麦进行识别检测的功能，并把可视化结果保存到本地。其中包含yolov5的后处理模块开发。
 该Sample的主要处理流程为：
 Init > ReadImage >Resize > Inference >PostProcess >DeInit <br/>
 参考设计来源：https://github.com/Yunyung/Global-Wheat-Detection-Competition <br/>

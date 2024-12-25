@@ -85,7 +85,7 @@
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置VisionSDK环境变量，SDK-path为VisionSDK 安装路径
 . ${SDK-path}/set_env.sh
 
 #设置FFMPEG环境变量，FFMPEG_HOME为ffmpeg安装的路径

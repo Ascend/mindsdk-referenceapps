@@ -65,7 +65,7 @@ MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格
 ## 2 设置环境变量
 
 ```
-# MindX SDK环境变量:
+# VisionSDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:
@@ -75,7 +75,7 @@ MediaCodecV2是基于v2接口的视频转码，适用于.h264格式或者.264格
 export LD_LIBRARY_PATH=${FFmpeg安装路径}/lib:$LD_LIBRARY_PATH
 
 # 环境变量介绍
-SDK-path:SDK mxVision安装路径
+SDK-path:VisionSDK安装路径
 ascend-toolkit-path:CANN安装路径
 
 # 查看环境变量

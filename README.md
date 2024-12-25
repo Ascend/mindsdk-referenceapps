@@ -1,17 +1,16 @@
 EN|[CN](README.zh.md)
 # Mind SDK Reference Apps
 
-[Mind SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as VisionSDK (visual analysis), mxRAG (knowledge enhancement), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
+[Mind SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as VisionSDK (visual analysis), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
 
-To help developers quickly master the use of VisionSDK, mxRAG and mxIndex interfaces and rapidly implement business functions, this code repository (mxSdkReferenceApps) provides various reference samples developed based on mxVision, mxRAG and mxIndex. Users can select the appropriate sample code according to their needs.
+To help developers quickly master the use of VisionSDK and mxIndex interfaces and rapidly implement business functions, this code repository provides various reference samples developed based on VisionSDK and mxIndex. Users can select the appropriate sample code according to their needs.
 ## Main Directory Structure and Description
 | 目录 | 说明                                            |
 |---|-----------------------------------------------|
 | [contrib](./contrib) | VisionSDK user-contributed sample directory    |
 | [docs](./docs) | VisionSDK documentation directory              |
 | [mxVision](./mxVision) | VisionSDK official sample directory |
-| [tutorials](./tutorials) | VisionSDK official tutorials directory         | 
-| [mxRAG](./mxRAG)        | mxRAG offical sample directory                |
+| [tutorials](./tutorials) | VisionSDK official tutorials directory         |
 | [mxIndex](./mxIndex)        | mxIndex offical sample directory                |
 
 

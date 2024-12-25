@@ -18,7 +18,7 @@ ImageProcessor类，作为图像处理类，主要开放图像编解码、缩放
 # 设置CANN环境变量
 . ${install_path}/set_env.sh
 
-# 设置MindX SDK 环境变量，sdk_path为mxVision SDK 安装路径
+# 设置VisionSDK环境变量，sdk_path为VisionSDK安装路径
 . ${sdk_path}/set_env.sh
 ```
 

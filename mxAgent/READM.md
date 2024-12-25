@@ -32,11 +32,13 @@ python samples/travel_agent_demo/travelagent.py --model_name xxx --base_url xxx 
 2）执行工具调用，得到工具执行结果
 3）将工具执行结果应用于下一次的模型思考
 4）循环上述过程，直到模型认为问题得到解决
+使用样例：
 ```
 cd mxAgent
 export PYTHONPATH=.
-python samples/basic_demo/agent_test.py --model_name xxx --base_url xxx  --api_key xxxx
+python samples/basic_demo/test_react_agent.py --model_name xxx --base_url xxx  --api_key xxxx
 ```
+样例执行过程的轨迹见目录`samples/basic_demo/trajs`下对应的文件
 ### 4.Single Action Agent
 
 通过模型反思、调用工具执行，总结工具结果的执行轨迹，完成一次复杂问题的处理。Single Action Agent使用一次工具调用帮助完成复杂问题解决
@@ -44,9 +46,19 @@ python samples/basic_demo/agent_test.py --model_name xxx --base_url xxx  --api_k
 ```
 cd mxAgent
 export PYTHONPATH=.
-python samples/basic_demo/traj_generate_test.py --model_name xxx --base_url xxx  --api_key xxxx
+python samples/basic_demo/test_single_action_agent.py --model_name xxx --base_url xxx  --api_key xxxx
 ```
+样例执行过程的轨迹见目录`samples/basic_demo/trajs`下对应的文件
 
+### 5. Tooless Agent
+
+未使用外部工具和知识库，通过prompt工程等技术指导大模型完成复杂问题规划，通过提供示例和指导等内容调优规划效果。
+使用示例：
+```
+cd mxAgent
+export PYTHONPATH=.
+python samples/basic_demo/test_toolless_agent.py --model_name xxx --base_url xxx  --api_key xxxx
+```
 ## 
 
 ## 二、接口使用方法

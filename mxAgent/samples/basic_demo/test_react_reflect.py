@@ -7,8 +7,7 @@ import os
 
 from loguru import logger
 
-from agent_sdk.agentchain.react_agent import ReactAgent, ReactReflectAgent
-from agent_sdk.agentchain.tool_less_agent import ToollessAgent
+from agent_sdk.agentchain.react_agent import ReactReflectAgent
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from samples.tools import QueryAccommodations, QueryAttractions, \
     QueryGoogleDistanceMatrix, QueryTransports, Finish
@@ -51,13 +50,6 @@ Day 4: Visit the Statue of Liberty and Ellis Island. Have lunch at The Boil and 
 Day 5: Spend the day shopping on Fifth Avenue and visiting the Rockefeller Center. Have lunch at Shake Shack and dinner at Katz's Delicatessen."}
 '''
 
-def test_toolless_agent():
-    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, API_BASE, API_KEY, LLM_NAME).run
-    agent = ToollessAgent(llm=llm, max_context_len=MAX_CONTEXT_LEN)
-    response = agent.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.", 
-                     text="given information")
-    logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
-
 
 def test_react_reflect_agent():
     llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, API_BASE, API_KEY, LLM_NAME).run
@@ -85,18 +77,6 @@ if __name__ == "__main__":
     API_BASE = args.pop("base_url")
     API_KEY = args.pop("api_key")
     LLM_NAME = args.pop("model_name")
-
     logger.info("react reflect agent test begin")
     test_react_reflect_agent()
     logger.info("react reflect agent test end")
-
-    logger.info("toolless agent test begin")
-    test_toolless_agent()
-    logger.info("toolless agent test end")
-
-
-
-
-
-
-

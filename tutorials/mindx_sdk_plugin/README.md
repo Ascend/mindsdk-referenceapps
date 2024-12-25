@@ -32,14 +32,14 @@ Atlas 300I pro、Atlas 300V pro
 ## 2 设置环境变量
 
 ```
-# MindX SDK环境变量:
+# VisionSDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:
 .${ascend-toolkit-path}/set_env.sh
 
 # 环境变量介绍
-SDK-path:SDK mxVision安装路径
+SDK-path:SDK VisionSDK安装路径
 ascend-toolkit-path:CANN安装路径
 ```
 将主目录下的`CMakeLists.txt`文件中第七行`set(MX_SDK_HOME "/usr/local/Ascend/mindx_sdk/mxVision/")`中`/usr/local/Ascend/mindx_sdk/mxVision/`内容替换为上述SDK安装路径。

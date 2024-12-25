@@ -3,7 +3,7 @@
 ## 介绍
 
 mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
-为了提升用户的易用性，VisionSDK提供了FFmepg-Plugin解决方案。
+为了提升用户的易用性，Vision SDK提供了FFmepg-Plugin解决方案。
 
 该样例的处理流程为：
 ```
@@ -14,9 +14,9 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 Atlas 300I Pro, Atlas 300V Pro和Atlas A500 A2
 
 ### 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |

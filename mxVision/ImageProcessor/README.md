@@ -1,4 +1,4 @@
-# VisionSDK快速入门——ImageProcessor类基本使用教程
+# Vision SDK快速入门——ImageProcessor类基本使用教程
 
 ## 1 介绍
 
@@ -9,7 +9,7 @@ ImageProcessor类，作为图像处理类，主要开放图像编解码、缩放
 本教程支持昇腾Atlas 300I Pro、Atlas 300V Pro。
 
 ### 1.3 支持的版本
-| VisionSDK版本 | CANN版本 | Driver/Firmware版本 |
+| Vision SDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
 
@@ -18,7 +18,7 @@ ImageProcessor类，作为图像处理类，主要开放图像编解码、缩放
 # 设置CANN环境变量
 . ${install_path}/set_env.sh
 
-# 设置VisionSDK环境变量，sdk_path为VisionSDK安装路径
+# 设置Vision SDK环境变量，sdk_path为Vision SDK安装路径
 . ${sdk_path}/set_env.sh
 ```
 

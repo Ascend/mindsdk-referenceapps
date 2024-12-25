@@ -2,11 +2,11 @@
 
 ## 1 介绍
 ### 1.1 简介
-VehicleRetrogradeRecognition交通逆行识别后处理插件基于VisionSDK开发，在晟腾芯片上进行目标检测和跟踪，可以对逆行车辆进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行逆行车辆识别，识别结果经过VehicleRetrogradeRecognition后处理后得到识别框，对识别框进行跟踪和车辆行驶方向判断，用编号覆盖原有的类别信息，再将逆行车辆的识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
+VehicleRetrogradeRecognition交通逆行识别后处理插件基于Vision SDK开发，在晟腾芯片上进行目标检测和跟踪，可以对逆行车辆进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行逆行车辆识别，识别结果经过VehicleRetrogradeRecognition后处理后得到识别框，对识别框进行跟踪和车辆行驶方向判断，用编号覆盖原有的类别信息，再将逆行车辆的识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
 软件方案介绍
 
-基于VisionSDK的VehicleRetrogradeRecognition车辆逆行识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，检测结果通过后处理插件objectpostprocessor处理，再通过mxpi_distributor插件筛选出汽车和卡车的检测结果，再接入跟踪插件mxpi_motsimplesortV2中识别框进行目标跟踪，得到目标的跟踪编号，本项目开发的MxpiTrackRetrogradeCar后处理插件识别出逆行的车辆目标，得到识别框，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
+基于Vision SDK的VehicleRetrogradeRecognition车辆逆行识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，检测结果通过后处理插件objectpostprocessor处理，再通过mxpi_distributor插件筛选出汽车和卡车的检测结果，再接入跟踪插件mxpi_motsimplesortV2中识别框进行目标跟踪，得到目标的跟踪编号，本项目开发的MxpiTrackRetrogradeCar后处理插件识别出逆行的车辆目标，得到识别框，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
 
 表1.1 系统方案各子系统功能描述：
 
@@ -36,8 +36,8 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于VisionSDK开�
 
 ### 1.3 支持的版本
 
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -193,7 +193,7 @@ bash build.sh
 
 命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
 
-**步骤6**进入VisionSDK安装目录的`operators/opencvosd`目录下执行命令：
+**步骤6**进入Vision SDK安装目录的`operators/opencvosd`目录下执行命令：
 ```
 bash generate_osd_om.sh
 ```

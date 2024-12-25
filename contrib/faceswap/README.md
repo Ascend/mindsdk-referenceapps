@@ -3,7 +3,7 @@
 ## 1、 介绍
 
 ### 1.1 简介
-faceswap应用基于VisionSDK开发，在昇腾芯片上进行目标检测，脸部关键点推理以及目标替换，将替换结果可视化并保存。  
+faceswap应用基于Vision SDK开发，在昇腾芯片上进行目标检测，脸部关键点推理以及目标替换，将替换结果可视化并保存。  
 
 ### 1.2 支持的产品
 
@@ -11,8 +11,8 @@ faceswap应用基于VisionSDK开发，在昇腾芯片上进行目标检测，脸
 
 ### 1.3 支持的版本
 
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

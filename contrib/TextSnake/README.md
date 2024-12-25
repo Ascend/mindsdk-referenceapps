@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-TextSnake 弯曲形状文字检测基于 VisionSDK 开发，对图片中的任意弯曲形状文字进行检测，将检测得到的不同类的目标用曲线框标记。本方案使用在人工合成数据集SynthText上训练一个epoch，然后在其他数据集上finetune得到的TextSnake_bs1模型检测，数据集中共包含各种各样的弯曲形状文字，可以对各种角度，各种环境下的弯曲形状文字进行检测。
+TextSnake 弯曲形状文字检测基于 Vision SDK 开发，对图片中的任意弯曲形状文字进行检测，将检测得到的不同类的目标用曲线框标记。本方案使用在人工合成数据集SynthText上训练一个epoch，然后在其他数据集上finetune得到的TextSnake_bs1模型检测，数据集中共包含各种各样的弯曲形状文字，可以对各种角度，各种环境下的弯曲形状文字进行检测。
 本项目流程为用python代码实现对图像的预处理过程，然后将处理好的图片通过 appsrc 插件输入到业务流程中。整体业务流程为：待检测图片通过 appsrc 插件输入，然后使用图像解码插件 mxpi_imagedecoder 对图片进行解码，解码后的图像输入模型推理插件 mxpi_tensorinfer 得到推理结果。最后通过输出插件 appsink 获取检测结果，并在外部进行后处理和可视化，将检测结果标记到原图上，本系统的各模块及功能描述下表所示：
 
 | 序号 | 子系统 | 功能描述     |
@@ -23,7 +23,7 @@ TextSnake 弯曲形状文字检测基于 VisionSDK 开发，对图片中的任�
 
 ### 1.3 支持的版本
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
@@ -63,7 +63,7 @@ export install_path=${install_path}
 . ${install_path}/set_env.sh
 . ${MX_SDK_HOME}/set_env.sh
 ```
-注：**${MX_SDK_HOME}** 替换为用户自己的VisionSDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
+注：**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
 **${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 

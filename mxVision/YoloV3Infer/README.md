@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例基于VisionSDK实现了基于C++ V2接口的yoloV3推理样例，主要支持以下功能：
+本开发样例基于Vision SDK实现了基于C++ V2接口的yoloV3推理样例，主要支持以下功能：
 
 1. 图片读取解码：本样例支持JPG格式图片，使用图像处理单元进行解码。
 2. 图片缩放/保存：使用图像处理单元相关接口进行图片的缩放，并输出一份缩放后的副本保存。
@@ -14,9 +14,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -47,7 +47,7 @@
 #设置CANN环境变量
 . ${install_path}/set_env.sh
 
-#设置VisionSDK环境变量，SDK-path为VisionSDK安装路径
+#设置Vision SDK环境变量，SDK-path为Vision SDK安装路径
 . ${SDK-path}/set_env.sh
 ```
 

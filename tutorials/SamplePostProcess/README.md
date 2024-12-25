@@ -10,9 +10,9 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0 | 7.0.0   |  23.0.0  |
 
@@ -24,8 +24,8 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ```bash
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
-. ${VisionSDK-path}/set_env.sh
-# VisionSDK-path: VisionSDK安装路径
+. ${Vision SDK-path}/set_env.sh
+# Vision SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 

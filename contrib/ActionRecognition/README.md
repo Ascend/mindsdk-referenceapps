@@ -3,7 +3,7 @@
 ## 1 介绍
 
 本开发样例演示动作识别系统 ActionRecgnition，供用户参考。
-本系统基于VisionSDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要应用于单人独处、逗留超时、快速移动、剧烈运动、离床检测、攀高检测六种应用场景。
+本系统基于Vision SDK进行开发，以昇腾Atlas300卡为主要的硬件平台，主要应用于单人独处、逗留超时、快速移动、剧烈运动、离床检测、攀高检测六种应用场景。
 
 1. 单人独处：识别出单个人独处场景后报警。
 2. 逗留超时：识别出单人或多人在区域内长时间逗留的情况并发出警报。
@@ -28,7 +28,7 @@
   | 软件名称 | 版本  |
   | -------- | ----- |
   | cmake    | 3.5.+ |
-  | VisionSDK | 2.0.4 |
+  | Vision SDK | 2.0.4 |
   | Python   | 3.9.2 |
   | OpenCV   | 3.4.0 |
   | gcc      | 7.5.0 |
@@ -133,13 +133,13 @@
 
 ## 5 准备
 
-**步骤1：** 参考安装教程《VisionSDK 用户指南》安装 VisionSDK。
+**步骤1：** 参考安装教程《Vision SDK 用户指南》安装 Vision SDK。
 
-**步骤2：** 配置 VisionSDK 环境变量。
+**步骤2：** 配置 Vision SDK 环境变量。
 
 `export MX_SDK_HOME=${安装路径}/mxVision `
 
-注：本例中VisionSDK安装路径为 /root/work/MindX_SDK/mxVision。
+注：本例中Vision SDK安装路径为 /root/work/MindX_SDK/mxVision。
 
 **步骤3：** 推荐在${MX_SDK_HOME}/samples下创建ActionRecognition根目录，在项目根目录下创建目录models `mkdir models`，分别为yolov3和ECONet创建一个文件夹，将两个离线模型及各自的配置文件放入文件夹下。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/models.zip)。创建完成后models文件夹下的目录结构如下：
 
@@ -462,7 +462,7 @@ sed -i 's/\r//g' xxx.sh
 本项目中用到的模型有：ECONet，yolov3 [备份链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/models.zip)
 
 yolov3模型下载参考华为昇腾社区[ModelZoo](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)  
-使用以下命令进行转换，请注意aipp配置文件名，此处使用的为自带sample中的相关文件（{VisionSDK安装路径}/mxVision/samples/mxVision/models/yolov3/）
+使用以下命令进行转换，请注意aipp配置文件名，此处使用的为自带sample中的相关文件（{Vision SDK安装路径}/mxVision/samples/mxVision/models/yolov3/）
 ```bash
 atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 ```

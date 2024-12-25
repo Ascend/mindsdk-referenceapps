@@ -1,16 +1,16 @@
 EN|[CN](README.zh.md)
 # MindSDK Reference Apps
 
-[MindSDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as VisionSDK (visual analysis), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
+[MindSDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as Vision SDK (visual analysis), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
 
-To help developers quickly master the use of VisionSDK and mxIndex interfaces and rapidly implement business functions, this code repository provides various reference samples developed based on VisionSDK and mxIndex. Users can select the appropriate sample code according to their needs.
+To help developers quickly master the use of Vision SDK and mxIndex interfaces and rapidly implement business functions, this code repository provides various reference samples developed based on Vision SDK and mxIndex. Users can select the appropriate sample code according to their needs.
 ## Main Directory Structure and Description
 | 目录 | 说明                                            |
 |---|-----------------------------------------------|
-| [contrib](./contrib) | VisionSDK user-contributed sample directory    |
-| [docs](./docs) | VisionSDK documentation directory              |
-| [mxVision](./mxVision) | VisionSDK official sample directory |
-| [tutorials](./tutorials) | VisionSDK official tutorials directory         |
+| [contrib](./contrib) | Vision SDK user-contributed sample directory    |
+| [docs](./docs) | Vision SDK documentation directory              |
+| [mxVision](./mxVision) | Vision SDK official sample directory |
+| [tutorials](./tutorials) | Vision SDK official tutorials directory         |
 | [mxIndex](./mxIndex)        | mxIndex offical sample directory                |
 
 

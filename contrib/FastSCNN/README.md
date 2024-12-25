@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-   使用fastscnn模型，在VisionSDK环境下实现语义分割功能
+   使用fastscnn模型，在Vision SDK环境下实现语义分割功能
    由用户设置测试图片，传入到pipeline中先后实现前处理，模型推理，后处理等功能，最终输出结果图片实现可视化
 
     Fast-SCNN 是一个面向实时的语义分割网络。 在双分支的结构基础上，大量使用了深度可分离卷积和逆残差模块，并且使用特征融合构造金字塔池化模块来融合上下文信息。
@@ -44,8 +44,8 @@
 
 ### 1.3 支持的版本
 
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

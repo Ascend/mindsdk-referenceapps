@@ -14,9 +14,9 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 本项目支持昇腾Atlas 500 A2。
 
 ### 1.3 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-|VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+|Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- |---------| -------------- |
 | 5.0.0   |7.0.0 |  23.0.0  |
 | 6.0.RC3   | 8.0.RC3 |  24.1.RC3  |
@@ -29,7 +29,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置VisionSDK 环境变量，SDK-path为VisionSDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

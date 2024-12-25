@@ -156,7 +156,7 @@ GST_PLUGIN_PATH=/home/*****/home/work/MindX_SDK/mxManufacture/opensource/lib/gst
 
 #### 步骤 3 配置SDK路径
 
-配置CMakeLists.txt中的MX_SDK_HOME环境变量，配置安装了VisionSDK的路径
+配置CMakeLists.txt中的MX_SDK_HOME环境变量，配置安装了Vision SDK的路径
 
 set(MX_SDK_HOME ${SDK安装路径}/mxManufacture)  
 

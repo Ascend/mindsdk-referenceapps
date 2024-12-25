@@ -1,8 +1,8 @@
-# VisionSDK-行人属性检测
+# Vision SDK-行人属性检测
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例是基于VisionSDK开发的端到端的Python应用实例，可在昇腾芯片上进行行人属性识别，并把可视化结果保存到本地。开发端到端行人属性识别，实现对检测图片中行人的定位与属性识别，并达到精度要求。该Sample的主要处理流程为：数据输入>预处理>行人检测>抠图缩放>行人属性识别>结果可视化。
+本开发样例是基于Vision SDK开发的端到端的Python应用实例，可在昇腾芯片上进行行人属性识别，并把可视化结果保存到本地。开发端到端行人属性识别，实现对检测图片中行人的定位与属性识别，并达到精度要求。该Sample的主要处理流程为：数据输入>预处理>行人检测>抠图缩放>行人属性识别>结果可视化。
 
 本样例适用于常见行人所处场景，如街道、红路灯路口、商场等，对于所推理的图片中的行人对象要求尽可能的完整、清晰、无遮挡、无重叠等。
 
@@ -12,9 +12,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -54,7 +54,7 @@
 
 ### 1.6 软件方案介绍
 
-基于VisionSDK的行人属性识别业务流程：待检测图片通过appsrc插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足行人检测模型(yolov3)要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer中进行推理，随后将数据送入后处理插件mxpi_objectpostprocessor中进行处理，将得到的结果经过分发插件mxpi_distributor输出，随后将数据输出到裁剪插件mxpi_imagecrop中，根据上游推理插件推理出的结果进行裁剪出行人，并将裁剪后的图像输入到Deepmar的模型推理插件中，进行行人属性推理，最后将行人属性推理插件经序列化插件mxpi_dataserialize输出，即得到属性的预测结果，并将结果进行标签化，即为该图片的属性推理结果。
+基于Vision SDK的行人属性识别业务流程：待检测图片通过appsrc插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足行人检测模型(yolov3)要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer中进行推理，随后将数据送入后处理插件mxpi_objectpostprocessor中进行处理，将得到的结果经过分发插件mxpi_distributor输出，随后将数据输出到裁剪插件mxpi_imagecrop中，根据上游推理插件推理出的结果进行裁剪出行人，并将裁剪后的图像输入到Deepmar的模型推理插件中，进行行人属性推理，最后将行人属性推理插件经序列化插件mxpi_dataserialize输出，即得到属性的预测结果，并将结果进行标签化，即为该图片的属性推理结果。
 
 表1.1 系统方案各子系统功能描述：
 
@@ -75,7 +75,7 @@
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置VisionSDK 环境变量，SDK-path为VisionSDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

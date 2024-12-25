@@ -7,7 +7,7 @@
 
 
 
-PPYOLOE+ 目标检测后处理插件基于 VisionSDK 开发，对图片中的不同类目标进行检测。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案基于 paddlepaddle 版本原始 ppyoloe_plus_crn_l_80e_coco_w_nms 模型所剪枝并转换的 om 模型进行目标检测，默认模型包含 80 个目标类。
+PPYOLOE+ 目标检测后处理插件基于 Vision SDK 开发，对图片中的不同类目标进行检测。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案基于 paddlepaddle 版本原始 ppyoloe_plus_crn_l_80e_coco_w_nms 模型所剪枝并转换的 om 模型进行目标检测，默认模型包含 80 个目标类。
 
 paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR->拉伸缩放->转换为RGB，main.cpp中通过在310P场景下通过dvpp对应方法进行了相应的处理。
 
@@ -17,9 +17,9 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 
 ### 1.3 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -62,7 +62,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 ## 2 设置环境变量
 
-VisionSDK 环境变量:
+Vision SDK 环境变量:
 
 ```
 . ${SDK-path}/set_env.sh
@@ -77,7 +77,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: VisionSDK 安装路径
+SDK-path: Vision SDK 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```  
 

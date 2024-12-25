@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为了提升用户的易用性，VisionSDK提供了 Ffmepg-Ascend 解决方案。
+mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为了提升用户的易用性，Vision SDK提供了 Ffmepg-Ascend 解决方案。
 
 支持的功能：
 

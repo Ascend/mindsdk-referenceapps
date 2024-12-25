@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例基于VisionSDK实现了端到端的行人重识别（Person Re-identification, ReID），支持检索给定照片中的行人ID。
+本开发样例基于Vision SDK实现了端到端的行人重识别（Person Re-identification, ReID），支持检索给定照片中的行人ID。
 
 其主要流程为：    
 1. 程序入口分别接收查询图片和行人底库所在的文件路径。    
@@ -18,9 +18,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
-本样例配套的VisionSDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| VisionSDK版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

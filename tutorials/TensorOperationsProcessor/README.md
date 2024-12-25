@@ -1,4 +1,4 @@
-# VisionSDK快速入门——TensorOperations接口基本使用教程
+# Vision SDK快速入门——TensorOperations接口基本使用教程
 
 ## 1 介绍
 
@@ -48,7 +48,7 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 本教程支持昇腾Atlas 300I Pro、Atlas 300V Pro。
 
 ### 1.3 支持的版本
-| VisionSDK版本 | CANN版本 | Driver/Firmware版本 |
+| Vision SDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
 
@@ -58,7 +58,7 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 # 设置CANN环境变量
 . ${install_path}/set_env.sh
 
-# 设置VisionSDK 环境变量，sdk_path为VisionSDK 安装路径
+# 设置Vision SDK 环境变量，sdk_path为Vision SDK 安装路径
 . ${sdk_path}/set_env.sh
 ```
 

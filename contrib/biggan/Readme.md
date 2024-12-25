@@ -17,7 +17,7 @@
 
 CANN：7.0.RC1
 
-SDK：VisionSDK 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+SDK：Vision SDK 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 ### 1.3 软件方案介绍
 
@@ -58,7 +58,7 @@ SDK：VisionSDK 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 | 软件名称            | 版本        | 说明                          | 获取方式                                                     |
 | ------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ |
-| VisionSDK           | 5.0.RC3     | VisionSDK软件包                | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) |
+| Vision SDK           | 5.0.RC3     | Vision SDK软件包                | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) |
 | ubuntu              | 18.04.1 LTS | 操作系统                      | Ubuntu官网获取                                               |
 | Ascend-CANN-toolkit | 7.0.RC1     | Ascend-cann-toolkit开发套件包 | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial) |
 | python              | 3.9.2       |                               |                                                              |

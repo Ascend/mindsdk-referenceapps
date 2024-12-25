@@ -105,14 +105,14 @@ OpenCVPlugin 插件流程图。
 | 软件名称 | 版本  |
 | -------- | ----- |
 | cmake    | 3.5+  |
-| VisionSDK | 2.0.4 |
+| Vision SDK | 2.0.4 |
 | python   | 3.9.2 |
 
-确保环境中正确安装VisionSDK。
+确保环境中正确安装Vision SDK。
 
 在编译运行项目前，需要设置环境变量：
 
-VisionSDK 环境变量:
+Vision SDK 环境变量:
 
 ```
 . ${SDK-path}/set_env.sh

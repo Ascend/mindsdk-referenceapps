@@ -136,9 +136,9 @@ class ReactAgent(BaseAgent, ABC):
             if not os.path.exists(directory):
                 os.makedirs(directory)
                 logger.info("create log directory")
-            flag = os.O_WRONLY | os.O_CREAT
+            flag = os.O_WRONLY | os.O_CREAT | os.O_APPEND
             mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
+            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "a") as fout:
                 fout.write("***************TASK START********************\n")
                 fout.write(f"task: {self.query}\n")
                 fout.write(f"trajectory: {traj}\n")

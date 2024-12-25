@@ -164,7 +164,7 @@ class QueryWeather(API):
 
             if len(weather_summary) == 0:
                 weather_summary = "**抱歉，我最多只能查询最近7天的天气情况，例如下面是我将为你提供最近的天气预报**:\n" + \
-                                  json.dumps(summary_copy, ensure_ascii=False)
+                                  json.dumps(summary_copy, ensure_ascii=False, indent=4)
             res = {
                 'forecast': weather_summary
             }

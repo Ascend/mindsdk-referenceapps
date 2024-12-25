@@ -46,7 +46,7 @@
 
 ```
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
-. ${SDK_INSTALL_PATH}/set_env.sh                # SDK_INSTALL_PATH: mxVision SDK 安装路径
+. ${SDK_INSTALL_PATH}/set_env.sh                # SDK_INSTALL_PATH: VisionSDK 安装路径
 ```
 
 ## 3 准备模型

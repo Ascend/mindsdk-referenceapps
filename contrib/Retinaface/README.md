@@ -85,7 +85,7 @@ Retinaface基于VisionSDK开发，在昇腾芯片上进行目标检测，并实�
 
 在编译运行项目前，需要设置环境变量：
 
-MindSDK 环境变量：
+VisionSDK 环境变量：
 
 ```
 . ${SDK-path}/set_env.sh
@@ -100,7 +100,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: mxVision SDK * 安装路径
+SDK-path: VisionSDK * 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```
 

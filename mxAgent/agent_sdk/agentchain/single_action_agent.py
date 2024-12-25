@@ -6,7 +6,7 @@ import os
 import stat
 import re
 import time
-from copy import deepcopy
+from datetime import datetime, timezone
 from loguru import logger
 
 from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
@@ -106,8 +106,14 @@ class SingleActionAgent(BaseAgent):
             flag = os.O_WRONLY | os.O_CREAT
             mode = stat.S_IWUSR | stat.S_IRUSR
             with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
-                json.dump(save_dict, fout, ensure_ascii=False)
-                fout.write("\n")
+                # json.dump(save_dict, fout, ensure_ascii=False)
+                # fout.write("\n")
+                fout.write("***********************************\n")
+                fout.write(f"task: {self.query}\n")
+                fout.write(f"trajectory: {traj}\n")
+                fout.write(f"status: {self.finished}\n")
+                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}")
+                fout.write("************************************\n")
         except Exception as e:
             logger.error(f"agent_prompt = {self.prompt}")
             logger.error(e)

@@ -106,5 +106,5 @@ if __name__ == "__main__":
         "What are the top - rated museums in Harrisburg?"
     ]
     generator = TrajectoryGenerator()
-    generator.generate(output_path="./save_instructions.jsonl", agent=single_agent,
+    generator.generate(output_path="./single_action_execution.jsonl", agent=single_agent,
                        load_dataset=lambda: queries)

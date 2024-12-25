@@ -50,60 +50,22 @@ Day 4: Visit the Statue of Liberty and Ellis Island. Have lunch at The Boil and 
 Day 5: Spend the day shopping on Fifth Avenue and visiting the Rockefeller Center. Have lunch at Shake Shack and dinner at Katz's Delicatessen."}
 '''
 
-
-def get_default_react_agent(api_base, api_key, llm_name, max_context_len):
-    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-
-    tool_list = [QueryAccommodations, QueryTransports, QueryGoogleDistanceMatrix, QueryAttractions, Finish]
-
-    agent = ReactAgent(llm=llm, tool_list=tool_list, max_context_len=max_context_len)
-    return agent
-
-
-def get_default_react_agent_fewshot(api_base, api_key, llm_name, max_context_len):
-    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-
-    tool_list = [QueryAccommodations, QueryTransports, QueryGoogleDistanceMatrix, QueryAttractions, Finish]
-
-    agent = ReactAgent(llm=llm, example=EXAMPLE, tool_list=tool_list, max_context_len=max_context_len)
-    return agent
-
-
-def get_default_toolless_agent(api_base, api_key, llm_name, max_context_len):
-    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-
-    agent = ToollessAgent(llm=llm, max_context_len=max_context_len)
-    return agent
-
-
-def get_default_react_reflect_agent(api_base, api_key, llm_name, max_context_len):
-    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-
-    tool_list = [QueryAccommodations, QueryTransports, QueryGoogleDistanceMatrix, QueryAttractions, Finish]
-    agent = ReactReflectAgent(reflect_llm=llm, react_llm=llm, example=EXAMPLE,
-                              tool_list=tool_list, max_context_len=max_context_len)
-    return agent
-
-
-def test_react_agent():
-    a = get_default_react_agent_fewshot(API_BASE, API_KEY, LLM_NAME, MAX_CONTEXT_LEN)
-    response = a.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.")
-    a.save_agent_status("./react_execution_log.jsonl")
-    logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
-
-
 def test_toolless_agent():
-    a = get_default_toolless_agent(API_BASE, API_KEY, LLM_NAME, MAX_CONTEXT_LEN)
-    response = a.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.", 
+    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, API_BASE, API_KEY, LLM_NAME).run
+    agent = ToollessAgent(llm=llm, max_context_len=MAX_CONTEXT_LEN)
+    response = agent.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.", 
                      text="given information")
-    
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 
 
 def test_react_reflect_agent():
-    a = get_default_react_reflect_agent(API_BASE, API_KEY, LLM_NAME, MAX_CONTEXT_LEN)
-    response = a.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.",
+    llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, API_BASE, API_KEY, LLM_NAME).run
+    tool_list = [QueryAccommodations, QueryTransports, QueryGoogleDistanceMatrix, QueryAttractions, Finish]
+    agent = ReactReflectAgent(reflect_llm=llm, react_llm=llm, example=EXAMPLE,
+                              tool_list=tool_list, max_context_len=MAX_CONTEXT_LEN)
+    response = agent.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.",
                      text="given information")
+    agent.save_agent_status("./react_reflect_execution_log.jsonl")
     
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 
@@ -121,17 +83,14 @@ if __name__ == "__main__":
     API_BASE = args.pop("base_url")
     API_KEY = args.pop("api_key")
     LLM_NAME = args.pop("model_name")
-    logger.info("react agent test begin")
-    test_react_agent()
-    logger.info("react agent test end")
-
-    logger.info("toolless agent test begin")
-    test_toolless_agent()
-    logger.info("toolless agent test end")
 
     logger.info("react reflect agent test begin")
     test_react_reflect_agent()
     logger.info("react reflect agent test end")
+
+    logger.info("toolless agent test begin")
+    test_toolless_agent()
+    logger.info("toolless agent test end")
 
 
 

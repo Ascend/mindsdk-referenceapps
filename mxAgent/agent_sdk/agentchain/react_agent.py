@@ -126,14 +126,23 @@ class ReactAgent(BaseAgent, ABC):
                 "status": self.finished, "created_at": str(datetime.now(tz=timezone.utc)),
                 "task": self.query
             }
+            save_dict = {
+                "task": self.query,
+                "trajectory": traj,
+                "created_at": str(datetime.now(tz=timezone.utc)),
+            }
 
             parent_folder_path = os.path.dirname(file_path)
             os.makedirs(parent_folder_path, exist_ok=True)
             flag = os.O_WRONLY | os.O_CREAT
             mode = stat.S_IWUSR | stat.S_IRUSR
             with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
-                json.dump(save_dict, fout, ensure_ascii=False)
-                fout.write("\n")
+                fout.write("***********************************\n")
+                fout.write(f"task: {self.query}\n")
+                fout.write(f"trajectory: {traj}\n")
+                fout.write(f"status: {self.finished}\n")
+                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}")
+                fout.write("************************************\n")
             logger.success(f"save {self.__class__.__name__} status done")
         except Exception as e:
             logger.error(f"prompt = {self.prompt}")

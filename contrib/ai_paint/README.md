@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-  本开发样例基于Mind SDK实现了从结构化描述生成对应风景照片的功能。
+  本开发样例基于MindSDK实现了从结构化描述生成对应风景照片的功能。
   参考以下链接说明： <br/>
   参考设计来源 - https://www.hiascend.com/zh/developer/mindx-sdk/landscape?fromPage=1 <br/>
   相关代码 - https://gitee.com/ascend/samples/tree/master/cplusplus/contrib/AI_painting <br/>

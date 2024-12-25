@@ -62,7 +62,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 ## 2 设置环境变量
 
-MindSDK 环境变量:
+VisionSDK 环境变量:
 
 ```
 . ${SDK-path}/set_env.sh
@@ -77,7 +77,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: mxVision SDK 安装路径
+SDK-path: VisionSDK 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```  
 

@@ -206,7 +206,7 @@ make install
 
 **步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindsdk-referenceapps安装路径：
 ```bash
-14  ${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
+14  ${mindxsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
 ```
 **步骤4：** 在`PPYOLOEPlusDetection`目录下运行脚本，进行照片检测：
 ```

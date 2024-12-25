@@ -34,7 +34,7 @@ Pytorch框架对yolov7模型推理时，前处理方案包括解码为BGR->等�
 │     └── CMakeLists.txt            # 用于编译后处理插件
 ├── model
 │     ├── coco.names                # 需要下载，下载链接在下方
-│     └── yolov7.cfg                # 模型后处理配置文件，配置说明参考《mxVision用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
+│     └── yolov7.cfg                # 模型后处理配置文件，配置说明参考《Vision SDK用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
 ├── pipeline
 │     ├── Sample.pipeline           # 参考pipeline文件，用于配置bgr模型，用户需要根据自己需求和模型输入类型进行修改
 │     └── SampleYuv.pipeline        # 参考pipeline文件，用于配置yuv模型，用户需要根据自己需求和模型输入类型进行修改

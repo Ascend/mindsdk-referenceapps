@@ -37,7 +37,7 @@
 ### 1.5 代码目录结构说明
 
 ```
-├── mxVision
+├── VisionSDK
 │   ├── AllObjectsStructuring
 │   |   ├── main_pipeline
 │   |   │   └── __init__.py

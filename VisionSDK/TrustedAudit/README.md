@@ -38,7 +38,7 @@
 本代码仓名称为mxSdkReferenceApps，工程目录如下图所示：
 
 ```
-├── mxVision
+├── VisionSDK
 │   ├── TrustedAudit
 │   |   ├── docker
 │   |   │   ├── docker_run.sh

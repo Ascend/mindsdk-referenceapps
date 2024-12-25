@@ -55,7 +55,7 @@ SampleYuv.pipeline中resize插件需要选用双线性插值的方式，需要�
 
 在编译运行项目前，需要设置环境变量：
 
-MindSDK 环境变量:
+VisionSDK 环境变量:
 
 ```
 . ${SDK-path}/set_env.sh
@@ -70,7 +70,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: mxVision SDK 安装路径
+SDK-path: VisionSDK 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```   
 

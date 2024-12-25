@@ -77,7 +77,7 @@
 ## 2 环境设置
 在编译运行项目前，需要设置环境变量：
 
-- VisionSDK 环境变量，其中${SDK-path}为MindX SDK安装路径
+- VisionSDK 环境变量，其中${SDK-path}为VisionSDK安装路径
 ```
 . ${SDK-path}/set_env.sh
 ```

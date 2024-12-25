@@ -75,7 +75,7 @@ class SingleActionAgent(BaseAgent):
         else:
             if self.is_valid_tool(action_type):
                 tool_response = self.tool_manager.api_call(action_type, argument, llm=self.llm)
-                output_str = json.dumps(tool_response.output, ensure_ascii=False)
+                output_str = json.dumps(tool_response.output, ensure_ascii=False, indent=4)
                 self.tool_output = output_str
                 if tool_response.success:
                     self.finished = True
@@ -107,17 +107,17 @@ class SingleActionAgent(BaseAgent):
             if not os.path.exists(directory):
                 os.makedirs(directory)
                 logger.info("create log directory")
-            flag = os.O_WRONLY | os.O_CREAT
+            flag = os.O_WRONLY | os.O_CREAT | os.O_APPEND
             mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
+            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "a") as fout:
                 # json.dump(save_dict, fout, ensure_ascii=False)
                 # fout.write("\n")
-                fout.write("***********************************\n")
+                fout.write("****************TASK START*******************\n")
                 fout.write(f"task: {self.query}\n")
                 fout.write(f"trajectory: {traj}\n")
                 fout.write(f"status: {self.finished}\n")
-                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}")
-                fout.write("************************************\n")
+                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}\n")
+                fout.write("*****************TASK END*******************\n\n\n")
         except Exception as e:
             logger.error(f"agent_prompt = {self.prompt}")
             logger.error(e)

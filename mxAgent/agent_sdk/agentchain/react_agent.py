@@ -139,12 +139,12 @@ class ReactAgent(BaseAgent, ABC):
             flag = os.O_WRONLY | os.O_CREAT
             mode = stat.S_IWUSR | stat.S_IRUSR
             with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
-                fout.write("***********************************\n")
+                fout.write("***************TASK START********************\n")
                 fout.write(f"task: {self.query}\n")
                 fout.write(f"trajectory: {traj}\n")
                 fout.write(f"status: {self.finished}\n")
-                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}")
-                fout.write("************************************\n")
+                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}\n")
+                fout.write("*****************TASK END*******************\n\n\n")
             logger.success(f"save {self.__class__.__name__} status done")
         except Exception as e:
             logger.error(f"prompt = {self.prompt}")
@@ -179,7 +179,7 @@ class ReactAgent(BaseAgent, ABC):
         if self.is_valid_tool(action_rst.action):
             resp = self.tool_manager.api_call(action_rst.action, action_rst.action_input, llm=self.llm)
             self.api_response_cache.add(resp, action=action_rst.action, action_input=action_rst.action_input)
-            output_str = json.dumps(resp.output, ensure_ascii=False)
+            output_str = json.dumps(resp.output, ensure_ascii=False, indent=4)
             result = output_str
             if resp.finished:
                 self.answer = output_str

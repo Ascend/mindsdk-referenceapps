@@ -107,5 +107,5 @@ if __name__ == "__main__":
     ]
     generator = TrajectoryGenerator()
     current_path = os.path.dirname(os.path.realpath(__file__))
-    generator.generate(output_path=f"{current_path}/trajs/single_action_execution.jsonl", agent=single_agent,
+    generator.generate(output_path=f"{current_path}/trajs/single_action_execution.txt", agent=single_agent,
                        load_dataset=lambda: queries)

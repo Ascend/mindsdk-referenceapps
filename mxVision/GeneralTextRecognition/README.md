@@ -33,14 +33,13 @@
 |   |-- GeneralTextRecognition
 |   |   |-- C++
 |   |   |   |-- CMakeLists.txt
-|   |   |   |-- mainMultiThread.cpp
+|   |   |   |-- main.cpp
 |   |   |   |-- run.sh
 |   |   |-- License.md
 |   |   |-- README.md
 |   |   |-- THIRD PARTY OPEN SOURCE SOFTWARE NOTICE.md
 |   |   |-- data
 |   |   |   |-- OCR.pipeline
-|   |   |   |-- OCR_multi3.pipeline
 |   |   |   |-- config
 |   |   |   |   |-- cls
 |   |   |   |   |   |-- cls.cfg

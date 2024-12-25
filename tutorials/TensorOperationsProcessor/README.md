@@ -58,7 +58,7 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 # 设置CANN环境变量
 . ${install_path}/set_env.sh
 
-# 设置MindX SDK 环境变量，sdk_path为mxVision SDK 安装路径
+# 设置VisionSDK 环境变量，sdk_path为VisionSDK 安装路径
 . ${sdk_path}/set_env.sh
 ```
 

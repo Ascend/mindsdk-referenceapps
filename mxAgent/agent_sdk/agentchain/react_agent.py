@@ -132,8 +132,10 @@ class ReactAgent(BaseAgent, ABC):
                 "created_at": str(datetime.now(tz=timezone.utc)),
             }
 
-            parent_folder_path = os.path.dirname(file_path)
-            os.makedirs(parent_folder_path, exist_ok=True)
+            directory = os.path.dirname(file_path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+                logger.info("create log directory")
             flag = os.O_WRONLY | os.O_CREAT
             mode = stat.S_IWUSR | stat.S_IRUSR
             with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:

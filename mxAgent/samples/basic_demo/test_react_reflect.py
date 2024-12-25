@@ -3,6 +3,7 @@
 
 import warnings
 import argparse
+import os
 
 from loguru import logger
 
@@ -65,7 +66,8 @@ def test_react_reflect_agent():
                               tool_list=tool_list, max_context_len=MAX_CONTEXT_LEN)
     response = agent.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.",
                      text="given information")
-    agent.save_agent_status("./react_reflect_execution_log.jsonl")
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    agent.save_agent_status(f"{current_path}/trajs/react_reflect_execution_log.jsonl")
     
     logger.info(f"5 day trip from Orlando to Paris:{response.answer}")
 

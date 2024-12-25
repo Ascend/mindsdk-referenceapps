@@ -103,6 +103,10 @@ class SingleActionAgent(BaseAgent):
                 "final answer": self.answer,
                 "status": self.finished
             }
+            directory = os.path.dirname(file_path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+                logger.info("create log directory")
             flag = os.O_WRONLY | os.O_CREAT
             mode = stat.S_IWUSR | stat.S_IRUSR
             with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:

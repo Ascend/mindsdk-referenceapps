@@ -9,7 +9,7 @@ To help developers quickly master the use of Vision SDK and mxIndex interfaces a
 |---|-----------------------------------------------|
 | [contrib](./contrib) | Vision SDK user-contributed sample directory    |
 | [docs](./docs) | Vision SDK documentation directory              |
-| [mxVision](./mxVision) | Vision SDK official sample directory |
+| [VisionSDK](./VisionSDK) | Vision SDK official sample directory |
 | [tutorials](./tutorials) | Vision SDK official tutorials directory         |
 | [mxIndex](./mxIndex)        | mxIndex offical sample directory                |
 

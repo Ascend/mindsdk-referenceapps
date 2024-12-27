@@ -109,7 +109,7 @@ APP_ERROR SendCallback(MxStreamManager& mxStreamManager,
 }
 APP_ERROR TestMain(const std::string& pipelinePath)
 {
-    std::cout << "********case TestMultiThread********" << std::endl;
+    std::cout << "********case TestMain********" << std::endl;
 
     MxStream::MxStreamManager mxStreamManager;
     APP_ERROR ret = mxStreamManager.InitManager();

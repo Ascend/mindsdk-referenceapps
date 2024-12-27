@@ -26,13 +26,13 @@ const int CAPTION_POOL_DEFAULT_SIZE = 10;
 template <typename K, typename V>
 class LimitedSizeMap {
 public:
-    explicit LimitedSizeMap(size_t max_size) {
-        max_size_ = max_size;
+    explicit LimitedSizeMap(size_t maxSize) {
+        maxSize_ = maxSize;
     }
 
-    void put(const K& key, const V& value) {
+    void Put(const K& key, const V& value) {
         if (map.find(key) == map.end()) {
-            if (order.size() >= max_size_) {
+            if (order.size() >= maxSize_) {
                 K oldest = order.front();
                 order.pop_front();
                 map.erase(oldest);
@@ -45,7 +45,7 @@ public:
         map[key] = value;
     }
 
-    bool get(const K& key, V& value) {
+    bool Get(const K& key, V& value) {
         if (map.find(key) != map.end()) {
             value = map[key];
             return true;
@@ -53,7 +53,7 @@ public:
         return false;
     }
 
-    bool isExist(const K& key) {
+    bool IsExist(const K& key) {
         if (map.find(key) != map.end()) {
             return true;
         }
@@ -61,7 +61,7 @@ public:
     }
 
 private:
-    size_t max_size_;
+    size_t maxSize_;
     std::list<K> order;
     std::unordered_map<K, V> map;
 };
@@ -70,17 +70,17 @@ class CaptionPool {
 public:
     explicit CaptionPool(size_t max_size = CAPTION_POOL_DEFAULT_SIZE);
 
-    APP_ERROR putCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption, MxBase::Tensor mask);
+    APP_ERROR PutCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption, MxBase::Tensor mask);
 
-    APP_ERROR getCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption, MxBase::Tensor& mask);
+    APP_ERROR GetCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption, MxBase::Tensor& mask);
 
-    bool isCaptionExist(std::string text1, std::string text2);
+    bool IsCaptionExist(std::string text1, std::string text2);
 
-    APP_ERROR putCaptionLength(std::string text, int length);
+    APP_ERROR PutCaptionLength(std::string text, int length);
 
-    APP_ERROR getCaptionLength(std::string text, int& length);
+    APP_ERROR GetCaptionLength(std::string text, int& length);
 
-    bool isCaptionLengthExist(std::string text);
+    bool IsCaptionLengthExist(std::string text);
 
 private:
     std::shared_ptr<LimitedSizeMap<std::string, MxBase::Tensor>> text2CaptionMap_;

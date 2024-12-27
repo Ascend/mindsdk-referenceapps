@@ -9,10 +9,7 @@ peft
 fschat
 langchain
 rouge
-langchain_openai
-colorlog
 rouge-score
-langchain-community==0.3.8
 loguru
 tiktoken
 duckduckgo-search==6.3.7

@@ -11,7 +11,7 @@ To help developers quickly master the use of mxVision and Index SDK interfaces a
 | [docs](./docs) | mxVision documentation directory              |
 | [mxVision](./mxVision) | mxVision official sample directory |
 | [tutorials](./tutorials) | mxVision official tutorials directory         | 
-| [Index SDK](./Index SDK)        | Index SDK offical sample directory                |
+| [Index SDK](./IndexSDK)        | Index SDK offical sample directory                |
 
 
 ## Related Websites

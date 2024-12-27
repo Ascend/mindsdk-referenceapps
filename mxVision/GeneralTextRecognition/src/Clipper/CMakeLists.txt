@@ -5,7 +5,7 @@ set(PLUGIN_NAME "clipper")
 set(TARGET_LIBRARY ${PLUGIN_NAME})
 
 include_directories(${PROJECT_SOURCE_DIR})
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_library(${TARGET_LIBRARY} SHARED clipper.cpp)
 
 install(TARGETS ${TARGET_LIBRARY} LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/../../lib/)

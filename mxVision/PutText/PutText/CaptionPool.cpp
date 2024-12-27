@@ -15,10 +15,10 @@
  */
 #include "CaptionPool.h"
 
-CaptionPool::CaptionPool(size_t max_size) {
-    text2Lenghth_ = std::make_shared<LimitedSizeMap<std::string, int>>(max_size);
-    text2CaptionMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(max_size);
-    text2MaskMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(max_size);
+CaptionPool::CaptionPool(size_t maxSize) {
+    text2Lenghth_ = std::make_shared<LimitedSizeMap<std::string, int>>(maxSize);
+    text2CaptionMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
+    text2MaskMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
 }
 
 APP_ERROR CaptionPool::putCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption,

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-
 import copy
 import json 
 import os

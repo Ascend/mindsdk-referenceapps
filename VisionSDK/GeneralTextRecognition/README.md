@@ -20,11 +20,11 @@
 
 ### 1.4 三方依赖
 
-| 软件名称              | 版本     |
-|-------------------|--------|
-| paddlle2onnx      | 1.3.1  |
-| paddlepaddle      | 2.6.0  |
-| onnx              | 1.10.0 |
+| 软件名称             | 版本     |
+|------------------|--------|
+| paddle2onnx      | 1.3.1  |
+| paddlepaddle     | 2.6.0  |
+| onnx             | 1.10.0 |
 
 ### 1.4 代码目录结构说明
 
@@ -33,14 +33,13 @@
 |   |-- GeneralTextRecognition
 |   |   |-- C++
 |   |   |   |-- CMakeLists.txt
-|   |   |   |-- mainMultiThread.cpp
+|   |   |   |-- main.cpp
 |   |   |   |-- run.sh
 |   |   |-- License.md
 |   |   |-- README.md
 |   |   |-- THIRD PARTY OPEN SOURCE SOFTWARE NOTICE.md
 |   |   |-- data
 |   |   |   |-- OCR.pipeline
-|   |   |   |-- OCR_multi3.pipeline
 |   |   |   |-- config
 |   |   |   |   |-- cls
 |   |   |   |   |   |-- cls.cfg
@@ -128,6 +127,10 @@ DB后处理目前支持两种缩放方式：拉伸缩放`Resizer_Stretch`、 等
 ```bash
 chmod 640 libclipper.so libDBPostProcess.so
 ```
+执行命令，添加环境变量，其中<Project_Root>需替换为实际项目路径：
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<Project_Root>/lib
+```
 
 **步骤4：** 准备字典数据。
 
@@ -174,13 +177,13 @@ OCR_multi3.pipeline示例如下：
 
 **步骤6：** 准备测试图片，在根目录下创建input_data目录，并将包含中英文的JPG或PNG图片拷贝到input_data目录下
 
-### 4.2 多线程高性能c++样例运行
+### 4.2 c++样例运行
 
 **步骤1：** 按照4.1小节中完成编译准备。
 
 **步骤2：** 执行样例程序。
 
-多线程高性能c++样例输入与输出解耦，多线程发送与读取数据。进入到<Project_Root>/C++目录，执行如下命令：
+进入到<Project_Root>/C++目录，执行如下命令：
 ```bash
 bash run.sh
 ```

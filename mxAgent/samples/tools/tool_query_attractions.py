@@ -14,8 +14,8 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryAttractions(API):
     name = "QueryAttractions"
-    description = "This api can be used to Search for tourist attractions from websites that '\
-        users expect and summarize them."
+    description = "This api can Search for tourist attractions from websites that expected, information includes \
+        location, ticket, open time, booking, contact adress."
     input_parameters = {
         'destination': {'type': 'str', 'description': "The destination where the user wants to travel."},
         'scene': {'type': 'str', 'description': 'The specific scenic spot mentioned by the user'},

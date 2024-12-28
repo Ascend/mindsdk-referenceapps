@@ -32,7 +32,8 @@ REQUEST_HEADERS = {
 @ToolManager.register_tool()
 class QueryWeather(API):
     name = "QueryWeather"
-    description = "This API is used to query weather forecast from the network according to the user's input question,"
+    description = "This API is used to query weather forecast from the network, information including temperature, \
+        humidness, wind force, weather condition."
     weekday = WEEK_MAP.get(datetime.datetime.now(ZoneInfo("Asia/Shanghai")).weekday(), '')
     input_parameters = {
 

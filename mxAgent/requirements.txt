@@ -13,3 +13,4 @@ rouge-score
 loguru
 tiktoken
 duckduckgo-search==6.3.7
+lxml

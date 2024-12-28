@@ -15,12 +15,13 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryTransports(API):
     name = "QueryTransports"
-    description = "This API is used to query relevant travel traffic information from the \
-        networkAccording to the user's input question,"
+    description = "This API can query relevant travel traffic information from network, including flight number, \
+        travel time, distance, price, constraints an so on."
     input_parameters = {
         "departure_city": {'type': 'str', 'description': "The city you'll be flying out from."},
         "destination_city": {'type': 'str', 'description': 'The city user aim to reach.'},
-        "travel_mode": {'type': 'str', 'description': 'The mode of travel appointed by the user'},
+        "travel_mode": {'type': 'str', 'description': "The mode of travel appointed by the user, \
+                        Choices include 'self-driving', 'flight', 'train', 'taxi' and so on."},
         "date": {'type': 'str', 'description': 'The date of the user plan to travel'},
         'requirement': {'type': 'str', 'description': 'The more requirement of transportation mentioned by the user'},
     }

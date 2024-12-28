@@ -15,7 +15,8 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryAccommodations(API):
     name = "QueryAccommodations"
-    description = "This api can discover accommodations in your desired city."
+    description = "This api can discover accommodations in your desired city. It provides room information, \
+        pricing, location, stars, estimation, constraints and so on"
     input_parameters = {
         "destination_city": {'type': 'str', 'description': 'The city you aim to reach.'},
         "position": {'type': 'str', 'description': 'The geographical position of accomodation appointed by the user'},

@@ -69,7 +69,7 @@ private:
 
 class CaptionPool {
 public:
-    explicit CaptionPool(size_t max_size = CAPTION_POOL_DEFAULT_SIZE);
+    explicit CaptionPool(size_t maxSize = CAPTION_POOL_DEFAULT_SIZE);
 
     APP_ERROR PutCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption, MxBase::Tensor mask);
 

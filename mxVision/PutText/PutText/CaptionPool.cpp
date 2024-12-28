@@ -15,16 +15,18 @@
  */
 #include "CaptionPool.h"
 
-CaptionPool::CaptionPool(size_t maxSize) {
+CaptionPool::CaptionPool(size_t maxSize)
+{
     text2Lenghth_ = std::make_shared<LimitedSizeMap<std::string, int>>(maxSize);
     text2CaptionMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
     text2MaskMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
 }
 
 APP_ERROR CaptionPool::PutCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption,
-                                         MxBase::Tensor mask) {
+                                         MxBase::Tensor mask)
+{
     std::string textMark = text1 + "_" + text2;
-    if(text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr) {
+    if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr) {
         text2CaptionMap_->Put(textMark, caption);
         text2MaskMap_->Put(textMark, mask);
         return APP_ERR_OK;
@@ -33,7 +35,8 @@ APP_ERROR CaptionPool::PutCaptionAndMask(std::string text1, std::string text2, M
 }
 
 APP_ERROR CaptionPool::GetCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption,
-                                         MxBase::Tensor& mask) {
+                                         MxBase::Tensor& mask)
+{
     std::string textMark = text1 + "_" + text2;
     if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr &&
         text2CaptionMap_->Get(textMark, caption) && text2MaskMap_->Get(textMark, mask)) {
@@ -42,7 +45,8 @@ APP_ERROR CaptionPool::GetCaptionAndMask(std::string text1, std::string text2, M
     return APP_ERR_COMM_FAILURE;
 }
 
-bool CaptionPool::IsCaptionExist(std::string text1, std::string text2) {
+bool CaptionPool::IsCaptionExist(std::string text1, std::string text2)
+{
     std::string textMark = text1 + "_" + text2;
     if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr &&
         text2MaskMap_->IsExist(textMark) && text2CaptionMap_->IsExist(textMark)) {
@@ -51,7 +55,8 @@ bool CaptionPool::IsCaptionExist(std::string text1, std::string text2) {
     return false;
 }
 
-APP_ERROR CaptionPool::PutCaptionLength(std::string text, int length) {
+APP_ERROR CaptionPool::PutCaptionLength(std::string text, int length)
+{
     if (text2Lenghth_ != nullptr) {
         text2Lenghth_->Put(text, length);
         return APP_ERR_OK;
@@ -60,14 +65,16 @@ APP_ERROR CaptionPool::PutCaptionLength(std::string text, int length) {
 }
 
 
-APP_ERROR CaptionPool::GetCaptionLength(std::string text, int& length) {
+APP_ERROR CaptionPool::GetCaptionLength(std::string text, int& length)
+{
     if (text2Lenghth_ != nullptr && text2Lenghth_->Get(text, length)) {
         return APP_ERR_OK;
     }
     return APP_ERR_COMM_FAILURE;
 }
 
-bool CaptionPool::IsCaptionLengthExist(std::string text) {
+bool CaptionPool::IsCaptionLengthExist(std::string text)
+{
     if (text2Lenghth_ != nullptr && text2Lenghth_->IsExist(text)) {
         return true;
     }

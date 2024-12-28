@@ -9,8 +9,7 @@ from loguru import logger
 
 from agent_sdk.agentchain.react_agent import ReactReflectAgent
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
-from samples.tools import QueryAccommodations, QueryAttractions, \
-    QueryGoogleDistanceMatrix, QueryTransports, Finish
+from samples.tools import QueryAccommodations, QueryAttractions, QueryTransports, Finish
 
 warnings.filterwarnings('ignore')
 
@@ -53,7 +52,7 @@ Day 5: Spend the day shopping on Fifth Avenue and visiting the Rockefeller Cente
 
 def test_react_reflect_agent():
     llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, API_BASE, API_KEY, LLM_NAME).run
-    tool_list = [QueryAccommodations, QueryTransports, QueryGoogleDistanceMatrix, QueryAttractions, Finish]
+    tool_list = [QueryAccommodations, QueryTransports, QueryAttractions, Finish]
     agent = ReactReflectAgent(reflect_llm=llm, react_llm=llm, example=EXAMPLE,
                               tool_list=tool_list, max_context_len=MAX_CONTEXT_LEN)
     response = agent.run("Can you help with a 5 day trip from Orlando to Paris? Departure date is April 10, 2022.",

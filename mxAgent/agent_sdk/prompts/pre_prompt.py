@@ -47,7 +47,7 @@ Reflection:"""
 
 
 
-SINGLE_AGENT_ACTION_INSTRUCTION = """I want you to be a good question assistant, handel the following tasks as best"\
+SINGLE_AGENT_ACTION_INSTRUCTION = ("""I want you to be a good question assistant, handel the following tasks as best"\
 you can. You have access to the following tools:
 
 {tools}
@@ -63,7 +63,7 @@ Observation: the result of the action.\n"""
 Begin!
 
 Question: {query}
-{scratchpad}"""
+{scratchpad}""")
 
 
 FINAL_PROMPT = """Please refine a clear and targeted answer based on the user's query and

@@ -13,7 +13,7 @@ from agent_sdk.agentchain.react_agent import ReactAgent
 from agent_sdk.common.constant import AgentRunStatus
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from samples.tools import QueryAttractions, QueryTransports, QueryAccommodations, \
-    QueryRestaurants, QueryGoogleDistanceMatrix
+    QueryRestaurants
 from samples.basic_demo.test_react_reflect import EXAMPLE
 
 
@@ -28,7 +28,7 @@ MAX_CONTEXT_LEN = 4096
 
 def get_default_react_agent(api_base, api_key, llm_name, max_context_len):
     llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-    tool_list = [QueryAttractions, QueryTransports, QueryAccommodations, QueryRestaurants, QueryGoogleDistanceMatrix]
+    tool_list = [QueryAttractions, QueryTransports, QueryAccommodations, QueryRestaurants]
     return ReactAgent(llm=llm, example=EXAMPLE, tool_list=tool_list, max_context_len=max_context_len)
 
 

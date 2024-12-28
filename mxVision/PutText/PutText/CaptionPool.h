@@ -26,11 +26,10 @@ const int CAPTION_POOL_DEFAULT_SIZE = 10;
 template <typename K, typename V>
 class LimitedSizeMap {
 public:
-    explicit LimitedSizeMap(size_t maxSize) {
-        maxSize_ = maxSize;
-    }
+    explicit LimitedSizeMap(size_t maxSize) : maxSize_(maxSize) {}
 
-    void Put(const K& key, const V& value) {
+    void Put(const K& key, const V& value)
+    {
         if (map.find(key) == map.end()) {
             if (order.size() >= maxSize_) {
                 K oldest = order.front();
@@ -45,7 +44,8 @@ public:
         map[key] = value;
     }
 
-    bool Get(const K& key, V& value) {
+    bool Get(const K& key, V& value)
+    {
         if (map.find(key) != map.end()) {
             value = map[key];
             return true;
@@ -53,7 +53,8 @@ public:
         return false;
     }
 
-    bool IsExist(const K& key) {
+    bool IsExist(const K& key)
+    {
         if (map.find(key) != map.end()) {
             return true;
         }

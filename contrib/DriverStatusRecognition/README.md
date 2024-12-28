@@ -13,7 +13,7 @@
 
 ### 1.3 支持的版本
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本 |
+| MxVision版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

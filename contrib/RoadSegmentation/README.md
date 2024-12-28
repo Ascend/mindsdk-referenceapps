@@ -4,9 +4,9 @@
 
 ## 1 介绍
 ### 1.1 简介
-本样例基于Vision SDK实现了端到端的路面分割功能，主要采用了Unet模型对输入的路面图片进行语义分割，输出mask掩膜，然后与原图结合，生成路面语义分割后的可视化结果。
+本样例基于MindX SDK实现了端到端的路面分割功能，主要采用了Unet模型对输入的路面图片进行语义分割，输出mask掩膜，然后与原图结合，生成路面语义分割后的可视化结果。
 
-基于Vision SDK的路面分割业务流程：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的路面分割后处理插件处理推理结果，从中获取掩膜mask，然后与原始图片进行融合，之后通过图像编码插件mxpi_imageencoder将后处理插件的融合后的数据进行编码，最后使用输出插件appsink输出可视化的结果。
+基于MindX SDK的路面分割业务流程：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的路面分割后处理插件处理推理结果，从中获取掩膜mask，然后与原始图片进行融合，之后通过图像编码插件mxpi_imageencoder将后处理插件的融合后的数据进行编码，最后使用输出插件appsink输出可视化的结果。
 
 表1 系统方案各子系统功能描述：
 
@@ -42,9 +42,9 @@
 
 ### 1.3 支持的版本
 
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  |  CANN版本 | Driver/Firmware版本  |
+| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
@@ -77,7 +77,7 @@
 ## 2 环境设置
 在编译运行项目前，需要设置环境变量：
 
-- Vision SDK 环境变量，其中${SDK-path}为Vision SDK安装路径
+- MindX SDK 环境变量，其中${SDK-path}为MindX SDK安装路径
 ```
 . ${SDK-path}/set_env.sh
 ```

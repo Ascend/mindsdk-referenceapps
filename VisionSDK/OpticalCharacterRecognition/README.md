@@ -11,9 +11,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- |---------| -------------- |
 | 6.0.RC3   | 8.0.RC3 |  24.1.RC3  |
 
@@ -100,7 +100,7 @@
 #设置CANN环境变量
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置Vision SDK环境变量，SDK-path为Vision SDK 安装路径
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

@@ -16,9 +16,9 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 ### 1.4 三方依赖
@@ -29,7 +29,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 | OpenCV              | 4.7.0                                                        | 用于结果可视化                                     |
 | FreeType            | [2.10.0](https://download.savannah.gnu.org/releases/freetype/) | 用于在图片上写中文（opencv只支持在图片上写英文字符） |
 
-**注**：OpenCV已在Vision SDK软件包中包含。
+**注**：OpenCV已在MxVision软件包中包含。
 
 FreeType编译安装流程如下：
 
@@ -88,7 +88,7 @@ atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./ca
 ## 4 编译与运行
 ### 4.1 修改CMakeLists.txt文件
 
-第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置Vision SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
+第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置MindX SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
 
 第**12**行 `set(FREETYPE_HOME $ENV{FREETYPE_HOME})` 语句是设置FreeType库的安装路径，若未设置FREETYPE_HOME环境变量，需将$ENV{FREETYPE_HOME}替换为用户实际的FreeType库安装路径。
 

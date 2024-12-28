@@ -52,7 +52,7 @@
 
 ### 2.1 依赖软件安装
 - CANN获取[链接](https://www.hiascend.com/software/cann), 安装[参考链接](https://www.hiascend.com/document/detail/zh/canncommercial/70RC1/envdeployment/instg/instg_0013.html)
-- MindSDK 获取[链接](https://www.hiascend.com/software/Mindx-sdk), 安装[参考链接](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc3/vision/mxvisionug/mxvisionug_0014.html)
+- MindX SDK 获取[链接](https://www.hiascend.com/software/Mindx-sdk), 安装[参考链接](https://www.hiascend.com/document/detail/zh/mind-sdk/50rc3/vision/mxvisionug/mxvisionug_0014.html)
 
 ### 2.2 python依赖安装
 #### 依赖库及版本

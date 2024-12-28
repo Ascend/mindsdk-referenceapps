@@ -12,7 +12,7 @@ Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
 
-| Vision SDK版本 | CANN版本  | Driver/Firmware版本 |
+| MxVision版本 | CANN版本  | Driver/Firmware版本 |
 |------------|---------|-------------------|
 | 6.0.RC2    | 8.0.RC2 | 24.1.RC2          |
 | 6.0.RC3    | 8.0.RC3 | 24.1.RC3          |
@@ -32,14 +32,14 @@ Atlas 300I pro、Atlas 300V pro
 ## 2 设置环境变量
 
 ```
-# Vision SDK环境变量:
+# MindX SDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:
 .${ascend-toolkit-path}/set_env.sh
 
 # 环境变量介绍
-SDK-path:SDK Vision SDK安装路径
+SDK-path:SDK mxVision安装路径
 ascend-toolkit-path:CANN安装路径
 ```
 将主目录下的`CMakeLists.txt`文件中第七行`set(MX_SDK_HOME "/usr/local/Ascend/mindx_sdk/mxVision/")`中`/usr/local/Ascend/mindx_sdk/mxVision/`内容替换为上述SDK安装路径。

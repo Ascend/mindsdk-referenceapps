@@ -329,8 +329,8 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
             return APP_ERR_COMM_FAILURE;
     }
     // Step1: 字幕生成
-    if (captionPool_.IsCaptionExist(text1, text2)) {
-        APP_ERROR ret = captionPool_.GetCaptionAndMask(text1, text2, caption_, mask_);
+    if (captionPool_.isCaptionExist(text1, text2)) {
+        APP_ERROR ret = captionPool_.getCaptionAndMask(text1, text2, caption_, mask_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to get caption and mask from captionPool.";
             return APP_ERR_COMM_FAILURE;
@@ -343,7 +343,7 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
             LogError << "Fail to generate caption for putText function.";
             return APP_ERR_COMM_FAILURE;
         }
-        ret = captionPool_.PutCaptionAndMask(text1, text2, caption_, mask_);
+        ret = captionPool_.putCaptionAndMask(text1, text2, caption_, mask_);
         if (ret != APP_ERR_OK) {
             LogError << "Fail to put caption and mask into captionPool.";
             return APP_ERR_COMM_FAILURE;
@@ -359,9 +359,9 @@ APP_ERROR CaptionImpl::putText(MxBase::Tensor &img, const std::string text1, con
 }
 
 int CaptionImpl::getLength(const std::string text) {
-    if (captionPool_.IsCaptionLengthExist(text)) {
+    if (captionPool_.isCaptionLengthExist(text)) {
         int captionLength;
-        captionPool_.GetCaptionLength(text, captionLength);
+        captionPool_.getCaptionLength(text, captionLength);
         return captionLength;
     }
     std::vector<uint32_t> compChrNum;
@@ -376,6 +376,6 @@ int CaptionImpl::getLength(const std::string text) {
         }
         totalWidth += CaptionGenManager::getInstance().FindWidth(font, fontSizeMap_[font], token.first);
     }
-    captionPool_.PutCaptionLength(text, totalWidth);
+    captionPool_.putCaptionLength(text, totalWidth);
     return totalWidth;
 }

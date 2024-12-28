@@ -5,7 +5,7 @@
 
 在电力能源厂区需要定期监测表计读数，以保证设备正常运行及厂区安全。但厂区分布分散，人工巡检耗时长，无法实时监测表计，且部分工作环境危险导致人工巡检无法触达。针对上述问题，希望通过摄像头拍照后利用计算机智能读数的方式高效地完成此任务。
 
-在本系统中，目的是基于Vision SDK，在华为云昇腾平台上，开发端到端工业指针型表计读数的参考设计，实现对传统机械式指针表计的检测与自动读数功能，达到功能要求。
+在本系统中，目的是基于MindX SDK，在华为云昇腾平台上，开发端到端工业指针型表计读数的参考设计，实现对传统机械式指针表计的检测与自动读数功能，达到功能要求。
 
 
 
@@ -17,16 +17,16 @@
 
 | 序号 | 子系统 | 功能描述 |
 | :------------ | :---------- | :---------- |
-| 1    | 图像输入 | 调用Vision SDK的appsrc输入图片|
-| 2    | 图像解码 | 调用Vision SDK的mxpi_imagedecoder输入图片|
-| 3    | 图像放缩 | 调用Vision SDK的mxpi_imageresize，放缩到1024*576大小 |
-| 4    | 工业表检测 | 调用Vision SDK的mxpi_tensorinfer，使用YOLOv5的检测模型，检测出图片中车辆|
+| 1    | 图像输入 | 调用MindX SDK的appsrc输入图片|
+| 2    | 图像解码 | 调用MindX SDK的mxpi_imagedecoder输入图片|
+| 3    | 图像放缩 | 调用MindX SDK的mxpi_imageresize，放缩到1024*576大小 |
+| 4    | 工业表检测 | 调用MindX SDK的mxpi_tensorinfer，使用YOLOv5的检测模型，检测出图片中车辆|
 | 5    | 保存工业表的图像 | 将YOLOv5检测到的工业表结果保存图片|
-| 6    | 图像输入| 调用Vision SDK的appsrc输入检测到的工业表 |
-| 7    | 图像解码 | 调用Vision SDK的mxpi_imagedecoder输入图片|
-| 8    | 图像放缩 | 调用Vision SDK的mxpi_imageresize，放缩到512*512大小 
-| 9    | 指针刻度检测 | 调用Vision SDK的mxpi_tensorinfer，使用DeepLabv3语义分割模型，检测图像中的指针与刻度|
-| 10    | 模型后处理 | 调用Vision SDK的mxpi_semanticsegpostprocessor，得到语义分割的结果|
+| 6    | 图像输入| 调用MindX SDK的appsrc输入检测到的工业表 |
+| 7    | 图像解码 | 调用MindX SDK的mxpi_imagedecoder输入图片|
+| 8    | 图像放缩 | 调用MindX SDK的mxpi_imageresize，放缩到512*512大小 
+| 9    | 指针刻度检测 | 调用MindX SDK的mxpi_tensorinfer，使用DeepLabv3语义分割模型，检测图像中的指针与刻度|
+| 10    | 模型后处理 | 调用MindX mxpi_semanticsegpostprocessor，得到语义分割的结果|
 | 11    | 读数后处理 | 开发mxpi_process3插件，读出工业表的数字|
 
 技术实现流图：
@@ -64,9 +64,9 @@
 
 ### 1.3 支持的版本
 
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -123,7 +123,7 @@
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

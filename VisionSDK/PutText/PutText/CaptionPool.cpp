@@ -15,67 +15,60 @@
  */
 #include "CaptionPool.h"
 
-CaptionPool::CaptionPool(size_t maxSize)
-{
-    text2Lenghth_ = std::make_shared<LimitedSizeMap<std::string, int>>(maxSize);
-    text2CaptionMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
-    text2MaskMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(maxSize);
+CaptionPool::CaptionPool(size_t max_size) {
+    text2Lenghth_ = std::make_shared<LimitedSizeMap<std::string, int>>(max_size);
+    text2CaptionMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(max_size);
+    text2MaskMap_ = std::make_shared<LimitedSizeMap<std::string, MxBase::Tensor>>(max_size);
 }
 
-APP_ERROR CaptionPool::PutCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption,
-                                         MxBase::Tensor mask)
-{
+APP_ERROR CaptionPool::putCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor caption,
+                                         MxBase::Tensor mask) {
     std::string textMark = text1 + "_" + text2;
-    if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr) {
-        text2CaptionMap_->Put(textMark, caption);
-        text2MaskMap_->Put(textMark, mask);
+    if(text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr) {
+        text2CaptionMap_->put(textMark, caption);
+        text2MaskMap_->put(textMark, mask);
         return APP_ERR_OK;
     }
     return APP_ERR_COMM_FAILURE;
 }
 
-APP_ERROR CaptionPool::GetCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption,
-                                         MxBase::Tensor& mask)
-{
+APP_ERROR CaptionPool::getCaptionAndMask(std::string text1, std::string text2, MxBase::Tensor& caption,
+                                         MxBase::Tensor& mask) {
     std::string textMark = text1 + "_" + text2;
     if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr &&
-        text2CaptionMap_->Get(textMark, caption) && text2MaskMap_->Get(textMark, mask)) {
+        text2CaptionMap_->get(textMark, caption) && text2MaskMap_->get(textMark, mask)) {
         return APP_ERR_OK;
     }
     return APP_ERR_COMM_FAILURE;
 }
 
-bool CaptionPool::IsCaptionExist(std::string text1, std::string text2)
-{
+bool CaptionPool::isCaptionExist(std::string text1, std::string text2) {
     std::string textMark = text1 + "_" + text2;
     if (text2MaskMap_ != nullptr && text2CaptionMap_ != nullptr &&
-        text2MaskMap_->IsExist(textMark) && text2CaptionMap_->IsExist(textMark)) {
+        text2MaskMap_->isExist(textMark) && text2CaptionMap_->isExist(textMark)) {
         return true;
     }
     return false;
 }
 
-APP_ERROR CaptionPool::PutCaptionLength(std::string text, int length)
-{
+APP_ERROR CaptionPool::putCaptionLength(std::string text, int length) {
     if (text2Lenghth_ != nullptr) {
-        text2Lenghth_->Put(text, length);
+        text2Lenghth_->put(text, length);
         return APP_ERR_OK;
     }
     return APP_ERR_COMM_FAILURE;
 }
 
 
-APP_ERROR CaptionPool::GetCaptionLength(std::string text, int& length)
-{
-    if (text2Lenghth_ != nullptr && text2Lenghth_->Get(text, length)) {
+APP_ERROR CaptionPool::getCaptionLength(std::string text, int& length) {
+    if (text2Lenghth_ != nullptr && text2Lenghth_->get(text, length)) {
         return APP_ERR_OK;
     }
     return APP_ERR_COMM_FAILURE;
 }
 
-bool CaptionPool::IsCaptionLengthExist(std::string text)
-{
-    if (text2Lenghth_ != nullptr && text2Lenghth_->IsExist(text)) {
+bool CaptionPool::isCaptionLengthExist(std::string text) {
+    if (text2Lenghth_ != nullptr && text2Lenghth_->isExist(text)) {
         return true;
     }
     return false;

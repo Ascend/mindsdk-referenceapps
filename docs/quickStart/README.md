@@ -1,12 +1,12 @@
 # 简介
-Vision SDK快速入门教程
+MindX SDK快速入门教程
 # 文档教程
 
 - **开发环境**
   - [环境安装](1-1安装SDK开发套件.md)
   - [IDE开发环境搭建](1-2IDE开发环境搭建.md)
   - [MindStuido开发环境搭建](1-3MindStuido开发环境搭建.md)
-  - [Vision SDK流程编码接口介绍](1-4Vision SDK流程编码接口介绍.md)
+  - [MIND_SDK总体结构](1-4MindX_SDK总体结构.md)
   
 - **初级开发**
   - [图像检测样例运行](2-1图像检测sample样例.md)

@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-基于 Vision SDK 实现 SLT-Net 模型的推理。输入连续几帧伪装物体的视频序列，输出伪装物体掩膜 Mask 图。
+基于 MindX SDK 实现 SLT-Net 模型的推理。输入连续几帧伪装物体的视频序列，输出伪装物体掩膜 Mask 图。
 
 ### 1.2 支持的产品
 
@@ -11,9 +11,9 @@
 
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

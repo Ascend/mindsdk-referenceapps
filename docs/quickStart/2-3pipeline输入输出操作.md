@@ -1,4 +1,5 @@
 # 2.3 pipeline输入输出操作
+**本章节中mxManufacture和mxVision可互相替换**
 
 ## 2.3.1 业务流程对接接口介绍
 ### 2.3.1.1 SendData-GetResult 数据流图
@@ -156,7 +157,7 @@ GST_PLUGIN_PATH=/home/*****/home/work/MindX_SDK/mxManufacture/opensource/lib/gst
 
 #### 步骤 3 配置SDK路径
 
-配置CMakeLists.txt中的MX_SDK_HOME环境变量，配置安装了Vision SDK的路径
+配置CMakeLists.txt中的MX_SDK_HOME环境变量，配置安装了MindX SDK的路径
 
 set(MX_SDK_HOME ${SDK安装路径}/mxManufacture)  
 

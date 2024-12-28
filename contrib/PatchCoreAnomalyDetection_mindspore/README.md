@@ -2,7 +2,7 @@
 
 ## 1. 项目概述
 
-该项目基于MindSpore实现算法训练与优化，并在Vision SDK实现推理部署；
+该项目基于MindSpore实现算法训练与优化，并在MindX SDK实现推理部署；
 
 项目选取的算法是Patchcore，并在此基础上进行精度和性能的优化和提升。PatchCore是2021年提出的基于预训练神经网络的工业异常检测模型，截至2021年末在MVTex-AD数据集上精度排名第一。PatchCore训练时仅使用正常样本，训练过程中不对网络参数进行更新(无反向传播)，将每张图片的网络输出(图片对应区域的特征表示)保存作为“Memory Bank”的一部分，最后进行采样操作得到最终“Memory Bank”。推理时加载“Memory Bank”，得到某张图片的网络输出后，通过论文定义的计算得到该图片score，以输出异常图。
 
@@ -58,7 +58,7 @@ python pthtockpt.py --pth_path wide_resnet101_2-32ee1156.pth
 python train_all.py --dataset_path path/to/mvtec/ --results /path/to/results/ --device_id 0
 ```
 
-​ 训练结束之后会在./results(默认为results)目录下保存训练出的faiss文件(./results/exp_n/models/})，训练结束之后保存的faiss文件需要移动到Ascend310(即PatchCoreAnomalyDetection目录下的faiss-index-precision目录)。同时会保存air文件，用于转换om模型，完成Vision SDK推理。所有子数据集训练完成，会生成wideresnet101_layer2.air和wideresnet_layer3.air文件，通过拆分特征层，提升最终推理的性能。将文件上传至310推理环境。件，通过拆分特征层，提升最终推理的性能。
+​ 训练结束之后会在./results(默认为results)目录下保存训练出的faiss文件(./results/exp_n/models/})，训练结束之后保存的faiss文件需要移动到Ascend310(即PatchCoreAnomalyDetection目录下的faiss-index-precision目录)。同时会保存air文件，用于转换om模型，完成MindX SDK推理。所有子数据集训练完成，会生成wideresnet101_layer2.air和wideresnet_layer3.air文件，通过拆分特征层，提升最终推理的性能。将文件上传至310推理环境。件，通过拆分特征层，提升最终推理的性能。
 
 - 训练某一个子数据集
 

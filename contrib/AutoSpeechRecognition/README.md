@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-  本开发样例基于Vision SDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
+  本开发样例基于MindX SDK实现了端到端的自动语音识别（Automatic speech recognition, ASR）。<br/>
   ASR主要分为两个步骤：<br/>
 
   **步骤1**  将语音转换成对应的拼音 <br/>
@@ -17,9 +17,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas300V pro
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |

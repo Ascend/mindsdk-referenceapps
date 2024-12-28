@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例是基于Vision SDK基础模块（MxBase）开发的端到端推理的小麦检测程序，实现对图像中的小麦进行识别检测的功能，并把可视化结果保存到本地。其中包含yolov5的后处理模块开发。
+本开发样例是基于MindX SDK基础模块（MxBase）开发的端到端推理的小麦检测程序，实现对图像中的小麦进行识别检测的功能，并把可视化结果保存到本地。其中包含yolov5的后处理模块开发。
 该Sample的主要处理流程为：
 Init > ReadImage >Resize > Inference >PostProcess >DeInit <br/>
 参考设计来源：https://github.com/Yunyung/Global-Wheat-Detection-Competition <br/>
@@ -51,8 +51,8 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit <br/>
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
@@ -83,7 +83,7 @@ Init > ReadImage >Resize > Inference >PostProcess >DeInit <br/>
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
+#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

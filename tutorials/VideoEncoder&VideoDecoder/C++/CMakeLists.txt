@@ -1,7 +1,7 @@
 #
 # Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 # Description: CMakeLists for this project.
-# Author: Vision SDK
+# Author: MindX SDK
 # Create: 2024
 # History: NA
 #

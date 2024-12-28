@@ -1,7 +1,7 @@
 
 
 
-# Vision SDK快速入门——开发opencv的均一化插件
+# MxVision快速入门——开发opencv的均一化插件
 
 ## 1 介绍
 
@@ -15,7 +15,7 @@ opencv的均一化插件开发样例基于c++代码，生成SDK插件，以用�
 
 ### 1.3 支持的版本
 
-| Vision SDK版本 | CANN版本  | Driver/Firmware版本 |
+| MxVision版本 | CANN版本  | Driver/Firmware版本 |
 |------------|---------|-------------------|
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -23,14 +23,14 @@ opencv的均一化插件开发样例基于c++代码，生成SDK插件，以用�
 ## 2 设置环境变量
 
 ```
-# Vision SDK环境变量:
+# MindX SDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:
 .${ascend-toolkit-path}/set_env.sh
 
 # 环境变量介绍
-SDK-path:Vision SDK安装路径
+SDK-path:SDK mxVision安装路径
 ascend-toolkit-path:CANN安装路径
 ```
 

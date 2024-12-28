@@ -2,7 +2,7 @@
 
 ## 1 介绍
 
-   使用BigGAN模型，在MindSDK环境下实现图像生成功能。
+   使用BigGAN模型，在MindxSDK环境下实现图像生成功能。
 
    BigGAN模型的输入数据是由噪声数据和标签数据组成，其中噪声数据是由均值为0，方差为1的正态分布中采样，标签数据是由0至类别总数中随机采样一个整数。针对不同的batch size需要生成不同的输入数据。   
 
@@ -17,7 +17,7 @@
 
 CANN：7.0.RC1
 
-SDK：Vision SDK 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 ### 1.3 软件方案介绍
 
@@ -58,7 +58,7 @@ SDK：Vision SDK 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
 
 | 软件名称            | 版本        | 说明                          | 获取方式                                                     |
 | ------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ |
-| Vision SDK           | 5.0.RC3     | Vision SDK软件包                | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) |
+| MindX SDK           | 5.0.RC3     | mxVision软件包                | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2FMindx-sdk) |
 | ubuntu              | 18.04.1 LTS | 操作系统                      | Ubuntu官网获取                                               |
 | Ascend-CANN-toolkit | 7.0.RC1     | Ascend-cann-toolkit开发套件包 | [链接](https://gitee.com/link?target=https%3A%2F%2Fwww.hiascend.com%2Fsoftware%2Fcann%2Fcommercial) |
 | python              | 3.9.2       |                               |                                                              |

@@ -8,14 +8,14 @@ PraNet是一种针对息肉分割任务需求设计的，名为并行反向注�
 基于并行反向注意力的息肉分割网络（PraNet），利用并行的部分解码器（PPD）在高级层中聚合特征作为初始引导区域，
 再使用反向注意模块（RA）挖掘边界线索。
 
-本项目基于MindSDK框架实现了PraNet模型的推理。
+本项目基于Mind SDK框架实现了PraNet模型的推理。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

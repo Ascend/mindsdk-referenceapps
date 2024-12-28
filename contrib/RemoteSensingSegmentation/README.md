@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例基于Vision SDK实现了对遥感影像地图进行的语义分割能力，并以可视化的形式返回输出。
+本开发样例基于MindX SDK实现了对遥感影像地图进行的语义分割能力，并以可视化的形式返回输出。
 
 本样例使用DANet和Deeplabv3+，其中两模型均使用了pytorch官方提供的resnet101预训练模型作为backbone,
 使用SGDR对模型进行训练,选择多个局部最优点的结果进行集成。
@@ -13,9 +13,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

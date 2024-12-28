@@ -3,11 +3,11 @@
 ## 1 介绍
 ### 1.1 简介
 
-本样例基于Vision SDK开发，在昇腾芯片上对输入图片进行目标和关键点检测，将检测结果可视化并保存。
+本样例基于mxVision开发，在昇腾芯片上对输入图片进行目标和关键点检测，将检测结果可视化并保存。
 
 目标检测指对输入图片输出目标检测框，关键点检测则指输出包括双眼，鼻尖和嘴巴两边在内的五个关键点。本方案模型推理采用CenterFace(一个轻量化的目标检测模型，同时实现了目标检测+关键点检测)，对模型的输出开发两个后处理插件——目标检测插件和关键点检测插件，分别对目标目标框和关键点信息进行了可视化处理。
 
-基于Vision SDK的目标检测和关键点模型(动态分辨率)推理流程为：
+基于mxVision的目标检测和关键点模型(动态分辨率)推理流程为：
 
 待检测图片通过appsrc插件输入，然后使用图像解码mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图形缩放至合适的分辨率档位，缩放后的图形输入模型推理插件mxpi_tensorinfer得到模型输出。本项目开发的模型后处理插件包括目标检测和关键点检测两部分；模型推理得到的结果分别送入两个后处理插件。目标检测插件用来得到目标目标框，关键点检测插件得到五个关键点。目标检测插件的结果可同图片mxpi_imagedecoder结果送入OSD可视化插件，和关键点检测插件通过appsink完成整个pipeline的流程，最后在外部使用opencv对目标和关键点进行可视化描绘并保存。本系统的各模块及功能如表1所示：
 
@@ -37,7 +37,7 @@
 
 ### 1.3 支持的版本
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本 |
+| MxVision版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
@@ -102,7 +102,7 @@ atc --model=centerface_offical.onnx --output=centerface_offical --dynamic_image_
 
 **步骤1：编译**
 
-进入Vision SDK安装目录的`operators/opencvosd`目录下执行以下命令：
+进入mxVision安装目录的`operators/opencvosd`目录下执行以下命令：
 
 ```
 bash generate_osd_om.sh

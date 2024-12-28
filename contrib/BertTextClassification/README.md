@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-文本分类插件基于 Vision SDK 开发，在昇腾芯片上进行文本分类，将分类结果保存。输入一段新闻，可以判断该新闻属于哪个类别。
+文本分类插件基于 MindXSDK 开发，在昇腾芯片上进行文本分类，将分类结果保存。输入一段新闻，可以判断该新闻属于哪个类别。
 该模型支持5个新闻类别：体育、健康、军事、教育、汽车。
 
 ### 1.2 支持的产品
@@ -13,8 +13,8 @@
 
 ### 1.3 支持的版本
 
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -113,7 +113,7 @@ cp ./bert_text_classification.om ./mxBase/model/
 
 **步骤2** 
 
-将本项目代码/BertTextClassification/sdk/pipeline目录下BertTextClassification.pipeline文件中的第26行的文件路径中出现的 ${SDK目录} 替换成Vision SDK的安装目录，下面是需要替换的代码片段。
+将本项目代码/BertTextClassification/sdk/pipeline目录下BertTextClassification.pipeline文件中的第26行的文件路径中出现的 ${SDK目录} 替换成mxVision SDK的安装目录，下面是需要替换的代码片段。
 ```
 "postProcessLibPath": "${SDK目录}/lib/modelpostprocessors/libresnet50postprocess.so"
 ```

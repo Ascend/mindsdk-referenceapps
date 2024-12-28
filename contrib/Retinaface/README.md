@@ -2,7 +2,7 @@
 
 ## 1介绍
 
-Retinaface基于Vision SDK开发，在昇腾芯片上进行目标检测，并实现可视化呈现。输入单张图片，对其进行推理，输出推理结果。
+Retinaface基于MindX_SDK开发，在昇腾芯片上进行目标检测，并实现可视化呈现。输入单张图片，对其进行推理，输出推理结果。
 
 ### 1.1 支持的产品
 
@@ -77,7 +77,7 @@ Retinaface基于Vision SDK开发，在昇腾芯片上进行目标检测，并实
 
 | 软件名称            | 版本  | 说明                          | 获取方式                                                  |
 | ------------------- | ----- | ----------------------------- | :-------------------------------------------------------- |
-| Vision SDK           | 2.0.4 | Vision SDK软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
+| MindX SDK           | 2.0.4 | mxVision软件包                | [链接](https://www.hiascend.com/software/Mindx-sdk)       |
 | ubuntu              | 18.04 | 操作系统                      | 请上ubuntu官网获取                                        |
 | Ascend-CANN-toolkit | 5.0.4 | Ascend-cann-toolkit开发套件包 | [链接](https://www.hiascend.com/software/cann/commercial) |
 
@@ -85,7 +85,7 @@ Retinaface基于Vision SDK开发，在昇腾芯片上进行目标检测，并实
 
 在编译运行项目前，需要设置环境变量：
 
-Vision SDK 环境变量：
+MindSDK 环境变量：
 
 ```
 . ${SDK-path}/set_env.sh
@@ -100,7 +100,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: Vision SDK 安装路径
+SDK-path: mxVision SDK * 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```
 

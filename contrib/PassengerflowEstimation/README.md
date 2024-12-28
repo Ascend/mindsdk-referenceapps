@@ -3,14 +3,14 @@
 ## 1 介绍
 
 ### 1.1 简介
-passengerflowestimation基于Vision SDK开发，在昇腾芯片上进行客流量统计，输入一段视频，最后可以得出在某一时间内的客流量。本项目适用于俯视角度较大，并且人流量不是非常密集的视频中人流量统计。
+passengerflowestimation基于MindXSDK开发，在昇腾芯片上进行客流量统计，输入一段视频，最后可以得出在某一时间内的客流量。本项目适用于俯视角度较大，并且人流量不是非常密集的视频中人流量统计。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
-|Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

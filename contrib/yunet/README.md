@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-yunet基于Vision SDK开发，在昇腾芯片上进行人脸检测，并实现可视化呈现。输入3路视频，对其进行推理，输出推理结果。
+yunet基于MindXSDK开发，在昇腾芯片上进行人脸检测，并实现可视化呈现。输入3路视频，对其进行推理，输出推理结果。
 
 技术实现流程图如下：
 
@@ -31,9 +31,9 @@ yunet基于Vision SDK开发，在昇腾芯片上进行人脸检测，并实现�
 
 ### 1.3 支持的版本
 
-本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
 
-| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| MxVision版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -128,7 +128,7 @@ ATC run success, welcome to the next use.
 
 **步骤4：** 编译。在项目根目录下，先执行命令`bash ${MX_SDK_HOME}/operators/opencvosd/generate_osd_om.sh`编译opencv_osd算子，然后再执行命令`bash build.sh`
 
-**步骤5：** 拷贝so文件至Vision SDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
+**步骤5：** 拷贝so文件至MindXSDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
 
 ```bash
 chmod 640 plugin/build/libyunetpostprocess.so
@@ -145,7 +145,7 @@ cp plugin/build/libyunetpostprocess.so ${MX_SDK_HOME}/lib/modelpostprocessors/
 
 **步骤1：** 修改`pipeline/InferTest.pipeline`文件。操作方式参考[第4节步骤3](#4-编译与运行)
 
-**步骤2：** 拷贝so文件至Vision SDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
+**步骤2：** 拷贝so文件至MindXSDK安装路径的`lib/modelpostprocessors/`目录下。在根目录下执行命令：
 
 ```bash
 chmod 640 plugin1/build/libtotalyunetpostprocess.so

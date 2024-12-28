@@ -2,8 +2,6 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 import json
-import os
-import stat
 import re
 import time
 from datetime import datetime, timezone
@@ -13,6 +11,7 @@ from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
 from agent_sdk.prompts.pre_prompt import single_action_agent_prompt, single_action_final_prompt
+from agent_sdk.common.constant import save_traj_local
 
 
 class SingleActionAgent(BaseAgent):
@@ -88,36 +87,7 @@ class SingleActionAgent(BaseAgent):
 
     def save_agent_status(self, file_path):
         try:
-            instruction = self.prompt.format(
-                tools=self.tools,
-                tools_name=self.tool_names,
-                query=self.query,
-                scratchpad=""
-            )
-
-            traj = self.scratchpad.strip()
-            save_dict = {
-                "instruction": instruction,
-                "input": "",
-                "output": traj,
-                "final answer": self.answer,
-                "status": self.finished
-            }
-            directory = os.path.dirname(file_path)
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-                logger.info("create log directory")
-            flag = os.O_WRONLY | os.O_CREAT | os.O_APPEND
-            mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "a") as fout:
-                # json.dump(save_dict, fout, ensure_ascii=False)
-                # fout.write("\n")
-                fout.write("****************TASK START*******************\n")
-                fout.write(f"task: {self.query}\n")
-                fout.write(f"trajectory: {traj}\n")
-                fout.write(f"status: {self.finished}\n")
-                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}\n")
-                fout.write("*****************TASK END*******************\n\n\n")
+            save_traj_local(self.query, self.scratchpad, file_path)
         except Exception as e:
             logger.error(f"agent_prompt = {self.prompt}")
             logger.error(e)

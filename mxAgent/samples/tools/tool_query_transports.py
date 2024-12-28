@@ -63,7 +63,6 @@ class QueryTransports(API):
                 请生成总结：
                 """
             filtered = filter_website_keywords(keys)
-            filtered.append("购票")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
             res = {'transport': json.dumps(webs, ensure_ascii=False, indent=4)}

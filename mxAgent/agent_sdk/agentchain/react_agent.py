@@ -1,7 +1,5 @@
 import copy
 import json 
-import os
-import stat
 import re 
 from abc import ABC
 from dataclasses import dataclass
@@ -15,6 +13,7 @@ from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
 from agent_sdk.prompts.pre_prompt import travel_agent_prompt, reflect_prompt_value, \
     react_reflect_planner_agent_prompt, REFLECTION_HEADER
 from agent_sdk.toolmngt.api import APIResponse
+from agent_sdk.common.constant import save_traj_local
 
 
 class ReflexionStrategy(Enum):
@@ -109,39 +108,7 @@ class ReactAgent(BaseAgent, ABC):
 
     def save_agent_status(self, file_path: str):
         try:
-            instruction = self.prompt.format(
-                tools=self.tools,
-                times=self.max_steps - 1,
-                tools_name=self.tool_names,
-                query=self.query,
-                example=self.example,
-                scratchpad="")
-            traj = self.scratchpad.strip()
-
-            save_dict = {
-                "instruction": instruction, "input": "", "output": traj,
-                "status": self.finished, "created_at": str(datetime.now(tz=timezone.utc)),
-                "task": self.query
-            }
-            save_dict = {
-                "task": self.query,
-                "trajectory": traj,
-                "created_at": str(datetime.now(tz=timezone.utc)),
-            }
-
-            directory = os.path.dirname(file_path)
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-                logger.info("create log directory")
-            flag = os.O_WRONLY | os.O_CREAT | os.O_APPEND
-            mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "a") as fout:
-                fout.write("***************TASK START********************\n")
-                fout.write(f"task: {self.query}\n")
-                fout.write(f"trajectory: {traj}\n")
-                fout.write(f"status: {self.finished}\n")
-                fout.write(f"created_at {str(datetime.now(tz=timezone.utc))}\n")
-                fout.write("*****************TASK END*******************\n\n\n")
+            save_traj_local(self.query, self.scratchpad, file_path)
             logger.success(f"save {self.__class__.__name__} status done")
         except Exception as e:
             logger.error(f"prompt = {self.prompt}")

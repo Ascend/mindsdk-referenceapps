@@ -58,15 +58,17 @@ Thought: you should always think about what to do
 Action: the action to take, should be one of {tools_name}
 Action Input: the input to the action.
 Observation: the result of the action.\n"""
-+ f"Please be aware that the current date is: {date.today().strftime('%Y-%m-%d')}.\n"
++ f"Please be aware that default date is today on {date.today().strftime('%Y-%m-%d')}.\n"
 + """
+Some rules you should follow:
+1. The parameters of tools are alternative, if the user haven't provided, you just keep it empty.
 Begin!
 
-Question: {query}
+Question: {query}.
 {scratchpad}""")
 
 
-FINAL_PROMPT = """Please refine a clear and targeted answer based on the user's query and
+FINAL_PROMPT = """Please write a clear and targeted survey based on the user's query and
  the existing answer. \
  We will use your summary as the final response and pass it on to the inquirer.
 

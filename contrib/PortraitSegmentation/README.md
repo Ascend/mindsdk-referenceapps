@@ -3,14 +3,14 @@
 ## 1 介绍
 
 ### 1.1 简介
-本开发样例基于MindX SDK实现了端到端的人像分割与背景替换（Portrait Segmentation and Background Replacement, PSBR）。PSBR的主要功能是使用Portrait模型对输入图片中的人像进行分割，然后与背景图像融合，实现背景替换。输入为带有简单背景的单人jpg图片和一张没有人像的背景jpg图片，输出为人像背景替换后的jpg图片。
+本开发样例基于Vision SDK实现了端到端的人像分割与背景替换（Portrait Segmentation and Background Replacement, PSBR）。PSBR的主要功能是使用Portrait模型对输入图片中的人像进行分割，然后与背景图像融合，实现背景替换。输入为带有简单背景的单人jpg图片和一张没有人像的背景jpg图片，输出为人像背景替换后的jpg图片。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

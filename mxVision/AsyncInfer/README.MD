@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-异步目标检测样例基于mxVision SDK进行开发，调用异步推理接口，对图像中的不同类目标进行检测，得到图像中大部分目标的类别和位置。
+异步目标检测样例基于Vision SDK进行开发，调用异步推理接口，对图像中的不同类目标进行检测，得到图像中大部分目标的类别和位置。
 
 ### 1.2 支持的产品
 
@@ -12,9 +12,9 @@
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

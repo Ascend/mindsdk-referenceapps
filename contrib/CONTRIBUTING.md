@@ -1,6 +1,6 @@
 ### 介绍
 
-mindxsdk-referenceapps欢迎各位开发者的加入，希望各位开发者遵循社区的行为准则，共同建立一个开放和受欢迎的社区 [ Ascend社区行为准则 1.0 版本]([code-of-conduct_zh_cn.md · Ascend/community - 码云 - 开源中国 (gitee.com)](https://gitee.com/ascend/community/blob/master/code-of-conduct_zh_cn.md))
+mindsdk-referenceapps欢迎各位开发者的加入，希望各位开发者遵循社区的行为准则，共同建立一个开放和受欢迎的社区 [ Ascend社区行为准则 1.0 版本]([code-of-conduct_zh_cn.md · Ascend/community - 码云 - 开源中国 (gitee.com)](https://gitee.com/ascend/community/blob/master/code-of-conduct_zh_cn.md))
 
 ### 贡献要求
 
@@ -19,7 +19,7 @@ mindxsdk-referenceapps欢迎各位开发者的加入，希望各位开发者遵�
 | **README**   | 包含第三方依赖安装、模型转换、编译、运行指导等内容，能指导端到端使用 |
 | 代码         | 包含插件开发的C++代码、CMakeLists.txt、python/C++推理运行代码、精度与性能测试代码 |
 | 配置文件     | 运行时相关配置文件，用于加载相关运行参数的文件               |
-| pipeline文件 | MindX SDK的编排文件                                          |
+| pipeline文件 | Mind SDK的编排文件                                          |
 | 启动脚本     | 包括编译、运行、测试、模型转换等脚本                         |
 
 - **典型的目录结构**
@@ -49,7 +49,7 @@ mindxsdk-referenceapps欢迎各位开发者的加入，希望各位开发者遵�
 
 ### 二、源码
 
-1、MindX SDK离线推理请使用`C++`或`python`代码，符合第四部分编码规范
+1、Mind SDK离线推理请使用`C++`或`python`代码，符合第四部分编码规范
 
 2、贡献者参考设计代码目录命名规则
 
@@ -135,7 +135,7 @@ mindxsdk-referenceapps/contrib/参考设计名称(英文)
 
 - 关键要求：
 
-1、请将**`mindxsdk-referenceapps`**仓**fork**到个人分支，基于个人分支提交代码到个人**fork仓**，并创建**`Pull Requests`**，提交合并请求到主仓上
+1、请将**`mindsdk-referenceapps`**仓**fork**到个人分支，基于个人分支提交代码到个人**fork仓**，并创建**`Pull Requests`**，提交合并请求到主仓上
 
 **参考Fork+Pull Requests 模式**：https://gitee.com/help/articles/4128#article-header0
 

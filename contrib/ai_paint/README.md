@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-  本开发样例基于MindX SDK实现了从结构化描述生成对应风景照片的功能。
+  本开发样例基于MindSDK实现了从结构化描述生成对应风景照片的功能。
   参考以下链接说明： <br/>
   参考设计来源 - https://www.hiascend.com/zh/developer/mindx-sdk/landscape?fromPage=1 <br/>
   相关代码 - https://gitee.com/ascend/samples/tree/master/cplusplus/contrib/AI_painting <br/>
@@ -12,9 +12,9 @@
 本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |

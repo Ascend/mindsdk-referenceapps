@@ -22,9 +22,9 @@
  
 
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+|Vision SDK版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |

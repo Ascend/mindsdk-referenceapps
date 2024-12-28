@@ -1,6 +1,6 @@
 
 
-# MindXSDK 行人重识别v2
+# Vision SDK 行人重识别v2
 
 ## 1 介绍
 ### 1.1 简介
@@ -47,9 +47,9 @@ ReID 技术和目标的技术可以做一个补充，当能看到目标的时候
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 

@@ -24,8 +24,8 @@
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0     | 7.0.0     |  23.0.0    |
 | 6.0.RC2   | 8.0.RC2   |  24.1.RC2  |
@@ -85,7 +85,7 @@
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 
 #设置FFMPEG环境变量，FFMPEG_HOME为ffmpeg安装的路径

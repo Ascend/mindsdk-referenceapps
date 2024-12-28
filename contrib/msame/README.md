@@ -3,7 +3,7 @@
 ## 1 介绍
 
 ### 1.1 简介
-基于MindX SDK实现开发模型推理工具，本例为msame的python版本实现，适用于单输入或多输入的om模型推理。[msame-C++工具链接](https://gitee.com/ascend/tools/tree/master/msame)
+基于Vision SDK实现开发模型推理工具，本例为msame的python版本实现，适用于单输入或多输入的om模型推理。[msame-C++工具链接](https://gitee.com/ascend/tools/tree/master/msame)
 
 技术实现流程图如下：
 
@@ -15,9 +15,9 @@
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -46,7 +46,7 @@
 
 ```
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # toolkit默认安装路径，根据实际安装路径修改
-. ${SDK_INSTALL_PATH}/set_env.sh                # SDK_INSTALL_PATH: mxVision SDK 安装路径
+. ${SDK_INSTALL_PATH}/set_env.sh                # SDK_INSTALL_PATH: Vision SDK 安装路径
 ```
 
 ## 3 准备模型

@@ -164,7 +164,7 @@ bash build.sh
 **步骤5：** 运行程序 
 
 ```bash
-python3 main.py -main-pipeline-only=True
+bash run.sh
 ```
 
 **步骤6：** 查看结果

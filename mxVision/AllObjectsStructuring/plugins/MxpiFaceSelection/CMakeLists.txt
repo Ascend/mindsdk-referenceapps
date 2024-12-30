@@ -11,4 +11,4 @@ target_link_libraries(${TARGET_LIBRARY} glib-2.0 gstreamer-1.0 gobject-2.0 gstba
 target_link_libraries(${TARGET_LIBRARY} plugintoolkit mxbase mxpidatatype)
 target_link_libraries(${TARGET_LIBRARY} -Wl,-z,relro,-z,now,-z,noexecstack)
 
-install(TARGETS ${TARGET_LIBRARY} PERMISSION OWNER_READ GROUP_READ LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/dist/lib)
+install(TARGETS ${TARGET_LIBRARY} PERMISSIONS OWNER_READ GROUP_READ LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/dist/lib)

@@ -163,8 +163,9 @@ bash build.sh
 
 **步骤5：** 运行程序 
 
+注意：当程序正常运行之后，如需停止进程，可以通过“Ctrl+C”的方式手动退出
 ```bash
-python3 main.py -main-pipeline-only=True
+bash run.sh
 ```
 
 **步骤6：** 查看结果

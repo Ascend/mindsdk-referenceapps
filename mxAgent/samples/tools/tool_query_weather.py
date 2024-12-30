@@ -32,7 +32,8 @@ REQUEST_HEADERS = {
 @ToolManager.register_tool()
 class QueryWeather(API):
     name = "QueryWeather"
-    description = "This API is used to query weather forecast from the network according to the user's input question,"
+    description = "This API is used to query weather forecast from the network, information including temperature, \
+        humidness, wind force, weather condition."
     weekday = WEEK_MAP.get(datetime.datetime.now(ZoneInfo("Asia/Shanghai")).weekday(), '')
     input_parameters = {
 
@@ -164,7 +165,7 @@ class QueryWeather(API):
 
             if len(weather_summary) == 0:
                 weather_summary = "**抱歉，我最多只能查询最近7天的天气情况，例如下面是我将为你提供最近的天气预报**:\n" + \
-                                  json.dumps(summary_copy, ensure_ascii=False)
+                                  json.dumps(summary_copy, ensure_ascii=False, indent=4)
             res = {
                 'forecast': weather_summary
             }

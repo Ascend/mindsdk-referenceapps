@@ -1,10 +1,5 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-
 import copy
 import json 
-import os
-import stat
 import re 
 from abc import ABC
 from dataclasses import dataclass
@@ -18,6 +13,7 @@ from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
 from agent_sdk.prompts.pre_prompt import travel_agent_prompt, reflect_prompt_value, \
     react_reflect_planner_agent_prompt, REFLECTION_HEADER
 from agent_sdk.toolmngt.api import APIResponse
+from agent_sdk.common.constant import save_traj_local
 
 
 class ReflexionStrategy(Enum):
@@ -112,28 +108,7 @@ class ReactAgent(BaseAgent, ABC):
 
     def save_agent_status(self, file_path: str):
         try:
-            instruction = self.prompt.format(
-                tools=self.tools,
-                times=self.max_steps - 1,
-                tools_name=self.tool_names,
-                query=self.query,
-                example=self.example,
-                scratchpad="")
-            traj = self.scratchpad.strip()
-
-            save_dict = {
-                "instruction": instruction, "input": "", "output": traj,
-                "status": self.finished, "created_at": str(datetime.now(tz=timezone.utc)),
-                "task": self.query
-            }
-
-            parent_folder_path = os.path.dirname(file_path)
-            os.makedirs(parent_folder_path, exist_ok=True)
-            flag = os.O_WRONLY | os.O_CREAT
-            mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
-                json.dump(save_dict, fout, ensure_ascii=False)
-                fout.write("\n")
+            save_traj_local(self.query, self.scratchpad, file_path)
             logger.success(f"save {self.__class__.__name__} status done")
         except Exception as e:
             logger.error(f"prompt = {self.prompt}")
@@ -168,7 +143,7 @@ class ReactAgent(BaseAgent, ABC):
         if self.is_valid_tool(action_rst.action):
             resp = self.tool_manager.api_call(action_rst.action, action_rst.action_input, llm=self.llm)
             self.api_response_cache.add(resp, action=action_rst.action, action_input=action_rst.action_input)
-            output_str = json.dumps(resp.output, ensure_ascii=False)
+            output_str = json.dumps(resp.output, ensure_ascii=False, indent=4)
             result = output_str
             if resp.finished:
                 self.answer = output_str

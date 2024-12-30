@@ -26,7 +26,7 @@ def check_number_input(num, crow):
     return True
 
 
-async def bai_du(url):
+async def curl_web(url):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '\
                Chrome/126.0.0.0 Safari/537.36"
@@ -80,7 +80,7 @@ class WebSummary:
         try:
             mommt = datetime.now(tz=timezone.utc)
             logger.info(f"start request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
-            response = await bai_du(url)
+            response = await curl_web(url)
             mommt = datetime.now(tz=timezone.utc)
             logger.debug(f"finish request website: {mommt.strftime('%Y-%m-%d %H:%M:%S')},{url}")
             content = response

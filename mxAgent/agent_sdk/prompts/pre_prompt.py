@@ -3,7 +3,7 @@ from langchain.prompts import PromptTemplate
 
 
 react_agent_instruction = ("""
-"You are a world expert at making travel plans with a set of carefully crafted tools. You will be given a task and 
+"You are a world expert at making plans with a set of carefully crafted tools. You will be given a task and 
 solve it as best you can. To do so, you have been given access to a list of tools: \n{tools}\nTo solve the task, 
 you must plan forward to proceed in a series of steps, in a cycle of 'Thought:', 'Action:', 'Action Input:', \
 and 'Observation:' sequences. At each step, in the 'Thought:' sequence, you should first explain your reasoning \
@@ -16,7 +16,7 @@ available as input for the next step."""
 Here are the rules you must follow to solve your task:\n
 1. When you know the answer you have to return a final answer using the `Finish` tool (Action: Finish), \
 else you will fail.\n
-2. When you annot provide a travel plan, you have to return a final answer using the `Finish` tool (Action: Finish), \
+2. When you cannot provide a plan, you have to return a final answer using the `Finish` tool (Action: Finish), \
 else you will fail.\n
 3. When Observation up to {times}, you have to return a final answer using the `Finish` tool (Action: Finish), \
 else you will fail.\n
@@ -47,7 +47,7 @@ Reflection:"""
 
 
 
-SINGLE_AGENT_ACTION_INSTRUCTION = """I want you to be a good question assistant, handel the following tasks as best"\
+SINGLE_AGENT_ACTION_INSTRUCTION = ("""I want you to be a good question assistant, handel the following tasks as best"\
 you can. You have access to the following tools:
 
 {tools}
@@ -57,28 +57,30 @@ Use the following format:
 Thought: you should always think about what to do
 Action: the action to take, should be one of {tools_name}
 Action Input: the input to the action.
-Observation: the result of the action.
-
+Observation: the result of the action.\n"""
++ f"Please be aware that default date is today on {date.today().strftime('%Y-%m-%d')}.\n"
++ """
+Some rules you should follow:
+1. The parameters of tools are alternative, if the user haven't provided, you just keep it empty.
 Begin!
 
-Question: {query}
-{scratchpad}"""
+Question: {query}.
+{scratchpad}""")
 
 
-FINAL_PROMPT = """Please refine a clear and targeted answer based on the user's query and
+FINAL_PROMPT = """Please write a clear and targeted survey based on the user's query and
  the existing answer. \
  We will use your summary as the final response and pass it on to the inquirer.
 
-The requirements are as follows:
-1. Understand the user's query.
-2. Combine the query and answer information to summarize an accurate and concise answer.
-3. Ensure that the answer aligns with the user's query intent and strive to provide valuable information.
+1. Understand the user's query, based on the user's question, combine `answer` into a coherent text. 
+2. Try to retain the more information in `answer` 
+3. Be careful not to fabricate data by oneself and ensure that all data come from the `answer`.
+4. When the provided information can't meet the question, you can make a explanation.
 
 Begin!
 
 question: {query}
 answer: {answer}
-summarize: 
 """
 
 REACT_REFLECT_PLANNER_INSTRUCTION = ("""

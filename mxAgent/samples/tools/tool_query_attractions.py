@@ -14,8 +14,8 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryAttractions(API):
     name = "QueryAttractions"
-    description = "This api can be used to Search for tourist attractions from websites that '\
-        users expect and summarize them."
+    description = "This api can Search for tourist attractions from websites that expected, information includes \
+        location, ticket, open time, booking, contact adress."
     input_parameters = {
         'destination': {'type': 'str', 'description': "The destination where the user wants to travel."},
         'scene': {'type': 'str', 'description': 'The specific scenic spot mentioned by the user'},
@@ -73,7 +73,7 @@ class QueryAttractions(API):
             filtered.append("景点")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=summary_prompt, llm=llm)
-            res = {'attractions': json.dumps(webs, ensure_ascii=False)}
+            res = {'attractions': json.dumps(webs, ensure_ascii=False, indent=4)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

@@ -15,12 +15,13 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryTransports(API):
     name = "QueryTransports"
-    description = "This API is used to query relevant travel traffic information from the \
-        networkAccording to the user's input question,"
+    description = "This API can query relevant travel traffic information from network, including flight number, \
+        travel time, distance, price, constraints an so on."
     input_parameters = {
         "departure_city": {'type': 'str', 'description': "The city you'll be flying out from."},
         "destination_city": {'type': 'str', 'description': 'The city user aim to reach.'},
-        "travel_mode": {'type': 'str', 'description': 'The mode of travel appointed by the user'},
+        "travel_mode": {'type': 'str', 'description': "The mode of travel appointed by the user, \
+                        Choices include 'self-driving', 'flight', 'train', 'taxi' and so on."},
         "date": {'type': 'str', 'description': 'The date of the user plan to travel'},
         'requirement': {'type': 'str', 'description': 'The more requirement of transportation mentioned by the user'},
     }
@@ -62,10 +63,9 @@ class QueryTransports(API):
                 请生成总结：
                 """
             filtered = filter_website_keywords(keys)
-            filtered.append("购票")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
-            res = {'transport': json.dumps(webs, ensure_ascii=False)}
+            res = {'transport': json.dumps(webs, ensure_ascii=False, indent=4)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

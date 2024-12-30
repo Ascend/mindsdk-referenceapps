@@ -13,8 +13,7 @@ from langchain._api import LangChainDeprecationWarning
 from agent_sdk.agentchain.base_agent import BaseAgent
 from agent_sdk.agentchain.single_action_agent import SingleActionAgent
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
-from samples.tools import QueryAccommodations, QueryAttractions, QueryRestaurants, \
-    QueryTransports, QueryGoogleDistanceMatrix
+from samples.tools import QueryAccommodations, QueryAttractions, QueryRestaurants, QueryTransports
 
 os.environ["WORKING_DIR"] = os.path.dirname(
     os.path.dirname(os.path.realpath(__file__)))
@@ -70,10 +69,7 @@ class TrajectoryGenerator:
 
 
 def get_single_action_agent(api_base, api_key, llm_name):
-    tool_list = [
-        QueryAccommodations, QueryAttractions, QueryRestaurants,
-        QueryTransports, QueryGoogleDistanceMatrix
-    ]
+    tool_list = [QueryAccommodations, QueryAttractions, QueryRestaurants, QueryTransports]
     llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE,
                           api_base, api_key, llm_name).run
     return SingleActionAgent(llm=llm, tool_list=tool_list, max_steps=5)
@@ -106,5 +102,6 @@ if __name__ == "__main__":
         "What are the top - rated museums in Harrisburg?"
     ]
     generator = TrajectoryGenerator()
-    generator.generate(output_path="./save_instructions.jsonl", agent=single_agent,
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    generator.generate(output_path=f"{current_path}/trajs/single_action_execution.txt", agent=single_agent,
                        load_dataset=lambda: queries)

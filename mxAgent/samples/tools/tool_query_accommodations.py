@@ -15,7 +15,8 @@ from samples.tools.web_summary_api import WebSummary
 @ToolManager.register_tool()
 class QueryAccommodations(API):
     name = "QueryAccommodations"
-    description = "This api can discover accommodations in your desired city."
+    description = "This api can discover accommodations in your desired city. It provides room information, \
+        pricing, location, stars, estimation, constraints and so on"
     input_parameters = {
         "destination_city": {'type': 'str', 'description': 'The city you aim to reach.'},
         "position": {'type': 'str', 'description': 'The geographical position of accomodation appointed by the user'},
@@ -64,7 +65,7 @@ class QueryAccommodations(API):
             filtered.append("住宿")
             webs = WebSummary.web_summary(
                 filtered, search_num=3, summary_num=3, summary_prompt=prompt, llm=llm)
-            res = {"accommodation": json.dumps(webs, ensure_ascii=False)}
+            res = {"accommodation": json.dumps(webs, ensure_ascii=False, indent=4)}
             return self.make_response(input_parameter, results=res, exception="")
         except Exception as e:
             logger.error(e)

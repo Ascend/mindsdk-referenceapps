@@ -2,17 +2,16 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 
 import json
-import os
-import stat
 import re
 import time
-from copy import deepcopy
+from datetime import datetime, timezone
 from loguru import logger
 
 from agent_sdk.agentchain.base_agent import BaseAgent, AgentRunResult
 from agent_sdk.toolmngt.api import API
 from agent_sdk.toolmngt.tool_manager import ToolManager
 from agent_sdk.prompts.pre_prompt import single_action_agent_prompt, single_action_final_prompt
+from agent_sdk.common.constant import save_traj_local
 
 
 class SingleActionAgent(BaseAgent):
@@ -75,7 +74,7 @@ class SingleActionAgent(BaseAgent):
         else:
             if self.is_valid_tool(action_type):
                 tool_response = self.tool_manager.api_call(action_type, argument, llm=self.llm)
-                output_str = json.dumps(tool_response.output, ensure_ascii=False)
+                output_str = json.dumps(tool_response.output, ensure_ascii=False, indent=4)
                 self.tool_output = output_str
                 if tool_response.success:
                     self.finished = True
@@ -88,26 +87,7 @@ class SingleActionAgent(BaseAgent):
 
     def save_agent_status(self, file_path):
         try:
-            instruction = self.prompt.format(
-                tools=self.tools,
-                tools_name=self.tool_names,
-                query=self.query,
-                scratchpad=""
-            )
-
-            traj = self.scratchpad.strip()
-            save_dict = {
-                "instruction": instruction,
-                "input": "",
-                "output": traj,
-                "final answer": self.answer,
-                "status": self.finished
-            }
-            flag = os.O_WRONLY | os.O_CREAT
-            mode = stat.S_IWUSR | stat.S_IRUSR
-            with os.fdopen(os.open(file_path, flags=flag, mode=mode), "w") as fout:
-                json.dump(save_dict, fout, ensure_ascii=False)
-                fout.write("\n")
+            save_traj_local(self.query, self.scratchpad, file_path)
         except Exception as e:
             logger.error(f"agent_prompt = {self.prompt}")
             logger.error(e)

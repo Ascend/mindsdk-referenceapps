@@ -13,8 +13,8 @@ from agent_sdk.agentchain.react_agent import ReactAgent
 from agent_sdk.common.constant import AgentRunStatus
 from agent_sdk.llms.llm import get_llm_backend, BACKEND_OPENAI_COMPATIBLE
 from samples.tools import QueryAttractions, QueryTransports, QueryAccommodations, \
-    QueryRestaurants, QueryGoogleDistanceMatrix
-from samples.basic_demo.agent_test import EXAMPLE
+    QueryRestaurants
+from samples.basic_demo.test_react_reflect import EXAMPLE
 
 
 warnings.filterwarnings('ignore')
@@ -28,7 +28,7 @@ MAX_CONTEXT_LEN = 4096
 
 def get_default_react_agent(api_base, api_key, llm_name, max_context_len):
     llm = get_llm_backend(BACKEND_OPENAI_COMPATIBLE, api_base, api_key, llm_name).run
-    tool_list = [QueryAttractions, QueryTransports, QueryAccommodations, QueryRestaurants, QueryGoogleDistanceMatrix]
+    tool_list = [QueryAttractions, QueryTransports, QueryAccommodations, QueryRestaurants]
     return ReactAgent(llm=llm, example=EXAMPLE, tool_list=tool_list, max_context_len=max_context_len)
 
 
@@ -54,23 +54,20 @@ between April 12 and 14, 2022.",
         "Write a short itinerary for a weekend trip to Nashville, starting on April 15, including live music venues."
     ]
 
-    s = AgentRunStatus()
+    staus = AgentRunStatus()
 
     for query in tqdm(queries):
         result = agent.run(query)
-        s.total_cnt += 1
+        staus.total_cnt += 1
         if agent.finished:
-            s.success_cnt += 1
-        agent.save_agent_status("./save_instructions.jsonl")
+            staus.success_cnt += 1
+        current_path = os.path.dirname(os.path.realpath(__file__))
+        agent.save_agent_status(f"{current_path}/trajs/react_execution_log.txt")
         agent.reset()
         logger.info("\n")
         logger.info("*" * 150)
         logger.info(f"Question: {query}")
         logger.info("*" * 150)
-        logger.info(f"Final answer: {result.answer}")
-        logger.info("*" * 150)
-        logger.info(f"Trajectory Path: {result.scratchpad}")
-        logger.info("*" * 150)
+        logger.info(f"Final answer: {result.answer}\n")
 
-    logger.info(f"success rates: {s}")
-    logger.info(f"Total success rates: {s}")
+    logger.info(f"success rates: {staus}")

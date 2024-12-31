@@ -108,7 +108,7 @@ class AgentExecutor():
     def get_leaves_result(state):
         summary = ""
         for name in state.leaves_tasks:
-            content = state.sop_graph.description
+            content = state.sop_graph[name].description
             res = state.workspace.variable_space.get(name, "")
             summary += f"content: {content}\n"
             summary += f"result: {json.dumps(res, ensure_ascii=False)}\n"

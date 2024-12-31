@@ -57,7 +57,7 @@ class Parser:
             node = {
                 "step": None,
                 "name":  None,
-                "goal":  None,
+                "description":  None,
                 "input": None,      # 输入
                 "prompt": None,     # llm的prompt
                 "activate": None,   # 执行引擎，表达式验证规则
@@ -104,14 +104,3 @@ class Parser:
         else:
             raise TypeError("Invalid inputs type")
         return output
-
-    
-
-
-class ActionGraph:
-    def __init__(self, actions) -> None:
-        self.actions = actions
-        if len(actions) == 0:
-            self.start_node_id = 0
-        else:
-            self.start_node_id = actions[next(iter(actions))]

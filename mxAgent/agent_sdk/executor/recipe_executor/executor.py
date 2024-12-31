@@ -104,9 +104,19 @@ class AgentExecutor():
                 action.input[key] = value
         return action
     
+    @staticmethod
+    def get_leaves_result(state):
+        summary = ""
+        for name in state.leaves_tasks:
+            content = state.sop_graph.get("description", name)
+            res = state.variable_space.get(name, "")
+            summary += f"content: {content}\n"
+            summary += f"result: {res}\n"
+        return summary
+
     def get_executable_actions(self, executor_state):
         done_actions = executor_state.done_tasks
-        graph = executor_state.sop_graph.actions
+        graph = executor_state.sop_graph
         activated = executor_state.activated_tasks
         independent_actions = []
         for task_name in executor_state.remaining_tasks:
@@ -142,7 +152,7 @@ class AgentExecutor():
         return pending_actions
 
     def run_task(self, action, executor_state, llm):
-        graph = executor_state.sop_graph.actions
+        graph = executor_state.sop_graph
         sop_handler = self.operation_handler
         mommt = datetime.now(tz=timezone.utc)
         logger.debug(f'{action.name} start: {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
@@ -177,7 +187,8 @@ class AgentExecutor():
                 for future in as_completed(thread_list):
                     with self.lock:
                         self.update_history(future.result(), executor_state)
-        return executor_state.workspace.get_last_result()
+        # return executor_state.workspace.get_last_result() # 这个worksapce什么东西啊留在这没用
+        return self.get_leaves_result(executor_state)
 
     # 而此处的写法不关注next，关注dependency
     def run(self, content):
@@ -238,12 +249,25 @@ class AgentExecutor():
 
         execute_state = ExecutorState()
         workspace = WorkSpace(operation_history=[], variable_space={})
-        graph = ActionGraph(operations)
 
         execute_state.workspace = workspace
-        execute_state.sop_graph = graph
-        execute_state.remaining_tasks = {k for k, _ in graph.actions.items()}
+        execute_state.sop_graph = operations
+        execute_state.start_node_id = operations[next(iter(operations))]
+        execute_state.remaining_tasks = {k for k, _ in operations.items()}
+        execute_state.leaves_tasks = self.get_leaves_node(operations)
         return execute_state
+
+    def get_leaves_node(self, nodes):
+        leaves = []
+        for node in nodes:
+            is_leaf = True
+            for other_node in nodes:
+                if node["step"] in other_node.get("dependency", []):
+                    is_leaf = False
+                    break
+            if is_leaf:
+                leaves.append(node["name"])
+        return leaves
 
 
 def fetch_str_content(content):

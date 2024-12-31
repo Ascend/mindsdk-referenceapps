@@ -115,7 +115,7 @@ class WebSummary:
             content, err = asyncio.run(cls.get_details(url, summary_prompt))
         except Exception as e:
             logger.error(e)
-        if not isinstance(content, str) or len(content) == 0:
+        if not isinstance(content, str) or len(content) == 0 or "【无】" in content:
             web_summary['snippet'] = snippet
         else:
             web_summary['content'] = content

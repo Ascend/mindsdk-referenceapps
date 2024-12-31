@@ -82,17 +82,17 @@ class RecipeAgent(BaseAgent, ABC):
     def get_tool_usage(self):
         return self.tool_desc_for_agent
 
-    def _build_final_prompt(self, text, **kwargs) -> Union[List, str]:
-        if self.final_prompt is None:
+    def _build_final_prompt(self, recipe_out, **kwargs) -> Union[List, str]:
+        if self.final_prompt is None or len(recipe_out) == 0:
             raise Exception("final prompt is None error")
         else:
             max_input_token_num = self.max_token_number
             input_token_len = len(self.encoding.encode(text))
             prompt_len = len(self.encoding.encode(self.final_prompt))
-            clip_text_index = int(
-                len(text) * (max_input_token_num - prompt_len) / input_token_len)
-            clip_text = text[:clip_text_index]
-            pmt = self.final_prompt.format(text=clip_text)
+            # 每个token平均可能包含1.5-1.8个汉字
+            element_len = 1.5 * (max_input_token_num-prompt_len) / len(recipe_out)
+            text = "".join([item[:element_len] for item in recipe_out])
+            pmt = self.final_prompt.format(text=text)
             return pmt
 
     def _execute_recipe(self, recipefile, llm):

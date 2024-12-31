@@ -106,13 +106,14 @@ class AgentExecutor():
     
     @staticmethod
     def get_leaves_result(state):
-        summary = ""
+        summary = []
         for name in state.leaves_tasks:
+            item = ""
             content = state.sop_graph[name].description
             res = state.workspace.variable_space.get(name, "")
-            summary += f"content: {content}\n"
-            summary += f"result: {json.dumps(res, ensure_ascii=False)}\n"
-        return summary
+            item += f"content: {content}\n"
+            item += f"result: {json.dumps(res, ensure_ascii=False)}\n"
+        return summary.append(item) # 每个叶子节点都有一个结束的结果
 
     def get_executable_actions(self, executor_state):
         done_actions = executor_state.done_tasks

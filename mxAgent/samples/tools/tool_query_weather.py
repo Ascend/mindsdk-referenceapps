@@ -88,7 +88,7 @@ class QueryWeather(API):
         # 精简输入
         key_keeps = [
             'day_weather', 'day_wind_direction', 'day_wind_power',
-            'max_degree', 'min_degree', 'night_weather', 'night_wind_direction', 'night_wind_power'
+            'max_degree', 'min_degree', 'night_weather'
         ]
         summary_copy = []
         for key, info in weekly_weather.items():
@@ -98,7 +98,7 @@ class QueryWeather(API):
                 info_keeps = {k: info[k] for k in key_keeps if k in info}
             daily[time] = info_keeps
             summary_copy.append(daily)
-        return summary_copy
+        return summary_copy[:5]
 
     def format_request_param(self, data, weather_type):
         for key, value in data.items():
@@ -164,7 +164,7 @@ class QueryWeather(API):
             weather_summary = summary_copy[gaps + 1:]
 
             if len(weather_summary) == 0:
-                weather_summary = "**抱歉，我最多只能查询最近7天的天气情况，例如下面是我将为你提供最近的天气预报**:\n" + \
+                weather_summary = "**抱歉，我最多只能查询最近5天的天气情况，例如下面是我将为你提供最近的天气预报**:\n" + \
                                   json.dumps(summary_copy, ensure_ascii=False, indent=4)
             res = {
                 'forecast': weather_summary

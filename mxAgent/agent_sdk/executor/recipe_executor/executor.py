@@ -15,7 +15,7 @@ import yaml
 from loguru import logger
 
 from agent_sdk.executor.recipe_executor.state import ExecutorState, WorkSpace
-from agent_sdk.executor.recipe_executor.parser import Node, Parser, ActionGraph
+from agent_sdk.executor.recipe_executor.parser import Node, Parser
 from agent_sdk.executor.recipe_executor.sop import SopHandler
 from agent_sdk.executor.common import ERROR_MAP, ErrorType, PlanStrategyType
 
@@ -108,10 +108,10 @@ class AgentExecutor():
     def get_leaves_result(state):
         summary = ""
         for name in state.leaves_tasks:
-            content = state.sop_graph.get("description", name)
-            res = state.variable_space.get(name, "")
+            content = state.sop_graph.description
+            res = state.workspace.variable_space.get(name, "")
             summary += f"content: {content}\n"
-            summary += f"result: {res}\n"
+            summary += f"result: {json.dumps(res, ensure_ascii=False)}\n"
         return summary
 
     def get_executable_actions(self, executor_state):
@@ -259,14 +259,14 @@ class AgentExecutor():
 
     def get_leaves_node(self, nodes):
         leaves = []
-        for node in nodes:
+        for key, _ in nodes.items():
             is_leaf = True
-            for other_node in nodes:
-                if node["step"] in other_node.get("dependency", []):
+            for _, other_node in nodes.items():
+                if key in other_node.dependency:
                     is_leaf = False
                     break
             if is_leaf:
-                leaves.append(node["name"])
+                leaves.append(key)
         return leaves
 
 

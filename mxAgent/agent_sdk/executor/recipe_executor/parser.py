@@ -9,6 +9,7 @@ from loguru import logger
 class Node:
     def __init__(self,
                  name,
+                 description,
                  content,
                  prompt,
                  step,
@@ -22,6 +23,7 @@ class Node:
                  ):
         self.step = step
         self.name = name
+        self.description = description
         self.input = content
         self.prompt = prompt
         self.activate = activate
@@ -39,7 +41,8 @@ class Parser:
     def construct_graph(nodes):
         graph = OrderedDict()
         for operation in nodes:
-            operation = Node(name=operation['name'],
+            node = Node(name=operation['name'],
+                             description=operation["description"],
                              step=operation['step'],
                              content=operation['input'],
                              prompt=operation['prompt'],
@@ -48,7 +51,7 @@ class Parser:
                              output=operation["output"],
                              strategy=operation["strategy"],
                              activate=operation["activate"])
-            graph[operation.name] = operation
+            graph[node.name] = node
         return graph
 
     def parse(self, raw_dict):

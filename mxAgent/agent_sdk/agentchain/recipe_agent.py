@@ -87,11 +87,10 @@ class RecipeAgent(BaseAgent, ABC):
             raise Exception("final prompt is None error")
         else:
             max_input_token_num = self.max_token_number
-            input_token_len = len(self.encoding.encode(text))
             prompt_len = len(self.encoding.encode(self.final_prompt))
             # 每个token平均可能包含1.5-1.8个汉字
-            element_len = 1.5 * (max_input_token_num-prompt_len) / len(recipe_out)
-            text = "".join([item[:element_len] for item in recipe_out])
+            element_len = 1.5 * (max_input_token_num-prompt_len)
+            text = recipe_out[:element_len]
             pmt = self.final_prompt.format(text=text)
             return pmt
 

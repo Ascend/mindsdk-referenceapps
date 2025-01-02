@@ -37,7 +37,7 @@ bash build.sh
 [100%] Built target demo
 ```
 
-**步骤3：** 准备图片；准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于200 * 200，文件大小不超过20MB。
+**步骤3：** 准备图片；准备一张JPG图片命名为input.jpg放到C++目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于200 * 200，文件大小不超过20MB。
 
 **步骤4：** 执行样例程序；样例主要提供下面5个功能，通过执行demo来体验不同的功能
 | 功能 | Demo函数 | 描述 | 执行方式 |
@@ -54,13 +54,13 @@ bash build.sh
 
 **步骤1：** 进入/PATH/TO/ImageProcessor/Python文件夹中。
 
-**步骤2：** 准备图片；准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于200 * 200。
+**步骤2：** 准备图片；准备一张JPG图片命名为input.jpg放到Python目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于200 * 200。
 
 **步骤3：** 执行样例程序；样例主要提供下面3个功能，通过执行main.py来体验不同的功能
 | 功能 | Demo函数 | 描述 | 执行方式 |
 |----|----|----|----|
-| 裁剪图片 | decode_encode | 使用ImageProcessor.Decode接口对图片进行解码，并使用ImageProcessor.Encode接口对解码后的图片进行编码，并保存到本地文件中。 | python3 main.py decode |
-| 解码编码图片 | crop_image | 使用ImageProcessor.Crop接口对图片进行裁剪，并使用编码接口将结果保存到本地文件中 | python3 main.py crop |
+| 解码编码图片 | decode_encode | 使用ImageProcessor.Decode接口对图片进行解码，并使用ImageProcessor.Encode接口对解码后的图片进行编码，并保存到本地文件中。 | python3 main.py decode |
+| 裁剪图片 | crop_image | 使用ImageProcessor.Crop接口对图片进行裁剪，并使用编码接口将结果保存到本地文件中 | python3 main.py crop |
 | 缩放图片 | resize_image | 使用ImageProcessor.Resize接口对图片进行缩放，并使用编码接口将结果保存到本地文件中 | python3 main.py resize |
 
 **步骤4：** 查看结果；运行后会在当前目录下生成一个名为output.jpg的图片文件。

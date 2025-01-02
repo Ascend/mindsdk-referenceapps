@@ -41,6 +41,6 @@ if(ENABLE_TEST)
     target_link_libraries(${TARGET_LIBRARY} gcov)
 endif()
 
-install(TARGETS ${TARGET_LIBRARY} PERMISSION OWNER_READ GROUP_READ LIBRARY DESTINATION ${PROJECT_DIR}/dist/lib)
+install(TARGETS ${TARGET_LIBRARY} PERMISSIONS OWNER_READ GROUP_READ LIBRARY DESTINATION ${PROJECT_DIR}/dist/lib)
 install(FILES ${PROJECT_SOURCE_DIR}/MxpiAllObjectsStructuringDataType.pb.h DESTINATION ${PROJECT_DIR}/dist/include)
 install(FILES ${PROJECT_SOURCE_DIR}/MxpiAllObjectsStructuringDataType_pb2.py DESTINATION ${PROJECT_DIR}/dist/python)

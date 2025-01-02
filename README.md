@@ -1,21 +1,21 @@
 EN|[CN](README.zh.md)
-# MindX SDK Reference Apps
+# MindSDK Reference Apps
 
-[MindX SDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as mxVision (visual analysis), mxRAG (knowledge enhancement), mxIndex (feature retrieval), and mxRec (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
+[MindSDK](https://www.hiascend.com/software/mindx-sdk) is a software development kit (SDK) launched by Huawei, offering simple and easy-to-use, high-performance APIs and tools. It includes multiple SDKs such as Vision SDK (visual analysis), Index SDK (feature retrieval), and Rec SDK (search recommendation), aiding the Ascend AI processor in empowering various application scenarios.
 
-To help developers quickly master the use of mxVision and mxIndex interfaces and rapidly implement business functions, this code repository (mxSdkReferenceApps) provides various reference samples developed based on mxVision and mxIndex. Users can select the appropriate sample code according to their needs.
+To help developers quickly master the use of Vision SDK and Index SDK interfaces and rapidly implement business functions, this code repository provides various reference samples developed based on Vision SDK and Index SDK. Users can select the appropriate sample code according to their needs.
 ## Main Directory Structure and Description
 | 目录 | 说明                                            |
 |---|-----------------------------------------------|
-| [contrib](./contrib) | mxVision user-contributed sample directory    |
-| [docs](./docs) | mxVision documentation directory              |
-| [mxVision](./mxVision) | mxVision official sample directory |
-| [tutorials](./tutorials) | mxVision official tutorials directory         | 
+| [contrib](./contrib) | Vision SDK user-contributed sample directory    |
+| [docs](./docs) | Vision SDK documentation directory              |
+| [VisionSDK](./VisionSDK) | Vision SDK official sample directory |
+| [tutorials](./tutorials) | Vision SDK official tutorials directory         |
 | [mxIndex](./mxIndex)        | mxIndex offical sample directory                |
 
 
 ## Related Websites
-The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest MindX SDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
+The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest Mind SDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
 
 Ascend Community Website: https://www.hiascend.com/
 

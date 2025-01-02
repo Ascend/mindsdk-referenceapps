@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-全目标结构化V2样例基于mxVision SDK进行开发，以Atlas 300I pro、Atlas 300V pro为主要的硬件平台，主要支持以下功能：
+全目标结构化V2样例基于Vision SDK进行开发，以Atlas 300I pro、Atlas 300V pro为主要的硬件平台，主要支持以下功能：
 
 1. 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
 2. 动态目标识别和属性分析：能够识别出检测出的目标类别，并对其属性进行分析。
@@ -16,8 +16,8 @@
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 5.0.0 | 7.0.0   |  23.0.0  | 
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 

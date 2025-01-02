@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-全目标结构化样例基于mxVision SDK进行开发，以昇腾Atlas 300I pro、 Atlas 300V pro卡为主要的硬件平台，主要支持以下功能：
+全目标结构化样例基于Vision SDK进行开发，以昇腾Atlas 300I pro、 Atlas 300V pro卡为主要的硬件平台，主要支持以下功能：
 
 * 目标检测：在视频流中检测出目标，本样例选用基于Yolov4-tiny的目标检测，能达到快速精准检测。
 * 动态目标识别和属性分析：能够识别检测出的目标类别，并对其属性进行分析。
@@ -15,9 +15,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -37,7 +37,7 @@
 ### 1.5 代码目录结构说明
 
 ```
-├── mxVision
+├── VisionSDK
 │   ├── AllObjectsStructuring
 │   |   ├── main_pipeline
 │   |   │   └── __init__.py
@@ -94,7 +94,7 @@
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

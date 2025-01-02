@@ -3,14 +3,14 @@
 ## 1 介绍
 
 ### 1.1 简介
-本开发样例演示如何用多线程(C++)使用MxVision流程编排能力来实现简单的目标检测功能。
+本开发样例演示如何用多线程(C++)使用Vision SDK流程编排能力来实现简单的目标检测功能。
 
 ### 1.2 支持的产品
 Atlas 300I pro、Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 

@@ -15,7 +15,7 @@ import yaml
 from loguru import logger
 
 from agent_sdk.executor.recipe_executor.state import ExecutorState, WorkSpace
-from agent_sdk.executor.recipe_executor.parser import Node, Parser, ActionGraph
+from agent_sdk.executor.recipe_executor.parser import Node, Parser
 from agent_sdk.executor.recipe_executor.sop import SopHandler
 from agent_sdk.executor.common import ERROR_MAP, ErrorType, PlanStrategyType
 
@@ -104,9 +104,32 @@ class AgentExecutor():
                 action.input[key] = value
         return action
     
+    @staticmethod
+    def get_leaves_result(state):
+        summary = ""
+        for name in state.leaves_tasks:
+            content = state.sop_graph[name].description
+            res = state.workspace.variable_space.get(name, "")
+            summary += f"content: {content}\n"
+            summary += f"result: {json.dumps(res, ensure_ascii=False)}\n"
+        return summary
+    
+    @staticmethod
+    def get_leaves_node(nodes):
+        leaves = []
+        for key, _ in nodes.items():
+            is_leaf = True
+            for _, other_node in nodes.items():
+                if key in other_node.dependency:
+                    is_leaf = False
+                    break
+            if is_leaf:
+                leaves.append(key)
+        return leaves
+
     def get_executable_actions(self, executor_state):
         done_actions = executor_state.done_tasks
-        graph = executor_state.sop_graph.actions
+        graph = executor_state.sop_graph
         activated = executor_state.activated_tasks
         independent_actions = []
         for task_name in executor_state.remaining_tasks:
@@ -142,7 +165,7 @@ class AgentExecutor():
         return pending_actions
 
     def run_task(self, action, executor_state, llm):
-        graph = executor_state.sop_graph.actions
+        graph = executor_state.sop_graph
         sop_handler = self.operation_handler
         mommt = datetime.now(tz=timezone.utc)
         logger.debug(f'{action.name} start: {mommt.strftime("%Y-%m-%d %H:%M:%S")}')
@@ -177,7 +200,7 @@ class AgentExecutor():
                 for future in as_completed(thread_list):
                     with self.lock:
                         self.update_history(future.result(), executor_state)
-        return executor_state.workspace.get_last_result()
+        return self.get_leaves_result(executor_state)
 
     # 而此处的写法不关注next，关注dependency
     def run(self, content):
@@ -238,11 +261,12 @@ class AgentExecutor():
 
         execute_state = ExecutorState()
         workspace = WorkSpace(operation_history=[], variable_space={})
-        graph = ActionGraph(operations)
 
         execute_state.workspace = workspace
-        execute_state.sop_graph = graph
-        execute_state.remaining_tasks = {k for k, _ in graph.actions.items()}
+        execute_state.sop_graph = operations
+        execute_state.start_node_id = operations[next(iter(operations))]
+        execute_state.remaining_tasks = {k for k, _ in operations.items()}
+        execute_state.leaves_tasks = self.get_leaves_node(operations)
         return execute_state
 
 

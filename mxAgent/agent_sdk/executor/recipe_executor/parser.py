@@ -9,6 +9,7 @@ from loguru import logger
 class Node:
     def __init__(self,
                  name,
+                 description,
                  content,
                  prompt,
                  step,
@@ -22,6 +23,7 @@ class Node:
                  ):
         self.step = step
         self.name = name
+        self.description = description
         self.input = content
         self.prompt = prompt
         self.activate = activate
@@ -39,7 +41,8 @@ class Parser:
     def construct_graph(nodes):
         graph = OrderedDict()
         for operation in nodes:
-            operation = Node(name=operation['name'],
+            node = Node(name=operation['name'],
+                             description=operation["description"],
                              step=operation['step'],
                              content=operation['input'],
                              prompt=operation['prompt'],
@@ -48,7 +51,7 @@ class Parser:
                              output=operation["output"],
                              strategy=operation["strategy"],
                              activate=operation["activate"])
-            graph[operation.name] = operation
+            graph[node.name] = node
         return graph
 
     def parse(self, raw_dict):
@@ -57,7 +60,7 @@ class Parser:
             node = {
                 "step": None,
                 "name":  None,
-                "goal":  None,
+                "description":  None,
                 "input": None,      # 输入
                 "prompt": None,     # llm的prompt
                 "activate": None,   # 执行引擎，表达式验证规则
@@ -104,14 +107,3 @@ class Parser:
         else:
             raise TypeError("Invalid inputs type")
         return output
-
-    
-
-
-class ActionGraph:
-    def __init__(self, actions) -> None:
-        self.actions = actions
-        if len(actions) == 0:
-            self.start_node_id = 0
-        else:
-            self.start_node_id = actions[next(iter(actions))]

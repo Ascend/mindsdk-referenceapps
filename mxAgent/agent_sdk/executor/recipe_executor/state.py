@@ -48,6 +48,8 @@ class ExecutorState:
         self.activated_tasks = set()
         self.done_tasks = set()
         self.activate_actions = []
+        self.leaves_tasks = [] # 图中所有的叶子节点
+        self.start_node_id = None # 开始节点
 
         # for sop planning type
         self.init_query = ""
@@ -73,7 +75,7 @@ class WorkSpace:
                  operation_history,
                  variable_space):
         self.operation_history = operation_history
-        self.variable_space = variable_space
+        self.variable_space = variable_space # 记录执行结果，workspace[node_name]的值正常是一个json，由[out_param]指定某一个具体的参数值
         self.last_operation = ""
 
     def update(self, history):

@@ -113,7 +113,8 @@ class AgentExecutor():
             res = state.workspace.variable_space.get(name, "")
             item += f"content: {content}\n"
             item += f"result: {json.dumps(res, ensure_ascii=False)}\n"
-        return summary.append(item) # 每个叶子节点都有一个结束的结果
+            summary.append(item) # 每个叶子节点都有一个结束的结果
+        return summary
 
     def get_executable_actions(self, executor_state):
         done_actions = executor_state.done_tasks
@@ -188,7 +189,6 @@ class AgentExecutor():
                 for future in as_completed(thread_list):
                     with self.lock:
                         self.update_history(future.result(), executor_state)
-        # return executor_state.workspace.get_last_result() # 这个worksapce什么东西啊留在这没用
         return self.get_leaves_result(executor_state)
 
     # 而此处的写法不关注next，关注dependency

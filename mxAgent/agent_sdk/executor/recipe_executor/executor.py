@@ -113,6 +113,19 @@ class AgentExecutor():
             summary += f"content: {content}\n"
             summary += f"result: {json.dumps(res, ensure_ascii=False)}\n"
         return summary
+    
+    @staticmethod
+    def get_leaves_node(nodes):
+        leaves = []
+        for key, _ in nodes.items():
+            is_leaf = True
+            for _, other_node in nodes.items():
+                if key in other_node.dependency:
+                    is_leaf = False
+                    break
+            if is_leaf:
+                leaves.append(key)
+        return leaves
 
     def get_executable_actions(self, executor_state):
         done_actions = executor_state.done_tasks
@@ -255,18 +268,6 @@ class AgentExecutor():
         execute_state.remaining_tasks = {k for k, _ in operations.items()}
         execute_state.leaves_tasks = self.get_leaves_node(operations)
         return execute_state
-
-    def get_leaves_node(self, nodes):
-        leaves = []
-        for key, _ in nodes.items():
-            is_leaf = True
-            for _, other_node in nodes.items():
-                if key in other_node.dependency:
-                    is_leaf = False
-                    break
-            if is_leaf:
-                leaves.append(key)
-        return leaves
 
 
 def fetch_str_content(content):

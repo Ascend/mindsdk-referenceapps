@@ -91,6 +91,8 @@ class WebSummary:
             if 'PleaseenableJSanddisableanyadblocker' in text:
                 text = ""
         except Exception as e:
+            if len(str(e)) == 0:
+                e = Exception(f"error type: {type(e)}, when request the url: {url}")
             logger.error(e)
             return '', e
         if len(text) == 0:
@@ -115,7 +117,7 @@ class WebSummary:
             content, err = asyncio.run(cls.get_details(url, summary_prompt))
         except Exception as e:
             logger.error(e)
-        if not isinstance(content, str) or len(content) == 0 or "【无】" in content:
+        if not isinstance(content, str) or len(content) == 0 or content == "【无】":
             web_summary['snippet'] = snippet
         else:
             web_summary['content'] = content
@@ -130,7 +132,7 @@ class WebSummary:
             mommt = datetime.now(tz=timezone.utc)
             logger.debug(f"start duck duck go search: {mommt.strftime('%Y-%m-%d %H:%M:%S')}")
             if isinstance(keys, list):
-                keys = ",".join(keys)
+                keys = " ".join(keys)
             search_result = call_duck_duck_go_search(keys, search_num)
             mommt = datetime.now(tz=timezone.utc)
             logger.debug(f"finish duck duck go search: {mommt.strftime('%Y-%m-%d %H:%M:%S')}")

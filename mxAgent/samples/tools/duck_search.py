@@ -56,7 +56,7 @@ def call_duck_duck_go_search(query: str, count: int) -> List[str]:
     while retry <= 3:
         try:
             logger.debug(f"search DuckDuckGo({query}, {count})")
-            results = DDGS().text(query, max_results=count)
+            results = DDGS().text(query, backend="html", max_results=count)
             return results
         except Exception as e:
             retry += 1

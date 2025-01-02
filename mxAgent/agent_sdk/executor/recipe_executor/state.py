@@ -120,15 +120,3 @@ class WorkSpace:
                 if value is not None and len(value) > 0:
                     ans += f"{key}: {str(value)}\n"
         return ans
-
-    def get_leaves_result(self, state):
-        summary = ""
-        for name in state.leaves_tasks:
-            content = state.sop_graph.get("description", name)
-            res = self.variable_space.get(name, "")
-            summary += f"content: {content}\n"
-            summary += f"result: {res}\n"
-        return summary
-
-
-        

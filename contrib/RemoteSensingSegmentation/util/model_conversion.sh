@@ -33,8 +33,8 @@ export ASCEND_OPP_PATH=${install_path}/opp
 # 执行，转换DANet和Deeplabv3+模型
 # Execute, transform DANet and Deeplabv3+ model
 
-atc --framework=5 --model=../models/DANet.onnx  --output=../models/DANet --soc_version=Ascend310 --insert_op_conf=../config/configure.cfg --log=error
-atc --framework=5 --model=../models/Deeplabv3.onnx  --output=../models/Deeplabv3 --soc_version=Ascend310 --insert_op_conf=../config/configure.cfg --log=error
+atc --framework=5 --model=../models/DANet.onnx  --output=../models/DANet --soc_version=Ascend310P3 --insert_op_conf=../config/configure.cfg --log=error
+atc --framework=5 --model=../models/Deeplabv3.onnx  --output=../models/Deeplabv3 --soc_version=Ascend310P3 --insert_op_conf=../config/configure.cfg --log=error
 # 退出
 # exit
 exit 0

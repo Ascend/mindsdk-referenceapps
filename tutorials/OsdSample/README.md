@@ -7,15 +7,16 @@
 * 如构建的proto数据正确则可在程序运行结束后在运行目录找到图片testout.jpg，此图片为输入图像经过缩放后加上绘图单元集合后的输出结果
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2卡为主要硬件平台
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 代码目录结构说明
 
@@ -47,7 +48,7 @@
   ```
 
 ## 3 准备模型
-使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行mxVision安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件
+使用mxpi_opencvosd插件前，需要使用osd相关的模型文件，请执行Vision SDK安装目录下operators/opencvosd/generate_osd_om.sh脚本并生成所需的模型文件
 ```bash
 # 执行脚本之前需要进入到运行目录下
 cd ${SDK_INSTALL_PATH}/mxVision/operators/opencvosd

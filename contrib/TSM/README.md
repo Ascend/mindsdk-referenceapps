@@ -1,97 +1,67 @@
 # TSM视频分类参考设计
 
-## 1 介绍
-使用TSM模型，基于Kinetics-400数据集，在MindX SDK环境下实现视频分类功能。将测试视频传入脚本进行前处理，模型推理，后处理等功能，最终得到模型推理的精度和性能。
+## 1、 介绍
 
-### 1.1 支持的产品
 
-以昇腾Atlas310卡为主要的硬件平台
+### 1.1 简介
 
-### 1.2 支持的版本
+使用TSM模型，基于Kinetics-400数据集，在Vision SDK环境下实现视频分类功能。将测试视频传入脚本进行前处理，模型推理，后处理等功能，最终得到模型推理的精度。
 
-CANN：7.0.RC1
+本案例中的 TSM 模型适用于Kinetics数据集中的400类视频分类，并可以返回测试集视频的精度值。
 
-SDK：mxVision 5.0.RC3（可通过cat SDK目录下的 version.info 查看）
+在以下两种情况视频分类情况不太好：1. 视频长度过短（小于3s）。 2. 视频帧率过低。
 
-### 1.3 软件方案介绍
+### 1.2 支持的产品
 
-项目主要由离线精度测试文件，在线功能测试文件，离线单视频推理性能测试文件，模型文件，测试数据集预处理文件组成。
+本项目支持昇腾Atlas 300I pro、 Atlas300V pro
 
-### 1.4 代码目录结构与说明
+### 1.3 支持的版本
+
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- |
+| 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+
+
+### 1.4 三方依赖
+
+|   软件名称    |    版本     |
+| :-----------: | :---------: |
+| numpy |  1.24.0  |
+| torchvision |  0.20.1  |
+| torch |  2.5.1  |
+| Pillow |  11.0.0  |
+| tqdm |  4.67.1  |
+
+
+### 1.5 代码目录结构与说明
 
 ```text
 ├── TSM
-    ├── README.md                        // 所有模型相关说明
+    ├── README.md                        // 相关说明
     ├── model
-        ├── onnx2om.sh                   // 转om模型脚本
-        ├── onnx2om1.sh                  // 在线模型转om模型脚本
+        ├── onnx2om.sh                   // 模型转换脚本
     ├── label
         ├── kinetics_val.csv             // label文件
     ├── download_data
         ├── k400_extractor.sh            // 解压数据集脚本
-    ├── offline.png                      // 离线推理技术实现流程
-    ├── online.png                       // 在线推理技术实现流程
     ├── online_infer.py                  // 在线推理精度脚本
     ├── offline_infer.py                 // 离线推理精度脚本
     ├── speed.py                         // 离线单视频推理NPU性能脚本
     ├── speed_gpu.py                     // 离线单视频推理GPU性能脚本
 ```
 
-### 1.5技术实现流程
 
-离线推理流程：
+## 2、 设置环境变量
 
-![离线推理流程](./offline.png)
+**步骤1**：设置CANN和Vision SDK相关环境变量
 
-在线推理流程：
-
-![离线推理流程](./online.png)
-
-### 1.6特性及适用场景
-
-离线模型：
-
-本案例中的 TSM 模型适用于Kinetics数据集中的400类视频分类，并可以返回测试集视频的精度值及单视频识别的种类、性能。
-
-在以下两种情况视频分类情况不太好：1. 视频长度过短（小于3s）。 2. 视频帧率过低。
-
-在线模型：
-
-本案例中的在线模型适用于26中手势识别，并可以返回识别手势的名称。
-
-## 2 环境依赖
-
-推荐系统为ubuntu 18.04，环境依赖软件和版本如下表
-
-| 软件名称     | 版本     |
-|----------|--------|
-| cmake    | 3.5+   |
-| mxVision | 5.0.RC3 |
-| Python   | 3.9    |
-| torch    | 1.10.0 |
-| ffmpeg   | 4.2.1  |
-
-- 环境变量搭建
-
-在运行项目前，需要设置环境变量：
-
-MindSDK 环境变量：
-
-```Shell
-. ${SDK-path}/set_env.sh
+```bash
+. /usr/local/Ascend/ascend-toolkit/set_env.sh #toolkit默认安装路径，根据实际安装路径修改
+. ${SDK_INSTALL_PATH}/mxVision/set_env.sh #sdk安装路径，根据实际安装路径修改
 ```
 
-CANN 环境变量：
-
-```Shell
-. ${ascend-toolkit-path}/set_env.sh
-```
-
-环境变量介绍
-
-SDK-path: mxVision SDK 安装路径
-
-ascend-toolkit-path: CANN 安装路径。
+**步骤2**：安装并设置ffmpeg相关环境变量
 
 下载[ffmpeg](https://github.com/FFmpeg/FFmpeg/archive/n4.2.1.tar.gz)，解压进入并执行以下命令安装：
 
@@ -101,18 +71,34 @@ make -j
 make install
 ```
 
-安装完毕后导入环境变量
+安装完毕后执行以下命令设置环境变量
 
 ```Shell
 export PATH=/usr/local/ffmpeg/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/ffmpeg/lib:$LD_LIBRARY_PATH
 ```
 
-## 3  离线推理
+## 3、 准备模型
 
-**步骤1** Kinetics-400数据集下载
+**步骤1**：模型文件下载
 
-参考[Kinetics-400 数据准备](https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md#%E4%B8%8B%E8%BD%BDvideo%E6%95%B0%E6%8D%AE)中的脚本下载操作，在代码根目录的"download_data"目录下准备"download.sh"数据集下载脚本和"val_link.list"验证集链接列表文件。
+TSM.onnx模型[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/offline_models.zip) , 将下载好压缩包解压并把模型放在“${TSM代码根目录}/model”目录下。
+
+**步骤2**：模型转换
+
+
+将模型转换为om模型，在“model”目录下，执行以下命令生成om模型
+
+```shell
+bash onnx2om.sh
+```
+
+
+## 4、 运行
+
+**步骤1**：Kinetics-400数据集下载
+
+参考[Kinetics-400 数据准备](https://github.com/PaddlePaddle/PaddleVideo/blob/develop/docs/zh-CN/dataset/k400.md#%E4%B8%8B%E8%BD%BDvideo%E6%95%B0%E6%8D%AE)中的脚本下载操作，下载验证集链接列表文件val_link.list并编写下载脚本download.sh。放在代码根目录的"download_data"目录下。
 
 ```text
 ├── TSM
@@ -145,7 +131,7 @@ bash k400_extractor.sh
         ├── zumba
 ```
 
-**步骤2** 数据集预处理
+**步骤2**：数据集预处理
 
 1、视频抽帧
 
@@ -192,8 +178,6 @@ mkdir ops
 ```shell
 mkdir dataset
 cd ./tools
-python3 vid2img_kinetics.py [video_path] [image_path]
-e.g.
 python3 vid2img_kinetics.py ../data ../dataset/
 ```
 
@@ -216,37 +200,25 @@ python3 vid2img_kinetics.py ../data ../dataset/
 python3 gen_label_kinetics.py
 ```
 
-**步骤3** 模型转换
-
-下载[离线模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/offline_models.zip) TSM.onnx, 将下载好的模型放在“${TSM代码根目录}/model”目录下。
-
-将模型转换为om模型，在“model”目录下，执行以下命令生成om模型
-
-```shell
-bash onnx2om.sh
-```
-
-**步骤4** 精度测试
+**步骤3**：运行精度测试
 
 修改${TSM代码根目录}/ops/dataset_config.py 脚本中参数root_data、filename_imglist_train和filename_imglist_val，若仅进行离线精度测试则可忽略filename_imglist_train设置。
 
 ```shell
-import os
-
-ROOT_DATASET = './labels/'    # 标签文件所在路径
+# 8行 ROOT_DATASET = './label/'    # 标签文件所在路径
 
 ...
 
-def return_kinetics(modality):
-    filename_categories = 400
-    if modality == 'RGB':
-        root_data = ROOT_DATASET                                # 训练集根目录
-        filename_imglist_train = 'train_videofolder.txt'        # 训练数据集标签
-        filename_imglist_val = 'val_videofolder.txt'            # 测试数据集标签
-        prefix = 'img_{:05d}.jpg'
-    else:
-        raise NotImplementedError('no such modality:' + modality)
-    return filename_categories, filename_imglist_train, filename_imglist_val, root_data, prefix
+# 92行 def return_kinetics(modality):
+# 93行     filename_categories = 400
+# 94行     if modality == 'RGB':
+# 95行         root_data = ROOT_DATASET                                # 训练集根目录
+# 96行         filename_imglist_train = 'train_videofolder.txt'        # 训练数据集标签
+# 97行         filename_imglist_val = 'val_videofolder.txt'            # 测试数据集标签
+# 98行         prefix = 'img_{:05d}.jpg'
+# 99行     else:
+# 100行        raise NotImplementedError('no such modality:' + modality)
+# 101行    return filename_categories, filename_imglist_train, filename_imglist_val, root_data, prefix
 ```
 
 在参考设计代码根目录下，运行精度测试脚本
@@ -254,88 +226,8 @@ def return_kinetics(modality):
 ```shell
 python3 offline_infer.py kinetics
 ```
-
-原模型精度值为71.1%，实测精度值为71.01%，符合精度偏差范围，精度达标。
-
-**步骤5** 性能测试
-
-将用来测试的单视频放在参考设计代码根目录下，如视频“test_speed.mp4”，运行性能测试脚本
-
-修改speed_gpu.py与speed.py参数，'./test_speed.mp4'为测试视频，测试视频类别需在Kinetics-400数据集的400个种类内且视频长度至少为3s。
-
-```python
-def main():
-    cmd = 'ffmpeg  -i \"{}\" -threads 1 -vf scale=-1:331 -q:v 0 \"{}/img_%05d.jpg\"'.format('./test_speed.mp4', './image')
-    subprocess.call(cmd, shell=True,
-                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    files = os.listdir(r"./image/")
+运行完成后屏幕输出如下信息表示运行成功
 ```
-
-GPU性能(Tesla_V100S_PCIE_32GB)
-
-在参考设计代码根目录下，运行GPU性能测试脚本
-
-```shell
-python3 speed_gpu.py kinetics --test_segments=8 --test_crops=1 --batch_size=1
-```
-
-注：speed_gpu.py脚本需在GPU环境上运行，NPU环境无法运行。
-
-得到单视频纯推理性能为0.08sec/video
-
-SDK性能
-
-在参考设计代码根目录下，运行SDK性能测试脚本
-
-```shell
-python3 speed.py
-```
-
-注：speed.py脚本需在NPU环境上运行。
-
-得到单视频纯推理性能为0.189sec/video
-
-## 4 在线推理
-
-**步骤1** 安装[视频流工具](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
-
-**步骤2** 生成视频流
-
-根据提示当前只支持部分视频格式，并不支持.mp4后缀的文件，但可以通过ffmpeg转换生成[ffmpeg安装教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)，如下所示为MP4转换为h.264命令：
-
-使用ffmpeg工具将带有手势的“jester.mp4”的mp4格式视频转换生成为“jester.264”的264格式视频：
-
-```shell
-ffmpeg -i jester.mp4 -vcodec h264 -bf 0 -g 25 -r 10 -s 1280*720 -an -f h264 jester.264
-
-//-bf B帧数目控制，-g 关键帧间隔控制，-s 分辨率控制 -an关闭音频， -r 指定帧率
-```
-
-使用live555生成视频流。
-
-**步骤3** 模型转换
-
-下载[在线模型](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/TSM/online_models.zip) jester.onnx
-
-将下载好的模型放在参考设计代码根目录的“model”目录下。
-
-将模型转换为om模型，在“model”目录下，运行脚本生成om模型
-
-```shell
-bash onnx2om1.sh
-```
-
-**步骤4** 程序测试
-
-```shell
-python3 online_infer.py
-```
-
-修改参数，'ip:port/jester.264'为测试视频流，其中ip为起流的机器ip地址，port为起流的机器端口地址，jester.264为测试视频jester.mp4通过ffmpeg转换后的视频。
-
-```python
-def video2img():
-    cmd = 'ffmpeg  -i \"{}\" -threads 1 -vf scale=-1:331 -q:v 0 \"{}/img_%05d.jpg\"'.format('rtsp://ip:port/jester.264', './image')
-    subprocess.call(cmd, shell=True,
-                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+-----finished-----
+Final Prec@x XX% Prec@x XX% 
 ```

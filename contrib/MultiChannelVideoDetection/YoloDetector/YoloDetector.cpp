@@ -221,7 +221,7 @@ APP_ERROR YoloDetector::InitModel(const YoloInitParam &initParam)
 APP_ERROR YoloDetector::InitPostProcess(const YoloInitParam &initParam)
 {
     LogInfo << "YoloDetector init postprocess start.";
-    std::map<std::string, std::shared_ptr<void>> config;
+    std::map<std::string, std::string> config;
     LoadPostProcessConfig(initParam, config);
 
     postProcess = std::make_shared<MxBase::Yolov3PostProcess>();
@@ -351,7 +351,7 @@ APP_ERROR YoloDetector::LoadLabels(const std::string &labelPath, std::map<int, s
  * @return status code of whether postprocess config construction is successful
  */
 APP_ERROR YoloDetector::LoadPostProcessConfig(const YoloInitParam &initParam,
-                                              std::map<std::string, std::shared_ptr<void>> &config)
+                                              std::map<std::string, std::string> &config)
 {
     LogInfo << "load postprocess config start.";
 
@@ -370,9 +370,8 @@ APP_ERROR YoloDetector::LoadPostProcessConfig(const YoloInitParam &initParam,
     configData.SetJsonValue("ANCHOR_DIM", std::to_string(initParam.anchorDim));
     configData.SetJsonValue("CHECK_MODEL", checkTensor);
 
-    auto jsonStr = configData.GetCfgJson().serialize();
-    config["postProcessConfigContent"] = std::make_shared<std::string>(jsonStr);
-    config["labelPath"] = std::make_shared<std::string>(initParam.labelPath);
+    config["postProcessConfigContent"] = configData.GetCfgJson();
+    config["labelPath"] = initParam.labelPath;
 
     LogInfo << "load postprocess config successfully.";
     return APP_ERR_OK;

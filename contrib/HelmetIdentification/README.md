@@ -10,17 +10,19 @@
 
 ### 1.2 支持的产品
 
-本项目基于mxVision SDK进行开发，以Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+
+| Vision SDK版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
+Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
 ### 1.4 三方依赖
 环境依赖软件和版本如下表：
 
@@ -58,7 +60,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 ```
 
 ## 2 设置环境变量
-设置CANN及MindX SDK相关的环境变量：
+设置CANN及MindSDK相关的环境变量：
 
 ```shell
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改
@@ -90,7 +92,7 @@ sh atc-env.sh
 脚本中包含atc命令:
 
 ```shell
---model=${Home}/YOLOv5_s.onnx --framework=5 --output=${Home}/YOLOv5_s  --insert_op_conf=./aipp_YOLOv5.config --input_format=NCHW --log=info --soc_version=Ascend310B1 --input_shape="images:1,3,640,640"
+--model=${Home}/YOLOv5_s.onnx --framework=5 --output=${Home}/YOLOv5_s  --insert_op_conf=./aipp_YOLOv5.config --input_format=NCHW --log=info --soc_version=${SOC_VERSION} --input_shape="images:1,3,640,640"
 ```
 
 其参数如下表所示
@@ -105,7 +107,9 @@ sh atc-env.sh
 | --input_shape    | 模型输入数据的 shape。                                       |
 | --out_nodes      | 指定输出节点,如果不指定输出节点（算子名称），则模型的输出默认为最后一层的算子信息，如果 指定，则以指定的为准 |
 
-其中--insert_op_conf参数为aipp预处理算子配置文件路径。该配置文件aipp_YOLOv5.config在输入图像进入模型前进行预处理。该配置文件保存在源码Models目录下。
+*其中--insert_op_conf参数为aipp预处理算子配置文件路径。该配置文件aipp_YOLOv5.config在输入图像进入模型前进行预处理。该配置文件保存在源码Models目录下。
+
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
 
 ## 4.编译与运行
 ### 4.1 编译mxpi_selectedframe插件

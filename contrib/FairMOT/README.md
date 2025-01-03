@@ -3,9 +3,9 @@
 ## 1 介绍
 ### 1.1 简介
 
-FairMOT目标跟踪后处理插件基于MindX SDK开发，在昇腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
+FairMOT目标跟踪后处理插件基于Vision SDK开发，在昇腾芯片上进行目标检测和跟踪，可以对行人进行画框和编号，将检测结果可视化并保存。项目主要流程为：通过live555服务器进行拉流输入视频，然后进行视频解码将264格式的视频解码为YUV格式的图片，图片缩放后经过模型推理进行行人识别，识别结果经过FairMOT后处理后得到识别框，对识别框进行跟踪并编号，用编号覆盖原有的类别信息，再将识别框和类别信息分别转绘到图片上，最后将图片编码成视频进行输出。 
 
-基于MindX SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
+基于Vision SDK的FairMOT目标识别业务流程为：待检测视频存放在live555服务器上经mxpi_rtspsrc拉流插件输入，然后使用视频解码插件mxpi_videodecoder将视频解码成图片，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的FairMOT后处理插件处理推理结果，得到识别框。再接入跟踪插件中识别框进行目标跟踪，得到目标的跟踪编号，然后在使用本项目开发的mxpi_trackidreplaceclassname插件将跟踪编号覆盖类名信息，使用mxpi_object2osdinstances和mxpi_opencvosd分别将识别框和类名（存储跟踪编号）绘制到原图片，再通过mxpi_videoencoder将图片合成视频。
 
 表1.1 系统方案各子系统功能描述：
 
@@ -34,9 +34,9 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 
@@ -111,7 +111,7 @@ ATC run success, welcome to the next use.
 
 ### 3.2 osd相关的模型转换
 
-请执行mxVision软件包安装目录下operators/opencvosd/generate_osd_om.sh脚本生成所需模型文件。执行后终端输出为：
+请执行Vision SDK软件包安装目录下operators/opencvosd/generate_osd_om.sh脚本生成所需模型文件。执行后终端输出为：
 
 ```
 ATC start working now, please wait for a moment.

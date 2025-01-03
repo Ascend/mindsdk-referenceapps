@@ -1,53 +1,78 @@
+# 基于MxBaseV1接口的yoloV3目标检测
 
-# C++ 基于MxBase 的yolov3图像检测样例及yolov3的后处理模块开发
+## 1 介绍
+### 1.1 简介
 
-## 介绍
-本开发样例是基于mxBase开发的端到端推理的C++应用程序，可在昇腾芯片上进行 yolov3 目标检测，并把可视化结果保存到本地。其中包含yolov3的后处理模块开发。
+开发样例是基于mxBase开发的端到端推理的C++应用程序，通过 yolov3 进行目标检测，并把可视化结果保存到本地。其中包含yolov3的后处理模块开发。
+
 该Sample的主要处理流程为：
+
 Init > ReadImage >Resize > Inference >PostProcess >DeInit
 
-## 模型转换
+### 1.2 支持的产品
 
-**步骤1** 模型获取
-在ModelZoo上下载YOLOv3模型。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)
-**步骤2** 模型存放
-将获取到的YOLOv3模型pb文件放至上一级的models文件夹中
-**步骤3** 执行模型转换命令
+本项目支持昇腾Atlas 500 A2。
 
-(1) 配置环境变量
-#### 设置环境变量（请确认install_path路径是否正确）
-#### Set environment PATH (Please confirm that the install_path is correct).
-```c
-export install_path=/usr/local/Ascend/ascend-toolkit/latest
-export PATH=/usr/local/python3.9.2/bin:${install_path}/atc/ccec_compiler/bin:${install_path}/atc/bin:$PATH
-export PYTHONPATH=${install_path}/atc/python/site-packages:${install_path}/atc/python/site-packages/auto_tune.egg/auto_tune:${install_path}/atc/python/site-packages/schedule_search.egg:$PYTHONPATH
-export LD_LIBRARY_PATH=${install_path}/atc/lib64:$LD_LIBRARY_PATH
-export ASCEND_OPP_PATH=${install_path}/opp
+### 1.3 支持的版本
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-```
-(2) 转换模型
-```
-atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
-```
+|Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| --------- |---------| -------------- |
+| 5.0.0   |7.0.0 |  23.0.0  |
+| 6.0.RC3   | 8.0.RC3 |  24.1.RC3  |
 
-## 编译与运行
-**步骤1** 修改CMakeLists.txt文件 将set(MX_SDK_HOME ${SDK安装路径}) 中的${SDK安装路径}替换为实际的SDK安装路径
 
-**步骤2** 设置环境变量
-ASCEND_HOME Ascend安装的路径，一般为/usr/local/Ascend
-LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径，包括ACL，开源软件库，libmxbase.so以及libyolov3postprocess.so的路径
-```
-export ASCEND_HOME=/usr/local/Ascend
-export ASCEND_VERSION=nnrt/latest
-export ARCH_PATTERN=.
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib/modelpostprocessors:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:${LD_LIBRARY_PATH}
+
+## 2 设置环境变量
+
+```bash
+#设置CANN环境变量（请确认install_path路径是否正确）
+. ${ascend-toolkit-path}/set_env.sh
+
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
+. ${SDK-path}/set_env.sh
 ```
 
-**步骤3** cd到mxbase目录下，执行如下编译命令：
+
+
+## 3 准备模型
+
+**步骤1：** 下载YOLOv3模型
+
+通过[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/ATC%20YOLOv3%28FP16%29%20from%20TensorFlow%20-%20Ascend310.zip)下载YOLOv3模型。
+
+
+**步骤2：** 放置模型文件
+
+将获取到的YOLOv3模型的pb文件放在`mxBaseSample/model/`下。
+
+**步骤3：** 模型转换
+
+在`mxBaseSample/model/`下执行模型转换命令
+
+```bash
+atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310B1 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
+```
+- 执行完模型转换脚本后，若提示如下信息说明模型转换成功，并可以在`mxBaseSample/model/`下找到名为`yolov3_tf_bs1_fp16.om`模型文件。
+
+```bash
+ATC run success, welcome to the next use.
+```  
+
+## 4 编译与运行
+**步骤1：** 编译
+
+在`mxBaseSample/`下执行如下编译命令：
+```bash
 bash build.sh
-
-**步骤4** 制定jpg图片进行推理，准备一张推理图片放入mxbase 目录下。eg:推理图片为test.jpg
-cd 到mxbase 目录下
 ```
+**步骤2：** 准备推理图片
+
+准备一张jpg格式的推理图片并命名为`test.jpg`， 并放入`mxBaseSample/`目录下，执行：
+```bash
 ./mxBase_sample ./test.jpg
 ```
+**步骤3：** 查看结果
+
+结果以`result.jpg`的形式保存在`mxBaseSample/`目录下。
+

@@ -99,7 +99,7 @@ APP_ERROR FCOSPostProcess::Process(
   }
   std::vector<ObjectInfo> objectInfo;
   auto res0 = (float *)tensors[0].GetBuffer();
-  auto classIdx = (__int64 *)tensors[1].GetBuffer();
+  auto classIdx = (int64 *)tensors[1].GetBuffer();
   auto shape1 = tensors[1].GetShape();
   for (uint32_t i = 0; i < shape[1]; i++) {
     float *beginRes = res0 + i * 5;

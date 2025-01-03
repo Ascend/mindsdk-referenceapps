@@ -7,7 +7,6 @@ set(PLUGIN_NAME "mxpi_sampleplugin")
 set(TARGET_LIBRARY ${PLUGIN_NAME})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/plugins)
 
-# set (MX_SDK_HOME /home/wangyi4/MindX_SDK/mxVision-2.0.4)
 set (MX_SDK_HOME "$ENV{MX_SDK_HOME}")
 
 set(SRC 
@@ -42,7 +41,7 @@ include_directories(${MX_SDK_HOME}/opensource/lib/glib-2.0/include)
 link_directories(${MX_SDK_HOME}/lib)
 link_directories(${MX_SDK_HOME}/opensource/lib)
 
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)
 add_compile_options("-DPLUGIN_NAME=${PLUGIN_NAME}")
 
 add_definitions(-DENABLE_DVPP_INTERFACE)

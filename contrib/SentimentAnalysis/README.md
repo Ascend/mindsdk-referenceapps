@@ -3,9 +3,9 @@
 ## 1 介绍
 
 ### 1.1 简介
-本项目是一个面向酒店服务领域的句子级情感极性分类系统。分类插件基于MindX SDK开发，在昇腾芯片上进行句子情感极性分类，将分类结果保存。输入一段句子，可以判断该句子属于哪个情感极性。
+本项目是一个面向酒店服务领域的句子级情感极性分类系统。分类插件基于Vision SDK开发，在昇腾芯片上进行句子情感极性分类，将分类结果保存。输入一段句子，可以判断该句子属于哪个情感极性。
 该模型支持3个类别：消极，积极，中性。
-基于MindX SDK的句子情感分类分类业务流程为：待分类文本通过预处理，将文本根据字典vocab.txt进行编码，组成numpy形式的向量，将向量通过 appsrc 插件输入，然后由模型推理插件mxpi_tensorinfer得到每种类别的得分，再通过后处理插件mxpi_classpostprocessor将模型输出的结果处理，最后得到该文本的类别。本系统的各模块及功能描述如表1所示：
+基于Vision SDK的句子情感分类分类业务流程为：待分类文本通过预处理，将文本根据字典vocab.txt进行编码，组成numpy形式的向量，将向量通过 appsrc 插件输入，然后由模型推理插件mxpi_tensorinfer得到每种类别的得分，再通过后处理插件mxpi_classpostprocessor将模型输出的结果处理，最后得到该文本的类别。本系统的各模块及功能描述如表1所示：
 
 表1.1 系统方案各子系统功能描述：
 
@@ -26,15 +26,15 @@
 
 ### 1.2 支持的产品
 
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
-
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 代码目录结构与说明
 
@@ -121,8 +121,10 @@ h5模型转pb可以参考[源码](https://github.com/amir-abdi/keras_to_tensorfl
 # 进入模型文件所在目录
 cd $HOME/models/sentiment_analysis
 # 执行模型转换命令
-atc --model=./sentiment_analysis.pb --framework=3 --input_format=ND --output=./sentiment_analysis --input_shape="Input-Token:1,500;Input-Segment:1,500" --out_nodes="dense_1/Softmax:0" --soc_version=Ascend310B1 --op_select_implmode="high_precision"
+atc --model=./sentiment_analysis.pb --framework=3 --input_format=ND --output=./sentiment_analysis --input_shape="Input-Token:1,500;Input-Segment:1,500" --out_nodes="dense_1/Softmax:0" --soc_version=${SOC_VERSION} --op_select_implmode="high_precision"
 ```
+
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
 
 执行成功后终端输出为：
 

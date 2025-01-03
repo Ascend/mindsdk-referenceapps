@@ -155,10 +155,11 @@ def extract_query_feature(queryPath, streamApi):
                 # get the output tensor, change it into a numpy array and append it into queryFeatures
                 tensorPackage = MxpiDataType.MxpiTensorPackageList()
                 tensorPackage.ParseFromString(inferResult[0].messageBuf)
-                featureFromTensor = np.frombuffer(tensorPackage.tensorPackageVec[0].tensorVec[0].dataStr,
+                feature_from_tensor = np.frombuffer(tensorPackage.tensorPackageVec[0].tensorVec[0].dataStr,
                                                   dtype=np.float32)
-                cv2.normalize(src=featureFromTensor, dst=featureFromTensor, norm_type=cv2.NORM_L2)
-                queryFeatures.append(featureFromTensor.tolist())
+                feature_from_tensor = feature_from_tensor.copy()
+                cv2.normalize(src=feature_from_tensor, dst=feature_from_tensor, norm_type=cv2.NORM_L2)
+                queryFeatures.append(feature_from_tensor.tolist())
             else:
                 print('Input image only support jpg')
                 exit()
@@ -274,11 +275,12 @@ def compute_feature_distance(objectList, featureList, queryFeatures):
             personDetectedFlag = True
             detectedPersonInformation.append({'x0': int(detectedItem.x0), 'x1': int(detectedItem.x1),
                                               'y0': int(detectedItem.y0), 'y1': int(detectedItem.y1)})
-            detectedFeature = \
+            detected_feature = \
                 np.frombuffer(featureList.tensorPackageVec[detectedItemIndex - filterImageCount].tensorVec[0].dataStr,
                               dtype=np.float32)
-            cv2.normalize(src=detectedFeature, dst=detectedFeature, norm_type=cv2.NORM_L2)
-            detectedPersonFeature.append(detectedFeature.tolist())
+            detected_feature = detected_feature.copy()
+            cv2.normalize(src=detected_feature, dst=detected_feature, norm_type=cv2.NORM_L2)
+            detectedPersonFeature.append(detected_feature.tolist())
 
     if not personDetectedFlag:
         return None

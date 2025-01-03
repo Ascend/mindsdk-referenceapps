@@ -4,9 +4,9 @@
 
 ## 1 介绍
 ### 1.1 简介
-本样例基于MindX SDK实现了端到端的路面分割功能，主要采用了Unet模型对输入的路面图片进行语义分割，输出mask掩膜，然后与原图结合，生成路面语义分割后的可视化结果。
+本样例基于Vision SDK实现了端到端的路面分割功能，主要采用了Unet模型对输入的路面图片进行语义分割，输出mask掩膜，然后与原图结合，生成路面语义分割后的可视化结果。
 
-基于MindX SDK的路面分割业务流程：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的路面分割后处理插件处理推理结果，从中获取掩膜mask，然后与原始图片进行融合，之后通过图像编码插件mxpi_imageencoder将后处理插件的融合后的数据进行编码，最后使用输出插件appsink输出可视化的结果。
+基于Vision SDK的路面分割业务流程：待检测图片通过 appsrc 插件输入，然后使用图像解码插件mxpi_imagedecoder对图片进行解码，再通过图像缩放插件mxpi_imageresize将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件mxpi_tensorinfer得到检测结果，本项目开发的路面分割后处理插件处理推理结果，从中获取掩膜mask，然后与原始图片进行融合，之后通过图像编码插件mxpi_imageencoder将后处理插件的融合后的数据进行编码，最后使用输出插件appsink输出可视化的结果。
 
 表1 系统方案各子系统功能描述：
 
@@ -37,16 +37,18 @@
 6.适应于形状规则且与周围环境色差较大的路面图片。<br>
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+
+| Vision SDK版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 代码目录结构说明
 ```
@@ -75,7 +77,7 @@
 ## 2 环境设置
 在编译运行项目前，需要设置环境变量：
 
-- MindX SDK 环境变量，其中${SDK-path}为MindX SDK安装路径
+- Vision SDK 环境变量，其中${SDK-path}为Vision SDK安装路径
 ```
 . ${SDK-path}/set_env.sh
 ```
@@ -93,8 +95,10 @@
 
 在使用[atc工具](https://www.hiascend.com/document/detail/zh/canncommercial/80RC2/devaids/auxiliarydevtool/atlasatc_16_0001.html)之前**需按第2节环境设置章节**事先配置好CANN环境，之后将3.1节中导出的onnx文件上传至```model```目录下，在该目录下执行：
 ```
-atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=Ascend310B1  
+atc --framework=5 --model=Road.onnx --output=road_segmentation --input_format=NCHW  --insert_op_conf=../config/aipp_road_segmentation.config --input_shape="image:1,3,224,224" --log=debug --soc_version=${SOC_VERSION} 
 ```
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+
 若出现以下信息，则转换成功。
 ```
 ATC run success

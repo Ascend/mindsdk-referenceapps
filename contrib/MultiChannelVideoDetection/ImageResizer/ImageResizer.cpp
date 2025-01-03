@@ -30,12 +30,6 @@ APP_ERROR ImageResizer::Init(uint32_t deviceId)
 
     // init DvppWrapper
     vDvppWrapper = std::make_shared<MxBase::DvppWrapper>();
-    APP_ERROR ret = vDvppWrapper->Init();
-    if (ret != APP_ERR_OK) {
-        LogError << "DvppWrapper init failed, ret = " << ret << ".";
-        return ret;
-    }
-
     LogInfo << "ImageResizer init successful.";
     return  APP_ERR_OK;
 }
@@ -46,14 +40,6 @@ APP_ERROR ImageResizer::Init(uint32_t deviceId)
  */
 APP_ERROR ImageResizer::DeInit()
 {
-    LogInfo << "ImageResizer deinit start.";
-
-    APP_ERROR ret = vDvppWrapper->DeInit();
-    if (ret != APP_ERR_OK) {
-        LogError << "DvppWrapper deinit failed.";
-        return ret;
-    }
-
     LogInfo << "ImageResizer deinit successful.";
     return APP_ERR_OK;
 }

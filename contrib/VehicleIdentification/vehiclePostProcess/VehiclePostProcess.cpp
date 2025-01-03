@@ -37,7 +37,7 @@ namespace MxBase {
         topK_ = other.topK_;
     }
 
-    APP_ERROR VehiclePostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
+    APP_ERROR VehiclePostProcess::Init(const std::map<std::string, std::string> &postConfig)
     {
         LogDebug << "Start to Init VehiclePostProcess.";
         APP_ERROR ret = ClassPostProcessBase::Init(postConfig);

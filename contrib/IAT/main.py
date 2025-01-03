@@ -19,9 +19,8 @@ from mindx.sdk import base
 from mindx.sdk.base import Tensor, Model, Size, log, ImageProcessor
 import cv2
 
-MODEL_PATH = "./models/iatsim.om"   # 模型的路径
+MODEL_PATH = "./models/IAT_lol-sim.om"   # 模型的路径
 IMAGE_PATH = "./data/test.png"   # 输入图片
-RESULT_PATH = "./data/result/"
 DATASET_DIR = "./data/eval15/"
 DEVICE_ID = 0   # 芯片ID
 
@@ -108,7 +107,7 @@ def infer(image_path, is_save=False):
     if is_save:
         enhanced_img = enhanced_img.reshape(3, 400, 600).transpose(1, 2, 0) * 255
         enhanced_img = cv2.cvtColor(enhanced_img, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(RESULT_PATH + image_path.split('/')[-1], enhanced_img)
+        cv2.imwrite("./data/result.png", enhanced_img)
 
     return enhanced_img
 

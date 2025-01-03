@@ -55,11 +55,8 @@ def call_duck_duck_go_search(query: str, count: int) -> List[str]:
     retry = 1
     while retry <= 3:
         try:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
-            }
             logger.debug(f"search DuckDuckGo({query}, {count})")
-            results = DDGS(headers=headers).text(query, backend="html", max_results=count)
+            results = DDGS().text(query, backend="html", max_results=count)
             return results
         except Exception as e:
             retry += 1

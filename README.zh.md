@@ -13,7 +13,7 @@
 | [docs](./docs) | Vision SDK文档目录            |
 | [VisionSDK](./VisionSDK) | Vision SDK官方应用样例目录        |
 | [tutorials](./tutorials) | Vision SDK官方开发样例和文档参考工程目录 |
-| [mxIndex](./mxIndex)        | mxIndex参考样例目录             |
+| [IndexSDK](./IndexSDK)        | Index SDK参考样例目录             |
 
 ## 相关网站
 

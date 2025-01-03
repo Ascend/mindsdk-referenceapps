@@ -11,7 +11,7 @@ To help developers quickly master the use of Vision SDK and Index SDK interfaces
 | [docs](./docs) | Vision SDK documentation directory              |
 | [VisionSDK](./VisionSDK) | Vision SDK official sample directory |
 | [tutorials](./tutorials) | Vision SDK official tutorials directory         |
-| [mxIndex](./mxIndex)        | mxIndex offical sample directory                |
+| [IndexSDK](./IndexSDK)        | Index SDK offical sample directory                |
 
 
 ## Related Websites

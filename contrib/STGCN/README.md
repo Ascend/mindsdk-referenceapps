@@ -3,7 +3,7 @@
 ## 1 介绍
 ### 1.1 简介
 
-STGCN主要用于交通预测领域，是一种时空卷积网络，解决在交通领域的时间序列预测问题。在定义图上的问题，并用纯卷积结构建立模型，这使得使用更少的参数能带来更快的训练速度。本样例基于MindxSDK开发，是在STGCN模型的基础上对SZ-Taxi数据集进行训练转化，可以对未来一定时段内的交通速度进行预测。
+STGCN主要用于交通预测领域，是一种时空卷积网络，解决在交通领域的时间序列预测问题。在定义图上的问题，并用纯卷积结构建立模型，这使得使用更少的参数能带来更快的训练速度。本样例基于Vision SDK开发，是在STGCN模型的基础上对SZ-Taxi数据集进行训练转化，可以对未来一定时段内的交通速度进行预测。
 论文原文：https://arxiv.org/abs/1709.04875
 
 STGCN模型GitHub仓库：https://github.com/hazdzz/STGCN
@@ -14,7 +14,7 @@ SZ-Taxi数据集包含深圳市的出租车动向，包括道路邻接矩阵和�
 
 软件方案介绍
 
-基于MindX SDK的城市道路交通预测模型的推理流程为：
+基于Vision SDK的城市道路交通预测模型的推理流程为：
 
 首先读取已有的交通速度数据集（csv格式）通过Python API转化为protobuf的格式传送给appsrc插件输入，然后输入模型推理插件mxpi_tensorinfer，最后通过输出插件mxpi_dataserialize和appsink进行输出。本系统的各模块及功能如表1.1所示：
 
@@ -22,9 +22,9 @@ SZ-Taxi数据集包含深圳市的出租车动向，包括道路邻接矩阵和�
 
 | 序号 | 子系统 | 功能描述     |
 | ---- | ------ | ------------ |
-| 1    | 数据输入 | 调用pythonAPI的SendProtobuf()函数和MindX SDK的appsrc输入数据|
-| 2    | 模型推理 | 调用MindX SDK的mxpi_tensorinfer对输入张量进行推理 |
-| 3    | 结果输出 | 调用MindX SDK的mxpi_dataserialize和appsink以及pythonAPI的GetProtobuf()函数输出结果 |
+| 1    | 数据输入 | 调用pythonAPI的SendProtobuf()函数和Vision SDK的appsrc输入数据|
+| 2    | 模型推理 | 调用Vision SDK的mxpi_tensorinfer对输入张量进行推理 |
+| 3    | 结果输出 | 调用Vision SDK的mxpi_dataserialize和appsink以及pythonAPI的GetProtobuf()函数输出结果 |
 
 主程序流程
 
@@ -40,8 +40,8 @@ SZ-Taxi数据集包含深圳市的出租车动向，包括道路邻接矩阵和�
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- | 
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -82,7 +82,7 @@ eg：本sample工程名称为STGCN，工程目录如下图所示：
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 
 #查看环境变量

@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-本开发样例基于MindX SDK实现了对本地图片进行YOLOv3目标检测，生成可视化结果。
+本开发样例基于Vision SDK实现了对本地图片进行YOLOv3目标检测，生成可视化结果。
 
 
 ### 1.2 支持的产品
@@ -10,9 +10,9 @@
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -32,7 +32,7 @@
 #设置CANN环境变量
 . ${install_path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 ## 3. 准备模型

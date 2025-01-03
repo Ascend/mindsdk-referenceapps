@@ -4,7 +4,7 @@
 ### 1.1 简介
 MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模型性能降级在移动设备上获得实时推断。MMNet模型基多分支dilated conv以及线性bottleneck模块，性能优于最新模型，并且速度提高了几个数量级。
 
-本开发样例基于MindX SDK实现人像分割的功能，其主要功能是利用MMNET模型对输入图片中的人像进行灰度提取，从而与背景分离开，生成一张人像分割图片。
+本开发样例基于Vision SDK实现人像分割的功能，其主要功能是利用MMNET模型对输入图片中的人像进行灰度提取，从而与背景分离开，生成一张人像分割图片。
 
 本项目能够针对人像清晰的图像完成人像分割任务并实现可视化。对于大部分人像图片，在图像清晰且人像在图片中占据较大比例的情况下都可以进行正确识别。但由于MMNET原算法的局限性，在部分情况下识别效果较差，具体如下：
 
@@ -27,7 +27,7 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -59,7 +59,7 @@ MMNet致力于解决移动设备上人像抠图的问题，旨在以最小的模
 #设置CANN环境变量，ascend-toolkit-path为cann安装路径
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

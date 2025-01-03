@@ -2,9 +2,9 @@
 
 ## 1 介绍
 ### 1.1 简介
-本案例基于mxVision，在昇腾平台上，使用PicoDet模型开发端到端目标检测的参考设计，并把可视化结果保存到本地，达到功能要求。本样例适用于通用场景的jpg/jpeg图片目标检测。
+本案例基于Vision SDK，在昇腾平台上，使用PicoDet模型开发端到端目标检测的参考设计，并把可视化结果保存到本地，达到功能要求。本样例适用于通用场景的jpg/jpeg图片目标检测。
 
-基于mxVision的目标检测业务流程为：待检测图片通过 appsrc 插件输入，然后使用图像解码插件 mxpi_imagedecoder 对图片进行解码，再通过图像缩放插件 mxpi_imageresize 将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件 mxpi_tensorinfer 得到推理结果，推理结果输入 mxpi_objectpostprocessor 插件进行后处理，得到输入图片中所有的目标框位置和对应的置信度。最后通过输出插件 appsink 获取检测结果，并在外部进行可视化，将检测结果标记到原图上，本系统的各模块及功能描述如表1所示：
+基于Vision SDK的目标检测业务流程为：待检测图片通过 appsrc 插件输入，然后使用图像解码插件 mxpi_imagedecoder 对图片进行解码，再通过图像缩放插件 mxpi_imageresize 将图像缩放至满足检测模型要求的输入图像大小要求，缩放后的图像输入模型推理插件 mxpi_tensorinfer 得到推理结果，推理结果输入 mxpi_objectpostprocessor 插件进行后处理，得到输入图片中所有的目标框位置和对应的置信度。最后通过输出插件 appsink 获取检测结果，并在外部进行可视化，将检测结果标记到原图上，本系统的各模块及功能描述如表1所示：
 
 表1 系统方案各模块功能描述：
 
@@ -24,7 +24,7 @@
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本 |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本 |
   | --------- | ------------------ | -------------- |
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  | 
 
@@ -60,8 +60,8 @@
 ```bash
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
-. ${mxVision-path}/set_env.sh
-# mxVision-path: mxVision安装路径
+. ${Vision SDK-path}/set_env.sh
+# Vision SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 

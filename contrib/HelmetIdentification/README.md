@@ -14,15 +14,15 @@
 
 ### 1.3 支持的版本
 
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  |  CANN版本 | Driver/Firmware版本  |
+| Vision SDK版本  |  CANN版本 | Driver/Firmware版本  |
 |--------------- | ---------------------------------- | ----------|
 | 5.0.0 | 7.0.0 | 23.0.0|
 |6.0.RC2 | 8.0.RC2 | 24.1.RC2| 
 | 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
+Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)。
 ### 1.4 三方依赖
 环境依赖软件和版本如下表：
 
@@ -60,7 +60,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 ```
 
 ## 2 设置环境变量
-设置CANN及MindX SDK相关的环境变量：
+设置CANN及MindSDK相关的环境变量：
 
 ```shell
 . /usr/local/Ascend/ascend-toolkit/set_env.sh   # Ascend-cann-toolkit开发套件包默认安装路径，根据实际安装路径修改

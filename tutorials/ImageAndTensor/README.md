@@ -1,4 +1,4 @@
-# MxVision快速入门——Image类与Tensor类基本使用教程
+# Vision SDK快速入门——Image类与Tensor类基本使用教程
 
 ## 1 介绍
 
@@ -10,7 +10,7 @@ Tensor数据类，作为模型推理的输入与输出的数据结构。
 本教程支持昇腾Atlas 300I Pro、Atlas 300V Pro。
 
 ### 1.3 支持的版本
-| MxVision版本 | CANN版本 | Driver/Firmware版本 |
+|Vision SDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
 
@@ -19,7 +19,7 @@ Tensor数据类，作为模型推理的输入与输出的数据结构。
 # 设置CANN环境变量
 . ${install_path}/set_env.sh
 
-# 设置MindX SDK 环境变量，sdk_path为mxVision SDK 安装路径
+# 设置Vision SDK环境变量，sdk_path为Vision SDK安装路径
 . ${sdk_path}/set_env.sh
 ```
 
@@ -38,7 +38,7 @@ bash build.sh
 [100%] Built target demo
 ```
 
-**步骤3：** 准备图片。准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于32 * 32，文件大小不超过20MB。
+**步骤3：** 准备图片。准备一张JPG图片命名为input.jpg放到C++目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于32 * 32，文件大小不超过20MB。
 
 **步骤4：** 执行样例程序。样例主要提供下面3个功能，通过执行demo来体验不同的功能。
 
@@ -54,7 +54,7 @@ bash build.sh
 
 **步骤1：** 进入/PATH/TO/ImageAndTensor/Python文件夹中。
 
-**步骤2：** 准备图片。准备一张JPG图片命名为input.jpg放到demo同级目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于32 * 32。
+**步骤2：** 准备图片。准备一张JPG图片命名为input.jpg放到Python目录下，最大分辨率不超过4096 * 4096，最小分辨率不小于32 * 32。
 
 **步骤3：** 执行样例程序。样例主要提供下面3个功能，通过执行main.py来体验不同的功能。
 | 功能 | Demo函数 | 描述 | 执行方式 |

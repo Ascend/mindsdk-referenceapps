@@ -791,6 +791,7 @@ extern AVCodec ff_h264_ascend_decoder;
 extern AVCodec ff_h265_ascend_decoder;
 extern AVCodec ff_h264_ascend_encoder;
 extern AVCodec ff_h265_ascend_encoder;
+extern AVCodec ff_mjpeg_ascend_encoder;
 extern AVCodec ff_h264_amf_encoder;
 extern AVCodec ff_h264_cuvid_decoder;
 extern AVCodec ff_h264_mf_encoder;

@@ -49,6 +49,8 @@ class ToolManager:
                     'input_parameters': apicls.input_parameters,
                     'output_parameters': apicls.output_parameters,
                 }
+                instance = apicls()
+                cls_info["instance"] = instance
                 cls.apis[name] = cls_info
             return apicls
 
@@ -69,9 +71,9 @@ class ToolManager:
         return json.dumps(api_info)
 
     def init_tool(self, tool_name: str, *args, **kwargs):
-        api_class = self.get_api_by_name(tool_name)['class']
+        tool = self.get_api_by_name(tool_name)['instance']
 
-        tool = api_class(*args, **kwargs)
+        # tool = api_class(*args, **kwargs)
 
         return tool
 

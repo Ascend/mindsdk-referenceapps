@@ -262,7 +262,7 @@ static int mjpeg_get_packet(AVCodecContext* avctx)
     AscendMJpegDecodeContext* s = avctx->priv_data;
     int ret;
     av_packet_unref(s->pkt);
-    ret = ff_decode_get_packet(avctxm s->pkt);
+    ret = ff_decode_get_packet(avctx, s->pkt);
     if (ret < 0)
         return ret;
     s->buf_size = s->pkt->size;
@@ -289,7 +289,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         return AVERROR_INVALIDDATA;
     }
 
-    if (AV_RB16(int->data)) != 0xffd8) {
+    if (AV_RB16(in->data) != 0xffd8) {
         av_log(avctx, AV_LOG_ERROR, "Input is not MJPEG.\n");
         return AVERROR_INVALIDDATA;
     }
@@ -388,7 +388,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
         return ret;
     }
-    if (decResult != 0 || got_frame.v_frame.virt_addr[0] == NULL || got_stream.need_display = HI_FALSE) {
+    if (decResult != 0 || got_frame.v_frame.virt_addr[0] == NULL || got_stream.need_display == HI_FALSE) {
         ret = hi_mpi_vdec_release_frame(s->channel_id, &got_frame);
         if (ret != 0) {
             av_log(avctx, AV_LOG_ERROR, "HiMpi release frame failed, ret is %d.\n", ret);

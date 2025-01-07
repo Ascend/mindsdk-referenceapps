@@ -277,7 +277,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         return AVERROR_INVALIDDATA;
     }
 
-    if (AV_RB16(int->data) != 0xffd8) {
+    if (AV_RB16(int->data)) != 0xffd8) {
         av_log(avctx, AV_LOG_ERROR, "Input is not MJPEG.\n");
         return AVERROR_INVALIDDATA;
     }
@@ -317,7 +317,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         return ret;
     }
 
-    ret = aclrtMemcpy(streamBuffer, output_size, output_size, out->data, output_size, ACL_MEMCPY_HOST_TO_DEVICE);
+    ret = aclrtMemcpy(streamBuffer, output_size, out->data, output_size, ACL_MEMCPY_HOST_TO_DEVICE);
     if (ret != 0) {
         av_log(avctx, AV_LOG_ERROR, "Mem copy H2D failed. ret is %d.\n", ret);
         return ret;
@@ -395,7 +395,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         av_log(avctx, AV_LOG_ERROR, "Frame get buffer failed, ret is %d.\n", ret);
         return AVERROR(EINVAL);
     }
-    ret = ff_deocde_frame_props(avctx, frame);
+    ret = ff_decode_frame_props(avctx, frame);
     if (ret < 0) {
         av_log(avctx, AV_LOG_ERROR, "Fill frame properties failed. ret is %d.\n", ret);
         return AVERROR(EINVAL);

@@ -257,6 +257,18 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     return ret;
 }
 
+static int mjpeg_get_packet(AVCodecContext* avctx)
+{
+    AscendMJpegDecodeContext* s = avctx->priv_data;
+    int ret;
+    av_packet_unref(s->pkt);
+    ret = ff_decode_get_packet(avctxm s->pkt);
+    if (ret < 0)
+        return ret;
+    s->buf_size = s->pkt->size;
+    return 0;
+}
+
 int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
 {
     AscendMJpegDecodeContext *s = avctx->priv_data;

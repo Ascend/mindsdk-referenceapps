@@ -87,7 +87,7 @@ static uint8_t *append_dht_segment2(uint8_t *buf)
 
 av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 {
-    AscendMjpegDecodeContext *s = avctx->priv_data;
+    AscendMJpegDecodeContext *s = avctx->priv_data;
     int ret;
 
     enum AVPixelFormat pix_fmts[3] = { AV_PIX_FMT_ASCEND, AV_PIX_FMT_NV12, AV_PIX_FMT_NONE };
@@ -259,7 +259,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 
 int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
 {
-    AscendMjpegDecodeContext *s = avctx->priv_data;
+    AscendMJpegDecodeContext *s = avctx->priv_data;
     int ret = 0;
     ret = mjpeg_get_packet(avctx);
     if (ret < 0) {
@@ -431,7 +431,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
 
 av_cold int ff_mjpeg_ascend_decode_end(AVCodecContext* avctx)
 {
-    AscendMjpegDecodeContext *s = avctx->priv_data;
+    AscendMJpegDecodeContext *s = avctx->priv_data;
     int ret;
     ret = aclrtSetCurrentContext(s->ascend_ctx->context);
     if (ret != 0) {
@@ -468,7 +468,7 @@ static void ascend_decode_flush(AVCodecContext* avctx)
     ff_mjpeg_ascend_decode_init(avctx);
 }
 
-#define OFFSET(x) offsetof(AscendMjpegDecodeContext, x)
+#define OFFSET(x) offsetof(AscendMJpegDecodeContext, x)
 #define VD AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_DECODING_PARAM
 static const AVOption options[] = {
     { "device_id",  "Use to choose the ascend chip.",     OFFSET(device_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 8, VD },
@@ -502,7 +502,7 @@ static const AVCodecHWConfigInternal* ascend_hw_configs[] = {
         .long_name = NULL_IF_CONFIG_SMALL("Ascend HiMpi " #X " decoder"), \
         .type = AVMEDIA_TYPE_VIDEO, \
         .id = AV_CODEC_ID_MJPEG, \
-        .priv_data_size = sizeof(AscendMjpegDecodeContext), \
+        .priv_data_size = sizeof(AscendMJpegDecodeContext), \
         .priv_class = &x##_ascend_class, \
         .init = ff_mjpeg_ascend_decode_init, \
         .close = ff_mjpeg_ascend_decode_end, \
@@ -512,7 +512,7 @@ static const AVCodecHWConfigInternal* ascend_hw_configs[] = {
         .pix_fmts = (const enum AVPixelFormat[]) { AV_PIX_FMT_ASCEND, \
                                                    AV_PIX_FMT_NV12, \
                                                    AV_PIX_FMT_NONE }, \
-        .hw_config2 = ascend_hw_configs, \
+        .hw_configs = ascend_hw_configs, \
         .wrapper_name = "ascendmjpegdec", \
     };
 #if CONFIG_MJPEG_ASCEND_DECODER

@@ -517,4 +517,4 @@ static const AVCodecHWConfigInternal* ascend_hw_configs[] = {
     };
 #if CONFIG_MJPEG_ASCEND_DECODER
 ASCEND_DEC_CODEC(mjpeg, MJPEG)
-##endif
+#endif

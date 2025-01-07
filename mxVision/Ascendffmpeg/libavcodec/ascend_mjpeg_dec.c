@@ -25,8 +25,8 @@
 #include "idctdsp.h"
 #include "internal.h"
 #include "jpegtables.h"
-#include "mjpeg.h"
-#include "mjpegdec.h"
+//#include "mjpeg.h"
+//#include "mjpegdec.h"
 #include "jpeglsdec.h"
 #include "profiles.h"
 #include "put_bits.h"
@@ -107,25 +107,25 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     sprintf(device_id, "%d", s->device_id);
 
     AVASCENDDeviceContext* hw_device_ctx;
-    AVHWFramesContext* hw_frame_ctx;
-    if (avctx->hw_frame_ctx) {
+    AVHWFramesContext* hw_frames_ctx;
+    if (avctx->hw_frames_ctx) {
         av_buffer_unref(&s->hw_frame_ref);
-        s->hw_frame_ref = av_buffer_ref(avctx->hw_frame_ctx);
+        s->hw_frame_ref = av_buffer_ref(avctx->hw_frames_ctx);
         if (!s->hw_frame_ref) {
             ret = AVERROR(EINVAL);
             goto error;
         }
 
-        hw_frame_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
-        if (!hw_frame_ctx->pool || (avctx->width != hw_frame_ctx->width)) {
-            if (hw_frame_ctx->pool) {
-                av_buffer_pool_uninit(&hw_frame_ctx->pool);
+        hw_frames_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
+        if (!hw_frames_ctx->pool || (avctx->width != hw_frames_ctx->width)) {
+            if (hw_frames_ctx->pool) {
+                av_buffer_pool_uninit(&hw_frames_ctx->pool);
             }
-            hw_frame_ctx->width                    = avctx->width;
-            hw_frame_ctx->height                   = avctx->height;
-            hw_frame_ctx->initial_pool_size        = 2;
-            hw_frame_ctx->format                   = AV_PIX_FMT_ASCEND;
-            hw_frame_ctx->sw_format                = AV_PIX_FMT_NV12;
+            hw_frames_ctx->width                    = avctx->width;
+            hw_frames_ctx->height                   = avctx->height;
+            hw_frames_ctx->initial_pool_size        = 2;
+            hw_frames_ctx->format                   = AV_PIX_FMT_ASCEND;
+            hw_frames_ctx->sw_format                = AV_PIX_FMT_NV12;
 
             ret = av_hwframe_ctx_init(s->hw_frame_ref);
             if (ret < 0) {
@@ -133,7 +133,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
                 return AVERROR(ENAVAIL);
             }
         }
-        s->hw_device_ref = av_buffer_ref(hw_frame_ctx->device_ref);
+        s->hw_device_ref = av_buffer_ref(hw_frames_ctx->device_ref);
         if (!s->hw_device_ref) {
             av_log(avctx, AV_LOG_ERROR, "Get hw_device_ref failed.\n");
             ret = AVERROR(EINVAL);
@@ -160,13 +160,13 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
             ret = AVERROR(EINVAL);
             goto error;
         }
-        hw_frame_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
-        if (!hw_frame_ctx->pool) {
-            hw_frame_ctx->width                  = avctx_width;
-            hw_frame_ctx->height                 = avctx->height;
-            hw_frame_ctx->initial_pool_size      = 2;
-            hw_frame_ctx->format                 = AV_PIX_FMT_ASCEND;
-            hw_frame_ctx->sw_format              = AV_PIX_FMT_NV12;
+        hw_frames_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
+        if (!hw_frames_ctx->pool) {
+            hw_frames_ctx->width                  = avctx->width;
+            hw_frames_ctx->height                 = avctx->height;
+            hw_frames_ctx->initial_pool_size      = 2;
+            hw_frames_ctx->format                 = AV_PIX_FMT_ASCEND;
+            hw_frames_ctx->sw_format              = AV_PIX_FMT_NV12;
             ret = av_hwframe_ctx_init(s->hw_frame_ref);
             if (ret < 0) {
                 av_log(avctx, AV_LOG_ERROR, "hwframe ctx init error, ret is %d.\n", ret);
@@ -178,7 +178,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 
     hw_device_ctx = ((AVHWDeviceContext*)s->hw_device_ref->data)->hwctx;
     s->hw_device_ctx = hw_device_ctx;
-    s->hw_frame_ctx = hw_frame_ctx;
+    s->hw_frames_ctx = hw_frames_ctx;
     s->ascend_ctx = s->hw_device_ctx->ascend_ctx;
 
     ret = aclrtSetCurrentContext(s->ascend_ctx->context);
@@ -198,7 +198,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     chn_attr_.mode                                              = HI_VDEC_SEND_MODE_FRAME;
     chn_attr_.pic_width                                         = avctx->width;
     chn_attr_.pic_height                                        = avctx->height;
-    chn_attr_.stream_buf_size                                   = chn_attr_.pic_width * chn_attr_.height * 3 / 2;
+    chn_attr_.stream_buf_size                                   = chn_attr_.pic_width * chn_attr_.pic_height * 3 / 2;
     chn_attr_.frame_buf_cnt                                     = REF_FRAME_NUM + DISPLAY_FRAME_NUM + 1;
 
     hi_pic_buf_attr buf_attr_;

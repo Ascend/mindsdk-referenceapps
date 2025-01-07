@@ -85,7 +85,7 @@ static uint8_t *append_dht_segment2(uint8_t *buf)
 #define WIDTH_ALIGN 2
 #define HEIGHT_ALIGN 16
 
-av_cold int ff_mjpeg_ascend_decode_init(AvCodecContext* avctx)
+av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 {
     AscendMjpegDecodeContext *s = avctx->priv_data;
     int ret;
@@ -257,7 +257,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AvCodecContext* avctx)
     return ret;
 }
 
-int ff_mjpeg_ascend_receive_frame(AvCodecContext* avctx, AVFrame* frame)
+int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
 {
     AscendMjpegDecodeContext *s = avctx->priv_data;
     int ret = 0;
@@ -429,7 +429,7 @@ int ff_mjpeg_ascend_receive_frame(AvCodecContext* avctx, AVFrame* frame)
     return ret;
 }
 
-av_cold int ff_mjpeg_ascend_decode_end(AvCodecContext* avctx)
+av_cold int ff_mjpeg_ascend_decode_end(AVCodecContext* avctx)
 {
     AscendMjpegDecodeContext *s = avctx->priv_data;
     int ret;
@@ -462,7 +462,7 @@ av_cold int ff_mjpeg_ascend_decode_end(AvCodecContext* avctx)
     return 0;
 }
 
-static void ascend_decode_flush(AvCodecContext* avctx)
+static void ascend_decode_flush(AVCodecContext* avctx)
 {
     ff_mjpeg_ascend_decode_end(avctx);
     ff_mjpeg_ascend_decode_init(avctx);
@@ -470,7 +470,7 @@ static void ascend_decode_flush(AvCodecContext* avctx)
 
 #define OFFSET(x) offsetof(AscendMjpegDecodeContext, x)
 #define VD AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_DECODING_PARAM
-static_cast const AVOption options[] = {
+static const AVOption options[] = {
     { "device_id",  "Use to choose the ascend chip.",     OFFSET(device_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 8, VD },
     { "channel_id", "Set channelId of decoder.",          OFFSET(channel_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 255, VD },
     { NULL }

@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <thread>
 #include <fstream>
+#include <sys/time.h>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/imgproc.hpp>
 #include "MxBase/Log/Log.h"

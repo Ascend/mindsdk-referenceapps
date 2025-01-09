@@ -240,7 +240,9 @@ cd dist
 pip3 install ascendfaiss*.whl
 ```
 
-执行用例前，设置环境变量：
+设置环境变量，执行测试用例：
 ```
+cd ..
 source /usr/local/Ascend/ascend-toolkit/set_env.sh
+python3 test_ascend_index_flat.py
 ```

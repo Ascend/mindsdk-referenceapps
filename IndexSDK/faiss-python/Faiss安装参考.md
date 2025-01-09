@@ -232,11 +232,15 @@ g++ -std=c++11 -DFINTEGER=int -fopenmp -I/usr/local/include -I${ASCEND_INSTALL_P
 
 g++ -std=c++11 -shared -fopenmp -L${ASCEND_INSTALL_PATH}/acllib/lib64 -L${ASCEND_INSTALL_PATH}/runtime/lib64 -L${DRIVER_INATALL_PATH}/lib64/driver -L${DRIVER_INATALL_PATH}/driver/lib64/common -L${DRIVER_INATALL_PATH}/driver/lib64/driver -L${FAISS_INSTALL_PATH}/lib -Wl,-rpath-link=${ASCEND_INSTALL_PATH}/acllib/lib64:${ASCEND_INSTALL_PATH}/runtime/lib64:${DRIVER_INATALL_PATH}/driver/lib64:${DRIVER_INATALL_PATH}/driver/lib64/common:${DRIVER_INATALL_PATH}/driver/lib64/driver -L/usr/local/lib -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -s -o _swig_ascendfaiss.so swig_ascendfaiss.o -L${MXINDEX_INSTALL_PATH}/host/lib -lascendfaiss -lfaiss -lascend_hal -lacl_retr -lascendcl -lc_sec -lopenblas
 
-$python3.10 -m build
+python3.10 -m build
 ```
 进入dist文件夹, 使用pip安装生成的ascendfaiss*.whl文件:
 ```
 cd dist
-$pip3 install ascendfaiss*.whl
+pip3 install ascendfaiss*.whl
 ```
 
+执行用例前，设置环境变量：
+```
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+```

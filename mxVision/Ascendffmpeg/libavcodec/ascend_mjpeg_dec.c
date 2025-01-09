@@ -25,8 +25,6 @@
 #include "idctdsp.h"
 #include "internal.h"
 #include "jpegtables.h"
-//#include "mjpeg.h"
-//#include "mjpegdec.h"
 #include "jpeglsdec.h"
 #include "profiles.h"
 #include "put_bits.h"
@@ -151,7 +149,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
             ret = av_hwdevice_ctx_create(&s->hw_device_ref, AV_HWDEVICE_TYPE_ASCEND, device_id, NULL, 0);
             if (ret < 0) {
                 av_log(avctx, AV_LOG_ERROR, "hwdevice context create failed. ret is %d.\n", ret);
-                return retr;
+                return ret;
             }
         }
         s->hw_frame_ref = av_hwframe_ctx_alloc(s->hw_device_ref);

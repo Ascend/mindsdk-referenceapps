@@ -2,7 +2,7 @@
 
 ```
 apt-get install swig
-apt-get install python3.7-dev
+apt-get install python3.10-dev
 pip3 install wheel
 pip3 install build
 ```
@@ -80,7 +80,7 @@ cd faiss-1.7.4
 
    ```
    cd ..
-   PYTHON=/usr/local/python3.7.5/bin/python3.7
+   PYTHON=/usr/local/lib/python3.10
    FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
    cmake -B build . -DFAISS_ENABLE_GPU=OFF -DPython_EXECUTABLE=${PYTHON} -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${FAISS_INSTALL_PATH}
    ```
@@ -175,7 +175,7 @@ cd faiss-1.7.1
 
    ```
    cd ..
-   PYTHON=/usr/local/python3.7.5/bin/python3.7
+   PYTHON=/usr/local/lib/python3.10
    FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.1
    cmake -B build . -DFAISS_ENABLE_GPU=OFF -DPython_EXECUTABLE=${PYTHON} -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${FAISS_INSTALL_PATH}
    ```
@@ -214,13 +214,13 @@ cd faiss-1.7.1
 1、设置软件安装路径信息，根据实际情况配置
 
 ```
-PYTHON_INSTALL_PATH=/usr/local/python3.7.5
+PYTHON_INSTALL_PATH=/usr/local/lib/python3.10
 FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
 MXINDEX_INSTALL_PATH=/home/stj/mxIndex
 
 ASCEND_INSTALL_PATH=/usr/local/Ascend/ascend-toolkit/latest
 DRIVER_INATALL_PATH=/home/driver_dev
-PYTHON_HEADER=$(python3-config --cflags | awk '{print $1}')
+PYTHON_HEADER=/usr/include/python3.10
 ```
 
 2、编译ascendfaiss
@@ -228,15 +228,15 @@ PYTHON_HEADER=$(python3-config --cflags | awk '{print $1}')
 ```
 swig -python -c++ -Doverride= -module swig_ascendfaiss -I${PYTHON_HEADER} -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -DSWIGWORDSIZE64 -o swig_ascendfaiss.cpp swig_ascendfaiss.swig
 
-g++ -std=c++11 -DFINTEGER=int -fopenmp -I/usr/local/include -I${ASCEND_INSTALL_PATH}/acllib/include -I${ASCEND_INSTALL_PATH}/runtime/include -I${DRIVER_INATALL_PATH}/driver/kernel/inc/driver -I${DRIVER_INATALL_PATH}/driver/kernel/libc_sec/include -fPIC -fstack-protector-all -Wall -Wreturn-type -D_FORTIFY_SOURCE=2 -g -O3 -Wall -Wextra -I${PYTHON_INSTALL_PATH}/include/python3.7m -I${PYTHON_INSTALL_PATH}/lib/python3.7/site-packages/numpy/core/include -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -c swig_ascendfaiss.cpp -o swig_ascendfaiss.o
+g++ -std=c++11 -DFINTEGER=int -fopenmp -I/usr/local/include -I${ASCEND_INSTALL_PATH}/acllib/include -I${ASCEND_INSTALL_PATH}/runtime/include -I${DRIVER_INATALL_PATH}/driver/kernel/inc/driver -I${DRIVER_INATALL_PATH}/driver/kernel/libc_sec/include -fPIC -fstack-protector-all -Wall -Wreturn-type -D_FORTIFY_SOURCE=2 -g -O3 -Wall -Wextra -I${PYTHON_HEADER}/ -I${PYTHON_INSTALL_PATH}/dist-packages/numpy/core/include -I${FAISS_INSTALL_PATH}/include -I${MXINDEX_INSTALL_PATH}/include -c swig_ascendfaiss.cpp -o swig_ascendfaiss.o
 
-g++ -std=c++11 -shared -fopenmp -L${ASCEND_INSTALL_PATH}/acllib/lib64 -L${ASCEND_INSTALL_PATH}/runtime/lib64 -L${DRIVER_INATALL_PATH}/driver/lib64 -L${DRIVER_INATALL_PATH}/driver/lib64/common -L${DRIVER_INATALL_PATH}/driver/lib64/driver -L${FAISS_INSTALL_PATH}/lib -Wl,-rpath-link=${ASCEND_INSTALL_PATH}/acllib/lib64:${ASCEND_INSTALL_PATH}/runtime/lib64:${DRIVER_INATALL_PATH}/driver/lib64:${DRIVER_INATALL_PATH}/driver/lib64/common:${DRIVER_INATALL_PATH}/driver/lib64/driver -L/usr/local/lib -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -s -o _swig_ascendfaiss.so swig_ascendfaiss.o -L${MXINDEX_INSTALL_PATH}/lib -lascendfaiss -lfaiss -lascend_hal -lacl_retr -lascendcl -lc_sec -lopenblas
+g++ -std=c++11 -shared -fopenmp -L${ASCEND_INSTALL_PATH}/acllib/lib64 -L${ASCEND_INSTALL_PATH}/runtime/lib64 -L${DRIVER_INATALL_PATH}/lib64/driver -L${DRIVER_INATALL_PATH}/driver/lib64/common -L${DRIVER_INATALL_PATH}/driver/lib64/driver -L${FAISS_INSTALL_PATH}/lib -Wl,-rpath-link=${ASCEND_INSTALL_PATH}/acllib/lib64:${ASCEND_INSTALL_PATH}/runtime/lib64:${DRIVER_INATALL_PATH}/driver/lib64:${DRIVER_INATALL_PATH}/driver/lib64/common:${DRIVER_INATALL_PATH}/driver/lib64/driver -L/usr/local/lib -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -s -o _swig_ascendfaiss.so swig_ascendfaiss.o -L${MXINDEX_INSTALL_PATH}/host/lib -lascendfaiss -lfaiss -lascend_hal -lacl_retr -lascendcl -lc_sec -lopenblas
 
-${PYTHON_INSTALL_PATH}/bin/python3.7 -m build
+$python3.10 -m build
 ```
 进入dist文件夹, 使用pip安装生成的ascendfaiss*.whl文件:
 ```
 cd dist
-${PYTHON_INSTALL_PATH}/bin/pip3.7 install ascendfaiss*.whl
+$pip3 install ascendfaiss*.whl
 ```
 

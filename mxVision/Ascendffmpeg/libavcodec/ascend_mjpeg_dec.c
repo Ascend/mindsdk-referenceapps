@@ -36,7 +36,7 @@
 #include "ascend_mjpeg_dec.h"
 
 
-static const uint8_t jpeg_header2[] = {
+static const uint8_t jpeg_header_ascend[] = {
         0xff, 0xd8,                        // SOI
         0xff, 0xe0,                        // APP0
         0x00, 0x10,                        // APP0 header size
@@ -49,33 +49,33 @@ static const uint8_t jpeg_header2[] = {
         0x00,                              // Y thumbnail size
 };
 
-static const int dht_segment_size2 = 420;
+static const int dht_segment_size_ascend = 420;
 
-static const uint8_t dht_segment_head2[] = {0xFF, 0xC4, 0x01, 0xA2, 0x00};
-static const uint8_t dht_segment_frag2[] = {
+static const uint8_t dht_segment_head_ascend[] = {0xFF, 0xC4, 0x01, 0xA2, 0x00};
+static const uint8_t dht_segment_frag_ascend[] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
         0x0a, 0x0b, 0x01, 0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-static uint8_t *append2(uint8_t *buf, const uint8_t *src, int size)
+static uint8_t *append_ascend(uint8_t *buf, const uint8_t *src, int size)
 {
     memcpy(buf, src, size);
     return buf + size;
 }
 
-static uint8_t *append_dht_segment2(uint8_t *buf)
+static uint8_t *append_dht_segment_ascend(uint8_t *buf)
 {
-    buf = append2(buf, dht_segment_head2, sizeof(dht_segment_head2));
-    buf = append2(buf, avpriv_mjpeg_bits_dc_luminance + 1, 16);
-    buf = append2(buf, dht_segment_frag2, sizeof(dht_segment_frag2));
-    buf = append2(buf, avpriv_mjpeg_val_dc, 12);
+    buf = append_ascend(buf, dht_segment_head_ascend, sizeof(dht_segment_head_ascend));
+    buf = append_ascend(buf, avpriv_mjpeg_bits_dc_luminance + 1, 16);
+    buf = append_ascend(buf, dht_segment_frag_ascend, sizeof(dht_segment_frag_ascend));
+    buf = append_ascend(buf, avpriv_mjpeg_val_dc, 12);
     *(buf++) = 0x10;
-    buf = append2(buf, avpriv_mjpeg_bits_ac_luminance + 1, 16);
-    buf = append2(buf, avpriv_mjpeg_val_ac_luminance, 162);
+    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_luminance + 1, 16);
+    buf = append_ascend(buf, avpriv_mjpeg_val_ac_luminance, 162);
     *(buf++) = 0x11;
-    buf = append2(buf, avpriv_mjpeg_bits_ac_chrominance + 1, 16);
-    buf = append2(buf, avpriv_mjpeg_val_ac_chrominance, 162);
+    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_chrominance + 1, 16);
+    buf = append_ascend(buf, avpriv_mjpeg_val_ac_chrominance, 162);
     return buf;
 }
 
@@ -113,7 +113,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
         s->hw_frame_ref = av_buffer_ref(avctx->hw_frames_ctx);
         if (!s->hw_frame_ref) {
             ret = AVERROR(EINVAL);
-            goto error;
+            return ret;
         }
 
         hw_frames_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
@@ -137,7 +137,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
         if (!s->hw_device_ref) {
             av_log(avctx, AV_LOG_ERROR, "Get hw_device_ref failed.\n");
             ret = AVERROR(EINVAL);
-            goto error;
+            return ret;
         }
     } else {
         if (avctx->hw_device_ctx) {
@@ -145,20 +145,20 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
             if (!s->hw_device_ref) {
                 av_log(avctx, AV_LOG_ERROR, "ref hwdevice failed.\n");
                 ret = AVERROR(EINVAL);
-                goto error;
+                return ret;
             }
         } else {
             ret = av_hwdevice_ctx_create(&s->hw_device_ref, AV_HWDEVICE_TYPE_ASCEND, device_id, NULL, 0);
             if (ret < 0) {
                 av_log(avctx, AV_LOG_ERROR, "hwdevice context create failed. ret is %d.\n", ret);
-                goto error;
+                return retr;
             }
         }
         s->hw_frame_ref = av_hwframe_ctx_alloc(s->hw_device_ref);
         if (!s->hw_frame_ref) {
             av_log(avctx, AV_LOG_ERROR, "hwframe ctx alloc falied.\n");
             ret = AVERROR(EINVAL);
-            goto error;
+            return ret;
         }
         hw_frames_ctx = (AVHWFramesContext*)s->hw_frame_ref->data;
         if (!hw_frames_ctx->pool) {
@@ -171,7 +171,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
             if (ret < 0) {
                 av_log(avctx, AV_LOG_ERROR, "hwframe ctx init error, ret is %d.\n", ret);
                 ret = AVERROR(EINVAL);
-                goto error;
+                return ret;
             }
         }
     }
@@ -218,6 +218,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     uint32_t channel_id = s->channel_id;
     ret = hi_mpi_vdec_create_chn(channel_id, &chn_attr_);
     if (ret != 0) {
+        hi_mpi_sys_exit();
         av_log(avctx, AV_LOG_ERROR, "HiMpi create vdec channel failed, ret is %d.\n", ret);
         return ret;
     }
@@ -225,6 +226,8 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     hi_vdec_chn_param chn_param_;
     ret = hi_mpi_vdec_get_chn_param(channel_id, &chn_param_);
     if (ret != 0) {
+        hi_mpi_vdec_destroy_chn(s->channel_id);
+        hi_mpi_sys_exit();
         av_log(avctx, AV_LOG_ERROR, "HiMpi vdec get channel param failed, ret is %d.\n", ret);
         return ret;
     }
@@ -237,24 +240,31 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 
     ret = hi_mpi_vdec_set_chn_param(channel_id, &chn_param_);
     if (ret != 0) {
+        hi_mpi_vdec_destroy_chn(s->channel_id);
+        hi_mpi_sys_exit();
         av_log(avctx, AV_LOG_ERROR, "HiMpi vdec set channel param failed, ret is %d.\n", ret);
         return ret;
     }
 
     ret = hi_mpi_vdec_start_recv_stream(channel_id);
     if (ret != 0) {
+        hi_mpi_vdec_stop_recv_stream(s->channel_id);
+        hi_mpi_vdec_destroy_chn(s->channel_id);
+        hi_mpi_sys_exit();
         av_log(avctx, AV_LOG_ERROR, "HiMpi vdec start receive stream failed, ret is %d.\n", ret);
         return ret;
     }
 
     s->pkt = av_packet_alloc();
-    if (!s->pkt)
+    if (!s->pkt) {
+        hi_mpi_vdec_stop_recv_stream(s->channel_id);
+        hi_mpi_vdec_destroy_chn(s->channel_id);
+        hi_mpi_sys_exit();
+        av_log(avctx, AV_LOG_ERROR, "Init packet failed, ret is %d.\n", ret);
         return AVERROR(ENOMEM);
+    }
     s->avctx = avctx;
     return 0;
-    error:
-    ff_mjpeg_ascend_decode_end(avctx);
-    return ret;
 }
 
 static int mjpeg_get_packet(AVCodecContext* avctx)
@@ -305,20 +315,20 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         return AVERROR_INVALIDDATA;
     }
 
-    output_size = in->size - input_skip + sizeof(jpeg_header2) + dht_segment_size2;
+    output_size = in->size - input_skip + sizeof(jpeg_header_ascend) + dht_segment_size_ascend;
     ret = av_new_packet(out, output_size);
     if (ret < 0)
         return AVERROR_INVALIDDATA;
     output = out->data;
-    output = append2(output, jpeg_header2, sizeof(jpeg_header2));
-    output = append_dht_segment2(output);
-    output = append2(output, in->data + input_skip, in->size - input_skip);
+    output = append_ascend(output, jpeg_header_ascend, sizeof(jpeg_header_ascend));
+    output = append_dht_segment_ascend(output);
+    output = append_ascend(output, in->data + input_skip, in->size - input_skip);
 
     /* JPEG to YUV420 By Ascend */
     ret = aclrtSetCurrentContext(s->ascend_ctx->context);
     if (ret != 0) {
         av_log(avctx, AV_LOG_ERROR, "Set context failed, ret is %d.\n", ret);
-        return ret;
+        goto error;
     }
 
     uint8_t* streamBuffer = NULL;
@@ -326,13 +336,14 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     ret = hi_mpi_dvpp_malloc(device_id, &streamBuffer, output_size);
     if (ret != 0) {
         av_log(avctx, AV_LOG_ERROR, "HiMpi malloc packet failed, ret is %d.\n", ret);
-        return ret;
+        goto error;
     }
 
     ret = aclrtMemcpy(streamBuffer, output_size, out->data, output_size, ACL_MEMCPY_HOST_TO_DEVICE);
     if (ret != 0) {
         av_log(avctx, AV_LOG_ERROR, "Mem copy H2D failed. ret is %d.\n", ret);
-        return ret;
+        hi_mpi_dvpp_free(streamBuffer);
+        goto error;
     }
 
     hi_vdec_stream stream;
@@ -361,7 +372,8 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     ret = hi_mpi_dvpp_malloc(device_id, &picBuffer, size);
     if (ret != 0) {
         av_log(avctx, AV_LOG_ERROR, "HiMpi malloc falied, ret is %d.\n", ret);
-        return ret;
+        hi_mpi_dvpp_free(streamBuffer);
+        goto error;
     }
 
     pic_info.vir_addr = (uint64_t)picBuffer;
@@ -369,8 +381,9 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     ret = hi_mpi_vdec_send_stream(s->channel_id, &stream, &pic_info, 1000);
     if (ret != 0) {
         hi_mpi_dvpp_free(picBuffer);
+        hi_mpi_dvpp_free(streamBuffer);
         av_log(avctx, AV_LOG_ERROR, "Send stream failed, ret is %d.\n", ret);
-        return ret;
+        goto error;
     }
 
     hi_video_frame_info got_frame;
@@ -379,38 +392,44 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     ret = hi_mpi_vdec_get_frame(s->channel_id, &got_frame, &stSupplement, &got_stream, 100);
     if (ret != 0) {
         hi_mpi_dvpp_free(picBuffer);
+        hi_mpi_dvpp_free(streamBuffer);
         av_log(avctx, AV_LOG_ERROR, "Get frame failed, ret is %d.\n", ret);
-        return ret;
+        goto error;
     }
     size_t decResult = got_frame.v_frame.frame_flag;
-    hi_mpi_dvpp_free(got_stream.addr);
+    hi_mpi_dvpp_free(got_stream.addr);         // free decode input
     if (decResult != 0 && got_frame.v_frame.virt_addr[0] != NULL) {
         hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
-        return ret;
+        goto error;
     }
     if (decResult != 0 || got_frame.v_frame.virt_addr[0] == NULL || got_stream.need_display == HI_FALSE) {
+        hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
         ret = hi_mpi_vdec_release_frame(s->channel_id, &got_frame);
         if (ret != 0) {
             av_log(avctx, AV_LOG_ERROR, "HiMpi release frame failed, ret is %d.\n", ret);
-            return ret;
+            goto error;
         }
-        return -1;
+        ret = -1;
+        goto error;
     }
     ret = hi_mpi_vdec_release_frame(s->channel_id, &got_frame);
     if (ret != 0) {
+        hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
         av_log(avctx, AV_LOG_ERROR, "HiMpi release frame failed, ret is %d.\n", ret);
-        return ret;
+        goto error;
     }
 
     ret = av_hwframe_get_buffer(s->hw_frame_ref, frame, 0);
     if (ret < 0) {
+        hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
         av_log(avctx, AV_LOG_ERROR, "Frame get buffer failed, ret is %d.\n", ret);
-        return AVERROR(EINVAL);
+        goto error;
     }
     ret = ff_decode_frame_props(avctx, frame);
     if (ret < 0) {
+        hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
         av_log(avctx, AV_LOG_ERROR, "Fill frame properties failed. ret is %d.\n", ret);
-        return AVERROR(EINVAL);
+        goto error;
     }
 
     frame->pkt_pos = -1;
@@ -419,9 +438,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     frame->width = got_frame.v_frame.width_stride[0];
     frame->height = got_frame.v_frame.height_stride[0];
     frame->format = (int)AV_PIX_FMT_NV12;
-//    frame->pts = got_frame.v_frame.pts;
-//    frame->pkt_pts = frame->pts;
-//    frame->pkt_dts = out->dts;
+    frame->pkt_dts = s->pkt->dts;
 
     uint32_t offset = 0;
     for (int i = 0; i < 2; i++) {
@@ -431,7 +448,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         if (ret != 0) {
             av_log(avctx, AV_LOG_ERROR, "Mem copy D2D failed, ret is %d.\n", ret);
             hi_mpi_dvpp_free(got_frame.v_frame.virt_addr[0]);
-            return ret;
+            goto error;
         }
         offset += dstBytes;
     }

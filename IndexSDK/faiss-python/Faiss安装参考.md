@@ -216,10 +216,10 @@ cd faiss-1.7.1
 ```
 PYTHON_INSTALL_PATH=/usr/local/lib/python3.10
 FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
-MXINDEX_INSTALL_PATH=/home/stj/mxIndex
+MXINDEX_INSTALL_PATH=/home/mxIndex #根据实际路径修改
 
 ASCEND_INSTALL_PATH=/usr/local/Ascend/ascend-toolkit/latest
-DRIVER_INATALL_PATH=/home/driver_dev
+DRIVER_INATALL_PATH=/home/driver #根据实际路径修改
 PYTHON_HEADER=/usr/include/python3.10
 ```
 

@@ -6,7 +6,7 @@ set(TARGET car_plate_recognition)
 add_compile_options(-std=c++11 -fPIE -fstack-protector-all -fPIC -Wl,-z,relro,-z,now,-z,noexecstack -s -pie -Wall) #添加编译选项
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
-#设置MindX_SDK的安装路径
+#设置Vision SDK的安装路径
 set(MX_SDK_HOME "$ENV{MX_SDK_HOME}")
 #设置FreeType的安装路径
 set(FREETYPE_HOME "$ENV{FREETYPE_HOME}")

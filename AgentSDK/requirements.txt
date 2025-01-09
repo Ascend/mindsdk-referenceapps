@@ -1,0 +1,16 @@
+requests==2.27.1
+tqdm
+bs4
+transformers
+openai
+pandas
+datasets
+peft
+fschat
+langchain
+rouge
+rouge-score
+loguru
+tiktoken
+duckduckgo-search==5.3.1b1
+lxml

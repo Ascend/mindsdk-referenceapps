@@ -1,6 +1,6 @@
 
 
-# MindXSDK 行人重识别v2
+# Vision SDK 行人重识别v2
 
 ## 1 介绍
 ### 1.1 简介
@@ -47,9 +47,9 @@ ReID 技术和目标的技术可以做一个补充，当能看到目标的时候
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
 
@@ -89,7 +89,7 @@ ReIDv2
 > 如果没有result文件夹，将无法产生输出
 
 
-## 2. 设置环境变量
+## 2 设置环境变量
 
 ```bash
 #设置CANN环境变量（请确认install_path路径是否正确）
@@ -125,45 +125,14 @@ ATC run success, welcome to the next use.
 
 
 ### 3.2 ReID的模型
-**步骤1** 从GitHub拉取ReID模型源代码
-
-在`项目所在目录/models`路径下输入：
-```
-git clone https://github.com/michuanhaohao/reid-strong-baseline
-```
-拉取成功后会在路径`项目所在目录/models`下看到文件夹`reid-strong-baseline`。
+**步骤1** 获取模型文件ReID.onnx
 
 
-**步骤2** 获取`.pth`权重文件
 
-&ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)
-
-通过上面的链接下载压缩包`ReID相关文件`。
-
-将`ReID.pth模型`文件夹内的`market_resnet50_model_120_rank1_945.pth`权重文件 放在`项目所在目录/models`路径下。
+通过[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReIDv2/ReID.onnx)获取模型文件ReID.onnx，并放在`项目所在目录/models`路径下。
 
 
-**步骤3** 创建转换为onnx的脚本：
-
-在`项目所在目录/models`路径下，创建py脚本：
-```bash
-vim ReID_pth2onnx.py
-```
-
-&ensp;&ensp;&ensp;&ensp;&ensp;[获取链接](https://gitee.com/ascend/ModelZoo-PyTorch/tree/master/ACL_PyTorch/contrib/cv/classfication/ReID_for_Pytorch)
-
-将上面链接内的`ReID_pth2onnx.py`的代码写入文件内，然后`wq`保存退出。
-
-在`项目所在目录/models`路径下，执行下列命令，生成.onnx模型文件：
-```
-python3 ReID_pth2onnx.py --config_file='reid-strong-baseline/configs/softmax_triplet_with_center.yml' MODEL.PRETRAIN_CHOICE "('self')" TEST.WEIGHT "('market_resnet50_model_120_rank1_945.pth')"
-```
-> 注意目前ATC支持的onnx算子版本为11
-
-成功后 在`项目所在目录/models`路径下会出现ReID.onnx模型。
-
-
-**步骤4** 使用ATC将.onnx文件转成为.om文件
+**步骤2** 使用ATC将.onnx文件转成为.om文件
 
 在`项目所在目录/models`路径下执行：
 
@@ -174,14 +143,19 @@ atc --framework=5 --model=ReID.onnx --output=ReID --input_format=NCHW --input_sh
 ```
 ATC run success, welcome to the next use.
 ```  
-经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和ReID.om模型。
+
+**经过上述操作，可以在“项目所在目录/models”找到yolov3.om模型和ReID.om模型。**
 
 
 ## 4 运行
 
 **步骤1：** 准备行人底库数据集
 
-在3.2 步骤2 中下载的压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
+&ensp;&ensp;&ensp;&ensp;&ensp; [Huawei Cloud](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ReID/ReID%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6.rar)
+
+通过上面的链接下载压缩包`ReID相关文件`。
+
+在压缩包`ReID相关文件`中有`文件夹Market1501数据集`，该文件夹内有压缩文件`Market-1501-v15.09.15.zip`。
 
 请解压“Market-1501-v15.09.15.zip”，在`Market-1501-v15.09.15\Market1501\gt_bbox`中选择想要查询的
 行人图片，将图片放在`项目所在目录/data/querySet`中。（注意：`querySet`需要用户自行创建。）
@@ -194,7 +168,7 @@ ATC run success, welcome to the next use.
 
 **步骤2：** 准备场景图片数据集
 
-在3.2 步骤2 中下载的压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
+在压缩包`ReID相关文件`中有`场景图片`，该文件夹内有压缩文件`search_samples.rar`。
 请解压“search_samples.rar”，然后将获取的图片放在`项目所在目录/data/gallerySet`中。
 （注意：`gallerySet`需要用户自行创建。）
 > gallery下的图片必须是1920*1080大小的jpg
@@ -230,5 +204,9 @@ python3 mainv2.py --queryFilePath='data/querySet' --galleryFilePath='data/galler
 
 
 ## 5 常见问题
-· 在运行mainv2.py时出现"Vpc cropping failed"，或者"The image height zoom ratio is out of range [1/32, 16]"  
-> 这里的错误是因为yolov3模型检测到的目标过小，抠图后放大的比例超过系统给定的阈值[1/32, 16]，更新“项目所在目录/models/yolov3.cfg”文件，将OBJECTNESS_THRESH适度调大可解决该问题
+
+### 5.1 检测目标过小
+
+**问题描述：** 在运行mainv2.py时出现"Vpc cropping failed"，或者"The image height zoom ratio is out of range [1/32, 16]" 。
+
+**解决方案：** 这里的错误是因为yolov3模型检测到的目标过小，抠图后放大的比例超过系统给定的阈值[1/32, 16]，更新“项目所在目录/models/yolov3.cfg”文件，将OBJECTNESS_THRESH适度调大可解决该问题。

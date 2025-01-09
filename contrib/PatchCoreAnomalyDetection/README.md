@@ -1,7 +1,7 @@
 # 基于概率模型和高阶异常度量的零负样本缺陷检测
 
 ## 1 介绍
-在本系统中，目的是基于MindX SDK，在华为云昇腾平台上，开发端到端**缺陷检测**的参考设计，我们采用的模型是PatchCore模型：[Towards Total Recall in Industrial Anomaly Detection](https://arxiv.org/abs/2106.08265)，在MvTec数据集上进行了实验，实现**基于图像Patch的无监督异常检测算法**。模型的主要参考代码：[https://github.com/amazon-science/patchcore-inspection](https://github.com/amazon-science/patchcore-inspection)
+在本系统中，目的是基于Vision SDK，在华为云昇腾平台上，开发端到端**缺陷检测**的参考设计，我们采用的模型是PatchCore模型：[Towards Total Recall in Industrial Anomaly Detection](https://arxiv.org/abs/2106.08265)，在MvTec数据集上进行了实验，实现**基于图像Patch的无监督异常检测算法**。模型的主要参考代码：[https://github.com/amazon-science/patchcore-inspection](https://github.com/amazon-science/patchcore-inspection)
 
 ### 1.1 支持的产品
 
@@ -18,7 +18,7 @@ npu-smi info
 ```
 本样例配套的CANN版本为[5.0.4](https://www.hiascend.com/software/cann/commercial)。支持的SDK版本为[2.0.4](https://www.hiascend.com/software/Mindx-sdk)。
 
-MindX SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 
 ### 1.3 软件方案介绍
 
@@ -28,7 +28,7 @@ MindX SDK安装前准备可参考《用户指南》，[安装教程](https://git
 
 | 序号 | 子系统   | 功能描述                                                |
 | :--- | :------- | :------------------------------------------------------ |
-| 1    | 图像输入 | 调用MindX SDK的appsrc输入图片                           |
+| 1    | 图像输入 | 调用Vision SDK的appsrc输入图片                           |
 | 2    | 图像放缩 | 根据config.yaml文件，通过代码将不同数据集缩放到对应尺寸 |
 | 3    | 缺陷检测 | 利用PatchCore检测模型，检测出图片中缺陷位置             |
 | 4    | 结果输出 | 输出instance_auroc评分                                  |
@@ -78,7 +78,7 @@ eg：推荐系统为ubuntu 18.04或centos 7.6，环境依赖软件和版本如�
 |   软件名称    |    版本     |
 | :-----------: | :---------: |
 |    ubantu     | 18.04.1 LTS |
-|   MindX SDK   |    2.0.4    |
+|   Vision SDK   |    2.0.4    |
 |    Python     |    3.9.2    |
 |     CANN      |    5.0.4    |
 |     numpy     |   1.22.3    |
@@ -129,7 +129,7 @@ python pthtockpt.py --pth_path wide_resnet101_2-32ee1156.pth
 python train_all.py --dataset_path path/to/mvtec/ --results /path/to/results/ --gpu 0
 ```
 
-​	训练结束之后会在./results(默认为results)目录下保存训练出的faiss文件(./results/exp_n/models/})，训练结束之后保存的faiss文件需要移动到Ascend310(即PatchCoreAnomalyDetection目录下的faiss-index-precision目录)。同时会保存**air文件**，用于转换om模型，完成MindX SDK推理。所有子数据集训练完成，会生成wideresnet101_layer2.air和wideresnet_layer3.air文件，通过拆分特征层，提升最终推理的性能。将文件上传至310推理环境。
+​	训练结束之后会在./results(默认为results)目录下保存训练出的faiss文件(./results/exp_n/models/})，训练结束之后保存的faiss文件需要移动到Ascend310(即PatchCoreAnomalyDetection目录下的faiss-index-precision目录)。同时会保存**air文件**，用于转换om模型，完成Vision SDK推理。所有子数据集训练完成，会生成wideresnet101_layer2.air和wideresnet_layer3.air文件，通过拆分特征层，提升最终推理的性能。将文件上传至310推理环境。
 
 Ascend310(PatchCoreAnomalyDetection目录):
 

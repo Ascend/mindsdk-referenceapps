@@ -62,8 +62,7 @@ public:
 protected:
     static APP_ERROR LoadLabels(const std::string &labelPath, std::map<int, std::string> &labelMap);
     static APP_ERROR LoadPostProcessConfig(const ResnetInitParam &initParam,
-                                           std::map<std::string,
-                                           std::shared_ptr<void>> &config);
+                                           std::map<std::string, std::string> &config);
 
 private:
     APP_ERROR InitModel(const ResnetInitParam &initParam);

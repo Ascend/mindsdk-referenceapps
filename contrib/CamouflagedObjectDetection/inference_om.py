@@ -19,6 +19,7 @@ import imageio
 import mindspore
 import numpy as np
 from mindx.sdk.base import Tensor, Model
+from PIL import Image
 
 
 def get_image(image_path, mean, std):
@@ -82,7 +83,13 @@ def infer(om_path, save_path, device_id, data_path):
         res = mindspore.nn.ResizeBilinear()(res, (h, w))
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
         res = res.asnumpy().squeeze()
-        imageio.imwrite(save_path+img_name.replace('.jpg', '.png'), res)
+        if isinstance(res, np.ndarray):
+            if res.dtype in [np.float32, np.float64]:
+                res = (res * 255).astype(np.uint8)
+            res = Image.fromarray(res)
+        if res.mode == 'F':
+            res = res.convert('RGB')
+        imageio.imwrite(save_path + img_name.replace('.jpg', '.jpeg'), res)
 
 
 if __name__ == "__main__":

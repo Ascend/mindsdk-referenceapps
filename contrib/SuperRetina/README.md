@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-基于深度学习的图像配准基于 MindXSDK 开发，在晟腾芯片上进行图像配准。输入两幅图片，可以匹配两幅图像中的特征点。
+基于深度学习的图像配准基于 Vision SDK 开发，在晟腾芯片上进行图像配准。输入两幅图片，可以匹配两幅图像中的特征点。
 图像配准的业务流程为：将输入的两幅图片进行归一化等预处理操作后，输入到模型中进行推理，对输出的关键点，进行极大值抑制去除相近的关键点，再进一步去除靠近边界的关键点，最后利用knn聚类算法得到可能性最大的关键点。本系统的各模块及功能描述如下：
 
 | 序号 | 子系统   | 功能描述                   |
@@ -16,14 +16,16 @@
 
 
 ### 1.2 支持的产品
-本项目以昇腾Atlas 500 A2为主要的硬件平台。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
-本样例配套的MxVision版本、CANN版本、Driver/Firmware版本如下所示：
-| MxVision版本  | CANN版本  | Driver/Firmware版本  |
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
+
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 5.0.0 | 7.0.0   |  23.0.0  |
 | 6.0.RC2 | 8.0.RC2   |  24.1.RC2  |
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 ### 1.4 三方依赖
 
@@ -61,7 +63,7 @@ export install_path=${install_path}
 ```
 
 注：
-**${MX_SDK_HOME}** 替换为用户自己的MindX_SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
+**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
 
 **${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
@@ -74,10 +76,11 @@ export install_path=${install_path}
 本文提供已完成转换的onnx模型供开发者使用：https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/SuperRetina/models.zip
 
 **步骤2** **onnx转om** 将步骤2中转换获得的onnx模型存放至**服务器端**的SuperRetina/目录下，执行如下命令：
-```bash
-bash onnx2om.sh ./SuperRetina.onnx ./SuperRetina
+```
+atc --framework=5 --model=./SuperRetina.onnx --output=./SuperRetina --soc_version=${SOC_VERSION}  --output_type="FP32"
 ```
 
+*当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
 
 ## 4 运行
 

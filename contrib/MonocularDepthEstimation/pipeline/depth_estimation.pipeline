@@ -29,7 +29,7 @@
         "mxpi_tensorinfer0": {
             "props": {
                 "dataSource": "mxpi_imageresize0",
-                "modelPath": "${ AdaBin_nyu.om 模型路径}"
+                "modelPath": "./model/AdaBins_nyu.om"
             },
             "factory": "mxpi_tensorinfer",
             "next": "appsink0"

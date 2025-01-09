@@ -2,7 +2,7 @@
 
 ## 1 介绍
 ### 1.1 简介
-在本系统中，目的是基于MindX Vision，在昇腾平台上，开发端到端文档版面分析的参考设计，实现对图像中的文档识别的功能，并把可视化结果保存到本地。具体来说，在本方案中，通过将onnx格式的文档版面分析模型转成华为晟腾的om模型。将传入的图片做解码、resize、色域转换和归一化之后放入模型推理，推理结果再经过后处理和可视化之后，形成框出版面内容并标有版面类型与置信度的图片。流程图如下所示：
+在本系统中，目的是基于Vision SDK，在昇腾平台上，开发端到端文档版面分析的参考设计，实现对图像中的文档识别的功能，并把可视化结果保存到本地。具体来说，在本方案中，通过将onnx格式的文档版面分析模型转成华为晟腾的om模型。将传入的图片做解码、resize、色域转换和归一化之后放入模型推理，推理结果再经过后处理和可视化之后，形成框出版面内容并标有版面类型与置信度的图片。流程图如下所示：
 ![process](./image/process.png)
 
 
@@ -10,19 +10,20 @@
 
 ### 1.2 支持的产品
 
-支持Atlas 500 A2 推理产品。
+本项目以昇腾Atlas 300I Pro, Atlas 300V Pro和Atlas 500 A2为主要的硬件平台。
 
 ### 1.3 支持的版本
 
-| MxVision版本  | CANN版本  | Driver/Firmware版本 |
-  | --------- | ------------------ | -------------- | 
-| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本 |
+  | --------- | ------------------ | -------------- |
 | 5.0.0     | 7.0.0     |  23.0.0    |
+| 6.0.RC2 | 8.0.RC2   |  24.1.RC2  | 
+| 6.0.RC3 | 8.0.RC3   |  24.1.RC3  |
 
 
 
 ### 1.4 三方依赖
-本项目除了依赖昇腾Driver、Firmware、CANN和MxVision及其要求的配套软件外，还需依赖以下组件：
+本项目除了依赖昇腾Driver、Firmware、CANN和Vision SDK及其要求的配套软件外，还需依赖以下组件：
 
 | 软件名称 | 版本   |
 | :--------: | :------: |
@@ -82,10 +83,10 @@
 cd 到工程目录model目录下。
 执行以下命令：
 
-     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=Ascend310B1 --insert_op_conf=./layout.aippconfig
-
-注：1.执行成功后终端会输出相关信息提示模型转换成功。
-2.模型转换使用了ATC工具，如在模型转换过程中出现异常请参考昇腾官网相关资料。
+     atc --model=./picodet_lcnet_x1_0_fgd_layout_cdla_infer.onnx --framework=5 --output=./layout --soc_version=${SOC_VERSION} --insert_op_conf=./layout.aippconfig
+注：1.当使用昇腾Atlas 300I Pro、Atlas 300V Pro硬件平台时，SOC_VERSION为 Ascend310P3；当使用昇腾Atlas 500 A2硬件平台时，SOC_VERSION为 Ascend310B1。
+2.执行成功后终端会输出相关信息提示模型转换成功。
+3.模型转换使用了ATC工具，如在模型转换过程中出现异常请参考昇腾官网相关资料。
 
 
 ## 4 运行

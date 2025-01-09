@@ -53,7 +53,7 @@ protected:
     APP_ERROR LoadLabels(const std::string &labelPath, std::map<int, std::string> &labelMap);
     APP_ERROR WriteResult(MxBase::TensorBase &tensor,
                          const std::vector<std::vector<MxBase::ObjectInfo>> &objInfos);
-    void SetYolov3PostProcessConfig(const InitParam &initParam, std::map<std::string, std::shared_ptr<void>> &config);
+    void SetYolov3PostProcessConfig(const InitParam &initParam, std::map<std::string, std::string> &config);
 private:
     std::shared_ptr<MxBase::DvppWrapper> dvppWrapper_; // 封装DVPP基本编码、解码、扣图功能
     std::shared_ptr<MxBase::ModelInferenceProcessor> model_; // 模型推理功能处理

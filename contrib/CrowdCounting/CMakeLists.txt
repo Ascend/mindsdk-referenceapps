@@ -6,7 +6,7 @@ include_directories(./CrowdCount)
 file(GLOB_RECURSE CROWDCOUNT_POSTPROCESS ${PROJECT_SOURCE_DIR}/CrowdCountPostProcess/*cpp)
 file(GLOB_RECURSE CROWDCOUNT ${PROJECT_SOURCE_DIR}/CrowdCount/*cpp)
 set(TARGET crowd_counting)
-add_compile_options(-std=c++11 -fPIC -fstack-protector-all -g -Wl,-z,relro,-z,now,-z -pie -Wall)
+add_compile_options(-std=c++14 -fPIC -fstack-protector-all -g -Wl,-z,relro,-z,now,-z -pie -Wall)
 
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 
@@ -26,6 +26,13 @@ link_directories(
 )
 
 add_executable(${TARGET} main.cpp ${CROWDCOUNT} ${CROWDCOUNT_POSTPROCESS})
+
+set(cpprest_DIR ${MX_SDK_HOME}/opensource/lib/libcpprest.so)
+if(EXISTS ${cpprest_DIR})
+        target_link_libraries(crowd_counting cpprest)
+        add_definitions(-DMX_VERSION_5)
+endif()
+
 target_link_libraries(${TARGET}
         glog
         mxbase

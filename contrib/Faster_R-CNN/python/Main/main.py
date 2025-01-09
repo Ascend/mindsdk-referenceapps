@@ -48,7 +48,7 @@ def parser_args():
         type=str,
         required=False,
         default="../pipeline/fasterrcnn_ms_dvpp.pipeline",
-        help="image file path. The default is 'config/maskrcnn_ms.pipeline'. ")
+        help="image file path. The default is '../pipeline/fasterrcnn_ms_dvpp.pipeline'. ")
     parser.add_argument(
         "--model_type",
         type=str,

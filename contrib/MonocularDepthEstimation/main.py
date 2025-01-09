@@ -27,32 +27,8 @@ from util.util import colorize
 
 if __name__ == '__main__':
 
-    input_image_path = 'image/${测试图片文件名}'
-    output_result_path = "result/${输出结果文件名}"
-
-    # parse command arguments
-    if len(sys.argv) == 2:
-        if sys.argv[1] == '':
-            print('input image path is valid, use default config.')
-        else:
-            input_image_path = sys.argv[1]
-        print('no output result path, use default config.')
-    elif len(sys.argv) == 3:
-        if sys.argv[1] == '':
-            print('input image path is valid, use default config.')
-        else:
-            input_image_path = sys.argv[1]
-        if sys.argv[2] == '':
-            print('output result path is valid, use default config.')
-        else:
-            output_result_path = sys.argv[2]
-    else:
-        print("Please enter at least image path, "
-              "such as 'python3 main.py image/test.jpg' or 'bash run.sh -m infer -i image/test.jpg'.")
-        print('no input image path and output result path, use default config.')
-
-    print('input image path: {}.'.format(input_image_path))
-    print('output result path: {}.'.format(output_result_path))
+    input_image_path = './test.jpg'
+    output_result_path = "./result.jpg"
 
     # check input image
     input_valid = False

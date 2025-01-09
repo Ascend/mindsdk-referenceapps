@@ -64,16 +64,16 @@ static void LoadReasonerConfig(const std::vector<std::string> &rtspList, Reasone
     reasonerConfig.baseVideoChannelId = BASE_CHANNEL_ID;
     reasonerConfig.rtspList = rtspList;
     reasonerConfig.maxTryOpenVideoStream = AscendStreamPuller::DEFAULT_RETRY_OPEN_VIDEO_TIMES;
-    reasonerConfig.yoloModelPath = "${yolov3.om模型路径}";
-    reasonerConfig.yoloLabelPath = "${yolov3 coco.names路径}";
+    reasonerConfig.yoloModelPath = "./model/yolov3_tf_bs1_fp16.om";
+    reasonerConfig.yoloLabelPath = "./model/coco.names";
     reasonerConfig.yoloModelWidth = AscendYoloDetector::YOLO_MODEL_INPUT_WIDTH;
     reasonerConfig.yoloModelHeight = AscendYoloDetector::YOLO_MODEL_INPUT_HEIGHT;
-    reasonerConfig.maxDecodeFrameQueueLength = DECODE_QUEUE_LENGTH_200;
+    reasonerConfig.maxDecodeFrameQueueLength = DECODE_QUEUE_LENGTH_100;
     reasonerConfig.popDecodeFrameWaitTime = DEFAULT_POP_WAIT_TIME;
     reasonerConfig.intervalPerformanceMonitorPrint = AscendPerformanceMonitor::DEFAULT_PRINT_INTERVAL;
     reasonerConfig.intervalMainThreadControlCheck = DEFAULT_CONTROL_CHECK_INTERVAL;
-    reasonerConfig.printDetectResult = false;
-    reasonerConfig.writeDetectResultToFile = false;
+    reasonerConfig.printDetectResult = true;
+    reasonerConfig.writeDetectResultToFile = true;
     reasonerConfig.enablePerformanceMonitorPrint = true;
     reasonerConfig.enableIndependentThreadForEachDetectStep = true;
 }
@@ -93,10 +93,11 @@ int main(int argc, char *argv[])
     /// === modify config === ///
     MxBase::ConfigData configData;
     MxBase::ConfigUtil configUtil;
-    APP_ERROR ret = configUtil.LoadConfiguration("${MindXSDK安装路径}/config/logging.conf", configData,
+    APP_ERROR ret = configUtil.LoadConfiguration("${MX_SDK_HOME}/config/logging.conf", configData,
                                                  MxBase::ConfigMode::CONFIGFILE);
     if (ret == APP_ERR_OK) {
-        configData.SetFileValue<int>("global_level", 1);
+        configData.SetFileValue<int>("global_level", 0);
+        configData.SetFileValue<int>("console_level", 0);
         MxBase::Log::SetLogParameters(configData);
     } else {
         LogInfo << "load log configuration failed.";

@@ -175,62 +175,62 @@ static APP_ERROR  PrintInfo(std::vector<MxStream::MxstProtobufOut> outPutInfo)
     return APP_ERR_OK;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {   
     // 读取test.pipeline文件信息
     std::string pipelineConfigPath = "./test.pipeline";
     std::string pipelineConfig = ReadPipelineConfig(pipelineConfigPath);
-    if(pipelineConfig == ""){
+    if (pipelineConfig == "") {
         return APP_ERR_COMM_INIT_FAIL;
     }
 
     std::string streamName = "detection";
     // 新建一个流管理MxStreamManager对象并初始化
-    auto mxStreamManager = std::make_shared<MxStream::MxStreamManager>();
-    APP_ERROR ret = mxStreamManager->InitManager();
-    if(ret != APP_ERR_OK){
-        LogError << GetError(ret) << "Fail to init Stream manager.";
-        return ret;
-    }
-    // 加载pipeline得到的信息，创建一个新的stream业务流
-    ret = mxStreamManager->CreateMultipleStreams(pipelineConfig);
-    if(ret != APP_ERR_OK){
-        LogError << GetError(ret) << "Fail to creat Stream.";
-        return ret;
-    }
+    {
+        auto mxStreamManager = std::make_shared<MxStream::MxStreamManager>();
+        APP_ERROR ret = mxStreamManager->InitManager();
+        if (ret != APP_ERR_OK) {
+            LogError << GetError(ret) << "Fail to init Stream manager.";
+            return ret;
+        }
+        // 加载pipeline得到的信息，创建一个新的stream业务流
+        ret = mxStreamManager->CreateMultipleStreams(pipelineConfig);
+        if (ret != APP_ERR_OK) {
+            LogError << GetError(ret) << "Fail to creat Stream.";
+            return ret;
+        }
 
-    // 将图片的信息读取到dataBuffer中
-    MxStream::MxstDataInput dataBuffer;
-    ret = ReadFile("./test.jpg", dataBuffer);
-    if(ret != APP_ERR_OK){
-        LogError << "Fail to read image file, ret = " << ret << ".";
-        return ret;
-    }
-    // 通过SendData函数传递输入信息到指定的工作元件模块
-    // streamName是pipeline文件中业务流名称；inPluginId为输入端口编号，对应输入元件的编号
-    ret = mxStreamManager->SendData(streamName, 0, dataBuffer);
-    if(ret != APP_ERR_OK){
+        // 将图片的信息读取到dataBuffer中
+        MxStream::MxstDataInput dataBuffer;
+        ret = ReadFile("./test.jpg", dataBuffer);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to read image file, ret = " << ret << ".";
+            return ret;
+        }
+        // 通过SendData函数传递输入信息到指定的工作元件模块
+        // streamName是pipeline文件中业务流名称；inPluginId为输入端口编号，对应输入元件的编号
+        ret = mxStreamManager->SendData(streamName, 0, dataBuffer);
+        if (ret != APP_ERR_OK) {
+            delete dataBuffer.dataPtr;
+            LogError << "Fail to send data to stream, ret = " << ret << ".";
+            return ret;
+        }
         delete dataBuffer.dataPtr;
-        LogError << "Fail to send data to stream, ret = " << ret << ".";
-        return ret;
-    }
-    delete dataBuffer.dataPtr;
-    // 获得Stream上输出原件的protobuf结果
-    std::vector<std::string> keyVec = {"mxpi_objectpostprocessor0", "mxpi_imagedecoder0"};
-    std::vector<MxStream::MxstProtobufOut> output = mxStreamManager->GetProtobuf(streamName, 0, keyVec);
-    ret = PrintInfo(output);
-    if(ret != APP_ERR_OK){
-        LogError << "Fail to print the info of output, ret = " << ret << ".";
-        return ret;
-    }
+        // 获得Stream上输出原件的protobuf结果
+        std::vector <std::string> keyVec = {"mxpi_objectpostprocessor0", "mxpi_imagedecoder0"};
+        std::vector <MxStream::MxstProtobufOut> output = mxStreamManager->GetProtobuf(streamName, 0, keyVec);
+        ret = PrintInfo(output);
+        if (ret != APP_ERR_OK) {
+            LogError << "Fail to print the info of output, ret = " << ret << ".";
+            return ret;
+        }
 
-    // mxpi_objectpostprocessor0模型后处理插件输出信息
-    auto objectList = std::static_pointer_cast<MxTools::MxpiObjectList>(output[0].messagePtr);
-    // mxpi_imagedecoder0图片解码插件输出信息
-    auto mxpiVision = std::static_pointer_cast<MxTools::MxpiVisionList>(output[1].messagePtr);
-    // 将结果写入本地图片中
-    SaveResult(mxpiVision, objectList);
-    mxStreamManager->DestroyAllStreams();
+        // mxpi_objectpostprocessor0模型后处理插件输出信息
+        auto objectList = std::static_pointer_cast<MxTools::MxpiObjectList>(output[0].messagePtr);
+        // mxpi_imagedecoder0图片解码插件输出信息
+        auto mxpiVision = std::static_pointer_cast<MxTools::MxpiVisionList>(output[1].messagePtr);
+        // 将结果写入本地图片中
+        SaveResult(mxpiVision, objectList);
+    }
     return 0;
 }
 

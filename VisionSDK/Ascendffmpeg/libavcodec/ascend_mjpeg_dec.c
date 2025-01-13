@@ -202,8 +202,8 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 
     ret = aclrtSetCurrentContext(s->ascend_ctx->context);
     if (ret != 0) {
-        av_log(avctx, AV_LOG_ERROR, "Set context failed at line(%d) in func(%s),
-            ret is %d.\n", __LINE__, __func__, ret);
+        av_log(avctx,
+               AV_LOG_ERROR, "Set context failed at line(%d) in func(%s), ret is %d.\n", __LINE__, __func__, ret);
         return ret;
     }
 

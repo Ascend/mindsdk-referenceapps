@@ -35,25 +35,31 @@
 
 
 static const uint8_t jpeg_header_ascend[] = {
-        0xff, 0xd8,                        // SOI
-        0xff, 0xe0,                        // APP0
-        0x00, 0x10,                        // APP0 header size
-        0x4a, 0x46, 0x49, 0x46, 0x00,      // ID string 'JFIF\0'
-        0x01, 0x01,                        // version
-        0x00,                              // bits per type
-        0x00, 0x00,                        // X density
-        0x00, 0x00,                        // Y density
-        0x00,                              // X thumbnail size
-        0x00,                              // Y thumbnail size
+    0xff, 0xd8,                        // SOI
+    0xff, 0xe0,                        // APP0
+    0x00, 0x10,                        // APP0 header size
+    0x4a, 0x46, 0x49, 0x46, 0x00,      // ID string 'JFIF\0'
+    0x01, 0x01,                        // version
+    0x00,                              // bits per type
+    0x00, 0x00,                        // X density
+    0x00, 0x00,                        // Y density
+    0x00,                              // X thumbnail size
+    0x00,                              // Y thumbnail size
 };
 
 static const int dht_segment_size_ascend = 420;
+static const int bits_dc_luminance = 16;
+static const int val_dc = 12;
+static const int bits_ac_luminance = 16;
+static const int val_ac_luminance = 162;
+static const int bits_ac_chrominance = 16;
+static const int val_ac_chrominance = 162;
 
 static const uint8_t dht_segment_head_ascend[] = {0xFF, 0xC4, 0x01, 0xA2, 0x00};
 static const uint8_t dht_segment_frag_ascend[] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-        0x0a, 0x0b, 0x01, 0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+    0x0a, 0x0b, 0x01, 0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
 static uint8_t *append_ascend(uint8_t *buf, const uint8_t *src, int size)
@@ -65,15 +71,15 @@ static uint8_t *append_ascend(uint8_t *buf, const uint8_t *src, int size)
 static uint8_t *append_dht_segment_ascend(uint8_t *buf)
 {
     buf = append_ascend(buf, dht_segment_head_ascend, sizeof(dht_segment_head_ascend));
-    buf = append_ascend(buf, avpriv_mjpeg_bits_dc_luminance + 1, 16);
+    buf = append_ascend(buf, avpriv_mjpeg_bits_dc_luminance + 1, bits_dc_luminance);
     buf = append_ascend(buf, dht_segment_frag_ascend, sizeof(dht_segment_frag_ascend));
-    buf = append_ascend(buf, avpriv_mjpeg_val_dc, 12);
+    buf = append_ascend(buf, avpriv_mjpeg_val_dc, val_dc);
     *(buf++) = 0x10;
-    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_luminance + 1, 16);
-    buf = append_ascend(buf, avpriv_mjpeg_val_ac_luminance, 162);
+    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_luminance + 1, bits_ac_luminance);
+    buf = append_ascend(buf, avpriv_mjpeg_val_ac_luminance, val_ac_luminance);
     *(buf++) = 0x11;
-    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_chrominance + 1, 16);
-    buf = append_ascend(buf, avpriv_mjpeg_val_ac_chrominance, 162);
+    buf = append_ascend(buf, avpriv_mjpeg_bits_ac_chrominance + 1, bits_ac_chrominance);
+    buf = append_ascend(buf, avpriv_mjpeg_val_ac_chrominance, val_ac_chrominance);
     return buf;
 }
 
@@ -82,6 +88,20 @@ static uint8_t *append_dht_segment_ascend(uint8_t *buf)
 #define FFALIGNMJPEG(x, a) (((x) + (a) - 1) &~ ((a) - 1))
 #define WIDTH_ALIGN 2
 #define HEIGHT_ALIGN 16
+#define MAX_WIDTH 4096
+#define MAX_HEIGHT 4096
+#define MIN_WIDTH 128
+#define MIN_HEIGHT 128
+#define POOL_SIZE 2
+#define NUM_EIGHT 8
+#define NUM_FIVE 5
+#define NUM_FOUR 4
+#define NUM_THREE 3
+#define NUM_TWO 2
+#define MIN_PKT_SIZE 12
+#define SEND_STREAM_TIME_DELAY 1000
+#define GET_FRAME_TIME_DELAY 100
+
 
 av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 {
@@ -95,7 +115,8 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
         return AVERROR(EINVAL);
     }
 
-    if (avctx->width < 128 || avctx->height < 128 || avctx->width > 4096 || avctx->height > 4096) {
+    if (avctx->width < MIN_WIDTH || avctx->height < MIN_HEIGHT ||
+        avctx->width > MAX_WIDTH || avctx->height > MAX_HEIGHT) {
         av_log(avctx, AV_LOG_ERROR, "MJPEG decoder only support resolution: 128x128 ~ 4096x4096, now: %dx%d.\n",
                avctx->width, avctx->height);
         return AVERROR(EINVAL);
@@ -121,7 +142,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
             }
             hw_frames_ctx->width                    = avctx->width;
             hw_frames_ctx->height                   = avctx->height;
-            hw_frames_ctx->initial_pool_size        = 2;
+            hw_frames_ctx->initial_pool_size        = POOL_SIZE;
             hw_frames_ctx->format                   = AV_PIX_FMT_ASCEND;
             hw_frames_ctx->sw_format                = AV_PIX_FMT_NV12;
 
@@ -162,7 +183,7 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
         if (!hw_frames_ctx->pool) {
             hw_frames_ctx->width                  = avctx->width;
             hw_frames_ctx->height                 = avctx->height;
-            hw_frames_ctx->initial_pool_size      = 2;
+            hw_frames_ctx->initial_pool_size      = POOL_SIZE;
             hw_frames_ctx->format                 = AV_PIX_FMT_ASCEND;
             hw_frames_ctx->sw_format              = AV_PIX_FMT_NV12;
             ret = av_hwframe_ctx_init(s->hw_frame_ref);
@@ -181,7 +202,8 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
 
     ret = aclrtSetCurrentContext(s->ascend_ctx->context);
     if (ret != 0) {
-        av_log(avctx, AV_LOG_ERROR, "Set context failed at line(%d) in func(%s), ret is %d.\n", __LINE__, __func__, ret);
+        av_log(avctx, AV_LOG_ERROR, "Set context failed at line(%d) in func(%s),
+            ret is %d.\n", __LINE__, __func__, ret);
         return ret;
     }
 
@@ -196,7 +218,8 @@ av_cold int ff_mjpeg_ascend_decode_init(AVCodecContext* avctx)
     chn_attr_.mode                                              = HI_VDEC_SEND_MODE_FRAME;
     chn_attr_.pic_width                                         = avctx->width;
     chn_attr_.pic_height                                        = avctx->height;
-    chn_attr_.stream_buf_size                                   = chn_attr_.pic_width * chn_attr_.pic_height * 3 / 2;
+    chn_attr_.stream_buf_size                                   = chn_attr_.pic_width * chn_attr_.pic_height *
+                                                                  NUM_THREE / NUM_TWO;
     chn_attr_.frame_buf_cnt                                     = REF_FRAME_NUM + DISPLAY_FRAME_NUM + 1;
 
     hi_pic_buf_attr buf_attr_;
@@ -271,8 +294,9 @@ static int mjpeg_get_packet(AVCodecContext* avctx)
     int ret;
     av_packet_unref(s->pkt);
     ret = ff_decode_get_packet(avctx, s->pkt);
-    if (ret < 0)
+    if (ret < 0) {
         return ret;
+    }
     s->buf_size = s->pkt->size;
     return 0;
 }
@@ -292,7 +316,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     int input_skip, output_size;
     AVPacket *in = s->pkt;
 
-    if (in->size < 12) {
+    if (in->size < MIN_PKT_SIZE) {
         av_log(avctx, AV_LOG_ERROR, "Input is truncate.\n");
         return AVERROR_INVALIDDATA;
     }
@@ -302,10 +326,10 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
         return AVERROR_INVALIDDATA;
     }
 
-    if (in->data[2] == 0xff && in->data[3] == APP0) {
-        input_skip = (in->data[4] << 8) + in->data[5] + 4;
+    if (in->data[NUM_TWO] == 0xff && in->data[NUM_THREE] == APP0) {
+        input_skip = (in->data[NUM_FOUR] << NUM_EIGHT) + in->data[NUM_FIVE] + NUM_FOUR;
     } else {
-        input_skip = 2;
+        input_skip = NUM_TWO;
     }
 
     if (in->size < input_skip) {
@@ -362,7 +386,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     pic_info.offset_left                               = 0;
     pic_info.offset_right                              = 0;
 
-    uint32_t size = pic_info.width_stride * pic_info.height_stride * 3 / 2;
+    uint32_t size = pic_info.width_stride * pic_info.height_stride * NUM_THREE / NUM_TWO;
     pic_info.buffer_size = size;
     pic_info.pixel_format = HI_PIXEL_FORMAT_YUV_SEMIPLANAR_420;
 
@@ -376,7 +400,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
 
     pic_info.vir_addr = (uint64_t)picBuffer;
 
-    ret = hi_mpi_vdec_send_stream(s->channel_id, &stream, &pic_info, 1000);
+    ret = hi_mpi_vdec_send_stream(s->channel_id, &stream, &pic_info, SEND_STREAM_TIME_DELAY);
     if (ret != 0) {
         hi_mpi_dvpp_free(picBuffer);
         hi_mpi_dvpp_free(streamBuffer);
@@ -387,7 +411,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     hi_video_frame_info got_frame;
     hi_vdec_stream got_stream;
     hi_vdec_supplement_info stSupplement;
-    ret = hi_mpi_vdec_get_frame(s->channel_id, &got_frame, &stSupplement, &got_stream, 100);
+    ret = hi_mpi_vdec_get_frame(s->channel_id, &got_frame, &stSupplement, &got_stream, GET_FRAME_TIME_DELAY);
     if (ret != 0) {
         hi_mpi_dvpp_free(picBuffer);
         hi_mpi_dvpp_free(streamBuffer);
@@ -439,7 +463,7 @@ int ff_mjpeg_ascend_receive_frame(AVCodecContext* avctx, AVFrame* frame)
     frame->pkt_dts = s->pkt->dts;
 
     uint32_t offset = 0;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < NUM_TWO; i++) {
         size_t dstBytes = got_frame.v_frame.width_stride[0] * got_frame.v_frame.height_stride[0] * (i ? 1.0 / 2 : 1);
         ret = aclrtMemcpy(frame->data[i], dstBytes, got_frame.v_frame.virt_addr[0] + offset, dstBytes,
                           ACL_MEMCPY_DEVICE_TO_DEVICE);
@@ -498,8 +522,8 @@ static void ascend_decode_flush(AVCodecContext* avctx)
 #define OFFSET(x) offsetof(AscendMJpegDecodeContext, x)
 #define VD AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_DECODING_PARAM
 static const AVOption options[] = {
-    { "device_id",  "Use to choose the ascend chip.",     OFFSET(device_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 8, VD },
-    { "channel_id", "Set channelId of decoder.",          OFFSET(channel_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 255, VD },
+    { "device_id",  "Use to choose the ascend chip.",    OFFSET(device_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 8, VD },
+    { "channel_id", "Set channelId of decoder.",         OFFSET(channel_id), AV_OPT_TYPE_INT, { .i64 = 0}, 0, 255, VD },
     { NULL }
 };
 

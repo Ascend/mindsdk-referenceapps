@@ -27,6 +27,7 @@ HEADERS = ac3_parser.h                                                  \
           xvmc.h                                                        \
           ascend_dec.h                                                  \
           ascend_enc.h                                                  \
+          ascend_mjpeg_dec.h                                            \
 
 OBJS = ac3_parser.o                                                     \
        adts_parser.o                                                    \
@@ -374,6 +375,7 @@ OBJS-$(CONFIG_H264_DECODER)            += h264dec.o h264_cabac.o h264_cavlc.o \
                                           h264_slice.o h264data.o
 OBJS-$(CONFIG_H264_ASCEND_DECODER)     += ascend_dec.o
 OBJS-$(CONFIG_H264_ASCEND_ENCODER)     += ascend_enc.o
+OBJS-$(CONFIG_MJPEG_ASCEND_DECODER)    += ascend_mjpeg_dec.o
 OBJS-$(CONFIG_H264_AMF_ENCODER)        += amfenc_h264.o
 OBJS-$(CONFIG_H264_CUVID_DECODER)      += cuviddec.o
 OBJS-$(CONFIG_H264_MEDIACODEC_DECODER) += mediacodecdec.o

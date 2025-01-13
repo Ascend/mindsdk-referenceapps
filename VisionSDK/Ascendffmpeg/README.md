@@ -121,7 +121,7 @@ export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/as
 ./ffmpeg -hwaccel ascend -s 1920x1080 -pix_fmt nv12 -i out.yuv -c:v h264_ascend out.264
 ```
 ```bash
-# 将输入文件 test.mjpeg 解码，通过 Ascend 硬件解码与编码，最终输出为 out.264
+# 将输入文件 test.mjpeg 通过 Ascend 硬件解码与编码，最终输出为 out.264
 ./ffmpeg -hwaccel ascend -c:v mjpeg_ascend -device_id 0 -channel_id 0 -i test.mjpeg -c:v h264_ascend -device_id 0 -channel_id 0 out.264
 ```
 ## 4 常见问题

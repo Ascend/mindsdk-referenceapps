@@ -1,6 +1,6 @@
 # 2.2 基于MindStuido的图像检测sample样例运行
 
-[样例获取](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
+[样例获取](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
 
 ## 2.2.1 运行前准备
 

@@ -52,7 +52,7 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 .
 ├── build.sh
 ├── images
-│   ├── MindXSDKValueError.png
+│   ├── MindSDKValueError.png
 │   ├── permissionerror.png
 │   ├── pipeline_pre.png
 │   └── warning.png
@@ -153,7 +153,7 @@ python3 pre_post.py
 
 运行demo前需要正确导入环境变量，否则会报错，如下图所示：
 <center>
-    <img src="./images/MindXSDKValueError.png">
+    <img src="./images/MindSDKValueError.png">
     <br>
 </center>
 

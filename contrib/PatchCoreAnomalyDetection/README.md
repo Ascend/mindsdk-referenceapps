@@ -18,7 +18,7 @@ npu-smi info
 ```
 本样例配套的CANN版本为[5.0.4](https://www.hiascend.com/software/cann/commercial)。支持的SDK版本为[2.0.4](https://www.hiascend.com/software/Mindx-sdk)。
 
-Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 
 ### 1.3 软件方案介绍
 

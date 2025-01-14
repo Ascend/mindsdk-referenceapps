@@ -12,7 +12,7 @@
 
 **V1版本链接：**
 
-https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/ReID
+https://gitee.com/ascend/mindsdk-referenceapps/tree/master/contrib/ReID
 
 **ReID论文地址：**
 
@@ -184,7 +184,7 @@ ATC run success, welcome to the next use.
 并修改以下两行路径为用户实际路径(行数为原代码行数)：
 ```bash
 59  LABEL_PATH = "/path/to/coco.names"  # 需要用户填写：coco.names的路径
-60  CONFIG_PATH = "/path/to/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
+60  CONFIG_PATH = "/path/to/mindsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
 ```
 
 

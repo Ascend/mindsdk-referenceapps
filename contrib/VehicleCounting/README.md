@@ -18,7 +18,7 @@
 
 技术实现流程图
 
-![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
+![Image text](./img/process.JPG)
 
 ### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。
@@ -36,7 +36,7 @@
 | 软件                | 版本         | 说明                          | 获取方式                                                     |
 | ------------------- | ------------ | ----------------------------- | ------------------------------------------------------------ |
 | ffmpeg             | 4.2.1        | 视频转码解码组件              | [安装教程](https://bbs.huaweicloud.com/forum/thread-142431-1-1.html)|                                               
-| pc端ffmpeg         | 2021-09-01   | 将视频文件格式转换为.264      | [安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)|
+| pc端ffmpeg         | 2021-09-01   | 将视频文件格式转换为.264      | [安装教程](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)|
 
 
 ### 1.5 代码目录结构说明

@@ -47,9 +47,9 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 ##  3 编译与运行
 **步骤1：下载贴字接口代码、和BlockingQueue.h文件**
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/VisionSDK/PutText)下载PutText参考设计，将PutText/PutText目录放在本项目根目录下。
+根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/VisionSDK/PutText)下载PutText参考设计，将PutText/PutText目录放在本项目根目录下。
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载BlockingQueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
+根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载BlockingQueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
 
 **步骤2： 下载字库文件**
 
@@ -73,7 +73,7 @@ _1. deviceNum 需为整数，取值范围为 [1, min(NPU设备个数, 5)]。`npu
 
 _2. saveVideo 需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 
-_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值；第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理；rtsp流视频格式需为H264，推流教程可参考[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)。_
+_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值；第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理；rtsp流视频格式需为H264，推流教程可参考[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)。_
 
 **步骤4： 编译**
 

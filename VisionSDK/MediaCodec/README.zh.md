@@ -35,7 +35,7 @@
 ## 3.编译与运行
 
 **步骤1** 构建rtsp视频流服务
-- 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
+- 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
 
 **步骤2** 配置文件配置项修改及说明
 

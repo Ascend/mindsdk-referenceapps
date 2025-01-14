@@ -57,7 +57,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 ```
 
-注：coco.names文件源于[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。
+注：coco.names文件源于[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。
 
 
 ## 2 设置环境变量

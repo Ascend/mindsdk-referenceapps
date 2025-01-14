@@ -12,7 +12,7 @@
 
 **V1版本链接：**
 
-https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/contrib/ReID
+https://gitee.com/ascend/mindsdk-referenceapps/tree/master/contrib/ReID
 
 **ReID论文地址：**
 

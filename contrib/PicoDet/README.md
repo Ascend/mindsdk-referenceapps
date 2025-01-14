@@ -88,7 +88,7 @@ bash build.sh
 
 **步骤2**  下载标签文件coco.names
 
-下载文件[coco2014.names](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)，将下载的标签文件放入models目录中并修改文件名为**coco.names**
+下载文件[coco2014.names](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)，将下载的标签文件放入models目录中并修改文件名为**coco.names**
 
 **步骤3**  在项目根目录执行以下指令创建输入、输出目录
 

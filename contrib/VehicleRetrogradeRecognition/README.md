@@ -48,7 +48,7 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于Vision SDK开
 
 | 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
 | -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 
 ### 1.5 代码目录结构与说明
 
@@ -137,7 +137,7 @@ atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_fo
 
 ## 4 编译与运行
 
-**步骤1** 拉起Live555服务：[Live555拉流教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+**步骤1** 拉起Live555服务：[Live555拉流教程](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
 **步骤2** 根据实际的网络视频流，修改`VehicleRetrogradeRecognition/pipeline`目录下的VehicleRetrogradeRecognition.pipeline文件中mxpi_rtspsrc0第9行的内容。
 

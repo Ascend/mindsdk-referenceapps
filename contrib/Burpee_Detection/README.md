@@ -77,7 +77,7 @@ ATC run success, welcome to the next use.
 
 **步骤1**：安装live555并创建视频流。 
 
-按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)，使用h264视频创建rtsp视频流。
+按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)，使用h264视频创建rtsp视频流。
 
 **步骤2**：修改流程编排文件。
 进入pipeline文件夹，

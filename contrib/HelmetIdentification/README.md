@@ -6,7 +6,7 @@
 
 技术实现流程图如下：
 
-<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image4.jpg" alt="image4" style="zoom: 80%;" />
+<img src="./image/image4.jpg" alt="image4" style="zoom: 80%;" />
 
 ### 1.2 支持的产品
 
@@ -125,12 +125,11 @@ make -j
 ```
 
 编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440。
- 注：[插件编译生成教程](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)在《SDK用户手册》深入开发章节。
 
 ### 4.2 视频推流
 本项目通过mxpi_rtspsrc拉流输入数据，通过两路GetResult接口输出数据，一路输出带有帧信息的图片数据，一路输出带有帧信息的目标检测框和检测框跟踪信息。推理过程如下：
 
-首先通过[live555](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
+首先通过[live555](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
 
 转换命令如下：
 
@@ -178,7 +177,7 @@ RESIZE_FLAG=0
 
 2. 修改pipline中mxpi_rtspsrc的拉流路径
 
-![image2](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image2.jpg)
+![image2](./image/image2.jpg)
 
 3. 根据使用的device修改deviceId。
 
@@ -188,11 +187,11 @@ RESIZE_FLAG=0
 
 mian.py通过调用sdk接口创建多个流完成数据接收、处理以及输出，接口调用流程图如下所示：
 
-<img src="https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image1.jpg" alt="image1" style="zoom:80%;" />
+<img src="./image/image1.jpg" alt="image1" style="zoom:80%;" />
 
 在Models目录下手动创建output/one,output/two两个文件夹
 
-![image3](https://gitee.com/liu-kai6334/mindxsdk-referenceapps/raw/master/contrib/HelmetIdentification/image/image3.jpg)
+![image3](./image/image3.jpg)
 
 切换目录至main.py所在目录下，运行命令：
 

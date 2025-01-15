@@ -49,7 +49,7 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 ### 3.1 C++样例运行
 **步骤1：下载BlockingQueue.h文件**
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载Blockingqueue.h文件，将BlockingQueue.h文件放在本项目根目录的C++目录下。
+根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载Blockingqueue.h文件，将BlockingQueue.h文件放在本项目根目录的C++目录下。
 
 
 **步骤2：准备视频** 

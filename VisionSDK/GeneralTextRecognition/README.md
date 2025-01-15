@@ -149,11 +149,11 @@ blank
 
 **步骤5：** 修改配置根目录下的配置文件。
 
-将<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline内所有`deviceId`字段值替换为实际使用的device的id值，可用的`deviceId`值可以使用如下命令查看：
+将<Project_Root>/data/OCR.pipeline内所有`deviceId`字段值替换为实际使用的device的id值，可用的`deviceId`值可以使用如下命令查看：
 ```bash
 npu-smi info
 ```
-文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so"，如有修改，请修改<Project_Root>/data/OCR.pipeline和OCR_multi3.pipeline的对应配置，OCR.pipeline示例如下：
+文本检测使用的DBNet后处理由步骤2编译得到，默认生成到"<Project_Root>/lib/libDBpostprocess.so"，如有修改，请修改<Project_Root>/data/OCR.pipeline的对应配置，OCR.pipeline示例如下：
 ```bash
 # 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
 .
@@ -163,15 +163,6 @@ npu-smi info
 .
 .
 # 199行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
-```
-OCR_multi3.pipeline示例如下：
-```bash
-# 44行         "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
-.
-# 265行        "modelPath": "<Project_Root>/data/model/Dynamic24_ch_ppocr_server_v2.0_det_infer.om"
-.
-.
-# 641行        "labelPath": "<Project_Root>/data/config/rec/ppocr_keys_v1.txt",
 ```
 最后，请将pipline下的所有<Project_Root>路径更换为实际的项目路径，例如/root/GeneralTextRecognition/data/config/rec/rec_cfg.txt，/root/GeneralTextRecognition为实际项目路径。
 

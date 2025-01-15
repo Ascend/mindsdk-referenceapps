@@ -54,7 +54,7 @@ mindsdk-referenceapps欢迎各位开发者的加入，希望各位开发者遵�
 2、贡献者参考设计代码目录命名规则
 
 ```shell
-mindxsdk-referenceapps/contrib/参考设计名称(英文)
+mindsdk-referenceapps/contrib/参考设计名称(英文)
 ```
 
 ### 三、License规则

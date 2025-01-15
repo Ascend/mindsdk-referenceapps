@@ -18,7 +18,7 @@
 
 技术实现流程图
 
-![Image text](https://gitee.com/wu-jindge/mindxsdk-referenceapps/raw/master/contrib/VehicleCounting/img/process.JPG)
+![Image text](./img/process.JPG)
 
 ### 1.2 支持的产品
 本项目以昇腾Atlas 500 A2为主要的硬件平台。

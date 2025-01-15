@@ -26,7 +26,7 @@ FairMOT目标跟踪后处理插件基于Vision SDK开发，在昇腾芯片上进
 
 流程图如下：
 
-![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image1.png)
+![](./image/image1.png)
 
 ### 1.2 支持的产品
 
@@ -125,7 +125,7 @@ ATC run success, welcome to the next use.
 
 本项目通过mxpi_rtspsrc拉流输入数据，推流过程如下：
 
-首先通过[live555](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
+首先通过[live555](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
 
 转换命令如下：
 
@@ -232,8 +232,10 @@ fps: 12.7977
 
 `FairMOT/pipeline/fairmot.pipeline`中视频编码分辨率参数目前配置为1280*720。  
 该参数通过imageHeight 和 imageWidth 属性配置，且需要和视频输入分配率相同，否则会报如下类型的错：
-
-![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image3.png)
+```
+E1115 09:27:24.113247 12189 DvppWrapper.cpp:1813] input width(1280) is not same as venc input format(1920)
+E1115 09:27:24.113312 12189 DvppVideoEncoder.cpp:299] [mxpi_videoencoder0][2010][DVPP: encode H264 or H265 fail] Encode fail.
+```
 
 **解决方案：**
 

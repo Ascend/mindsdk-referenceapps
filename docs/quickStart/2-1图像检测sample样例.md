@@ -3,7 +3,7 @@
 ## 2.1.1 样例介绍
 
 提供了一个图像检测sample样例，实现对本地图片进行YOLOv3目标检测，并把可视化结果保存到本地。
-[样例获取](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
+[样例获取](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
 
 ## 2.1.2 运行前准备
 参考[IDE开发环境搭建](./1-2IDE开发环境搭建.md)章节搭建好项目运行环境。
@@ -19,7 +19,7 @@
 具体模型转换步骤请参考C++样例目录下的README.md文件  
 在步骤2目录中执行完模型转换脚本后，会生成相应的.om模型文件。
 
->模型转换使用了ATC工具，如需更多信息请参考:  https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md
+> 模型转换使用了ATC工具，如需更多信息请参考: https://www.hiascend.com/document/detail/zh/canncommercial/800/devaids/devtools/atc/atlasatc_16_0001.html
 ### 2.1.2.2 配置pipeline
 在test.pipeline文件中配置所需的模型路径与模型后处理插件路径。  
 ![10.png](img/1623231415247.png '10.png')  
@@ -54,7 +54,7 @@
 
 ## 2.2.2 运行前准备
 请参考[IDE开发环境搭建](./1-2IDE开发环境搭建.md)章节搭建好项目运行环境。
-将项目从（[项目文件地址](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/ImageDetectionSample/python)）移动到运行项目的目录下。
+将项目从（[项目文件地址](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/ImageDetectionSample/python)）移动到运行项目的目录下。
 
 ### 2.2.2.1 模型转换
 确认*.om模型文件存在model 路径下。

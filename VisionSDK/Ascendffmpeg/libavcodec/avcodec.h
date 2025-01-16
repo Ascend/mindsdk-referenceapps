@@ -28,6 +28,7 @@
  */
 
 #include <errno.h>
+#include <stdbool.h>
 #include "libavutil/samplefmt.h"
 #include "libavutil/attributes.h"
 #include "libavutil/avutil.h"
@@ -4180,5 +4181,9 @@ AVCPBProperties *av_cpb_properties_alloc(size_t *size);
 /**
  * @}
  */
+
+typedef struct AscendEncPrivateData {
+    bool next_frame_is_I_frame;
+} AscendEncPrivateData_t;
 
 #endif /* AVCODEC_AVCODEC_H */

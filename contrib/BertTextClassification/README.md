@@ -113,7 +113,7 @@ cp ./bert_text_classification.om ./mxBase/model/
 
 **步骤2** 
 
-将本项目代码/BertTextClassification/sdk/pipeline目录下BertTextClassification.pipeline文件中的第26行的文件路径中出现的 ${SDK目录} 替换成Vision SDK的安装目录，下面是需要替换的代码片段。
+将本项目代码/BertTextClassification/sdk/pipeline目录下BertTextClassification.pipeline文件中的第26行的文件路径中出现的`${SDK目录}` 替换成Vision SDK的安装目录，下面是需要替换的代码片段。
 ```
 "postProcessLibPath": "${SDK目录}/lib/modelpostprocessors/libresnet50postprocess.so"
 ```

@@ -124,7 +124,7 @@ cmake ..
 make -j
 ```
 
-编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(./MindX_SDK/mxVision/lib/plugins)，并修改权限为440。
+编译成功后将产生**libmxpi_selectedframe.so**文件，文件生成位置在build目录下。将其复制至SDK的插件库中(${Vision SDK安装路径}/lib/plugins)，并修改权限为440。
 
 ### 4.2 视频推流
 本项目通过mxpi_rtspsrc拉流输入数据，通过两路GetResult接口输出数据，一路输出带有帧信息的图片数据，一路输出带有帧信息的目标检测框和检测框跟踪信息。推理过程如下：
@@ -160,7 +160,7 @@ test.264可替换成任意上传至当前目录的[264格式文件](https://gite
 
 pipline根据1.6节中技术实现流程图编写，**HelmetDetection.pipline**放在源码根目录Models。
 
-1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${MX_SDK}/mxVision/lib下）。该后处理配置文件内容如下：              
+1. pipline中mxpi_modelinfer用于加载yolov5安全帽识别模型。该插件包含四个参数，modelPath用于加载om模型文件。labelPath用于加载模型可识别类（imgclass.names）。postProcessLibPath用于加载后处理动态链接库文件，该模块实现NMS等后处理。postProcessConfigPath用于加载后处理所需要的配置文件（Helmet_yolov5.cfg）。本项目使用后处理文件为**libMpYOLOv5PostProcessor.so**（在${Vision-SDK-path}/mxVision/lib下，Vision-SDK-path表示Vision SDK安装路径）。该后处理配置文件内容如下：              
 ```python
 CLASS_NUM=3
 BIASES_NUM=18

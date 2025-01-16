@@ -112,7 +112,7 @@ rtspList.emplace_back("${rtsp流地址1}");
 rtspList.emplace_back("${rtsp流地址2}");
 ```
 
-②：将文件中第96行的`${MindXSDK安装路径}`字段值替换为实际使用的安装路径。
+②：将文件中第96行的`${MX_SDK_HOME}`字段值替换为实际Vision SDK的安装路径。
 
 ```c++
 APP_ERROR ret = configUtil.LoadConfiguration("${MX_SDK_HOME}/config/logging.conf", configData, MxBase::ConfigMode::CONFIGFILE);

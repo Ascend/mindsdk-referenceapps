@@ -72,9 +72,9 @@ chmod +x ./ffbuild/*.sh
 
 **步骤3：** 添加环境变量
 
-通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
+通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
 ```bash
-export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
 ```
 
 **步骤4：** 运行

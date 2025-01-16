@@ -47,7 +47,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 │     └── CMakeLists.txt            # 用于编译后处理插件
 ├── model
 │     ├── coco.names                # 需要下载，下载链接在下方
-│     └── ppyoloe.cfg               # 模型后处理配置文件，配置说明参考《mxVision用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
+│     └── ppyoloe.cfg               # 模型后处理配置文件，配置说明参考《Vision SDK用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
 ├── pipeline
 │     ├── Sample.pipeline           # 参考pipeline文件，用于配置rgb模型，用户需要根据自己需求和模型输入类型进行修改
 │     └── SampleYuv.pipeline        # 参考pipeline文件，用于配置yuv模型，用户需要根据自己需求和模型输入类型进行修改
@@ -206,7 +206,7 @@ make install
 
 **步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindsdk-referenceapps安装路径：
 ```bash
-14  ${mindxsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
+14  ${mindsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
 ```
 **步骤4：** 在`PPYOLOEPlusDetection`目录下运行脚本，进行照片检测：
 ```

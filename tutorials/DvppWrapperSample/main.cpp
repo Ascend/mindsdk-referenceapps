@@ -1,7 +1,7 @@
 /*
 * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
 * Description: Interface sample of DvppWrapper
-* Author: MindX SDK
+* Author: Mind SDK
 * Create: 2021
 * History: NA
 */

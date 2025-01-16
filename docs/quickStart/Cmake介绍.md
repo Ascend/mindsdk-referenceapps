@@ -106,7 +106,7 @@ add_compile_options(-fPIC -fstack-protector-all -g -Wl,-z,relro,-z,now,-z -pie -
 add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
   
   
-# 配置环境变量MX_SDK_HOME，如：/home/xxxxxxx/MindX_SDK/mxVision,可在远程环境中用指令env查看
+# 配置环境变量MX_SDK_HOME，如：/home/xxxxxxx/Mind_SDK/mxVision,可在远程环境中用指令env查看
 set(MX_SDK_HOME ${用户自己的SDK安装路径})
 # 设置所需变量
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")

@@ -137,9 +137,15 @@
 
 **步骤2：** 配置 Vision SDK 环境变量。
 
-`export MX_SDK_HOME=${安装路径}/mxVision `
+在执行后续步骤前，需要设置环境变量：
 
-注：本例中Vision SDK安装路径为 /root/work/MindX_SDK/mxVision。
+```bash
+# 执行环境变量脚本使环境变量生效
+. ${ascend-toolkit-path}/set_env.sh
+. ${Vision-SDK-path}/set_env.sh
+# Vision-SDK-path: Vision SDK安装路径
+# ascend-toolkit-path: CANN安装路径
+```
 
 **步骤3：** 推荐在${MX_SDK_HOME}/samples下创建ActionRecognition根目录，在项目根目录下创建目录models `mkdir models`，分别为yolov3和ECONet创建一个文件夹，将两个离线模型及各自的配置文件放入文件夹下。[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/models.zip)。创建完成后models文件夹下的目录结构如下：
 
@@ -163,8 +169,8 @@
 **步骤5：** 配置环境变量MX_SDK_HOME：
 
 ```bash
-export MX_SDK_HOME=/MindX_SDK/mxVision/								
-# 此处MX_SDK_HOME请使用MindX_SDK的实际路径
+export MX_SDK_HOME=${Vision SDK的安装路径}								
+# 此处MX_SDK_HOME请使用Vision SDK的安装路径
 ```
 
 **步骤6**：在插件代码目录下创建build文件夹，使用cmake命令进行编译，生成.so文件。下面以单人独处插件的编译过程作为范例：
@@ -420,7 +426,7 @@ terminate called after throwing an instance of 'cv::Exception'
 
 H264视频文件及ROI文件：[下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/ActionRecognition/data.zip) ；
 
-RTSP取流地址（可以从网络摄像机获取，也可通过Live555等工具将本地视频文 件转换为rtsp流）。自主搭建RTSP拉流教程：[live555链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)，需要注意的是在搭建RTSP时，使用./genMakefiles <os-platform>命令生成编译文件时，输入的<os-platform>参数是根据cofig.<后缀>获取的，与服务器架构等有关。
+RTSP取流地址（可以从网络摄像机获取，也可通过Live555等工具将本地视频文 件转换为rtsp流）。自主搭建RTSP拉流教程：[live555链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)，需要注意的是在搭建RTSP时，使用./genMakefiles <os-platform>命令生成编译文件时，输入的<os-platform>参数是根据cofig.<后缀>获取的，与服务器架构等有关。
 
 RTSP视频拉流插件配置范例：
 
@@ -436,7 +442,7 @@ RTSP视频拉流插件配置范例：
 
 其中rtsp_Url的格式是 rtsp:://host:port/Data，host:port/路径映射到mediaServer/目录下，Data为视频文件的路径。
 
-RTSP拉流教程：[live555链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)中第七步视频循环推流，按照提示修改cpp文件可以使自主搭建的rtsp循环推流，如果不作更改，则为有限的视频流；同时第六步高分辨率帧花屏，修改mediaServer/DynamicRTSPServer.cpp文件，将OutPacketBuffer::maxSize增大，例如"500000"，避免出现”The input frame data was too large for our buffer“问题，导致丢帧。修改完后，需要重新运行以下命令：
+RTSP拉流教程：[live555链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)中第七步视频循环推流，按照提示修改cpp文件可以使自主搭建的rtsp循环推流，如果不作更改，则为有限的视频流；同时第六步高分辨率帧花屏，修改mediaServer/DynamicRTSPServer.cpp文件，将OutPacketBuffer::maxSize增大，例如"500000"，避免出现”The input frame data was too large for our buffer“问题，导致丢帧。修改完后，需要重新运行以下命令：
 
 ```cmake
 ./genMakefiles <os-platform>

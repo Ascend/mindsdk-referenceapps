@@ -113,7 +113,7 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于Vision SDK开
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置MindX SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 
 #查看环境变量
@@ -191,7 +191,7 @@ atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_fo
 bash build.sh
 ```
 
-命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
+命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${Vision SDK安装路径}/lib/plugins`目录下，然后将权限设置为0640。
 
 **步骤6**进入Vision SDK安装目录的`operators/opencvosd`目录下执行命令：
 ```

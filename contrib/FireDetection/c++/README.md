@@ -56,10 +56,10 @@
 ```bash
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
-. ${mxVision-path}/set_env.sh
+. ${Vision-SDK-path}/set_env.sh
 export FFMPEG_PATH=${ffmpeg-path}
 export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
-# mxVision: mxVision安装路径
+# Vision-SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 # ffmpeg-path: ffmpeg安装路径，通常为/usr/local/ffmpeg
 # ffmpeg-lib-path: ffmpeg的lib库安装路径，通常为/usr/local/ffmpeg/lib

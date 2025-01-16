@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  * Description: ConfigParser implementation.
- * Author: MindX SDK
+ * Author: Mind SDK
  * Create: 2024
  * History: NA
  */

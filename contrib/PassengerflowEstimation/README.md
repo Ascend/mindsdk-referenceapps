@@ -63,7 +63,7 @@ bash generate_osd_om.sh
         "dataSource": "mxpi_tensorinfer0",
         "postProcessConfigPath": "./models/yolov4.cfg",
         "labelPath": "./models/yolov3.names",
-        "postProcessLibPath": "${MindX_SDK安装路径}/mxVision/lib/modelpostprocessors/libyolov3postprocess.so"
+        "postProcessLibPath": "${Vision SDK安装路径}/lib/modelpostprocessors/libyolov3postprocess.so"
     },
     "factory": "mxpi_objectpostprocessor",
     "next":  "mxpi_selectobject0"

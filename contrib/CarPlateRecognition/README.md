@@ -88,7 +88,7 @@ atc --model=./car_plate_recognition/car_plate_recognition.prototxt --weight=./ca
 ## 4 编译与运行
 ### 4.1 修改CMakeLists.txt文件
 
-第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置Vision SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的MindX SDK安装路径。
+第**10**行 `set(MX_SDK_HOME $ENV{MX_SDK_HOME})` 语句是设置Vision SDK的安装路径，一般按第2章设置环境变量后环境中有该变量存在，若没有，则将$ENV{MX_SDK_HOME}替换为用户实际的Vision SDK安装路径。
 
 第**12**行 `set(FREETYPE_HOME $ENV{FREETYPE_HOME})` 语句是设置FreeType库的安装路径，若未设置FREETYPE_HOME环境变量，需将$ENV{FREETYPE_HOME}替换为用户实际的FreeType库安装路径。
 

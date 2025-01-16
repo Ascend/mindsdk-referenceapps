@@ -110,7 +110,7 @@ Atlas 300I pro、Atlas 300V pro
 
 ```
 ├── samplePluginPostProc
-|   ├── mindx_sdk_plugin    // 插件样例
+|   ├── mind_sdk_plugin    // 插件样例
 |   |   ├── src
 |   |   |   ├── mxpi_sampleplugin
 |   |   |   |   ├── MxpiSamplePlugin.cpp
@@ -140,14 +140,14 @@ Atlas 300I pro、Atlas 300V pro
 |   └── CMakeLists.txt
 ```
 上述目录中`samplePluginPostProc`为[工程根目录](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/samplePluginPostProc)(用户需跳转到页面自行下载)，
-`mindx_sdk_plugin`为上述根目录下的插件工程目录，`mxVision`为图像分类识别样例工程目录(复制 SDK-path/samples/mxVision文件夹到根目录下，SDK-path表示SDK安装路径)。
+`mind_sdk_plugin`为上述根目录下的插件工程目录，`mxVision`为图像分类识别样例工程目录(复制 SDK-path/samples/mxVision文件夹到根目录下，SDK-path表示SDK安装路径)。
 
 test.jpg为分类识别样例所需图片，用户需要自行准备，并放置在对应目录下。
 
 ## 2 设置环境变量
 
 ```
-# MindX SDK环境变量:
+# Vision SDK环境变量:
 .${SDK-path}/set_env.sh
 
 # CANN环境变量:
@@ -157,7 +157,7 @@ test.jpg为分类识别样例所需图片，用户需要自行准备，并放置
 export LD_LIBRARY_PATH=usr/lib64:$LD_LIBRARY_PATH
 
 # 环境变量介绍
-SDK-path:SDK mxVision安装路径
+SDK-path:Vision SDK安装路径
 ascend-toolkit-path:CANN安装路径
 ```
 相应地，`./mxVision/C++/`和`./mxVision/python/`目录下的run.sh脚本也需要做出对应修改。 将两脚本中环境变量路径：
@@ -212,7 +212,7 @@ cd build
 cmake ..
 make
 ```
-编译完成后该工程`mindx_sdk_plugin/lib/plugins/`目录下会生成自定义插件*.so文件，mxVision/C++/目录下会生成可执行文件`main`。
+编译完成后该工程`mind_sdk_plugin/lib/plugins/`目录下会生成自定义插件*.so文件，mxVision/C++/目录下会生成可执行文件`main`。
 
 **步骤3** 将插件复制到`${SDK-path}/lib/plugins/`目录下，执行以下脚本修改文件权限：
 ```

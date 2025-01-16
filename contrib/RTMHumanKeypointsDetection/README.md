@@ -113,7 +113,7 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ## 4 编译与运行
 步骤1 创建rtsp视频流
 
-使用live555创建rtsp视频流，live555的使用方法可以参考[链接](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/reference_material/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
+使用live555创建rtsp视频流，live555的使用方法可以参考[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。
 
 步骤2 配置pipeline文件中的rtsp视频流地址、模型文件路径和视频的宽高
 

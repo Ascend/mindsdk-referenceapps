@@ -6,5 +6,5 @@ project(mxpi_samplecustomproto)
 set(MX_SDK_HOME /usr/local/Ascend/mxVision)
 
 add_subdirectory("./mxVision/C++")
-add_subdirectory("./mindx_sdk_plugin")
+add_subdirectory("./mind_sdk_plugin")
 add_subdirectory("./proto")

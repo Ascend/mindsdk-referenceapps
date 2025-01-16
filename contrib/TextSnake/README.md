@@ -58,13 +58,12 @@ TextSnake 弯曲形状文字检测基于 Vision SDK 开发，对图片中的任�
 在编译运行项目前，需要执行以下命令设置环境变量：
 
 ```bash
-export PYTHONPATH=${MX_SDK_HOME}/python/:$PYTHONPATH
+export PYTHONPATH=${Vision SDK安装路径}/python/:$PYTHONPATH
 export install_path=${install_path}
 . ${install_path}/set_env.sh
-. ${MX_SDK_HOME}/set_env.sh
+. ${Vision SDK安装路径}/set_env.sh
 ```
-注：**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
-**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
+注：**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 
 ## 3 准备模型

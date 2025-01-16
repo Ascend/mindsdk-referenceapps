@@ -110,7 +110,7 @@ env
 
 从 pytorch官网获取pth模型，在运行项目之前需要将 pth 模型转为mindspore可以加载的ckpt模型，mindspore训练过程中将ckpt模型转化为 air 模型，再由ATC命令将 air 模型转为 om 模型。
 
-模型转换工具（ATC）相关介绍如下 [https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)
+模型转换工具（ATC）相关介绍如下：[ATC工具介绍](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/800alpha003/devaids/devtools/atc/atlasatc_16_0005.html)
 
 具体步骤如下
 

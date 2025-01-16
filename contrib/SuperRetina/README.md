@@ -63,7 +63,7 @@ export install_path=${install_path}
 ```
 
 注：
-**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；
+**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径；
 
 **${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 

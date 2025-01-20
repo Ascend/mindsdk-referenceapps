@@ -746,7 +746,7 @@ static int ff_himpi_enc_receive_packet(AVCodecContext *avctx, AVPacket *avpkt)
                 continue;
             }
 
-            AscendEncPrivateData_t* priv_data = frame->opaque;
+            AscendEncPrivateData_t* priv_data = frame.opaque;
             if (priv_data && priv_data->next_frame_is_I_frame) {
                 ret = hi_mpi_venc_request_idr(ctx->channel_id, HI_TRUE);
                 if (ret) {

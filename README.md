@@ -16,7 +16,7 @@ To help developers quickly master the use of Vision SDK and Index SDK interfaces
 
 
 ## Related Websites
-The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest Mind SDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
+The Ascend Community encourages developers to communicate and learn together. Developers can obtain the latest MindSDK software, documentation, and other resources through the Ascend Community website; they can also exchange development experiences with other developers through the Ascend Forum.
 
 Ascend Community Website: https://www.hiascend.com/
 

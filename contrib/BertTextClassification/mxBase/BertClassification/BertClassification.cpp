@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-#include "BertClassification.h"
-#include "MxBase/DeviceManager/DeviceManager.h"
+#include <string>
 #include <unistd.h>
 #include <fstream>
+#include "MxBase/DeviceManager/DeviceManager.h"
+#include "BertClassification.h"
 
 namespace {
   const float TEXT_START_CODE = 101.0;

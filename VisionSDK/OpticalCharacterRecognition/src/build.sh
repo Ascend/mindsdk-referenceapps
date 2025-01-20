@@ -1,7 +1,7 @@
 # !/bin/bash
 # Copyright (c) Huawei Technologies Co., Ltd. 2022-2022. All rights reserved.
 # Description: mxOCR c++ build.
-# Author: Mind SDK
+# Author: MindSDK
 # Create: 2022
 # History: NA
 

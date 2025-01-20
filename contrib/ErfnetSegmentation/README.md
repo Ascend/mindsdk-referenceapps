@@ -4,7 +4,7 @@
 
 ErfNet是一个语义分割网络，ERFNet可以看作是对ResNet结构的又一改变，ERFNet提出了Factorized Residual Layers，内部全部使用1D的cov(非对称卷积)，以此来降低参数量，提高速度。同时ERFNet也是对ENet的改进，在模型结构上删除了encode中的层和decode层之间的long-range链接，同时所有的downsampling模块都是一组并行的max pooling和conv。
 
-本项目基于Mind SDK框架实现了ErfNet模型的推理。
+本项目基于Vision SDK框架实现了ErfNet模型的推理。
 
 ### 1.1 支持的产品
 

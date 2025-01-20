@@ -75,7 +75,7 @@ pipeline流程如下图所示：
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
 . ${Vision-SDK-path}/set_env.sh
-# Vision-SDK-pat: Vision SDK安装路径
+# Vision-SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 ## 3  模型转换

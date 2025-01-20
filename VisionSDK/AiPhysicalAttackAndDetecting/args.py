@@ -3,7 +3,7 @@
 """
 Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
 Description: Input args parse.
-Author: Mind SDK
+Author: MindSDK
 Create: 2023
 History: NA
 """

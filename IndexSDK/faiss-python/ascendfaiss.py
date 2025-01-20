@@ -29,6 +29,7 @@ if faiss.__version__ == "1.7.1":
 
 logger = logging.getLogger(__name__)
 try:
+    from .swig_ascendfaiss import FloatVector, DoubleVector, ByteVector, CharVector, UInt64Vector, LongVector, FaissIdxVector
     from .swig_ascendfaiss import IntVector, AscendIndex
     from .swig_ascendfaiss import Index, index_ascend_to_cpu
     from .swig_ascendfaiss import AscendIndexInt8, AscendIndexFlatL2

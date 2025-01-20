@@ -14,7 +14,7 @@ add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dgoogle=mindxsdk_private)
 add_definitions(-DENABLE_DVPP_INTERFACE)
 
 
-set(MX_SDK_HOME ${XXX}/MindX_SDK/mxVision/)
+set(MX_SDK_HOME ${Vision SDK安装路径})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${MX_SDK_HOME/lib/plugins})
 

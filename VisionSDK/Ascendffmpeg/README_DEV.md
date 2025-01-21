@@ -2,7 +2,7 @@
 
 ### 1.1 简介
 
-mxVison ascend 硬件平台内置了视频相关的硬件加速编解码器，为了提升用户的易用性，Vision SDK提供了 Ffmepg-Ascend 解决方案。
+Vison ascend 硬件平台内置了视频相关的硬件加速编解码器，为了提升用户的易用性，Vision SDK提供了 Ffmepg-Ascend 解决方案。
 
 支持的功能：
 
@@ -68,9 +68,9 @@ chmod +x ./ffbuild/*.sh
 
 **步骤3：** 添加环境变量
 
-通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
+通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
 ```bash
-export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
 ```
 
 

@@ -169,8 +169,8 @@
 **步骤5：** 配置环境变量MX_SDK_HOME：
 
 ```bash
-export MX_SDK_HOME=/MindX_SDK/mxVision/								
-# 此处MX_SDK_HOME请使用MindX_SDK的实际路径
+export MX_SDK_HOME=${Vision SDK的安装路径}								
+# 此处MX_SDK_HOME请使用Vision SDK的安装路径
 ```
 
 **步骤6**：在插件代码目录下创建build文件夹，使用cmake命令进行编译，生成.so文件。下面以单人独处插件的编译过程作为范例：

@@ -91,7 +91,7 @@ YOLOX 的后处理插件接收模型推理插件输出的特征图，该特征�
 MindSDK 环境变量:
 
 ```
-. ${SDK-path}/set_env.sh    # SDK-path: mxVision SDK 安装路径
+. ${SDK-path}/set_env.sh    # SDK-path: Vision SDK 安装路径
 ```
 
 CANN 环境变量：

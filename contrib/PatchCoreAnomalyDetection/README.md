@@ -95,7 +95,7 @@ vim ~/.bashrc
 # 在.bashrc文件中添加以下环境变量
 . ${MX_SDK_HOME}/set_env.sh
 . ${HOME}/Ascend/ascend-toolkit/set_env.sh
-# 其中${MX_SDK_HOME}为MindX SDK安装目录，${HOME}为用户目录（如果CANN 开发包装在用户目录，否则为/usr/local/），配置的时候请自行替换成相应目录
+# 其中${MX_SDK_HOME}为Vision SDK安装目录，${HOME}为用户目录（如果CANN 开发包装在用户目录，否则为/usr/local/），配置的时候请自行替换成相应目录
 # 保存退出.bashrc文件
 # 执行如下命令使环境变量生效
 source ~/.bashrc

@@ -112,7 +112,7 @@ CANN 环境变量：
 - 环境变量介绍
 
 ```
-SDK-path: SDK mxVision 安装路径
+SDK-path: Vision SDK 安装路径
 ascend-toolkit-path: CANN 安装路径
 ```
 

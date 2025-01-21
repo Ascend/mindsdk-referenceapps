@@ -69,7 +69,7 @@
     openssl rsa -in server.key -out server_no.crt
     生成server_no.crt，则说明成功。
 
-    证书ca.crt、server.crt的制作，请参考mxVision手册证书制作章节。
+    证书ca.crt、server.crt的制作，请参考Vision SDK手册证书制作章节。
 
 ### 4.2 运行
 

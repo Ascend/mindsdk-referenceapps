@@ -60,8 +60,8 @@ CenterNet 目标检测后处理插件基于 Vision SDK 开发，对图片中的�
 ```bash
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
-. ${mxVision-path}/set_env.sh
-# mxVision: mxVision安装路径
+. ${Vision-SDK-path}/set_env.sh
+# Vision-SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 

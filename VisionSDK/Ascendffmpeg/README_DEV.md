@@ -91,21 +91,21 @@ Ascendffmpeg在ffmpeg开源软件基础上，结合昇腾NPU设备硬件加速�
 <tbody>
   <tr>
     <td rowspan="5"> h264_ascend</td>
-    <td><a href="docs/features/data-parallel.md">link</a></td>
+    <td><a href="doc/dec_h26x_ascend.md">link</a></td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
 <tbody>
   <tr>
     <td rowspan="5"> h265_ascend</td>
-    <td><a href="docs/features/tensor-parallel.md">link</a></td>
+    <td><a href="doc/dec_h26x_ascend.md">link</a></td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
   <tbody>
   <tr>
     <td rowspan="5"> mjpeg_ascend</td>
-    <td><a href="docs/features/pipeline-parallel.md">link</a></td>
+    <td><a href="doc/dec_mjpeg_ascend.md">link</a></td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
@@ -126,7 +126,7 @@ Ascendffmpeg在ffmpeg开源软件基础上，结合昇腾NPU设备硬件加速�
 <tbody>
   <tr>
     <td rowspan="5"> h264_ascend</td>
-    <td><a href="docs/features/ulysses-context-parallel.md">link</a></td>
+    <td><a href="doc/enc_h26x_ascend.md">link</a></td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
@@ -134,7 +134,7 @@ Ascendffmpeg在ffmpeg开源软件基础上，结合昇腾NPU设备硬件加速�
 <tbody>
   <tr>
     <td rowspan="5"> h265_ascend</td>
-    <td><a href="docs/features/ring-attention-context-parallel.md">link</a></td>
+    <td><a href="doc/enc_h26x_ascend.md">link</a></td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>
     <td style="text-align: center; vertical-align: middle">✅</td>

@@ -4183,7 +4183,8 @@ AVCPBProperties *av_cpb_properties_alloc(size_t *size);
  */
 
 typedef struct AscendEncPrivateData {
-    bool next_frame_is_I_frame;
+    bool next_is_I_frame;
+    bool is_instant;
 } AscendEncPrivateData_t;
 
 #endif /* AVCODEC_AVCODEC_H */

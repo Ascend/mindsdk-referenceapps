@@ -85,29 +85,22 @@ Ascendffmpeg在ffmpeg开源软件基础上，结合昇腾NPU设备硬件加速�
   <tr>
     <th width='250'>解码器</th>
     <th>介绍</th>
-    <th>Mcore</th>
-    <th>Legacy</th>
   </tr></thead>
 <tbody>
   <tr>
     <td rowspan="5"> h264_ascend</td>
     <td><a href="doc/dec_h26x_ascend.md">link</a></td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
 <tbody>
   <tr>
     <td rowspan="5"> h265_ascend</td>
     <td><a href="doc/dec_h26x_ascend.md">link</a></td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
   <tbody>
   <tr>
     <td rowspan="5"> mjpeg_ascend</td>
     <td><a href="doc/dec_mjpeg_ascend.md">link</a></td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
+
   </tr>
   <tbody>
 </table>
@@ -119,25 +112,18 @@ Ascendffmpeg在ffmpeg开源软件基础上，结合昇腾NPU设备硬件加速�
   <tr>
     <th width='250'>编码器</th>
     <th>介绍</th>
-    <th>Mcore</th>
-    <th>Legacy</th>
-    <th>Released</th>    
+
   </tr></thead>
 <tbody>
   <tr>
     <td rowspan="5"> h264_ascend</td>
     <td><a href="doc/enc_h26x_ascend.md">link</a></td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
+
   </tr>
 <tbody>
   <tr>
     <td rowspan="5"> h265_ascend</td>
     <td><a href="doc/enc_h26x_ascend.md">link</a></td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
-    <td style="text-align: center; vertical-align: middle">✅</td>
   </tr>
 
 </table>

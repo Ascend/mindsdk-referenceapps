@@ -42,7 +42,8 @@ Ffmepg-Ascend 中内置了mjpeg_ascend解码器，利用昇腾NPU设备处理mjp
 
 ### 4 解码器使用
 
-开发态使用解码器代码样例请参考：Ascendffmepg/doc/examples/hw_decode.c
+开发态使用解码器代码样例请参考：<td><a href="doc/examples/hw_decode.c">hw_decode.c</a></td>
+
 
 如用户对执行设备，执行通道有自定义诉求，可以利用“ascend_mjpeg_dec.h”文件中的AscendMJpegDecodeContext结构体实现，如下代码所示：
 

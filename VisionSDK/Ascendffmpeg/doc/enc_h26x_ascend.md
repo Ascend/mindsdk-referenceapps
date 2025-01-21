@@ -121,7 +121,9 @@ Ffmepg-Ascend 中内置了h264_ascend和h265_ascend编码器，利用昇腾NPU�
 
 ### 4 编码器使用
 
-开发态使用解码器代码样例请参考：Ascendffmepg/doc/examples/encode_video.c
+开发态使用编码器代码样例请参考：<td><a href="doc/examples/encode_video.c">encode_video.c</a></td>
+
+
 
 #### 4.1 常规特性使用
 

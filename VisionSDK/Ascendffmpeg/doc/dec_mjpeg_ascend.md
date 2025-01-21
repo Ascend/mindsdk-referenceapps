@@ -4,7 +4,7 @@
 
 Ffmepg-Ascend 中内置了mjpeg_ascend解码器，利用昇腾NPU设备处理mjpeg视频流的解码。当前该解码器仅支持在Atlas A500 A2上使用。
 
-### 2 头文件导入
+### 2 头文件
 
 ```commandline
 #include "libavcodec/ascend_mjpeg_dec.h"

@@ -4,7 +4,7 @@
 
 Ffmepg-Ascend 中内置了h264_ascend和h265_ascend编码器，利用昇腾NPU设备分别处理h264视频流和h265视频流的编码。
 
-### 2 头文件导入
+### 2 头文件
 
 ```commandline
 #include "libavcodec/ascend_enc.h"

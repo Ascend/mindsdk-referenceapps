@@ -168,6 +168,10 @@ frame->opaque = privData; // 将是否将下一帧编码为I帧的信息赋值�
 
 avcodec_send_frame(enc_ctx, frame);  // 调用编码器进行编码
 
-/* 获取编码结果以及释放资源 */
+/* 获取编码结果 */
+···
+frame->opaque = NULL;  // 当编码I帧结束，需要对该参数进行复位，否则后续视频帧都会编码为I帧
+
+/* 释放资源 */
 ···
 ```

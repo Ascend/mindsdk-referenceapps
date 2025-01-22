@@ -15,6 +15,8 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 |硬件转码|√|√|   √   |    √    |
 |硬件缩放|√|√|       |    √    |
 
+注意：mjpeg视频流的转码相关功能只在Atlas A500 A2上适用。
+
 ### 1.2 支持的产品
 
 本项目支持昇腾Atlas 300I pro、 Atlas 300V pro、 Atlas A500 A2。
@@ -72,9 +74,9 @@ chmod +x ./ffbuild/*.sh
 
 **步骤3：** 添加环境变量
 
-通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
+通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
 ```bash
-export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
 ```
 
 **步骤4：** 运行
@@ -89,8 +91,8 @@ export LD_LIBRARY_PATH=/PATH/TO/mindxsdk-referenceapps/VisionSDK/Ascendffmpeg/as
 * `-c:v`        -   指定解码器为 h264_ascend (解码 h265 格式可以使用 h265_ascend，解码 mjpeg 格式可以使用 mjpeg_ascend)。
 * `-device_id`  -   指定硬件设备 id 为 0。取值范围取决于芯片个数，默认为 0。 `npu-smi info` 命令可以查看芯片个数
 * `-channel_id` -   指定解码通道 id ,默认为0,取值范围取决于芯片实际情况,超出时会报错（对于昇腾Atlas 300I pro、 Atlas 300V pro，该参数的取值范围：[0, 256)，JPEGD功能和VDEC功能共用通道，且通道总数最多256。对于Atlas 500 A2推理产品，该参数的取值范围：[0, 128)，JPEGD功能和VDEC功能共用通道，且通道总数最多128）。 若是指定的通道已被占用, 则自动寻找并申请新的通道。
-* `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304（此为h264的约束）。宽要与 16 对齐，高要与 2 对齐。
-* `-i`          -   指定输入文件（支持h264和h265及rtsp视频流, 其他视频格式不做保证）。
+* `-resize`     -   指定缩放大小, 输入格式为: {width}x{height}。宽高:[128x128-4096x4096], 宽高相乘不能超过 4096*2304（此为h264的约束）。宽要与 16 对齐，高要与 2 对齐。注意：mjpeg_ascend不支持该参数。
+* `-i`          -   指定输入文件（支持h264和h265及rtsp视频流, 其他视频格式不做保证）。视频文件宽高应满足在[128x128-4096x4096]范围内。
 
 编码相关参数（注意：编码相关参数需要在 `-i` 参数后设置）：
 * `-c:v`        -   指定编码器为 h264_ascend (编码成 h265 格式可以使用 h265_ascend)。

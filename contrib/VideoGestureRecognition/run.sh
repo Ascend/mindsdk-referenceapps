@@ -23,7 +23,7 @@ env_ready=true
 
 function check_env() {
 
-    # check MindXSDK env
+    # check MindSDK env
     if [ ! "${MX_SDK_HOME}" ]; then
       env_ready=false
       echo "please set MX_SDK_HOME path into env."

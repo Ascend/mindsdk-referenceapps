@@ -18,7 +18,7 @@ npu-smi info
 ```
 本样例配套的CANN版本为[5.0.4](https://www.hiascend.com/software/cann/commercial)。支持的SDK版本为[2.0.4](https://www.hiascend.com/software/Mindx-sdk)。
 
-Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
+Vision SDK安装前准备可参考《用户指南》，[安装教程](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/quickStart/1-1安装SDK开发套件.md)
 
 ### 1.3 软件方案介绍
 
@@ -95,7 +95,7 @@ vim ~/.bashrc
 # 在.bashrc文件中添加以下环境变量
 . ${MX_SDK_HOME}/set_env.sh
 . ${HOME}/Ascend/ascend-toolkit/set_env.sh
-# 其中${MX_SDK_HOME}为MindX SDK安装目录，${HOME}为用户目录（如果CANN 开发包装在用户目录，否则为/usr/local/），配置的时候请自行替换成相应目录
+# 其中${MX_SDK_HOME}为Vision SDK安装目录，${HOME}为用户目录（如果CANN 开发包装在用户目录，否则为/usr/local/），配置的时候请自行替换成相应目录
 # 保存退出.bashrc文件
 # 执行如下命令使环境变量生效
 source ~/.bashrc
@@ -110,7 +110,7 @@ env
 
 从 pytorch官网获取pth模型，在运行项目之前需要将 pth 模型转为mindspore可以加载的ckpt模型，mindspore训练过程中将ckpt模型转化为 air 模型，再由ATC命令将 air 模型转为 om 模型。
 
-模型转换工具（ATC）相关介绍如下 [https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)
+模型转换工具（ATC）相关介绍如下：[ATC工具介绍](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/800alpha003/devaids/devtools/atc/atlasatc_16_0005.html)
 
 具体步骤如下
 

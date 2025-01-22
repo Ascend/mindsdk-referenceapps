@@ -1,7 +1,7 @@
 /*
 * Copyright (c) Huawei Technologies Co., Ltd 2022-2022. All rights reserved.
 * Description: Common data struct.
-* Author: MindX SDK
+* Author: MindSDK
 * Create: 2022
 * History: NA
 */

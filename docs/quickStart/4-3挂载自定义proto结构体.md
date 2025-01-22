@@ -2,7 +2,7 @@
 
 本章节将指导在SDK自带的图像分类识别样例中挂载自定义proto结构并输出的流程。  
 在执行本样例前，应已成功远程部署并运行4-1章节的自定义插件样例。  
-[点击跳转代码样例](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/sampleCustomProto)
+[点击跳转代码样例](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/sampleCustomProto)
 
 ## 自定义proto结构说明
 

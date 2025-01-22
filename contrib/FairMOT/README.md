@@ -26,7 +26,7 @@ FairMOT目标跟踪后处理插件基于Vision SDK开发，在昇腾芯片上进
 
 流程图如下：
 
-![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image1.png)
+![](./image/image1.png)
 
 ### 1.2 支持的产品
 
@@ -43,8 +43,8 @@ x86_64 Atlas 300I（型号3010）和arm Atlas 300I（型号3000）。
 ### 1.4 三方依赖
 | 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
 | -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
-| ffmpeg   | 4.4.4 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
+| live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| ffmpeg   | 4.4.4 | 实现mp4格式视频转为264格式视频 | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/pc%E7%AB%AFffmpeg%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md#https://ffmpeg.org/download.html) |
 
 ### 1.5 代码目录结构说明
 
@@ -125,7 +125,7 @@ ATC run success, welcome to the next use.
 
 本项目通过mxpi_rtspsrc拉流输入数据，推流过程如下：
 
-首先通过[live555](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
+首先通过[live555](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)进行推流，进入到live555安装目录下mediaServer路径，上传要推流的视频在本目录下然后推流。 live555只支持特定几种格式文件，不支持MP4。 所以本地文件先要转成live555支持的格式。选择使用[ffmpeg](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)进行格式转换。
 
 转换命令如下：
 
@@ -151,7 +151,7 @@ ffmpeg -i xxx1.mp4 -vcodec h264 -bf 0 -g 25 -r 24 -s 1280*720 -an -f h264 xxx2.2
 ./live555MediaServer port-id  //port-id为用户推流的端口号
 ```
 
-test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)。
+test.264可替换成任意上传至当前目录的[264格式文件](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/pc端ffmpeg安装教程.md)。
 
 
 ### 4.2 编译后处理插件
@@ -232,8 +232,10 @@ fps: 12.7977
 
 `FairMOT/pipeline/fairmot.pipeline`中视频编码分辨率参数目前配置为1280*720。  
 该参数通过imageHeight 和 imageWidth 属性配置，且需要和视频输入分配率相同，否则会报如下类型的错：
-
-![](https://gitee.com/seven-day/mindxsdk-referenceapps/raw/master/contrib/FairMOT/image/image3.png)
+```
+E1115 09:27:24.113247 12189 DvppWrapper.cpp:1813] input width(1280) is not same as venc input format(1920)
+E1115 09:27:24.113312 12189 DvppVideoEncoder.cpp:299] [mxpi_videoencoder0][2010][DVPP: encode H264 or H265 fail] Encode fail.
+```
 
 **解决方案：**
 

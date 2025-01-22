@@ -57,7 +57,7 @@ YOLOV3 = base.model(YOLOV3_MODEL_PATH, deviceId=DEVICE_ID)
 REID_MODEL_PATH = "./models/ReID.om"
 REID = base.model(REID_MODEL_PATH, deviceId=DEVICE_ID)
 LABEL_PATH = "/path/to/coco.names"  # 需要用户填写：coco.names的路径
-CONFIG_PATH = "/path/to/mindxsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
+CONFIG_PATH = "/path/to/mindsdk-referenceapps/contrib/ReID/models/yolov3.cfg" # 需要用户填写：yolov3.cfg的路径
 
 imageProcessor1 = ImageProcessor(DEVICE_ID)
 yolov3_post = post.Yolov3PostProcess(config_path=CONFIG_PATH, label_path=LABEL_PATH)

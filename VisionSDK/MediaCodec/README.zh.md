@@ -35,7 +35,7 @@
 ## 3.编译与运行
 
 **步骤1** 构建rtsp视频流服务
-- 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
+- 可参考：[Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md#%E8%A1%A5%E5%85%85)
 
 **步骤2** 配置文件配置项修改及说明
 
@@ -72,7 +72,7 @@ stream.ch0 = rtsp://xxx.xxx.xxx.xxx:xxx/xxx.264
 
 **注意**：解码模块`mxpi_videodecoder`的**vdecChannelId**配置项要保证不重用；缩放模块`mxpi_imageresize`的**resizeHeight**和**resizeWidth**要与编码模块的`mxpi_videoencoder`的**imageHeight**和**imageWidth**保持一致；`mxpi_videoencoder`编码模块的**fps**用于控制是否打印帧率，默认值是**0**表示不打印，若要打印，可设置为**1**;**deviceId**配置为需要运行的npu芯片编号，具体可以通过`npu-smi info`查看。
 
-**步骤3** 修改MindXSDK的日志配置文件
+**步骤3** 修改Vision SDK的日志配置文件
 
 修改`${MX_SDK_HOME}/mxVision/config/logging.conf`，调节输出日志级别为info级别。
 

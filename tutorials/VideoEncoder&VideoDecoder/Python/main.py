@@ -89,7 +89,7 @@ def vdec_thread(video_decoder):
 #                                        |
 #                                        V
 #                                   |获取解码结果|
-# 线程3：用于获取解码结果（获取解码结果的线程由mxVision内部创建，用户仅需自定义回调函数、用于由该线程调用、获取解码结果）
+# 线程3：用于获取解码结果（获取解码结果的线程由Vision SDK内部创建，用户仅需自定义回调函数、用于由该线程调用、获取解码结果）
 def vdec_callback_func(decoded_image, channel_id, frame_id):
     VDEC_TO_VENC_QUEUE.append(DecodedFrame(decoded_image, frame_id, channel_id))
 
@@ -118,7 +118,7 @@ def venc_thread(video_encoder):
 #                                        |
 #                                        V
 #                                   |获取编码结果|
-# 线程5：用于获取编码结果（用于获取编码结果的线程由mxVision内部创建，用户仅需自定义回调函数、用于由该线程调用、获取编码结果）
+# 线程5：用于获取编码结果（用于获取编码结果的线程由Vision SDK内部创建，用户仅需自定义回调函数、用于由该线程调用、获取编码结果）
 def venc_callback_func(output, output_datasize, channel_id, frame_id):
     VENC_TO_FILE_SAVE_QUEUE.append(EncodedFrame(output, frame_id, channel_id))
 

@@ -29,7 +29,7 @@
 | google       | 3.0.0           |
 | protobuf       | 3.19.0           |
 | numpy         | 1.24.0           |
-| live555  | 1.09  | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| live555  | 1.09  | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 
 ### 1.4 代码目录结构与说明
 
@@ -77,7 +77,7 @@ ATC run success, welcome to the next use.
 
 **步骤1**：安装live555并创建视频流。 
 
-按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)，使用h264视频创建rtsp视频流。
+按照 [Live555离线视频转RTSP说明文档](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)，使用h264视频创建rtsp视频流。
 
 **步骤2**：修改流程编排文件。
 进入pipeline文件夹，

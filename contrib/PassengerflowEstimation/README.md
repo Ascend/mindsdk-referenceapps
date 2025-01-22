@@ -18,7 +18,7 @@ Atlas 300I pro、Atlas 300V pro
 
 | 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
 | -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| live555  | 1.10       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 
 ## 2 设置环境变量
 ```
@@ -63,7 +63,7 @@ bash generate_osd_om.sh
         "dataSource": "mxpi_tensorinfer0",
         "postProcessConfigPath": "./models/yolov4.cfg",
         "labelPath": "./models/yolov3.names",
-        "postProcessLibPath": "${MindX_SDK安装路径}/mxVision/lib/modelpostprocessors/libyolov3postprocess.so"
+        "postProcessLibPath": "${Vision SDK安装路径}/lib/modelpostprocessors/libyolov3postprocess.so"
     },
     "factory": "mxpi_objectpostprocessor",
     "next":  "mxpi_selectobject0"

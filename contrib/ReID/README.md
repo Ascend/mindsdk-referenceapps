@@ -61,7 +61,7 @@ ReID
 #设置CANN环境变量
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 ```
 

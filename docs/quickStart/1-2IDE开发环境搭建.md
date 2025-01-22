@@ -1,7 +1,7 @@
 # IDE开发环境搭建--Clion
 
 以图像检测项目sample为例演示基于本地IDE--Clion的开发调试。
-[样例获取](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
+[样例获取](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
 
 ## 1.2.1 获得项目文件
 **情况1** 当项目文件在远程环境中时，需要从远程环境中将想要开发的C++项目文件下载到本地，用CLion打开项目，并按以下操作同步本地与远程环境。  
@@ -85,7 +85,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # IDE开发环境搭建--pyCharm
 
-[样例获取](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
+[样例获取](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/ImageDetectionSample)
 
 ## 获取项目
 当项目文件在远程环境中时，需要从远程环境中将想要开发的Python项目文件下载到本地，用pyCharm打开项目，并按以下操作同步本地与远程环境。

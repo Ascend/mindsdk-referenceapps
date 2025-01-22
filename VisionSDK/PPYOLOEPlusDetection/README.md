@@ -47,7 +47,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 │     └── CMakeLists.txt            # 用于编译后处理插件
 ├── model
 │     ├── coco.names                # 需要下载，下载链接在下方
-│     └── ppyoloe.cfg               # 模型后处理配置文件，配置说明参考《mxVision用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
+│     └── ppyoloe.cfg               # 模型后处理配置文件，配置说明参考《Vision SDK用户指南》中已有模型支持->模型后处理配置参数->YOLOv5模型后处理配置参数
 ├── pipeline
 │     ├── Sample.pipeline           # 参考pipeline文件，用于配置rgb模型，用户需要根据自己需求和模型输入类型进行修改
 │     └── SampleYuv.pipeline        # 参考pipeline文件，用于配置yuv模型，用户需要根据自己需求和模型输入类型进行修改
@@ -57,7 +57,7 @@ paddlepaddle框架的ppyoloe模型推理时，前处理方案包括解码为BGR-
 
 ```
 
-注：coco.names文件源于[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。
+注：coco.names文件源于[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco.names文件，下载之后，放到models目录下。
 
 
 ## 2 设置环境变量
@@ -114,7 +114,7 @@ python3 prune_paddle_model.py --model_dir ${input_model_dir} --model_filename ${
 ```    
 对于PP-YOLOE+_l(w/nms)模型而言，建议输出端口为"tmp20"和"concat_14.tmp_0"。
 其中：  
-```${input_model_dir}``` 代表输入模型根目录，例如 ```./ppuoloe_plus_crn_l_80e_coco_w_nms```   
+```${input_model_dir}``` 代表输入模型根目录，例如 ```./ppyoloe_plus_crn_l_80e_coco_w_nms```   
 ```${pdmodel_file_name}``` 代表模型模型目录下模型名称，例如 ```model.pdmodel```   
 ```${pdiparams_file_name}``` 代表模型模型目录下模型参数，例如 ```model.pdiparams```   
 ```${new_model_dir}``` 代表模型输出的路径, ```./```
@@ -206,7 +206,7 @@ make install
 
 **步骤3：** 修改`PPYOLOEPlusDetection`目录下的`CMakeLists.txt`，第14行配置mindsdk-referenceapps安装路径：
 ```bash
-14  ${mindxsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
+14  ${mindsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
 ```
 **步骤4：** 在`PPYOLOEPlusDetection`目录下运行脚本，进行照片检测：
 ```

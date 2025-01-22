@@ -3,7 +3,7 @@
 """
 Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
 Description: Main process of attack detect.
-Author: MindX SDK
+Author: MindSDK
 Create: 2023
 History: NA
 """

@@ -60,8 +60,8 @@ CenterNet 目标检测后处理插件基于 Vision SDK 开发，对图片中的�
 ```bash
 # 执行环境变量脚本使环境变量生效
 . ${ascend-toolkit-path}/set_env.sh
-. ${mxVision-path}/set_env.sh
-# mxVision: mxVision安装路径
+. ${Vision-SDK-path}/set_env.sh
+# Vision-SDK-path: Vision SDK安装路径
 # ascend-toolkit-path: CANN安装路径
 ```
 
@@ -71,7 +71,7 @@ CenterNet 目标检测后处理插件基于 Vision SDK 开发，对图片中的�
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/contrib/CenterNet/ATC%20CenterNet.zip)下载并解压，在解压后的310P_model目录下得到CenterNet.onnx文件，并放在``python/models`` 目录下。
 
 
-根据[链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)下载coco.names文件，并放在``python/models`` 目录下。
+根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)下载coco.names文件，并放在``python/models`` 目录下。
 
 **步骤2:** 转换模型格式
 进入到``python/models`` 目录下，将onnx格式模型转换为om格式模型。

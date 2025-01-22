@@ -77,12 +77,12 @@ export install_path=${install_path}
 . ${MX_SDK_HOME}/set_env.sh
 ```
 
-注：**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径（例如："/home/xxx/MindX_SDK/mxVision"）；**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
+注：**${MX_SDK_HOME}** 替换为用户自己的Vision SDK安装路径；**${install_path}** 替换为CANN开发套件包所在路径（例如：/usr/local/Ascend/ascend-toolkit/latest）。
 
 
 ## 3 准备模型
 
-模型转换使用的是ATC工具，具体使用教程可参考[《ATC工具使用指南》](https://gitee.com/ascend/docs-openmind/blob/master/guide/mindx/sdk/tutorials/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.md)。
+模型转换使用的是ATC工具，具体使用教程可参考[《ATC工具使用指南》](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/800alpha003/devaids/devtools/atc/atlasatc_16_0005.html)。
 
 ### 3.1 yolov3的模型转换
 **步骤1** 获取yolov3的原始模型(.pb文件)和相应的配置文件(.cfg文件)  

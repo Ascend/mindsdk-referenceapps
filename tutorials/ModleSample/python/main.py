@@ -1,8 +1,8 @@
 import numpy as np
 
 from mindx.sdk import Tensor 
-from mindx.sdk import base  # mxVision 推理接口
-from mindx.sdk.base import Model  # mxVision 推理接口
+from mindx.sdk import base  # Vision SDK 推理接口
+from mindx.sdk.base import Model  # Vision SDK 推理接口
 
 
 def process():
@@ -43,6 +43,6 @@ def process():
     print("output numpy array shape", output.shape)
 
 if __name__ == "__main__":
-    base.mx_init()  # 初始化 mxVision 资源
+    base.mx_init()  # 初始化 Vision SDK 资源
     process()
     base.mx_deinit()

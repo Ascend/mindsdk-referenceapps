@@ -130,7 +130,7 @@ SendProtobuf-GetProtobuf |protobuf|protobuf|否| 是 |否 |支持单线程有序
 #### 步骤 1 Clion开发环境搭建
 参见 IDE开发环境搭建--基于Clion开发调试章节，实现安装clion和远程环境连接。
 
-C++ 样例在（[项目目录地址](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/C++)）路径下。
+C++ 样例在（[项目目录地址](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/C++)）路径下。
 将路径下的整个C++文件夹下载到本地用Clion打开该项目文件。
 
 #### 步骤2 配置环境变量
@@ -204,7 +204,7 @@ Program arguments 传入[0,1,2]可以切换调用接口，对应关系可以见�
 #### 步骤 1 pyCharm开发环境搭建
 参见 IDE开发环境搭建--基于pyCharm开发调试章节，实现安装pyCharm和远程环境连接。
 
-python 样例在（[项目目录地址](https://gitee.com/ascend/mindxsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/python)）路径下。
+python 样例在（[项目目录地址](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/tutorials/PipelineInputOutputSample/python)）路径下。
 将路径下的整个python文件夹下载到本地用pyCharm打开该项目文件。
 
 #### 步骤 2 配置SDK路径

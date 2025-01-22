@@ -199,7 +199,7 @@ void VdecThread(VideoDecoder& videoDecoder)
 //                                        |
 //                                        V
 //                                   |获取解码结果|
-// 线程3：用于获取解码结果（获取解码结果的线程由mxVision内部创建，用户仅需自定义回调函数、用于由该线程调用、获取解码结果）
+// 线程3：用于获取解码结果（获取解码结果的线程由Vision SDK内部创建，用户仅需自定义回调函数、用于由该线程调用、获取解码结果）
 APP_ERROR VdecCallBack(MxBase::Image &decodedImage, uint32_t channelId, uint32_t frameId,
                        void *userData)
 {
@@ -248,7 +248,7 @@ void VencThread(VideoEncoder& videoEncoder)
 //                                        |
 //                                        V
 //                                   |获取编码结果|
-// 线程5：用于获取编码结果（用于获取编码结果的线程由mxVision内部创建，用户仅需自定义回调函数、用于由该线程调用、获取编码结果）
+// 线程5：用于获取编码结果（用于获取编码结果的线程由Vision SDK内部创建，用户仅需自定义回调函数、用于由该线程调用、获取编码结果）
 APP_ERROR VencCallBack(std::shared_ptr<uint8_t>& outDataPtr, uint32_t& outDataSize,
                        uint32_t& channelId, uint32_t& frameId, void* userData)
 {

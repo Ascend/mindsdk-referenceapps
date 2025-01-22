@@ -11,7 +11,7 @@ include_directories(
     ${MX_SDK_HOME}/include
     ${MX_SDK_HOME}/opensource/include
     ${MX_SDK_HOME}/opensource/include/opencv4
-    ${mindxsdk-referenceapps安装路径}/mxVision/PPYOLOEPlusDetection/plugin
+    ${mindsdk-referenceapps安装路径}/VisionSDK/PPYOLOEPlusDetection/plugin
 )
 
 link_directories(

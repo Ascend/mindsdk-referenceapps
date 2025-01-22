@@ -48,7 +48,7 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于Vision SDK开
 
 | 依赖软件 | 版本       | 说明                           | 使用教程                                                     |
 | -------- | ---------- | ------------------------------ | ------------------------------------------------------------ |
-| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
+| live555  | 1.09       | 实现视频转rstp进行推流         | [链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md) |
 
 ### 1.5 代码目录结构与说明
 
@@ -113,7 +113,7 @@ VehicleRetrogradeRecognition交通逆行识别后处理插件基于Vision SDK开
 #设置CANN环境变量（请确认install_path路径是否正确）
 . ${ascend-toolkit-path}/set_env.sh
 
-#设置MindX SDK 环境变量，SDK-path为mxVision SDK 安装路径
+#设置MindX SDK 环境变量，SDK-path为Vision SDK 安装路径
 . ${SDK-path}/set_env.sh
 
 #查看环境变量
@@ -137,7 +137,7 @@ atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_fo
 
 ## 4 编译与运行
 
-**步骤1** 拉起Live555服务：[Live555拉流教程](https://gitee.com/ascend/mindxsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
+**步骤1** 拉起Live555服务：[Live555拉流教程](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
 **步骤2** 根据实际的网络视频流，修改`VehicleRetrogradeRecognition/pipeline`目录下的VehicleRetrogradeRecognition.pipeline文件中mxpi_rtspsrc0第9行的内容。
 
@@ -191,7 +191,7 @@ atc --model=./yolov4_dynamic_bs.onnx --framework=5 --output=yolov4_bs --input_fo
 bash build.sh
 ```
 
-命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${SDK安装路径}/mxVision/lib/plugins`目录下，然后将权限设置为0640。
+命令执行成功后会在`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar`目录下生成build文件夹。将`VehicleRetrogradeRecognition/plugins/MxpiTrackRetrogradeCar/build`目录下生成的的libmxpi_trackretrogradecar.so下载后上传到`${Vision SDK安装路径}/lib/plugins`目录下，然后将权限设置为0640。
 
 **步骤6**进入Vision SDK安装目录的`operators/opencvosd`目录下执行命令：
 ```

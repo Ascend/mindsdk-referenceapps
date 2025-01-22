@@ -589,7 +589,7 @@ static int hi_mpi_encode(ASCENDEncContext_t *ctx, const AVFrame *frame)
 {
     av_log(ctx, AV_LOG_DEBUG, "Send frame size: %ux%u, pts:%ld, frame type:%d.\n",
            frame->width, frame->height, frame->pts, frame->pict_type);
-    
+
     hi_venc_start_param recvParam;
     recvParam.recv_pic_num = -1;
     int ret = hi_mpi_venc_start_chn(ctx->channel_id, &recvParam);
@@ -744,6 +744,15 @@ static int ff_himpi_enc_receive_packet(AVCodecContext *avctx, AVPacket *avpkt)
                 ctx->eos_post_flag = 1;
                 ctx->encoder_flushing = 1;
                 continue;
+            }
+
+            AscendEncPrivateData_t* priv_data = frame.opaque;
+            if (priv_data && priv_data->next_is_I_frame) {
+                ret = hi_mpi_venc_request_idr(ctx->channel_id, priv_data->is_instant);
+                if (ret) {
+                    av_log(ctx, AV_LOG_ERROR, "Set I-frame failed. ret is %d.\n", ret);
+                    return ret;
+                }
             }
 
             send_ret = hi_mpi_encode(ctx, &frame);

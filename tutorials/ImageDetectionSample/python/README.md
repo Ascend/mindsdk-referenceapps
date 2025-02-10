@@ -15,6 +15,7 @@
 | Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
 | --------- | ------------------ | -------------- |
 | 6.0.RC3   | 8.0.RC3   |  24.1.RC3  |
+| 6.0.0   | 8.0.0   |  24.1.0  |
 
 ### 1.4 三方依赖
 
@@ -29,68 +30,36 @@
 ## 2. 设置环境变量
 
 ```bash
-#设置CANN环境变量
-. ${install_path}/set_env.sh
+#设置CANN环境变量，cann_install_path为CANN安装路径
+. ${cann_install_path}/set_env.sh
 
-#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
-. ${SDK-path}/set_env.sh
+#设置Vision SDK 环境变量，sdk_install_path为Vision SDK 安装路径
+. ${sdk_install_path}/set_env.sh
 ```
 ## 3. 准备模型
 
-**步骤1** 在ModelZoo上下载YOLOv3模型。[下载地址](https://gitee.com/link?target=https%3A%2F%2Fobs-9be7.obs.cn-east-2.myhuaweicloud.com%2F003_Atc_Models%2Fmodelzoo%2Fyolov3_tf.pb)
+**步骤1** 下载YOLOv3模型。[下载地址](https://gitee.com/link?target=https%3A%2F%2Fobs-9be7.obs.cn-east-2.myhuaweicloud.com%2F003_Atc_Models%2Fmodelzoo%2Fyolov3_tf.pb)
 
 **步骤2** 将获取到的YOLOv3模型文件内的`.pb`文件存放至`ImageDetectionSample/python/models/`下。
  
-**步骤3** 模型转换
-在文件夹 `ImageDetectionSample/python/models/` 下，执行模型转换脚本model_conversion.sh
+**步骤3** 使用ATC执行模型转换
+在文件夹 `ImageDetectionSample/python/models/` 目录下执行以下命令
+```bash
+atc --model=./yolov3_tf.pb --framework=3 --output=./yolov3_tf_bs1_fp16 --soc_version=Ascend310P3 --insert_op_conf=./aipp_yolov3_416_416.aippconfig --input_shape="input:1,416,416,3" --out_nodes="yolov3/yolov3_head/Conv_6/BiasAdd:0;yolov3/yolov3_head/Conv_14/BiasAdd:0;yolov3/yolov3_head/Conv_22/BiasAdd:0"
 ```
-bash model_conversion.sh
-```
-执行完模型转换脚本后，会生成相应的`.om`模型文件。执行后终端输出为：
+执行后终端输出为：
 ```bash
 ATC start working now, please wait for a moment.
 ATC run success, welcome to the next use.
 ```
 表示命令执行成功。
 
-**步骤4** 准备标签文件coco.names
-
-通过命令查找到文件`coco.names`路径：
-```bash
-find / -name coco.names
-```
-在`ImageDetectionSample/python/models/` 下， 复制文件`coco.names`：
-```bash
-cp ${刚刚获取的路径}  ./
-```
-
 ## 4 运行
-**步骤1：** 转移样例：
 
-将样例目录从 `mindxsdk-referenceapps/tutorials/ImageDetectionSample/python` 文件夹下 移动到 `${SDK安装路径}/samples/mxVision/python/`路径下。
-```bash
-cp -r mindxsdk-referenceapps/tutorials/ImageDetectionSample/python ${SDK安装路径}/samples/mxVision/python
-```
-移动后的项目路径为：`${SDK安装路径}/samples/mxVision/python/python`。
+**步骤1：** 准备一张待检测图片，放到`ImageDetectionSample/python`目录下命名为`test.jpg`。
 
-
-**步骤2：** 修改main.py：
-
-
-将main.py 文件中 第78行 mxpi_objectpostprocessor0插件中的postProcessLibPath路径中的${SDK安装路径} 替换为自己的SDK安装路径：
-```bash
-78  "postProcessLibPath": "${SDK安装路径}/lib/modelpostprocessors/libyolov3postprocess.so"
-```
-**步骤3：** 准备测试图片：
-
-准备一张待检测图片，放到项目目录`${SDK安装路径}/samples/mxVision/python/python`下命名为test.jpg
-
-
-**步骤4：** 运行:
-
-命令行输入：
-
+**步骤2：** 运行, 进入`ImageDetectionSample/python`目录，执行
 ```
 python3 main.py
 ```
-运行结果将以`result.jpg`的形式保存在项目目录下。
+**步骤3：** 查看结果，目标检测结果保存在当前目录的`result.jpg`中。

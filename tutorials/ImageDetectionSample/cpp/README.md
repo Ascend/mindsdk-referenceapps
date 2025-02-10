@@ -32,7 +32,7 @@
 
 **步骤1** 下载YOLOv3模型。[下载地址](https://gitee.com/link?target=https%3A%2F%2Fobs-9be7.obs.cn-east-2.myhuaweicloud.com%2F003_Atc_Models%2Fmodelzoo%2Fyolov3_tf.pb)
 
-**步骤2** 将获取到的YOLOv3模型文件内的.pb文件存放至`ImageDetectionSample/C++/model/`下。
+**步骤2** 将获取到的YOLOv3模型文件内的.pb文件存放至`ImageDetectionSample/cpp/model/`下。
 
 **步骤3** 使用ATC执行模型转换
 

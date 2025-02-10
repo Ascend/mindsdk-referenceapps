@@ -57,8 +57,7 @@ ATC run success, welcome to the next use.
 bash run.sh
 ```
 
-**步骤5：** 查看结果
-目标检测结果保存在当前目录的`result.jpg`中。
+**步骤5：** 查看结果，目标检测结果保存在当前目录的`result.jpg`中。
 
 
 ## 5 常见问题

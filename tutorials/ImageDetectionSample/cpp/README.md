@@ -50,9 +50,9 @@ ATC run success, welcome to the next use.
 
 ## 4 编译与运行
 
-**步骤1：** 准备一张待检测图片，放到项目根目录下命名为`test.jpg`。
+**步骤1：** 准备一张待检测图片，放到`ImageDetectionSample/cpp`目录下命名为`test.jpg`。
 
-**步骤2：** 编译与运行，执行脚本
+**步骤2：** 编译与运行，进入`ImageDetectionSample/cpp`目录，执行脚本
 ```
 bash run.sh
 ```

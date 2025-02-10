@@ -52,57 +52,19 @@ ATC run success, welcome to the next use.
 
 **步骤1：** 准备一张待检测图片，放到项目根目录下命名为`test.jpg`。
 
-**步骤2：** 编译项目文件
-
-
-在项目的c++目录下，新建立build目录，进入build执行cmake ..（..代表包含CMakeLists.txt的源文件父目录），在build目录下生成了编译需要的Makefile和中间文件。执行make构建工程，构建成功后就会生成可执行文件。
-
+**步骤2：** 编译与运行，执行脚本
 ```
-# 新建立build目录
-mkdir build
-
-#进入build
-cd build
-
-# 执行
-cmake ..
-
-# 执行make构建工程
-make
-```
-构建成功后就会生成可执行文件，回显为：
-```
-Scanning dependencies of target sample
-[ 50%] Building CXX object CMakeFiles/sample.dir/main.cpp.o
-[100%] Linking CXX executable ../sample
-[100%] Built target sample
-# sample就是CMakeLists文件中指定生成的可执行文件。
-```
-
-**步骤4：** 执行脚本
-
-执行run.sh脚本前请先确认可执行文件sample已生成。
-
-```
-# 添加执行权限
-chmod +x run.sh 
-
-#执行脚本
 bash run.sh
 ```
 
 **步骤5：** 查看结果
-
-执行run.sh完毕后，sample会将目标检测结果保存在工程目录下`result.jpg`中。
+目标检测结果保存在当前目录的`result.jpg`中。
 
 
 ## 5 常见问题
 
 
 ### 5.1 .sh文件执行报错
-
-
-
 **问题描述：**  如果执行`bash run.sh`报错如下：
 ```
 run.sh: line 2: $'\r': command not found

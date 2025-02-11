@@ -15,11 +15,11 @@
  */
 #include <string>
 #include <glob.h>
+#include <fstream>
 #include "opencv2/opencv.hpp"
 #include "MxBase/Log/Log.h"
 #include "MxBase/MemoryHelper/MemoryHelper.h"
 #include "MxStream/StreamManager/MxStreamManager.h"
-#include <fstream>
 
 namespace {
     const uint32_t YUV_BYTES_NU = 3;
@@ -49,28 +49,50 @@ static APP_ERROR  ReadFile(const std::string& filePath, MxStream::MxstDataInput&
         return APP_ERR_COMM_OPEN_FAIL;
     }
     // 得到文件内容长度
-    fseek(fp, 0, SEEK_END);
+    if (fseek(fp, 0, SEEK_END) != 0) {
+        LogError << "Failed to fseek.";
+        if (fclose(fp) != 0) {
+            LogError << "Failed to fclose.";
+        }
+        return APP_ERR_COMM_FAILURE;
+    }
     long fileSize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    if (fseek(fp, 0, SEEK_SET) != 0) {
+        LogError << "Failed to fseek.";
+        if (fclose(fp) != 0) {
+            LogError << "Failed to fclose.";
+        }
+        return APP_ERR_COMM_FAILURE;
+    }
     // 若文件内容不为空，把文件内容写入dataBuffer中
     if(fileSize > 0){
         dataBuffer.dataSize = fileSize;
         dataBuffer.dataPtr = new (std::nothrow) uint32_t[fileSize];
         if(dataBuffer.dataPtr == nullptr){
             LogError << "allocate memory with \"new uint32_t\" failed.";
-            fclose(fp);
+            if (fclose(fp) != 0) {
+                LogError << "Failed to fclose.";
+            }
             return APP_ERR_COMM_FAILURE;
         }
 
         uint32_t readRet = fread(dataBuffer.dataPtr, 1, fileSize, fp);
         if(readRet <= 0){
-            fclose(fp);
+            if (fclose(fp) != 0) {
+                LogError << "Failed to fclose.";
+            }
             return APP_ERR_COMM_READ_FAIL;
         }
-        fclose(fp);
+        if (fclose(fp) != 0) {
+            LogError << "Failed to fclose.";
+            return APP_ERR_COMM_FAILURE;
+        }
         return APP_ERR_OK;
     }
-    fclose(fp);
+    if (fclose(fp) != 0) {
+        LogError << "Failed to fclose.";
+        return APP_ERR_COMM_FAILURE;
+    }
     return APP_ERR_COMM_FAILURE;
 }
 

@@ -75,7 +75,7 @@ if __name__ == '__main__':
                     "dataSource": "mxpi_tensorinfer0",
                     "postProcessConfigPath": "models/yolov3_tf_bs1_fp16.cfg",
                     "labelPath": "models/coco.names",
-                    "postProcessLibPath": "${SDK安装路径}/lib/modelpostprocessors/libyolov3postprocess.so"
+                    "postProcessLibPath": "libyolov3postprocess.so"
                 },
                 "factory": "mxpi_objectpostprocessor",
                 "next": "appsink0"

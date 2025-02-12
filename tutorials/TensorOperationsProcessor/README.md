@@ -51,6 +51,7 @@ TensorOperations接口，主要开放四则运算、指对数、绝对值、值�
 | Vision SDK版本 | CANN版本 | Driver/Firmware版本 |
 |----|----|----|
 | 6.0.RC3 | 8.0.RC3 | 24.1.RC3 |   
+| 6.0.0   | 8.0.0   |  24.1.0  |
 
 
 ## 2 设置环境变量

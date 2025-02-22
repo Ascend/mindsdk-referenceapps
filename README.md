@@ -23,7 +23,15 @@ Ascend Community Website: https://www.hiascend.com/
 Ascend Forum Website: https://www.hiascend.com/forum/
 
 ## Disclaimer
-The reference design is not a commercial release product and is provided for users' reference only. Users need to complete the productization and implement security protection on their own if they choose to use it. Huawei does not assume security responsibilities.
+To the users of this code repository
+
+1. This code repository only suggests datasets and models that can be used to complete the examples. These datasets and models are only for non-commercial purposes and Huawei does not provide any datasets or models. If you use these datasets and models to complete the examples, please note that you should comply with the corresponding licenses for the datasets and models. If you have any infringement disputes due to the use of datasets or models, Huawei will not be held responsible.
+
+2. If you encounter any issues (including but not limited to functional or compliance issues) while using this code repository, please submit an issue on Gitee and we will promptly review and provide answers.
+
+To the owners of the dataset and models
+
+If you do not want your dataset or models to be mentioned in the examples of this code repository, or wish to update the description of your dataset or models in this code repository, please submit an issue on Gitee, and we will delete or update your dataset or models description according to your issue request. Thank you sincerely for your understanding and contribution to this code repository.
 ## Copyright Description
 
 Refer to [License.md](License.md).

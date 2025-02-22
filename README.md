@@ -25,9 +25,9 @@ Ascend Forum Website: https://www.hiascend.com/forum/
 ## Disclaimer
 To the users of this code repository
 
-1. This code repository only suggests datasets and models that can be used to complete the examples. These datasets and models are only for non-commercial purposes and Huawei does not provide any datasets or models. If you use these datasets and models to complete the examples, please note that you should comply with the corresponding licenses for the datasets and models. If you have any infringement disputes due to the use of datasets or models, Huawei will not be held responsible.
+1.This code repository only suggests datasets and models that can be used to complete the examples. These datasets and models are only for non-commercial purposes and Huawei does not provide any datasets or models. If you use these datasets and models to complete the examples, please note that you should comply with the corresponding licenses for the datasets and models. If you have any infringement disputes due to the use of datasets or models, Huawei will not be held responsible.
 
-2. If you encounter any issues (including but not limited to functional or compliance issues) while using this code repository, please submit an issue on Gitee and we will promptly review and provide answers.
+2.If you encounter any issues (including but not limited to functional or compliance issues) while using this code repository, please submit an issue on Gitee and we will promptly review and provide answers.
 
 To the owners of the dataset and models
 

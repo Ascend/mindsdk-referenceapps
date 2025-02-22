@@ -1,5 +1,0 @@
-add_subdirectory(carPlateDetectionPostProcess)
-add_subdirectory(carPlateRecognitionPostProcess)
-add_subdirectory(faceAlignment)
-add_subdirectory(faceLandmark)
-add_subdirectory(resnetAttributePostProcess)

@@ -44,8 +44,7 @@ Pytorch框架对yolov7模型推理时，前处理方案包括解码为BGR->等�
 
 ```
 
-注：coco.names文件源于[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/Collision/model/coco.names)的coco2014.names文件，下载之后，放到models目录下。   
-另外，yolov7.cfg中新增了一个配置项PADDING_TYPE用于区分补边的情况，若采用dvpp补边则填写0，采用opencv补边则填写1，默认为1。    
+注：yolov7.cfg中新增了一个配置项PADDING_TYPE用于区分补边的情况，若采用dvpp补边则填写0，采用opencv补边则填写1，默认为1。    
 SampleYuv.pipeline中resize插件需要选用双线性插值的方式，需要根据310和310P环境填写interpolation的参数。310上需要设置"interpolation"为"1"。
 
 

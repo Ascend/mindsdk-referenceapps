@@ -6,7 +6,7 @@ Vision SDK快速入门教程
   - [环境安装](1-1安装SDK开发套件.md)
   - [IDE开发环境搭建](1-2IDE开发环境搭建.md)
   - [MindStuido开发环境搭建](1-3MindStuido开发环境搭建.md)
-  - [Vision SDK流程编码接口介绍](1-4VisionSDK流程编码接口介绍.md)
+  - [Vision SDK流程编码接口介绍](1-4Vision SDK流程编码接口介绍.md)
   
 - **初级开发**
   - [pipeline输入输出操作](2-3pipeline输入输出操作.md)

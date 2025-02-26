@@ -9,8 +9,6 @@ Vision SDK快速入门教程
   - [Vision SDK流程编码接口介绍](1-4Vision SDK流程编码接口介绍.md)
   
 - **初级开发**
-  - [图像检测样例运行](2-1图像检测sample样例.md)
-  - [基于MindStuido的图像检测sample样例运行](2-2基于MindStuido的图像检测sample样例运行.md)
   - [pipeline输入输出操作](2-3pipeline输入输出操作.md)
   
 - **中级开发**

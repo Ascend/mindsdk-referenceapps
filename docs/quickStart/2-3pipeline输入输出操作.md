@@ -134,7 +134,6 @@ C++ 样例在（[项目目录地址](https://gitee.com/ascend/mindsdk-referencea
 将路径下的整个C++文件夹下载到本地用Clion打开该项目文件。
 
 #### 步骤2 配置环境变量
-可参考[2-1图像检测样例运行章节](./2-1图像检测sample样例.md)
 
 clion任务栏 Run->Edit Configurations->Environment variables 添加环境变量
 

@@ -48,16 +48,11 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 ##  3 编译与运行
 ### 3.1 C++样例运行
-**步骤1：下载BlockingQueue.h文件**
-
-根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载Blockingqueue.h文件，将BlockingQueue.h文件放在本项目根目录的C++目录下。
-
-
-**步骤2：准备视频** 
+**步骤1：准备视频** 
 
 准备一个H264格式的视频文件，并放至在本项目路径下。
 
-**步骤3：修改main.cpp文件，指定VideoDecoder和VideoEncoder的基本初始化参数**  
+**步骤2：修改main.cpp文件，指定VideoDecoder和VideoEncoder的基本初始化参数**  
 
 
 第**332**行到第**354**行展示了VideoDecoder和VideoEncoder的主要配置项，用户可以结合Vision SDK官方文档根据需要调整。本样例中仅指定必要配置项，如下所示：
@@ -73,21 +68,21 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 第**352**行 `"vEncodeConfig.displayRate = ${fps}"`中的${fps}替换为步骤2中视频实际的帧率。
 
 
-**步骤4：编译**
+**步骤3：编译**
 
 进入项目根目录的C++目录下，执行以下命令:
 ```
 bash build.sh
 ```
 
-**步骤5：运行**
+**步骤4：运行**
 
 进入项目根目录的C++目录下，执行以下命令:
 ```
 ./main
 ```
 
-**步骤6：查看结果**
+**步骤5：查看结果**
 
 保存后的视频文件（命令为output.264）会在同级目录下，打开该文件即可查看编码结果。
 

@@ -49,8 +49,6 @@ export LD_LIBRARY_PATH=${ffmpeg-lib-path}:$LD_LIBRARY_PATH
 
 根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/VisionSDK/PutText)下载PutText参考设计，将PutText/PutText目录放在本项目根目录下。
 
-根据[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/contrib/FireDetection/c++/BlockingQueue/BlockingQueue.h)下载BlockingQueue.h文件，将BlockingQueue.h文件放在本项目根目录下。
-
 **步骤2： 下载字库文件**
 
 根据[链接](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/mindxsdk-referenceapps%20/mxVision/PutTextForMultiVideos/vocab.zip)下载贴字接口所需要的字库文件，解压缩后将其中的vocab目录放至在本项目根目录下。

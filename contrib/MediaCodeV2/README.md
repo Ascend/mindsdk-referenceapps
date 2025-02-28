@@ -88,7 +88,6 @@ env
 
 MediaCodecV2提供了视频多路转码功能，可根据需要自行选择单路或者多路转码。
 
-运行前需先下载[BlockingQueue.h](https://gitee.com/ascend/mindsdk-referenceapps/tree/master/contrib/VehicleCounting/BlockingQueue)头文件，并将其添加到`mxbase`目录下。
 
 ### 3.1 日志等级设置
 

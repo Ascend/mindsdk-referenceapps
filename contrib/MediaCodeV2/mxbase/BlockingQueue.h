@@ -17,11 +17,11 @@
 #ifndef BLOCKING_QUEUE_H
 #define BLOCKING_QUEUE_H
 
-#include "MxBase/ErrorCode/ErrorCode.h"
 #include <condition_variable>
 #include <list>
 #include <mutex>
 #include <stdint.h>
+#include "MxBase/ErrorCode/ErrorCode.h"
 
 namespace MxBase {
 static const int DEFAULT_MAX_QUEUE_SIZE = 50000;

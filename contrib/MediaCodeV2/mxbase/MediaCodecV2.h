@@ -39,7 +39,7 @@
 #include "MxBase/Log/Log.h"
 
 #include "BlockingQueue.h"
-
+using namespace MxBase;
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>

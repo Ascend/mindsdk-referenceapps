@@ -51,7 +51,6 @@ make install
 |           |---- show.sh                           // 运行显示log信息的脚本
 |           |---- stop.sh                           // 停止多路视频转码的脚本
 |           |---- BlockingQueue.h                   // 队列工具类 
-BlockingQueue.h
 |           |---- .keep 
 |-------- test
 |           |---- .keep                             // 测试视频(需自行准备)

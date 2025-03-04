@@ -24,12 +24,12 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-if("${MXVISION_VERSION}" STREQUAL "mxVision:6.0.RC3")
-    set(CMAKE_CXX_STANDARD 14)
-    message(STATUS "C++14 standard is set.")
-else()
+if("${MXVISION_VERSION}" STREQUAL "mxVision:6.0.RC2")
     set(CMAKE_CXX_STANDARD 11)
     message(STATUS "C++11 standard is set.")
+else()
+    set(CMAKE_CXX_STANDARD 14)
+    message(STATUS "C++14 standard is set.")
 endif()
 
 add_compile_options(-fPIC -fstack-protector-all -pie -Wno-deprecated-declarations)

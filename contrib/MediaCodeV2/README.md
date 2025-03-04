@@ -52,6 +52,7 @@ make install
 |           |---- stop.sh                           // 停止多路视频转码的脚本
 |           |---- BlockingQueue.h                   // 队列工具类 
 |           |---- .keep 
+|-------- out    
 |-------- test
 |           |---- .keep                             // 测试视频(需自行准备)
 |-------- README.md

@@ -50,8 +50,9 @@ make install
 |           |---- run.sh                            // 运行多路视频转码的脚本
 |           |---- show.sh                           // 运行显示log信息的脚本
 |           |---- stop.sh                           // 停止多路视频转码的脚本
-|-------- out                                       // 存放输出结果 
+|           |---- BlockingQueue.h                   // 队列工具类 
 |           |---- .keep 
+|-------- out    
 |-------- test
 |           |---- .keep                             // 测试视频(需自行准备)
 |-------- README.md

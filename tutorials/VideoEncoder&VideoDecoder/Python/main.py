@@ -202,6 +202,7 @@ def start_service():
     PULLER_TO_VDEC_QUEUE.clear()
     VDEC_TO_VENC_QUEUE.clear()
     VENC_TO_FILE_SAVE_QUEUE.clear()
+    time.sleep(1)
 
 if __name__ == '__main__':
     base.mx_init()

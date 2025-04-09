@@ -1,9 +1,9 @@
 # Index SDK-test
 
-### 1.介绍
+### 介绍
 **本仓库提供了昇腾Index SDK 组件实现的几种常见检索算法的demo**
 
-#### 1.1版本配套表
+#### 版本配套表
 | MindSDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
 | -------------- | ------------ | -------- | -------- | --------- |
 | master | 6.0.RC3 | 8.0.RC3  | 24.1.RC3 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
@@ -15,14 +15,13 @@ master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为
 
 mxIndex-faiss1.7.1分支对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
 
-#### 1.2关于MindSDK 更多信息
+#### 关于MindSDK 更多信息
 请关注昇腾社区[MindSDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
 
 
-### 2.安装教程
+### 安装教程
 
-1.  Index SDK [安装文档](https://www.hiascend.com/document/detail/zh/mindsdk/600/index/indexug/mxindexfrug_0007.html)
-**请根据用户指南中的安装部署章节完成Index SDK的安装**
+1.  Index SDK [用户指南](https://www.hiascend.com/document/detail/zh/mindsdk/600/index/indexug/mxindexfrug_0007.html)
 2. gtest安装教程
 ``` shell
 wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \
@@ -31,7 +30,7 @@ cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local/gtest . && make -
 cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 ```
 
-### 3.代码目录结构说明
+### 代码目录结构说明
 
 ```
 .
@@ -62,14 +61,14 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 |-- TestAscendIndexVStar.cpp                       # VStar近似检索算法demo
 |-- TestAscendMultiSearch.cpp                      # 多Index批量检索demo
 |-- build.sh                                       # 编译安装脚本
-|-- dependencies.cmake                             # 
+|-- dependencies.cmake
 `-- faiss-python                                   # python接口
     |-- Faiss安装参考.md                            # python接口安装说明
     |-- MANIFEST.in
     |-- Makefile
     |-- ascendfaiss.py
     |-- setup.py
-    |-- swig_ascendfaiss.swig
+    |-- swig_ascendfaiss.swig                      # swig 配置文件
     `-- test_ascend_index_flat.py                  # flat算法demo
 
 ```
@@ -80,9 +79,9 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 
 <kbd>TestAscendIReduction.cpp</kbd> 需要根据实际情况填写对应的NN降维模型所在的目录。
 
-### 4.Demo使用说明
+### Demo使用说明
 
-1.  请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss
+**1.  请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss** (具体可参考用户指南 安装部署章节)
 
 2.  修改dependencies.cmake 中的 MXINDEX_HOME
 ```
@@ -109,15 +108,13 @@ MXINDEX_INSTALL_PATH为Index SDK实际安装路径，本例中为/home/work/Feat
 
 所有算子生成的python文件均在MXINDEX_INSTALL_PATH/tools/目录下，可执行 -h参数 查看具体参数意义
 
-用例所需生成算子命令已写明在用例注释里。
-
 以TestAscendIndexFlat.cpp中需要生成的Flat算子为例, 执行：
 ```
 cd ${MXINDEX_INSTALL_PATH}/ops/
 bash custom_opp_{arch}.run
 
 cd ${MXINDEX_INSTALL_PATH}/tools/
-生成aicpu和flat的算子
+生成aicpu和flat 512维的算子
 ```
 
 算子默认生成在${MXINDEX_INSTALL_PATH}/tools/op_models 路径下，将算子移动至算子目录，执行：

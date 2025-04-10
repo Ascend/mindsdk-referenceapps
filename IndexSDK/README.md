@@ -66,8 +66,8 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
     |-- Faiss安装参考.md                            # python接口安装说明
     |-- MANIFEST.in
     |-- Makefile
-    |-- ascendfaiss.py
-    |-- setup.py
+    |-- ascendfaiss.py                             # 接口配置脚本
+    |-- setup.py                                   # 安装脚本
     |-- swig_ascendfaiss.swig                      # swig 配置文件
     `-- test_ascend_index_flat.py                  # flat算法demo
 
@@ -81,20 +81,28 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 
 ### Demo使用说明
 
-**1.  请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss** (具体可参考用户指南 安装部署章节)
+1.  **请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss** (具体可参考用户指南 安装部署章节)
 
-2.  修改dependencies.cmake 中的 MXINDEX_HOME
+2.  进入IndexSDK目录
+```
+cd mindxsdk-referenceapps/IndexSDK/
+``` 
+
+3.  修改dependencies.cmake 中的 MXINDEX_HOME
 ```
 SET(MXINDEX_HOME /home/work/FeatureRetrieval/mxIndex/    CACHE STRING "")
 ```
 本例中Index SDK默认安装路径为 /home/work/FeatureRetrieval/mxIndex/，可将其修改为Index SDK实际安装路径。
+```
+export MXINDEX_INSTALL_PATH=/home/work/FeatureRetrieval/mxIndex/
+```
 
-3.  执行一下命令编译demo
+4.  执行build.sh编译demo
 ``` shell
 bash build.sh
 ```
 
-4.  设置环境变量与生成算子
+5.  设置环境变量与生成算子
 
 执行如下命令设置环境变量（根据CANN软件包的实际安装路径修改）：
 ```

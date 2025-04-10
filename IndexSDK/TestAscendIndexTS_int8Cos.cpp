@@ -14,6 +14,8 @@
  * limitations under the License.
  */
  
+// 需要生成aicpu算子+int8flat算子(-d 512)+mask算子
+
 #include <bitset>
 #include <cstdlib>
 #include <ctime>

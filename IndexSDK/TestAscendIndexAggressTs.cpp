@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+ // 需要生成aicpu算子+ flat算法512维算子+ mask算子
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>

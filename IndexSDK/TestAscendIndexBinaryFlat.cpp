@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// 需要生成aicpu算子+ binary_flat算法512维算子
+// 需要生成aicpu算子+binary_flat算法512维算子
 
 #include <random>
 #include <sys/time.h>

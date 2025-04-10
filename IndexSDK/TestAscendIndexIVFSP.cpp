@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ // 需要生成aicpu算子+ivfsp_pycal算子(-d 256 -nonzero_num 64 -nlist 256 -batch_size 64 -code_num 32768)+ivfsp_model算子
+
 #include <map>
 #include <set>
 #include <algorithm>

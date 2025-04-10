@@ -210,6 +210,8 @@ cd faiss-1.7.1
 
 
 # ascendfaiss编译
+**编译前请完成Index SDK的安装 并生成aicpu和flat 512维的算子** MXINDEX_INSTALL_PATH为安装路径 
+
 
 1、设置软件安装路径信息，根据实际情况配置
 

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ // 需要生成aicpu算子+int8flat(-d 64)+sq8算子(-d 64)
+
 #include <vector>
 #include <numeric>
 #include <faiss/index_io.h>

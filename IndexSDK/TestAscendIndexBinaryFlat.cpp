@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// 需要生成aicpu算子+binary_flat算子(-d 512)
+
 #include <random>
 #include <sys/time.h>
 #include <gtest/gtest.h>

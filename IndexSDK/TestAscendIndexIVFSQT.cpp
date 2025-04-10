@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// 需要生成ivfsqt算子(-d 256 -c 16384)+flat_at算子(-d 256 -c 16384)+flat_at_int8算子(-d 256 -c 16384)
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>

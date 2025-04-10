@@ -1,3 +1,6 @@
+
+// 需要生成 aicpu算子+ivfsqt算子(-d 256 -c 16384)+flat_at算子(-d 256 -c 16384)
+
 #include <unordered_map>
 #include <unistd.h>
 #include <algorithm>

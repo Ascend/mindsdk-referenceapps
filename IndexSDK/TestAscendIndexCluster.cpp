@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// 需要生成aicpu算子+flat算子(-d 64)
+
 #include <faiss/ascend/AscendIndexCluster.h>
 #include <random>
 #include <iostream>

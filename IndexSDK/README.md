@@ -129,7 +129,7 @@ mv ${INDEX_INSTALL_PATH}/tools/op_models/* ${INDEX_INSTALL_PATH}/modelpath/
 
 设置算子的环境变量：
 ```
-export $MX_INDEX_MODELPATH=${INDEX_INSTALL_PATH}/modelpath
+export MX_INDEX_MODELPATH=${INDEX_INSTALL_PATH}/modelpath
 ```
 注意：算子环境变量请勿使用软链接，而是算子实际所在目录。本例中为/home/work/FeatureRetrieval/mxIndex-{version}/modelpath/
 

@@ -79,7 +79,6 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 1.  **请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss** (具体可参考用户指南 安装部署章节)
 
 2.  进入IndexSDK目录
-
 本例中demo默认安装路径为 /home/work/，可将其修改为demo实际安装路径。
 ```
 export INDEXDEMO_INSTALL_PATH=/home/work/

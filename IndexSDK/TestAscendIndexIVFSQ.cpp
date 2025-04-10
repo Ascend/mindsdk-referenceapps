@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// 需要生成aicpu算子+ivfsq8算子(-d 64 -c 8192)+flat_at算子(-d 64 -c 8192)
 
 #include <faiss/ascend/AscendIndexIVFSQ.h>
 #include <cstdio>

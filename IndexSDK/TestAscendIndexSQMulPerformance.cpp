@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ // 需要生成aicpu算子+sq8(-d 64)
+
 #include <numeric>
 #include <random>
 #include <cfloat>

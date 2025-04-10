@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- // 需要生成aicpu算子+flat算法512维算子
+ // 需要生成aicpu算子+flat算子(-d 512)
 
 #include <numeric>
 #include <cmath>

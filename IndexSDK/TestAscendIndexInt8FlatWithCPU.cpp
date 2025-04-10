@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// 需要生成 aicpu算子+int8flat算子(-d 512)
+
 #include <algorithm>
 #include <cstdio>
 #include <cstdint>

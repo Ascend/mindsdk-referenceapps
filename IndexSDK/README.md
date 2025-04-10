@@ -7,13 +7,8 @@
 | MindSDK版本  | Index SDK版本  | CANN版本  | HDK版本 | 硬件形态  |
 | -------------- | ------------ | -------- | -------- | --------- |
 | master | 6.0.RC3 | 8.0.RC3  | 24.1.RC3 | Atlas推理系列产品 Atlas200/300/500 800I A2推理产品 |
-| master | 5.0.0 | 7.0.0  | 23.0.0 | Atlas推理系列产品 Atlas200/300/500推理产品 |
-
-之前版本请参见：https://gitee.com/ascend/ascend-referenceapps/tree/master/IndexSDK_samples
 
 master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为1.7.4
-
-mxIndex-faiss1.7.1分支对应版本mxIndex 5.0.0、mxIndex 5.0.1，依赖faiss版本为1.7.1
 
 #### 关于MindSDK 更多信息
 请关注昇腾社区[MindSDK](https://www.hiascend.com/zh/software/mindx-sdk)的最新版本
@@ -84,8 +79,10 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 1.  **请先正确安装Index SDK 组件及其依赖的driver、firmware、Ascend toolkit、OpenBLAS、Faiss** (具体可参考用户指南 安装部署章节)
 
 2.  进入IndexSDK目录
+本例中demo默认安装路径为 /home/work/，可将其修改为demo实际安装路径。
 ```
-cd mindxsdk-referenceapps/IndexSDK/
+export INDEXDEMO_INSTALL_PATH=/home/work/
+cd ${INDEXDEMO_INSTALL_PATH}/mindxsdk-referenceapps/IndexSDK/
 ``` 
 
 3.  修改dependencies.cmake 中的 MXINDEX_HOME
@@ -94,7 +91,7 @@ SET(MXINDEX_HOME /home/work/FeatureRetrieval/mxIndex/    CACHE STRING "")
 ```
 本例中Index SDK默认安装路径为 /home/work/FeatureRetrieval/mxIndex/，可将其修改为Index SDK实际安装路径。
 ```
-export MXINDEX_INSTALL_PATH=/home/work/FeatureRetrieval/mxIndex/
+export INDEX_INSTALL_PATH=/home/work/FeatureRetrieval/mxIndex/
 ```
 
 4.  执行build.sh编译demo
@@ -107,7 +104,7 @@ bash build.sh
 执行如下命令设置环境变量（根据CANN软件包的实际安装路径修改）：
 ```
 source /usr/local/Ascend/ascend-toolkit/set_env.sh
-export LD_LIBRARY_PATH=${MXINDEX_INSTALL_PATH}/host/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${INDEX_INSTALL_PATH}/host/lib:$LD_LIBRARY_PATH
 ``` 
 
 MXINDEX_INSTALL_PATH为Index SDK实际安装路径，本例中为/home/work/FeatureRetrieval/mxIndex/
@@ -118,27 +115,27 @@ MXINDEX_INSTALL_PATH为Index SDK实际安装路径，本例中为/home/work/Feat
 
 以TestAscendIndexFlat.cpp中需要生成的Flat算子为例, 执行：
 ```
-cd ${MXINDEX_INSTALL_PATH}/ops/
+cd ${INDEX_INSTALL_PATH}/ops/
 bash custom_opp_{arch}.run
 
-cd ${MXINDEX_INSTALL_PATH}/tools/
+cd ${INDEX_INSTALL_PATH}/tools/
 生成aicpu和flat 512维的算子
 ```
 
-算子默认生成在${MXINDEX_INSTALL_PATH}/tools/op_models 路径下，将算子移动至算子目录，执行：
+算子默认生成在${INDEX_INSTALL_PATH}/tools/op_models 路径下，将算子移动至算子目录，执行：
 ```
-mv ${MXINDEX_INSTALL_PATH}/tools/op_models/* ${MXINDEX_INSTALL_PATH}/modelpath/
+mv ${INDEX_INSTALL_PATH}/tools/op_models/* ${INDEX_INSTALL_PATH}/modelpath/
 ```
 
 设置算子的环境变量：
 ```
-export $MX_INDEX_MODELPATH=${MXINDEX_INSTALL_PATH}/modelpath
+export $MX_INDEX_MODELPATH=${INDEX_INSTALL_PATH}/modelpath
 ```
 注意：算子环境变量请勿使用软链接，而是算子实际所在目录。本例中为/home/work/FeatureRetrieval/mxIndex-{version}/modelpath/
 
-5.  在build目录中找到对应的二进制可执行文件
+6.  在build目录中找到对应的二进制可执行文件
 以TestAscendIndexFlat.cpp为例，执行:
 ```
-cd build/
+cd ${INDEXDEMO_INSTALL_PATH}/mindxsdk-referenceapps/IndexSDK/build/
 ./TestAscendIndexFlat
 ```

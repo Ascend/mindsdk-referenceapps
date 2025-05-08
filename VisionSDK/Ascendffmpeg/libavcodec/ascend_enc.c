@@ -693,7 +693,6 @@ static int hi_mpi_get_pkt(AVCodecContext *avctx, AVPacket *avpkt)
     ret = aclrtMemcpy(avpkt->data, avpkt->size, stream_info.data, stream_info.data_size,
                       ACL_MEMCPY_DEVICE_TO_HOST);
     if (ret != 0) {
-        hi_mpi_dvpp_free(stream_info.data);
         av_log(ctx, AV_LOG_ERROR, "Ascend memory D2H(dev: %d, host: %d) failed, ret is %d.\n",
                avpkt->size, stream_info.data_size, ret);
         return ret;
@@ -701,8 +700,6 @@ static int hi_mpi_get_pkt(AVCodecContext *avctx, AVPacket *avpkt)
 
     avpkt->pts = stream_info.pts;
     avpkt->size = stream_info.data_size;
-
-    hi_mpi_dvpp_free(stream_info.data);
 
     return 0;
 }

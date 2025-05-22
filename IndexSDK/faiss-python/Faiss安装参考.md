@@ -11,7 +11,107 @@ pip3 install build
 
 # Faiss安装参考
 
-根据index版本，选择faiss的安装版本，index版本为5.0.0及以前版本，安装faiss1.7.1,  index版本为6.0.0以后安装faiss1.7.4;
+根据index版本，选择faiss的安装版本，index版本为5.0.0及以前版本，安装faiss1.7.1, index版本为6.0.0以后安装faiss1.7.4，index版本为7.1.0以后安装faiss1.10.0;
+
+## 安装faiss1.10.0版本
+
+### 1、源码下载
+
+执行以下命令下载Faiss源码压缩包并解压。（编译该Faiss需要CMake的版本不低于CMake 3.24.0。）
+
+```
+wget https://github.com/facebookresearch/faiss/archive/refs/tags/v1.10.0.tar.gz
+tar -xf v1.10.0.tar.gz
+```
+
+### 2、源码修改
+
+进入Faiss目录。
+
+```
+cd faiss-1.10.0
+```
+
+- 在“faiss/Index.h”文件中的第149行（“search”接口声明之后）插入以下内容。
+
+  ```
+  virtual void search_with_filter (
+     idx_t n,
+     const float *x,
+     idx_t k,
+     float *distances,
+     idx_t *lables,
+     const void *mask = nullptr) const {}
+  ```
+
+- 在“faiss/CMakeLists.txt” 文件中的第217行（“utils/utils.h”之前）插入以下内容。
+
+  ```
+  utils/sorting.h
+  ```
+
+- 在“faiss/IndexIDMap.h”
+
+  文件中的第30行（“IndexIdMapTemplate”接口的声明之后）插入以下内容。
+
+  ```
+  explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids);
+  ```
+
+- 在“faiss/IndexIDMap.cpp”文件中的第49行（“IndexIDMapTemplate”接口的定义之后）插入以下内容。
+
+  ```
+  template <typename IndexT>
+  IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids):
+   index (index),
+   own_fields (false)
+  {
+   this->is_trained = index->is_trained;
+   this->metric_type = index->metric_type;
+   this->verbose = index->verbose;
+   this->d = index->d;
+   id_map = ids;
+  }
+  ```
+
+### 3、源码编译安装
+
+1. 执行以下命令完成Faiss的编译配置。
+
+   ```
+   cd ..
+   PYTHON=/usr/local/lib/python3.10 （可以使用which python3查看）
+   FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.10.0
+   cmake -B build . -DFAISS_ENABLE_GPU=OFF -DPython_EXECUTABLE=${PYTHON} -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${FAISS_INSTALL_PATH}
+   ```
+
+2. 编译安装。
+
+   ```
+   make -C build -j faiss
+   make -C build -j swigfaiss
+   cd build/faiss/python && python3 setup.py bdist_wheel
+   cd ../../.. && make -C build install
+   cd build/faiss/python && cp libfaiss_python_callbacks.so ${FAISS_INSTALL_PATH}/lib
+   cd dist
+   pip3 install faiss-1.10.0*.whl
+   ```
+
+   注：安装完成以后，如果执行失败，就查看执行失败目录文件是否解压，如果没有解压就手动解压
+
+3. 配置系统库查找路径，返回上层目录。
+
+   动态链接依赖Faiss的程序在运行时需要知道Faiss动态库所在路径，需要在Faiss的库目录加入“LD_LIBRARY_PATH”环境变量。
+
+   ```
+   # 配置/etc/profile
+   vim /etc/profile
+   # 在/etc/profile中添加: export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+   # /usr/local/lib是Faiss的安装目录,如果安装在其他目录下,将/usr/local/lib替换为Faiss实际安装路径，部分操作系统和环境中，faiss可能会安装在其他目录下。
+   source /etc/profile
+   cd ..
+   ```
+
 
 ## 安装faiss1.7.4版本
 

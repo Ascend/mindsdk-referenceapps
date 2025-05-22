@@ -19,6 +19,10 @@ import numpy as np
 
 import faiss
 
+if faiss.__version__ == "1.10.0":   
+    from faiss.class_wrappers import handle_Index
+    from faiss.class_wrappers import replace_method
+
 if faiss.__version__ == "1.7.4":   
     from faiss.class_wrappers import handle_Index
     from faiss.class_wrappers import replace_method

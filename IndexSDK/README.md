@@ -16,7 +16,7 @@ master分支对应版本mxIndex 6.0.RC2、mxIndex 6.0.RC1，依赖faiss版本为
 
 ### 安装教程
 
-1.  Index SDK [用户指南](https://www.hiascend.com/document/detail/zh/mindsdk/600/index/indexug/mxindexfrug_0007.html)
+1.  Index SDK [用户指南](https://www.hiascend.com/document/detail/zh/mindsdk/70rc1/indexn/indexug/mxindexfrug_0002.html)
 2. gtest安装教程
 ``` shell
 wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \

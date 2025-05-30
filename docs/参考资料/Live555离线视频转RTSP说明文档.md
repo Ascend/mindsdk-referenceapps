@@ -2,7 +2,7 @@
 
 ## 1.下载安装包
 
-[live555安装包下载地址](https://mindx.sdk.obs.cn-north-4.myhuaweicloud.com/tool/live555.tar.gz)
+[live555安装包下载地址](https://mindx.sdk-6e12.obs.cn-north-4.myhuaweicloud.com/tool/live555.tar.gz)
 
 
 ## 2. 解压

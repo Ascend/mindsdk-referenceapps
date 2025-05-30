@@ -29,9 +29,6 @@ Atlas 300I Pro, Atlas 300V Pro和Atlas A500 A2
 |硬件转码|√|√|√|
 |硬件缩放|√|√|√|
 
-## 安装 CANN
-[详情请参考CANN用户指南](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/82RC1alpha002/index/index.html)
-
 ## 下载开源FFmpeg代码
 [FFmpeg-n4.4.4 Source code](https://github.com/FFmpeg/FFmpeg/releases/tag/n4.4.4)
 

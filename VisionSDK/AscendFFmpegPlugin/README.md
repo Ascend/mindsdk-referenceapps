@@ -7,7 +7,7 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，
 
 该样例的处理流程为：
 ```
-准备芯片及环境 -> 安装CANN版本包 -> 下载开源FFmpeg代码 -> 拉取FFmpeg-Plugin代码 -> 应用patch -> 编译 -> 执行
+准备芯片及环境 -> 安装CANN对应版本包 -> 下载开源FFmpeg代码 -> 拉取FFmpeg-Plugin代码 -> 应用patch -> 编译 -> 执行
 ```
 
 ## 支持的产品
@@ -29,8 +29,8 @@ Atlas 300I Pro, Atlas 300V Pro和Atlas A500 A2
 |硬件转码|√|√|√|
 |硬件缩放|√|√|√|
 
-## 安装 CANN
-[详情请参考CANN用户指南](https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/80RC3alpha001/softwareinst/instg/instg_0001.html)
+## 安装CANN对应版本包
+请在昇腾官网下载对应版本的CANN，并根据其用户手册进行安装
 
 ## 下载开源FFmpeg代码
 [FFmpeg-n4.4.4 Source code](https://github.com/FFmpeg/FFmpeg/releases/tag/n4.4.4)

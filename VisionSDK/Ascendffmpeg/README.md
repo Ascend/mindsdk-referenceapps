@@ -4,7 +4,7 @@
 
 ### 1.1 简介
 
-mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为了提升用户的易用性，Vision SDK提供了 Ffmepg-Ascend 解决方案。
+mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为了提升用户的易用性，Vision SDK提供了 FFmpeg-Ascend 解决方案。
 
 支持的功能：
 
@@ -70,13 +70,13 @@ cd FFmpeg-n4.4.1
 patch -p1 -f < {Ascendffmpeg所在路径}/ascend_ffmpeg.patch
 ```
 
-**步骤3：** 在项目目录`Ascendffmpeg/`下添加可执行权限：
+**步骤3：** 在目录`FFmpeg-n4.4.1/`下添加可执行权限：
 ```bash
 chmod +x ./configure
 chmod +x ./ffbuild/*.sh
 ```
 
-**步骤4：** 在项目目录`Ascendffmpeg/`下执行编译：
+**步骤4：** 在目录`FFmpeg-n4.4.1/`下执行编译：
 
 编译选项说明：
 * `prefix`    -   FFmpeg 及相关组件安装目录
@@ -100,9 +100,9 @@ chmod +x ./ffbuild/*.sh
 
 **步骤5：** 添加环境变量
 
-通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
+通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/FFmpeg-n4.4.1/ascend/lib/libavdevice.so`，则执行：
 ```bash
-export LD_LIBRARY_PATH=/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/PATH/TO/FFmpeg-n4.4.1/ascend/lib:$LD_LIBRARY_PATH
 ```
 
 **步骤6：** 运行

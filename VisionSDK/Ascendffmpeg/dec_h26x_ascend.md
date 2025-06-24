@@ -55,7 +55,7 @@ Ffmepg-Ascend 中内置了h264_ascend和h265_ascend解码器，利用昇腾NPU�
 
 ### 4 解码器使用
 
-开发态使用解码器代码样例请参考：<td><a>FFmpeg-n4.4.1/doc/examples/hw_decode.c</a></td>
+开发态使用解码器代码样例请参考：FFmpeg-n4.4.1/doc/examples/hw_decode.c
 
 **特别的**：
 

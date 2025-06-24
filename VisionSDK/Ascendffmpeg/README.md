@@ -32,12 +32,12 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 ### 1.3 代码目录结构说明
 ```
 .
-|-------- ascend_ffmpeg.patch                       // ffmpeg适配补丁文件
-|-------- dec_h26x_ascend.md                        // h26x视频解码说明文档             
-|-------- dec_mjpeg_ascend.md                       // mjpeg视频解码说明文档
-|-------- enc_h26x_ascend.md                        // h26x视频编码说明文档
-|-------- README_DEV.md                             // API调用说明文档
-|-------- README.md                                 // 说明文档
+|---- ascend_ffmpeg.patch                       // ffmpeg适配补丁文件
+|---- dec_h26x_ascend.md                        // h26x视频解码说明文档             
+|---- dec_mjpeg_ascend.md                       // mjpeg视频解码说明文档
+|---- enc_h26x_ascend.md                        // h26x视频编码说明文档
+|---- README_DEV.md                             // API使用说明文档
+|---- README.md                                 // 二进制使用说明文档
 
 ```
 
@@ -54,6 +54,7 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 
 **步骤1：** 下载开源FFmpeg 4.4.1版本代码：
 [FFmpeg-n4.4.1 Source code](https://github.com/FFmpeg/FFmpeg/releases/tag/n4.4.1)
+
 zip包解压
 ```shell
 unzip FFmpeg-n4.4.4.zip
@@ -66,7 +67,7 @@ tar -zxvf FFmpeg-n4.4.4.tar.gz
 **步骤2：** 应用patch：
 ```shell
 cd FFmpeg-n4.4.1
-patch -p1 -f < {mindsdk-referenceapps路径}/Ascendffmpeg/ascend_ffmpeg.patch
+patch -p1 -f < {Ascendffmpeg所在路径}/ascend_ffmpeg.patch
 ```
 
 **步骤3：** 在项目目录`Ascendffmpeg/`下添加可执行权限：

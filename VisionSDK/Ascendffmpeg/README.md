@@ -57,11 +57,11 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 
 zip包解压
 ```shell
-unzip FFmpeg-n4.4.4.zip
+unzip FFmpeg-n4.4.1.zip
 ```
 tar.gz包解压
 ```shell
-tar -zxvf FFmpeg-n4.4.4.tar.gz
+tar -zxvf FFmpeg-n4.4.1.tar.gz
 ```
 
 **步骤2：** 应用patch：

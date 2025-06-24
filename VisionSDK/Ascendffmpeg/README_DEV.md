@@ -2,7 +2,7 @@
 
 ### 1.1 简介
 
-Vison ascend 硬件平台内置了视频相关的硬件加速编解码器，为了提升用户的易用性，Vision SDK提供了 FFmepg-Ascend 解决方案。
+Vison ascend 硬件平台内置了视频相关的硬件加速编解码器，为了提升用户的易用性，Vision SDK提供了 FFmpeg-Ascend 解决方案。
 
 支持的功能：
 
@@ -54,6 +54,7 @@ tar -zxvf FFmpeg-n4.4.1.tar.gz
 ```shell
 cd FFmpeg-n4.4.1
 patch -p1 -f < {Ascendffmpeg所在路径}/ascend_ffmpeg.patch
+```
 
 **步骤3：** 在目录`FFmpeg-n4.4.1/`下添加可执行权限：
 ```bash

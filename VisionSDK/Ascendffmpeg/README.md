@@ -1,4 +1,4 @@
-# 基于Ascend的Ffmpeg流媒体框架
+# 基于Ascend的FFmpeg流媒体框架
 
 ## 1 介绍
 

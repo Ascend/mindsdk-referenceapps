@@ -29,6 +29,17 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 | 8.0.RC3   |  24.1.RC3  |
 | 8.0.0   |  24.1.0  |
 
+### 1.3 代码目录结构说明
+```
+.
+|-------- ascend_ffmpeg.patch                       // ffmpeg适配补丁文件
+|-------- dec_h26x_ascend.md                        // h26x视频解码说明文档             
+|-------- dec_mjpeg_ascend.md                       // mjpeg视频解码说明文档
+|-------- enc_h26x_ascend.md                        // h26x视频编码说明文档
+|-------- README_DEV.md                             // API调用说明文档
+|-------- README.md                                 // 说明文档
+
+```
 
 ## 2 设置环境变量
 * `ASCEND_HOME`     Ascend 安装的路径，一般为 `/usr/local/Ascend`
@@ -41,17 +52,30 @@ mxVison ascend 硬件平台内置了视频相关的硬件加速解码器，为�
 
 ## 3 编译与运行
 
-**步骤1：** 在项目目录`Ascendffmpeg/`下添加可执行权限：
+**步骤1：** 下载开源FFmpeg 4.4.1版本代码：
+[FFmpeg-n4.4.1 Source code](https://github.com/FFmpeg/FFmpeg/releases/tag/n4.4.1)
+zip包解压
+```shell
+unzip FFmpeg-n4.4.4.zip
+```
+tar.gz包解压
+```shell
+tar -zxvf FFmpeg-n4.4.4.tar.gz
+```
+
+**步骤2：** 应用patch：
+```shell
+cd FFmpeg-n4.4.1
+patch -p1 -f < {mindsdk-referenceapps路径}/Ascendffmpeg/ascend_ffmpeg.patch
+```
+
+**步骤3：** 在项目目录`Ascendffmpeg/`下添加可执行权限：
 ```bash
 chmod +x ./configure
 chmod +x ./ffbuild/*.sh
 ```
 
-
-
-
-
-**步骤2：** 在项目目录`Ascendffmpeg/`下执行编译：
+**步骤4：** 在项目目录`Ascendffmpeg/`下执行编译：
 
 编译选项说明：
 * `prefix`    -   FFmpeg 及相关组件安装目录
@@ -73,14 +97,14 @@ chmod +x ./ffbuild/*.sh
       && make -j && make install
   ```
 
-**步骤3：** 添加环境变量
+**步骤5：** 添加环境变量
 
 通过指令`find / -name libavdevice.so`查找到文件所在路径，形如`/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib/libavdevice.so`，则执行：
 ```bash
 export LD_LIBRARY_PATH=/PATH/TO/mindsdk-referenceapps/VisionSDK/Ascendffmpeg/ascend/lib:$LD_LIBRARY_PATH
 ```
 
-**步骤4：** 运行
+**步骤6：** 运行
 
 通过步骤3在项目目录`Ascendffmpeg/`下会生成 `ffmpeg` 可执行文件，可以参考下面的说明使用。
 

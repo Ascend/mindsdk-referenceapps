@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 WORKDIR /tmp
 COPY install_deps.sh ./
+COPY ./urls.conf ./
 # TODO
 RUN chmod 777 /tmp
 # 系统包 + Pip3.9
@@ -16,7 +17,7 @@ RUN apt update && \
     apt install --no-install-recommends zlib1g-dev xz-utils libgmpxx4ldbl -y && \
     apt clean && rm -rf /var/lib/apt/lists/*
 # 安装Python
-RUN wget https://repo.huaweicloud.com/python/3.9.11/Python-3.9.11.tar.xz && \
+RUN . ./urls.conf && wget $PYTHON_DOCKR && \
     tar -xf Python-3.9.11.tar.xz && \
     cd Python-3.9.11 && \
     mkdir build && cd build && \
@@ -47,7 +48,7 @@ RUN pip3.9 install -U pip && \
     rm -rf /root/.cache/pip
 
 # 安装cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1.tar.gz && \
+RUN . ./urls.conf && wget $CMAKE_DOCKR && \
     tar xf cmake-3.23.1.tar.gz && cd cmake-3.23.1 && ./configure --prefix=/usr && \
     make -j && make -j install && cd .. && rm -rf cmake-3.23.1* && bash install_deps.sh
 # 清理临时目录

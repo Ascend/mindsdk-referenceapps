@@ -1,6 +1,7 @@
 set -e
+. ./urls.conf
 # OpenBLAS
-wget ${OpenBLAS_URL} -O OpenBLAS-0.3.10.tar.gz
+wget ${OpenBLAS_SH} -O OpenBLAS-0.3.10.tar.gz
 tar -xf OpenBLAS-0.3.10.tar.gz
 cd OpenBLAS-0.3.10
 make FC=gfortran USE_OPENMP=1 -j
@@ -10,7 +11,7 @@ cd .. && rm -f OpenBLAS-0.3.10.tar.gz && rm -rf OpenBLAS-0.3.10
 
 # faiss 1.7.4
 install_path=/usr/local/faiss/faiss1.7.4
-wget ${FAISS_URL} -O faiss-1.7.4.tar.gz
+wget ${FAISS_SH} -O faiss-1.7.4.tar.gz
 tar -xf faiss-1.7.4.tar.gz && cd faiss-1.7.4/faiss
 
 arch="$(uname -m)"
@@ -53,7 +54,7 @@ cmake -B build . -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTIN
 cd build && make -j && make install
 cd ../.. && rm -rf faiss-1.7.4*
 
-wget ${RELEASE_URL} && \
+wget ${RELEASE_SH} && \
 cp release-1.8.1.tar.gz /tmp/googletest-release-1.8.1.tar.gz && \
 tar xf release-1.8.1.tar.gz && cd googletest-release-1.8.1 && \
 cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local/gtest . && make -j && make install && \

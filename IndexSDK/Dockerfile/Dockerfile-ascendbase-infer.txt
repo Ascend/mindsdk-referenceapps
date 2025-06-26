@@ -5,9 +5,9 @@ COPY ./urls.conf ./
 # TODO
 RUN chmod 777 /tmp
 # 系统包 + Pip3.9
-RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak && \
-    sed -i "s@http://.*archive.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
-    sed -i "s@http://.*security.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list
+RUN . ./urls.conf && cp -a /etc/apt/sources.list /etc/apt/sources.list.bak && \
+    sed -i "$ARCHIVE_DOCKR" /etc/apt/sources.list && \
+    sed -i "$SECRITY_DOCKR" /etc/apt/sources.list
 RUN apt update && \
     apt install --no-install-recommends ca-certificates -y && \
     apt install --no-install-recommends wget vim dos2unix net-tools ssh lsof sshpass -y && \
@@ -27,10 +27,10 @@ RUN . ./urls.conf && wget $PYTHON_DOCKR && \
     ldconfig
 ENV PATH=$PATH:/usr/local/python3.9.11/bin \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3.9.11/lib
-RUN mkdir ~/.pip && touch ~/.pip/pip.conf && \
+RUN . ./urls.conf && mkdir ~/.pip && touch ~/.pip/pip.conf && \
     echo "[global]" > ~/.pip/pip.conf && \
     echo "trusted-host=mirrors.aliyun.com" >> ~/.pip/pip.conf && \
-    echo "index-url=http://mirrors.aliyun.com/pypi/simple" >> ~/.pip/pip.conf && \
+    echo "index-url=$INDEX_DOCKR" >> ~/.pip/pip.conf && \
     echo "timeout=200" >> ~/.pip/pip.conf
 # python包
 RUN pip3.9 install -U pip && \

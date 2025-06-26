@@ -29,6 +29,7 @@ namespace {
     const int TIME_OUT = 20000;
     const float SEC2MS = 1000.0;
     const std::string PICTURE_PATH = "../input_data/";
+    const long MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1G
 }
 
 std::string ReadFileContent(const std::string& filePath)
@@ -42,6 +43,10 @@ std::string ReadFileContent(const std::string& filePath)
     file.seekg(0, std::ifstream::end);
     uint32_t fileSize = file.tellg();
     file.seekg(0);
+    if (fileSize == 0 || fileSize > MAX_FILE_SIZE){
+        LogError << "File size invalid";
+        return "";
+    }
     std::vector<char> buffer(fileSize);
     file.read(buffer.data(), fileSize);
     file.close();
@@ -71,6 +76,7 @@ APP_ERROR GetPicture(const std::string& filePath, std::vector<std::string>& pict
             pictureName.push_back(filename);
         }
     }
+    closedir(pDir);
     return APP_ERR_OK;
 }
 

@@ -110,6 +110,8 @@ namespace {
     constexpr int COS_LEN_VALUE = 416;
     constexpr int COS_FORMAT_VALUE = 12;
     constexpr bool USE_SENDDATA = true; // switch different send data method
+    const long MAX_IMAGE_SIZE = 1024 * 1024 * 1024; // 1G
+    const long MAX_FILE_SIZE = 1024 * 1024 * 100; // 100MB
 
     // read data File to MxstDataInput structure
     APP_ERROR ReadFile(const std::string& filePath, MxStream::MxstDataInput& dataBuffer)
@@ -137,7 +139,7 @@ namespace {
         long fileSize = ftell(fp);
         fseek(fp, 0, SEEK_SET);
         // If file not empty, read it into FileInfo and return it
-        if (fileSize > 0) {
+        if (fileSize > 0 && fileSize < MAX_IMAGE_SIZE) {
             dataBuffer.dataSize = fileSize;
             dataBuffer.dataPtr = new (std::nothrow) uint32_t[fileSize];
             if (dataBuffer.dataPtr == nullptr) {
@@ -169,6 +171,10 @@ namespace {
         file.seekg(0, std::ifstream::end);
         uint32_t fileSize = file.tellg();
         file.seekg(0);
+        if (fileSize ==0 || fileSize > MAX_FILE_SIZE){
+            LogError << "Invalid file size";
+            return "";       
+        }
         auto data = std::unique_ptr<char>(new char[fileSize]);
         file.read(data.get(), fileSize);
         file.close();
@@ -377,7 +383,7 @@ int main(int argc, char* argv[])
     // destroy streams
     mxStreamManager.DestroyAllStreams();
 
-    delete dataBuffer.dataPtr;
+    delete[] dataBuffer.dataPtr;
     dataBuffer.dataPtr = nullptr;
 
     return 0;

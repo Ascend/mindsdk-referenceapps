@@ -22,6 +22,10 @@ import json
 
 from StreamManagerApi import StreamManagerApi, MxDataInput
 
+MAX_FILE_SIZE = 1024 * 1024 * 10 # 10MB
+MAX_IMAGE_SIZE = 1024 * 1024 * 1024 # 1G
+PATH = "../data/OCR.pipeline"
+
 if __name__ == '__main__':
     # init stream manager
     STREAM_NAME = b'OCR'
@@ -33,7 +37,10 @@ if __name__ == '__main__':
         exit()
 
     # create streams by pipeline config file
-    with open("../data/OCR.pipeline", 'rb') as f:
+    if os.path.getsize(PATH) <= 0 or os.path.getsize(PATH) > MAX_FILE_SIZE:
+        print("Pipeline file size invalid!")
+        exit()
+    with open(PATH, 'rb') as f:
         pipelineStr = f.read()
     ret = streamManagerApi.CreateMultipleStreams(pipelineStr)
     if ret != 0:
@@ -54,6 +61,9 @@ if __name__ == '__main__':
         if lower_file_name.endswith(".jpeg") or lower_file_name.endswith(".jpg") or lower_file_name.endswith(".png"):
             img_path = os.path.join(DIR_NAME, file_name)
             print("img_path: ", img_path)
+            if os.path.getsize(img_path) <= 0 or os.path.getsize(img_path) > MAX_IMAGE_SIZE:
+                print("Image file size invalid!")
+                exit() 
             with open(img_path, 'rb') as f:
                 dataInput.data = f.read()
 

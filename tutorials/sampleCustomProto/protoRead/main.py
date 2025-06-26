@@ -17,12 +17,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from StreamManagerApi import StreamManagerApi, MxDataInput, StringVector
-
 import sys
+import os
 sys.path.append("../../proto")
 import mxpiSampleProto_pb2 as mxpiSampleProto
+from StreamManagerApi import StreamManagerApi, MxDataInput, StringVector
 
+MAX_FILE_SIZE = 1024 * 1204 * 10 # 10MB
+PATH = "../pipeline/Sample_proto.pipeline"
 if __name__ == '__main__':
     # init stream manager
     streamManagerApi = StreamManagerApi()
@@ -32,7 +34,10 @@ if __name__ == '__main__':
         exit()
 
     # create streams by pipeline config file
-    with open("../pipeline/Sample_proto.pipeline", 'rb') as f:
+    if os.path.getsize(PATH) <= 0 or os.path.getsize(PATH) > MAX_FILE_SIZE:
+        print("Pipeline file size invalid!")
+        exit()
+    with open(PATH, 'rb') as f:
         pipelineStr = f.read()
     ret = streamManagerApi.CreateMultipleStreams(pipelineStr)
     if ret != 0:

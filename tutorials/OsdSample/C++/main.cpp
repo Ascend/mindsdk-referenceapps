@@ -23,6 +23,8 @@
 
 namespace {
 const int SLEEP_TIME = 2;
+const long MAX_IMAGE_SIZE = 1024 * 1024 * 1024; // 1G
+const long MAX_FILE_SIZE = 1024 * 1024 * 100; // 100MB
 APP_ERROR ReadFile(const std::string& filePath, MxStream::MxstDataInput& dataBuffer)
 {
     char c[PATH_MAX + 1] = { 0x00 };
@@ -48,7 +50,7 @@ APP_ERROR ReadFile(const std::string& filePath, MxStream::MxstDataInput& dataBuf
     long fileSize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
     // If file not empty, read it into FileInfo and return it
-    if (fileSize > 0) {
+    if (fileSize > 0 && fileSize < MAX_IMAGE_SIZE) {
         dataBuffer.dataSize = fileSize;
         dataBuffer.dataPtr = new (std::nothrow) uint32_t[fileSize];
         if (dataBuffer.dataPtr == nullptr) {
@@ -79,6 +81,10 @@ std::string ReadFileContent(const std::string& filePath)
     file.seekg(0, std::ifstream::end);
     uint32_t fileSize = file.tellg();
     file.seekg(0);
+    if (fileSize ==0 || fileSize > MAX_FILE_SIZE){
+        LogError << "Invalid file size";
+        return "";       
+    }
     std::vector<char> buffer;
     buffer.resize(fileSize);
     file.read(buffer.data(), fileSize);
@@ -97,6 +103,10 @@ std::string ReadPipelineConfig(const std::string& pipelineConfigPath)
     file.seekg(0, std::ifstream::end);
     uint32_t fileSize = file.tellg();
     file.seekg(0);
+    if (fileSize ==0 || fileSize > MAX_FILE_SIZE){
+        LogError << "Invalid file size";
+        return "";       
+    }
     std::unique_ptr<char[]> data(new char[fileSize]);
     file.read(data.get(), fileSize);
     file.close();
@@ -163,7 +173,7 @@ int main(int argc, char* argv[])
 
     // destroy streams
     mxStreamManager.DestroyAllStreams();
-    delete dataBuffer.dataPtr;
+    delete[] dataBuffer.dataPtr;
     dataBuffer.dataPtr = nullptr;
 
     return 0;

@@ -36,6 +36,7 @@ static const FontFile timesNewRoman = {"times", "60px"};
 static const FontFile simsun = {"simsun", "60px"};
 FontFile FONT_LIST[] = {timesNewRoman, simsun};
 int FONT_NUMBER = sizeof(FONT_LIST) / sizeof(FONT_LIST[0]);
+const long MAX_FILE_SIZE = 1024 * 1024 * 1024 // 1G
 
 CaptionGenManager::CaptionGenManager()
 {
@@ -180,11 +181,17 @@ std::vector<std::string> split(const std::string &str, const std::string &delim)
 // 读入文本文件到内存对象中
 bool CaptionGenManager::_loadVocab(const std::string &vocabFile, FontInfo &singleFont)
 {
-    std::ifstream fin(vocabFile, std::ios::in);
+    std::ifstream fin(vocabFile, std::ios::in | std::ios::ate);
     std::string word;
 
     if (!fin.is_open()) {
         LogError << "Unable to read file " << vocabFile;
+        return false;
+    }
+    long fileSize = fin.tellg();
+    fin.seekg(0);
+    if (fileSize <= 0 || fileSize > MAX_FILE_SIZE){
+        LogError << "Vocab size invalid!";
         return false;
     }
     int index = 0;
@@ -213,6 +220,13 @@ bool CaptionGenManager::_loadMapBin(const std::string &filePath, cv::Mat &map, F
         LogError << "_loadMapBin can not open the file " << filePath << ".";
         return false;
     }
+    fseek(fpr, 0, SEEK_END);
+    long fileSize = ftell(fpr);
+    fseek(fpr, 0, SEEK_SET);
+    if (fileSize < vocabImageRows * imageCols || fileSize > MAX_FILE_SIZE){
+        LogError << "Map bin file size invalid!";
+        return false;
+    } 
     int channels = 1;
     int type = 0;
     int vocabImageRows = singleFont.wordHeight * singleFont.wordNum;

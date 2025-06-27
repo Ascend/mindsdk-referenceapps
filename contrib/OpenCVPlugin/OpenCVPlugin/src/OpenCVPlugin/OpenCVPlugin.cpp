@@ -15,6 +15,7 @@
 */
 
 #include "OpenCVPlugin.h"
+#include <algorithm>
 #include "MxBase/Log/Log.h"
 #include "MxBase/Tensor/TensorBase/TensorBase.h"
 using namespace MxBase;
@@ -25,10 +26,10 @@ namespace {
     const string SAMPLE_KEY = "MxpiVisionList";
     const int YUV_U = 2;
     const int YUV_V = 3;
-    const int san = 3;
-    const int er = 2;
-    const int yi = 1;
-    const float yiwu = 1.5;
+    const int THREE = 3;
+    const int TWO = 2;
+    const int ONE = 1;
+    const float RATIO = 1.5;
 }
 
 APP_ERROR MxpiSamplePlugin::Init(std::map<std::string, std::shared_ptr<void>>& configParamMap)
@@ -101,7 +102,7 @@ APP_ERROR MxpiSamplePlugin::openCV(size_t idx, const MxTools::MxpiVision srcMxpi
     cv::Mat imgRgb;
     MxBase::MemoryData memoryNewDst(dst.data, MxBase::MemoryData::MEMORY_HOST_NEW);
     if (option == "resize") {
-	if (memorySrc.type == er) {
+	if (memorySrc.type == TWO) {
 	    cv::resize(imgBgr, dst, cv::Size(width, height), fx, fy, interpolation);
 	}
 	else {
@@ -110,13 +111,14 @@ APP_ERROR MxpiSamplePlugin::openCV(size_t idx, const MxTools::MxpiVision srcMxpi
     }
     else {
       cv::Rect ori(startRow, startCol, endCol, endRow);
-      if (memorySrc.type == san) {
+      if (memorySrc.type == THREE) {
 	dst = src(ori).clone();
 	}
       else {
 	dst = imgBgr(ori).clone();
       }
     }
+    MxBase::MemoryHelper::MxbsFree(memoryDst);
     Output(dst, idx, dstMxpiVision);
     auto ret = APP_ERR_OK;
     if (ret != APP_ERR_OK) {
@@ -135,7 +137,7 @@ void MxpiSamplePlugin::Judge(auto& visionData, auto& visionInfo, cv::Mat &imgBgr
     else {
         imgBgr = cv::Mat(visionInfo.heightaligned(), visionInfo.widthaligned(), CV_8UC3);
     }
-    if (memorySrc.type == san) {
+    if (memorySrc.type == THREE) {
         if (visionData.datatype() == MxTools::MxpiDataType::MXPI_DATA_TYPE_FLOAT32) {
             src = cv::Mat(visionInfo.heightaligned(), visionInfo.widthaligned(), CV_32FC3,
                           memoryDst.ptrData);
@@ -207,8 +209,8 @@ APP_ERROR MxpiSamplePlugin::Bgr2Yuv(cv::Mat src, cv::Mat &dst)
 {
     int w_img = src.cols;
     int h_img = src.rows;
-    dst = cv::Mat(h_img * yiwu, w_img, CV_8UC1);
-    cv::Mat src_YUV_I420(h_img * yiwu, w_img, CV_8UC1);
+    dst = cv::Mat(h_img * RATIO, w_img, CV_8UC1);
+    cv::Mat src_YUV_I420(h_img * RATIO, w_img, CV_8UC1);
     cvtColor(src, src_YUV_I420, cv::COLOR_BGR2YUV_I420);
     swapYUV_I420toNV12(src_YUV_I420.data, dst.data, w_img, h_img);
     return APP_ERR_OK;
@@ -219,12 +221,12 @@ void  MxpiSamplePlugin::swapYUV_I420toNV12(unsigned char* i420bytes, unsigned ch
     int nLenY = width * height;
     int nLenU = nLenY / 4;
 
-    memcpy(nv12bytes, i420bytes, width * height);
+    std::copy(i420bytes, i420bytes + width * height, nv12bytes);
 
     for (int i = 0; i < nLenU; i++)
     {
-        nv12bytes[nLenY + er * i] = i420bytes[nLenY + i];                    // U
-        nv12bytes[nLenY + er * i + 1] = i420bytes[nLenY + nLenU + i];        // V
+        nv12bytes[nLenY + TWO * i] = i420bytes[nLenY + i];                    // U
+        nv12bytes[nLenY + TWO * i + 1] = i420bytes[nLenY + nLenU + i];        // V
     }
 }
 
@@ -329,12 +331,16 @@ APP_ERROR MxpiSamplePlugin::Process(std::vector<MxpiBuffer*>& mxpiBuffer)
 {
     LogInfo << "MxpiSamplePlugin::Process start";
     MxpiBuffer* buffer = mxpiBuffer[0];
+    if (!buffer) {
+        LogError << "mxpiBuffer is nullptr.";
+        return APP_ERR_COMM_FAILURE;
+    }
     MxpiMetadataManager mxpiMetadataManager(*buffer);
     MxpiErrorInfo mxpiErrorInfo;
     ErrorInfo_.str("");
     auto errorInfoPtr = mxpiMetadataManager.GetErrorInfo();
     if (errorInfoPtr != nullptr) {
-        ErrorInfo_ << GetError(APP_ERR_COMM_FAILURE, pluginName_) << "MxpiSamplePlugin process is not implemented";
+        ErrorInfo_ << GetErrorInfo(APP_ERR_COMM_FAILURE, pluginName_) << "MxpiSamplePlugin process is not implemented";
         mxpiErrorInfo.ret = APP_ERR_COMM_FAILURE;
         mxpiErrorInfo.errorInfo = ErrorInfo_.str();
         SetMxpiErrorInfo(*buffer, pluginName_, mxpiErrorInfo);
@@ -351,7 +357,7 @@ APP_ERROR MxpiSamplePlugin::Process(std::vector<MxpiBuffer*>& mxpiBuffer)
     google::protobuf::Message* msg = (google::protobuf::Message*)metadata.get();
     const google::protobuf::Descriptor* desc = msg->GetDescriptor();
     if (desc->name() != SAMPLE_KEY) {
-        ErrorInfo_ << GetError(APP_ERR_PROTOBUF_NAME_MISMATCH, pluginName_)
+        ErrorInfo_ << GetErrorInfo(APP_ERR_PROTOBUF_NAME_MISMATCH, pluginName_)
         << "Proto struct name is not MxpiVisionList, failed with:" << desc->name();
         mxpiErrorInfo.ret = APP_ERR_PROTOBUF_NAME_MISMATCH;
         mxpiErrorInfo.errorInfo = ErrorInfo_.str();
@@ -364,7 +370,7 @@ APP_ERROR MxpiSamplePlugin::Process(std::vector<MxpiBuffer*>& mxpiBuffer)
     LogInfo << "generate";
     APP_ERROR ret = GenerateVisionList(*srcMxpiVisionListSptr, *dstMxpiVisionListptr);
     if (ret != APP_ERR_OK) {
-        LogError << GetError(ret, pluginName_) << "MxpiSamplePlugin gets inference information failed.";
+        LogError << GetErrorInfo(ret, pluginName_) << "MxpiSamplePlugin gets inference information failed.";
         mxpiErrorInfo.ret = ret;
         mxpiErrorInfo.errorInfo = ErrorInfo_.str();
         SetMxpiErrorInfo(*buffer, pluginName_, mxpiErrorInfo);
@@ -373,7 +379,7 @@ APP_ERROR MxpiSamplePlugin::Process(std::vector<MxpiBuffer*>& mxpiBuffer)
     // Add Generated data to metedata
     ret = mxpiMetadataManager.AddProtoMetadata(pluginName_, static_pointer_cast<void>(dstMxpiVisionListptr));
     if (ret != APP_ERR_OK) {
-        ErrorInfo_ << GetError(ret, pluginName_) << "MxpiSamplePlugin add metadata failed.";
+        ErrorInfo_ << GetErrorInfo(ret, pluginName_) << "MxpiSamplePlugin add metadata failed.";
         mxpiErrorInfo.ret = ret;
         mxpiErrorInfo.errorInfo = ErrorInfo_.str();
         SetMxpiErrorInfo(*buffer, pluginName_, mxpiErrorInfo);

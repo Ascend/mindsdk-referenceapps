@@ -27,7 +27,10 @@ using namespace std;
 APP_ERROR TextInfoPlugin::Init(std::map<std::string, std::shared_ptr<void>> &configParamMap)
 {
     LogInfo << "Begin to initialize TextInfoPlugin(" << pluginName_ << ").";
-
+    if (!configParamMap["dataSource"]) {
+        LogError << "dataSource is nullptr.";
+        return APP_ERR_COMM_FAILURE;
+    }
     dataSource_ = *std::static_pointer_cast<std::string>(configParamMap["dataSource"]);
     do_lower_case_ = false;
     never_split_ = { "[UNK]", "[SEP]", "[PAD]", "[CLS]", "[MASK]" };
@@ -107,11 +110,19 @@ APP_ERROR TextInfoPlugin::Process(std::vector<MxpiBuffer *> &mxpiBuffer)
     LogInfo << "Begin to process MxpiMotSimpleSort(" << elementName_ << ").";
     // Get MxpiVisionList and MxpiTrackletList from mxpibuffer
     MxpiBuffer *inputMxpiBuffer = mxpiBuffer[0];   // deviceID[0]
+    if (!inputMxpiBuffer) {
+        LogError << "mxpiBuffer is nullptr.";
+        return APP_ERR_COMM_FAILURE;
+    }
     MxpiMetadataManager mxpiMetadataManager(*inputMxpiBuffer);
 
     // Get the metadata from buffer
     std::shared_ptr<void> metadata = mxpiMetadataManager.GetMetadata(dataSource_);
     auto textInfoList = std::static_pointer_cast<MxTools::MxpiTextsInfoList>(metadata);
+    if (!textInfoList) {
+        LogError << "metadata is nullptr.";
+        return APP_ERR_COMM_FAILURE;
+    }
     std::vector<MxBase::TextsInfo> texts;
     int length = 0;
     Covert(textInfoList, texts);
@@ -370,7 +381,8 @@ std::string TextInfoPlugin::_clean_text(std::string text)
     std::string output;
     int len = 0;
     char* char_array = new char[text.length() + 1];
-    strcpy(char_array, text.c_str());
+    std::copy(text.begin(), text.end(), char_array);
+    char_array[text.length()] = '\0';
     while (char_array[len] != '\0')
     {
         int cp = int(char_array[len]);
@@ -398,7 +410,8 @@ vector<std::string> TextInfoPlugin::_run_split_on_punc(std::string text)
     }
     int len_char_array = text.length();
     char* char_array = new char[text.length() + 1];
-    strcpy(char_array, text.c_str());
+    std::copy(text.begin(), text.end(), char_array);
+    char_array[text.length()] = '\0';
     int i = 0;
     bool start_new_word = true;
     vector<vector<char>> output;
@@ -484,7 +497,8 @@ std::vector<std::string> TextInfoPlugin::tokenize2(std::string& text)
         int len_char_array = token.length();
 
         char* char_array = new char[token.length() + 1];
-        strcpy(char_array, token.c_str());
+        std::copy(token.begin(), token.end(), char_array);
+        char_array[token.length()] = '\0';
         if (len_char_array > max_input_chars_per_word_)
         {
             output_tokens.push_back(unk_token_);

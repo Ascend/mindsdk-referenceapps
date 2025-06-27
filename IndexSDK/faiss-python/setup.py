@@ -39,7 +39,6 @@ setup(
     version='1.0.0',
     description='A library for efficient similarity search and clustering of dense vectors',
     long_description=DESCRIPTION,
-    url='https://www.huawei.com',
     author='Huawei',
     author_email='',
     license='MIT',

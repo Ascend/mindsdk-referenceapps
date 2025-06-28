@@ -220,9 +220,15 @@ bool CaptionGenManager::_loadMapBin(const std::string &filePath, cv::Mat &map, F
         LogError << "_loadMapBin can not open the file " << filePath << ".";
         return false;
     }
-    fseek(fpr, 0, SEEK_END);
+    if (fseek(fpr, 0, SEEK_END) !=0) {
+        LogError << "_loadMapBin can not seek file " << filePath << ".";
+        return false;
+    }
     long fileSize = ftell(fpr);
-    fseek(fpr, 0, SEEK_SET);
+    if (fseek(fpr, 0, SEEK_SET) !=0) {
+        LogError << "_loadMapBin can not seek file " << filePath << ".";
+        return false;
+    }
     if (fileSize < vocabImageRows * imageCols || fileSize > MAX_FILE_SIZE){
         LogError << "Map bin file size invalid!";
         return false;

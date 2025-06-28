@@ -36,7 +36,7 @@ static const FontFile timesNewRoman = {"times", "60px"};
 static const FontFile simsun = {"simsun", "60px"};
 FontFile FONT_LIST[] = {timesNewRoman, simsun};
 int FONT_NUMBER = sizeof(FONT_LIST) / sizeof(FONT_LIST[0]);
-const long MAX_FILE_SIZE = 1024 * 1024 * 1024 // 1G
+const long MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1G
 
 CaptionGenManager::CaptionGenManager()
 {
@@ -229,13 +229,13 @@ bool CaptionGenManager::_loadMapBin(const std::string &filePath, cv::Mat &map, F
         LogError << "_loadMapBin can not seek file " << filePath << ".";
         return false;
     }
+    int channels = 1;
+    int type = 0;
+    int vocabImageRows = singleFont.wordHeight * singleFont.wordNum;
     if (fileSize < vocabImageRows * imageCols || fileSize > MAX_FILE_SIZE){
         LogError << "Map bin file size invalid!";
         return false;
     } 
-    int channels = 1;
-    int type = 0;
-    int vocabImageRows = singleFont.wordHeight * singleFont.wordNum;
     map = cv::Mat::zeros(vocabImageRows, imageCols, type);
     auto *pData = (uchar *) map.data;
     for (int i = 0; i < vocabImageRows * imageCols; i++) {

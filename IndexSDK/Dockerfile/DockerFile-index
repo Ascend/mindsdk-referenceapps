@@ -1,0 +1,123 @@
+FROM ubuntu:18.04
+WORKDIR /tmp
+ARG ARCH=aarch64
+ARG PLATFORM=310P
+RUN chmod 777 /tmp
+# 系统包 + Pip3.9
+RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak && \
+    sed -i "s@http://.*archive.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
+    sed -i "s@http://.*security.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list
+RUN apt update && \
+    apt install --no-install-recommends ca-certificates -y && \
+    apt install --no-install-recommends wget vim dos2unix net-tools ssh lsof sshpass -y && \
+    apt install --no-install-recommends curl gcc g++ make pkg-config unzip autoconf autoconf -y && \
+    apt install --no-install-recommends libblas3 liblapack3 gfortran libxml2 -y && \
+    apt install --no-install-recommends pciutils liblapack-dev libblas-dev libffi-dev libssl-dev -y && \
+    apt install --no-install-recommends zlib1g-dev xz-utils libgmpxx4ldbl -y && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+# 安装Python
+RUN wget https://repo.huaweicloud.com/python/3.9.11/Python-3.9.11.tar.xz && \
+    tar -xf Python-3.9.11.tar.xz && \
+    cd Python-3.9.11 && \
+    mkdir build && cd build && \
+    ../configure --enable-shared --prefix=/usr/local/python3.9.11 && \
+    make -j && make install && \
+    cd .. && rm -rf build && cd .. && rm -rf Python-3.9.11 && rm -f Python-3.9.11.tar.xz && \
+    ldconfig
+ENV PATH=$PATH:/usr/local/python3.9.11/bin \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3.9.11/lib
+RUN mkdir ~/.pip && touch ~/.pip/pip.conf && \
+    echo "[global]" > ~/.pip/pip.conf && \
+    echo "trusted-host=mirrors.aliyun.com" >> ~/.pip/pip.conf && \
+    echo "index-url=http://mirrors.aliyun.com/pypi/simple" >> ~/.pip/pip.conf && \
+    echo "timeout=200" >> ~/.pip/pip.conf
+# python包
+RUN pip3.9 install -U pip && \
+    pip3.9 install numpy && \
+    pip3.9 install decorator && \
+    pip3.9 install sympy==1.4 && \
+    pip3.9 install cffi==1.12.3 && \
+    pip3.9 install pyyaml && \
+    pip3.9 install pathlib2 && \
+    pip3.9 install protobuf && \
+    pip3.9 install scipy && \
+    pip3.9 install requests && \
+    pip3.9 install attrs && \
+    pip3.9 install psutil && \
+    rm -rf /root/.cache/pip
+
+# 安装cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0.tar.gz && \
+    tar xf cmake-3.24.0.tar.gz && cd cmake-3.24.0 && ./configure --prefix=/usr && \
+    make -j && make -j install && cd .. && rm -rf cmake-3.24.0*
+
+RUN wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz -O OpenBLAS-0.3.10.tar.gz && \
+    tar -xf OpenBLAS-0.3.10.tar.gz && \
+    cd OpenBLAS-0.3.10 && \
+    make FC=gfortran USE_OPENMP=1 -j && \
+    make install && \
+    ln -s /opt/OpenBLAS/lib/libopenblas.so /usr/lib/libopenblas.so && \
+    cd .. && rm -f OpenBLAS-0.3.10.tar.gz && rm -rf OpenBLAS-0.3.10
+
+ARG install_path=/usr/local/faiss/faiss1.10.0
+RUN wget https://github.com/facebookresearch/faiss/archive/v1.10.0.tar.gz -O faiss-1.10.0.tar.gz && \
+    tar -xf faiss-1.10.0.tar.gz && cd faiss-1.10.0/faiss && \
+    sed -i "131 i virtual void search_with_filter (idx_t n, const float *x, idx_t k, float *distances, idx_t *labels, const void *mask = nullptr) const {}" Index.h && \
+    sed -i "38 i template <typename IndexT> IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids): index (index), own_fields (false) {this->is_trained = index->is_trained; this->metric_type = index->metric_type; this->verbose = index->verbose; this->d = index->d; id_map = ids;}" IndexIDMap.cpp && \
+    sed -i "29 i explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids); " IndexIDMap.h &&\
+    sed -i "199 i utils/sorting.h" CMakeLists.txt &&\
+    cd .. && \
+    cmake -B build . -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${install_path} && \
+    cd build && make -j && make install && \
+    cd ../.. && rm -f v1.10.0.tar.gz && rm -rf faiss-1.10.0
+
+RUN sed -i '$a\export LD_LIBRARY_PATH=/usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' ~/.bashrc
+
+RUN wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \
+    cp release-1.8.1.tar.gz /tmp/googletest-release-1.8.1.tar.gz && \
+    tar xf release-1.8.1.tar.gz && cd googletest-release-1.8.1 && \
+    cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local/gtest . && make -j && make install && \
+    cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
+
+# 清理临时目录
+RUN rm -rf ./*
+
+ARG BASE_VERSION:v1.0
+ARG BASE=ascendbase-infer:$BASE_VERSION
+ARG CHIP=all
+WORKDIR /tmp
+ARG ASCEND_BASE=/home/HwHiAiUser/Ascend
+ARG TOOLKIT_PKG=Ascend-cann-toolkit*_linux-${ARCH}.run
+ARG TOOLKIT_PATH=$ASCEND_BASE/ascend-toolkit/latest
+
+RUN groupadd HwHiAiUser && useradd -g HwHiAiUser -d /home/HwHiAiUser -m HwHiAiUser -s /bin/bash
+COPY --chown=HwHiAiUser:HwHiAiUser $TOOLKIT_PKG ./
+USER HwHiAiUser:HwHiAiUser
+RUN chmod +x $TOOLKIT_PKG && \
+    ./$TOOLKIT_PKG --quiet --full --install-path=$ASCEND_BASE --install-for-all && \
+    rm -f $TOOLKIT_PKG
+
+ENV GLOG_v=2
+ENV LD_LIBRARY_PATH=$TOOLKIT_PATH/runtime/lib64:$LD_LIBRARY_PATH
+ENV TBE_IMPL_PATH=$TOOLKIT_PATH/opp/op_impl/built-in/ai_core/tbe
+ENV PATH=$TOOLKIT_PATH/atc/ccec_compiler/bin:$TOOLKIT_PATH/atc/bin:$PATH
+ENV ASCEND_OPP_PATH=$TOOLKIT_PATH/opp
+ENV ASCEND_AICPU_PATH=$TOOLKIT_PATH
+ENV PYTHONPATH=$TBE_IMPL_PATH:$PYTHONPATH
+
+COPY --chown=HwHiAiUser:HwHiAiUser ./Ascend-mindxsdk-mxindex*_linux-${ARCH}.run ./
+RUN bash Ascend-mindxsdk-mxindex*_linux-${ARCH}.run --quiet --install --install-path=/home/HwHiAiUser/Ascend/ --platform=${PLATFORM}
+ENV MX_INDEX_MODELPATH=/home/HwHiAiUser/Ascend/modelpath
+RUN cd /home/HwHiAiUser/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
+ENV ASCEND_HOME=/home/HwHiAiUser/Ascend/
+
+USER root
+RUN rm -rf ./*
+
+USER HwHiAiUser:HwHiAiUser
+RUN touch /home/HwHiAiUser/.vimrc && \
+    echo 'set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936' >> /home/HwHiAiUser/.vimrc && \
+    sed -i '$a\set termencoding=utf-8' /home/HwHiAiUser/.vimrc && \
+    sed -i '$a\set encoding=utf-8' /home/HwHiAiUser/.vimrc
+
+WORKDIR /home/HwHiAiUser

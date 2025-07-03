@@ -91,6 +91,7 @@ ARG TOOLKIT_PKG=Ascend-cann-toolkit*_linux-${ARCH}.run
 ARG TOOLKIT_PATH=$ASCEND_BASE/ascend-toolkit/latest
 
 RUN groupadd HwHiAiUser && useradd -g HwHiAiUser -d /home/HwHiAiUser -m HwHiAiUser -s /bin/bash
+COPY --chown=HwHiAiUser:HwHiAiUser ./driver $ASCEND_BASE/driver
 COPY --chown=HwHiAiUser:HwHiAiUser $TOOLKIT_PKG ./
 USER HwHiAiUser:HwHiAiUser
 RUN chmod +x $TOOLKIT_PKG && \
@@ -110,6 +111,14 @@ RUN bash Ascend-mindxsdk-mxindex*_linux-${ARCH}.run --quiet --install --install-
 ENV MX_INDEX_MODELPATH=/home/HwHiAiUser/Ascend/modelpath
 RUN cd /home/HwHiAiUser/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
 ENV ASCEND_HOME=/home/HwHiAiUser/Ascend/
+
+RUN sed -i '$a\source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh' /home/HwHiAiUser/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/host/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/opt/OpenBLAS/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/driver/lib64/driver' /home/HwHiAiUser/.bashrc
+
+RUN pip3 install numpy==1.26.4
 
 USER root
 RUN rm -rf ./*

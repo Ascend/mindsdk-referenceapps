@@ -45,30 +45,6 @@ Yolov7PostProcess &Yolov7PostProcess::operator = (const Yolov7PostProcess &other
     return *this;
 }
 
-APP_ERROR Yolov7PostProcess::Init(const std::map<std::string, std::shared_ptr<void>> &postConfig)
-{
-    LogDebug << "Start to Init Yolov7PostProcess. ";
-    APP_ERROR ret = ObjectPostProcessBase::Init(postConfig);
-    if (ret != APP_ERR_OK) {
-        LogError << GetError(ret) << "Fail to superInit in ObjectPostProcessorBase";
-        return ret;
-    }
-    ret = configData_.GetFileValue<float>("OBJECTNESS_THRESH", objectnessThresh_, 0.0f, 1.0f);
-    if (ret != APP_ERR_OK) {
-        LogWarn << GetError(ret) << "Fail to read OBJECTNESS_THRESH from config, default is :" << objectnessThresh_;
-    }
-    ret = configData_.GetFileValue<float>("IOU_THRESH", iouThresh_, 0.0f, 1.0f);
-    if (ret != APP_ERR_OK) {
-        LogWarn << GetError(ret) << "Fail to read IOU_THRESH from config, default is :" << iouThresh_;
-    }
-    ret = configData_.GetFileValue<int>("PADDING_TYPE", paddingType_, 0, 1);
-    if (ret != APP_ERR_OK) {
-        LogWarn << GetError(ret) << "Fail to read PADDING_TYPE from config, default is :" << paddingType_;
-    }
-    LogDebug << "End to Init Yolov7PostProcess. ";
-    return APP_ERR_OK;
-}
-
 APP_ERROR Yolov7PostProcess::Init(const std::map<std::string, std::string> &postConfig)
 {
     LogDebug << "Start to Init Yolov7PostProcess. ";

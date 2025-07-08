@@ -26,4 +26,5 @@ target_link_libraries(sample
     mxbase
     yolov7postprocess
     opencv_world
+    cpprest
 )

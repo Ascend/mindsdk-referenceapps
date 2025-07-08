@@ -33,7 +33,6 @@ public:
 
     Yolov7PostProcess &operator=(const Yolov7PostProcess &other);
 
-    SDK_DEPRECATED_FOR() APP_ERROR Init(const std::map<std::string, std::shared_ptr<void>> &postConfig) override;
     APP_ERROR Init(const std::map<std::string, std::string> &postConfig) override;
 
     APP_ERROR DeInit() override;

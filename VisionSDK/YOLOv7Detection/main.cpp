@@ -29,7 +29,7 @@
 #include "MxBase/MemoryHelper/MemoryHelper.h"
 #include "MxBase/DeviceManager/DeviceManager.h"
 #include "MxBase/Log/Log.h"
-#include "Yolov7PostProcess.h"
+#include "plugin/Yolov7PostProcess.h"
 
 using namespace MxBase;
 using namespace std;
@@ -144,6 +144,7 @@ APP_ERROR PaddingProcess(ImageProcessor &imageProcessor, std::pair<int, int> res
             LogError << "Failed to mallloc and copy dvpp memory.";
             return APP_ERR_ACL_BAD_COPY;
         }
+        std::shared_ptr<uint8_t> pastedData((uint8_t*)resHostData.ptrData, resHostData.free);
         cv::Mat resizedHost(resizeImage.GetSize().height, resizeImage.GetSize().width, OPENCV_8UC3,
             resHostData.ptrData);
         cv::Rect roi = cv::Rect(0, 0, resizedWidth, resizedHeight);
@@ -449,6 +450,9 @@ int main(int argc, char *argv[])
                 usage();
                 return 0;
             case '?':
+                usage();
+                return 0;
+            default:
                 usage();
                 return 0;
         }

@@ -1,25 +1,24 @@
 # YOLOv7 模型推理参考样例
+
 ## 1. 介绍
+
+### 1.1 简介
 
 YOLOv7 目标检测后处理插件基于 Vision SDK 开发，对图片中的不同类目标进行检测。输入一幅图像，可以检测得到图像中大部分类别目标的位置。本方案基于 pytorch 版本原始 yolo7x.pt 模型所转换的 om 模型进行目标检测，默认模型包含 80 个目标类。
 
-### 1.1 支持的产品
+### 1.2 支持的产品
 
-本项目以昇腾310及310P芯片卡为主要的硬件平台。
-
-
-### 1.2 支持的版本
-
-支持的SDK版本为 5.0.RC1, CANN 版本为 6.0.RC1。
+本项目支持Atlas 300I pro、 Atlas 300V pro。
 
 
-### 1.3 软件方案介绍 
+### 1.3 支持的版本
 
-封装yolov7后处理方法到后处理插件中，通过编译yolov7postprocessor插件so, 将该插件应用到pipeline或者v2接口进行后处理计算。
+本样例配套的Vision SDK版本、CANN版本、Driver/Firmware版本如下所示：
 
-#### 1.3.1 业务流程加图像预处理方案
-
-Pytorch框架对yolov7模型推理时，前处理方案包括解码为BGR->等比缩放->中心补边->转换为RGB->标准化，main.cpp中通过在310P场景下通过dvpp及opencv对应方法进行了相应的处理，标准化的步骤在aipp配置项中完成。                           
+| Vision SDK版本  | CANN版本  | Driver/Firmware版本  |
+| --------- | ------------------ | -------------- | 
+| 5.0.1   | 7.0.1.3   |  23.0.5  |
+                          
 
 ### 1.4 代码目录结构与说明
 
@@ -45,12 +44,11 @@ Pytorch框架对yolov7模型推理时，前处理方案包括解码为BGR->等�
 ```
 
 注：yolov7.cfg中新增了一个配置项PADDING_TYPE用于区分补边的情况，若采用dvpp补边则填写0，采用opencv补边则填写1，默认为1。    
-SampleYuv.pipeline中resize插件需要选用双线性插值的方式，需要根据310和310P环境填写interpolation的参数。310上需要设置"interpolation"为"1"。
+SampleYuv.pipeline中resize插件需要选用双线性插值的方式，需要根据Atlas 300I pro、 Atlas 300V pro填写interpolation的参数。
 
 
-## 2 环境依赖
+## 2 设置环境变量
 
-推荐系统为ubuntu 18.04，芯片环境310P：
 
 在编译运行项目前，需要设置环境变量：
 
@@ -73,13 +71,15 @@ SDK-path: Vision SDK 安装路径
 ascend-toolkit-path: CANN 安装路径。
 ```   
 
-## 3. 模型转换    
+## 3. 准备模型    
+
+**步骤1：** 模型下载。
 
 关键依赖版本说明    
 PyTorch >=1.8.0    
 
-请参考[链接](https://gitee.com/ascend/modelzoo-GPL/tree/master/built-in/ACL_Pytorch/Yolov7_for_Pytorch)对模型进行下载和转换为om。   
-注意：由于main.cpp样例在310P环境下解码后的图片为BGR格式，因此使用aipp转换至om时，请将上述链接中的教程中 4. 使用aipp预处理 aipp_op中的rbuv_swap_switch项设置为true。
+请参考[链接](https://gitee.com/ascend/modelzoo-GPL/tree/master/built-in/ACL_Pytorch/Yolov7_for_Pytorch)下载模型并转换为ONNX模型，并使用下方提供的命令转换为OM模型。   
+注意：由于main.cpp样例在Atlas 300I pro、 Atlas 300V pro下解码后的图片为BGR格式，因此使用aipp转换至om时，请将上述链接中的教程中的 4. 使用aipp预处理 aipp_op中的rbuv_swap_switch项设置为true。
 转换完成后，将该模型放到model路径下。  
 
 转换为BGR输入参考
@@ -129,6 +129,7 @@ aipp_op {
     var_reci_chn_1: 0.0039215686274509803921568627451
     var_reci_chn_2: 0.0039215686274509803921568627451
 }
+
 ```
 atc转换模型命令参考
 ```
@@ -146,12 +147,13 @@ atc --framework=5 --model=${onnx_model} --output={output_name} --input_format=NC
 
 **步骤1**   
 编译后处理插件so：  
-后处理插件编译步骤参考《Vision SDK用户指南》中 深入开发->推理模型后处理开发介绍->新框架模型后处理->编译，其中"samplepostprocess"和"SamplePostProcess.cpp"分别代表生成的后处理动态库名和生成后处理的目标文件，对应到yolov7则yolov7postprocess和Yolov7PostProcess.cpp，
+进入plugin目录中，请创建文件夹build
+
 
 注意：  
 修改CMakeLists.txt中 ```set(PLUGIN_NAME "samplepostprocess")``` 一行中插件名称，为 ```set(PLUGIN_NAME "yolov7postprocess")```    
 修改CMakeLists.txt中 ```add_library(${TARGET_LIBRARY} SHARED SamplePostProcess.cpp)``` 一行中cpp文件名称，为 ```add_library(${TARGET_LIBRARY} SHARED Yolov7PostProcess.cpp)```   
-生成的so会在make install时被安装到${MX_SDK_HOME}/lib/modelpostprocessors/下，请确保该so文件权限为440。   
+生成的so请移动至${MX_SDK_HOME}/lib/modelpostprocessors/下，请确保该so文件权限为440。   
 
 **步骤2**    
 放入待测图片。将一张图片放项目根路径下，命名为 test.jpg。   

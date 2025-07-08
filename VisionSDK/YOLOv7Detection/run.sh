@@ -1,4 +1,18 @@
 #!/bin/bash
+cd plugin
+rm -fr build
+mkdir -p build
+cd build
+cmake ..
+make -j || {
+    ret=$?
+    echo "Failed to build."
+    exit ${ret}
+}
+make install
+cd ..
+cd ..
+
 rm -fr build
 mkdir -p build
 cd build

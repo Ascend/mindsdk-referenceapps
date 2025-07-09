@@ -8,6 +8,7 @@ import re
 import shutil
 from http import HTTPStatus
 from typing import Optional, List
+from pathlib import Path
 
 import docx
 import fitz
@@ -18,7 +19,6 @@ from fastapi import FastAPI, UploadFile
 from langchain_openai import ChatOpenAI
 from loguru import logger
 from openai import OpenAI
-from pathlib import Path
 from pydantic import BaseModel
 from pymilvus import MilvusClient
 from starlette.responses import JSONResponse
@@ -43,7 +43,8 @@ upload_file_dir = os.environ.get("UPLOAD_FILE_DIR", "/home/data")
 images_store_dir = os.environ.get("IMG_STORE_DIR", "/home/images")
 os.mkdir(upload_file_dir) if not os.path.exists(upload_file_dir) else None
 
-img_to_text_prompt = '''Given an image containing a table or figure, please provide a structured and detailed description in chinese with two levels of granularity:
+img_to_text_prompt = '''Given an image containing a table or figure, please provide a structured and detailed
+description in chinese with two levels of granularity:
 
   Coarse-grained Description:
   - Summarize the overall content and purpose of the image.
@@ -53,11 +54,13 @@ img_to_text_prompt = '''Given an image containing a table or figure, please prov
   Fine-grained Description:
   - Describe the specific details present in the image.
   - For tables: List the column and row headers, units, and any notable values, patterns, or anomalies.
-  - For figures (e.g., plots, charts): Explain the axes, data series, legends, and any significant trends, outliers, or data points.
+  - For figures (e.g., plots, charts): Explain the axes, data series, legends, and any significant trends, outliers,
+  or data points.
   - Note any labels, captions, or annotations included in the image.
   - Highlight specific examples or noteworthy details.
 
-  Deliver the description in a clear, organized, and reader-friendly manner, using bullet points or paragraphs as appropriate, answer in chinese'''
+  Deliver the description in a clear, organized, and reader-friendly manner, using bullet points or paragraphs
+  as appropriate, answer in chinese'''
 
 text_infer_prompt = '''
 You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:
@@ -590,7 +593,7 @@ async def deletefile(file: DeleteFileParam):
         shutil.rmtree(os.path.join(images_store_dir, file.file_name))
 
     except Exception as e:
-        print(f"delete file [{file.file_name}] failed: {e}")
+        logger.error(f"delete file [{file.file_name}] failed: {e}")
         return JSONResponse(content=f"delete file [{file.file_name}] failed: {e}")
 
     return JSONResponse(content=f"delete file [{file.file_name}] successfully")

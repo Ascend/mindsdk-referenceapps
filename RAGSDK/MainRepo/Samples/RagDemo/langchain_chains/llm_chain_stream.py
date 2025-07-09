@@ -52,8 +52,28 @@ class StreamingLLMCallbackHandler(BaseCallbackHandler):
             except Exception as e:
                 logger.error(f"Exception:{e}")
 
+class LLMInfo:
+    def __init__(self, base_url, model_name, handler, ssl, ca_path, cert_path, key_path, pwd):
+        self.base_url = base_url
+        self.model_name = model_name
+        self.handler = handler
+        self.ssl = ssl
+        self.ca_path = ca_path
+        self.cert_path = cert_path
+        self.key_path = key_path
+        self.pwd = pwd
 
-def create_llm_chain(base_url, model_name, handler, ssl, ca_path, cert_path, key_path, pwd):
+
+def create_llm_chain(params: LLMInfo):
+    base_url = params.base_url
+    model_name = params.model_name
+    handler = params.handler
+    ssl = params.ssl
+    ca_path = params.ca_path
+    cert_path = params.cert_path
+    key_path = params.key_path
+    pwd = params.pwd
+
     if not ssl:
         http_client = httpx.Client()
     else:
@@ -114,8 +134,7 @@ if __name__ == "__main__":
 
     def get_llm_result(handler):
         for chunk in handler.stream_gen:
-            sys.stdout.write(chunk)
-            sys.stdout.flush()
+            logger.info(chunk)
 
 
     thread = threading.Thread(target=get_llm_result, args=(streaming_llm_callback_handler,))

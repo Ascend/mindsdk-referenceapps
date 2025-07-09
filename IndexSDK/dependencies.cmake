@@ -1,5 +1,5 @@
 SET(MXINDEX_HOME /home/work/FeatureRetrieval/mxIndex/             CACHE STRING "")
-SET(FAISS_HOME /usr/local/faiss/faiss1.7.4  CACHE STRING "")
+SET(FAISS_HOME /usr/local/faiss/faiss1.10.0  CACHE STRING "")
 SET(GTEST_HOME /usr/local/gtest             CACHE STRING "")
 SET(DRIVER_HOME /usr/local/Ascend/driver/   CACHE STRING "")
 SET(OPENBLAS /opt/OpenBLAS/                 CACHE STRING "")

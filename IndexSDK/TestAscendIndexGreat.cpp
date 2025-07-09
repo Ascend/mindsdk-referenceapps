@@ -75,49 +75,54 @@ TEST(TestAscendIndexGreat, Test_KMode_QPS)
     int convPQM = 128;
     int evaluationType = 0;
     int expandingFactor = 300;
-    AscendIndexGreatInitParams kParams(dim, degree, convPQM, evaluationType, expandingFactor);
-    auto index = std::make_shared<AscendIndexGreat>(kParams);
-
-    // 生成base底库数据
-    std::vector<float> data(ntotal);
-    Generate(ntotal * dim, data);
-    // 标准化
-    Norm(data, dim);
-
-    // add底库
-    index->Add(data);
-    size_t total = 0;
-    index->GetNTotal(total);
-    EXPECT_EQ(total, ntotal);
+    try {
+        AscendIndexGreatInitParams kParams(dim, degree, convPQM, evaluationType, expandingFactor);
+        auto index = std::make_shared<AscendIndexGreat>(kParams);
     
-    // search检索
-    int topk = 100;
-    int warmUpTimes = 10;
-    size_t nq = 9000;
-    std::vector<float> distsWarm(nq * topk);
-    std::vector<int64_t> labelsWarm(nq * topk);
-
-    // warm up
-    for (int i = 0; i < warmUpTimes; ++i) {
-        AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
-        index->Search(searchParamsWarm);
-    }
-
-    // search
-    std::vector<size_t> searchNum = {1, 8, 16, 32, 64, 128, 256};
-    int loopTimes = 100;
-    for (auto n : searchNum) {
-        std::vector<float> queryData(data.begin(), data.begin() + n * dim);
-        std::vector<float> dists(n * topk, 0);
-        std::vector<int64_t> labels(n * topk, 0);
-        double ts = GetMillisecs();
-        for (int i = 0; i < loopTimes; ++i) {
-            AscendIndexSearchParams searchParams {n, queryData, topk, dists, labels};
-            index->Search(searchParams);
+        // 生成base底库数据
+        std::vector<float> data(ntotal);
+        Generate(ntotal * dim, data);
+        // 标准化
+        Norm(data, dim);
+    
+        // add底库
+        index->Add(data);
+        size_t total = 0;
+        index->GetNTotal(total);
+        EXPECT_EQ(total, ntotal);
+        
+        // search检索
+        int topk = 100;
+        int warmUpTimes = 10;
+        size_t nq = 9000;
+        std::vector<float> distsWarm(nq * topk);
+        std::vector<int64_t> labelsWarm(nq * topk);
+    
+        // warm up
+        for (int i = 0; i < warmUpTimes; ++i) {
+            AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
+            index->Search(searchParamsWarm);
         }
-        double te = GetMillisecs();
-        printf("base:%zu, dim:%d, search num:%zu, QPS:%.4f\n",
-            ntotal, dim, n, MILLI_SECOND * n * loopTimes / (te - ts));
+    
+        // search
+        std::vector<size_t> searchNum = {1, 8, 16, 32, 64, 128, 256};
+        int loopTimes = 100;
+        for (auto n : searchNum) {
+            std::vector<float> queryData(data.begin(), data.begin() + n * dim);
+            std::vector<float> dists(n * topk, 0);
+            std::vector<int64_t> labels(n * topk, 0);
+            double ts = GetMillisecs();
+            for (int i = 0; i < loopTimes; ++i) {
+                AscendIndexSearchParams searchParams {n, queryData, topk, dists, labels};
+                index->Search(searchParams);
+            }
+            double te = GetMillisecs();
+            printf("base:%zu, dim:%d, search num:%zu, QPS:%.4f\n",
+                ntotal, dim, n, MILLI_SECOND * n * loopTimes / (te - ts));
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
 }
 
@@ -141,55 +146,60 @@ TEST(TestAscendIndexGreat, Test_AKMode_QPS)
     int nlist = 1024;
     int subSpaceDim = 128;
     std::vector<int> devices = {0};
-    AscendIndexGreatInitParams kParams(dim, degree, convPQM, evaluationType, expandingFactor);
-    AscendIndexVstarInitParams aParams(dim, subSpaceDim, nlist, devices);
-    auto index = std::make_shared<AscendIndexGreat>(aParams, kParams);
-
-    // 添加码本 需要提前生成好码本路径
-    std::string codebook = "/home/work/codebook_1024_1024_128/codebook_l1_l2.bin";
-    auto ret = index->AddCodeBooks(codebook);
-    EXPECT_EQ(ret, 0);
-
-    // 生成base底库数据
-    std::vector<float> data(ntotal);
-    Generate(ntotal * dim, data);
-    // 标准化
-    Norm(data, dim);
-
-    // add底库
-    index->Add(data);
-    size_t total = 0;
-    index->GetNTotal(total);
-    EXPECT_EQ(total, ntotal);
+    try {
+        AscendIndexGreatInitParams kParams(dim, degree, convPQM, evaluationType, expandingFactor);
+        AscendIndexVstarInitParams aParams(dim, subSpaceDim, nlist, devices);
+        auto index = std::make_shared<AscendIndexGreat>(aParams, kParams);
     
-    // search检索
-    int topk = 100;
-    int warmUpTimes = 10;
-    size_t nq = 9000;
-    std::vector<float> distsWarm(nq * topk);
-    std::vector<int64_t> labelsWarm(nq * topk);
-
-    // warm up
-    for (int i = 0; i < warmUpTimes; ++i) {
-        AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
-        index->Search(searchParamsWarm);
-    }
-
-    // search
-    std::vector<size_t> searchNum = {1, 8, 16, 32, 64, 128, 256};
-    int loopTimes = 100;
-    for (auto n : searchNum) {
-        std::vector<float> queryData(data.begin(), data.begin() + n * dim);
-        std::vector<float> dists(n * topk, 0);
-        std::vector<int64_t> labels(n * topk, 0);
-        double ts = GetMillisecs();
-        for (int i = 0; i < loopTimes; ++i) {
-            AscendIndexSearchParams searchParams {n, queryData, topk, dists, labels};
-            index->Search(searchParams);
+        // 添加码本 需要提前生成好码本路径
+        std::string codebook = "/home/work/codebook_1024_1024_128/codebook_l1_l2.bin";
+        auto ret = index->AddCodeBooks(codebook);
+        EXPECT_EQ(ret, 0);
+    
+        // 生成base底库数据
+        std::vector<float> data(ntotal);
+        Generate(ntotal * dim, data);
+        // 标准化
+        Norm(data, dim);
+    
+        // add底库
+        index->Add(data);
+        size_t total = 0;
+        index->GetNTotal(total);
+        EXPECT_EQ(total, ntotal);
+        
+        // search检索
+        int topk = 100;
+        int warmUpTimes = 10;
+        size_t nq = 9000;
+        std::vector<float> distsWarm(nq * topk);
+        std::vector<int64_t> labelsWarm(nq * topk);
+    
+        // warm up
+        for (int i = 0; i < warmUpTimes; ++i) {
+            AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
+            index->Search(searchParamsWarm);
         }
-        double te = GetMillisecs();
-        printf("base:%zu, dim:%d, search num:%zu, QPS:%.4f\n",
-            ntotal, dim, n, MILLI_SECOND * n * loopTimes / (te - ts));
+    
+        // search
+        std::vector<size_t> searchNum = {1, 8, 16, 32, 64, 128, 256};
+        int loopTimes = 100;
+        for (auto n : searchNum) {
+            std::vector<float> queryData(data.begin(), data.begin() + n * dim);
+            std::vector<float> dists(n * topk, 0);
+            std::vector<int64_t> labels(n * topk, 0);
+            double ts = GetMillisecs();
+            for (int i = 0; i < loopTimes; ++i) {
+                AscendIndexSearchParams searchParams {n, queryData, topk, dists, labels};
+                index->Search(searchParams);
+            }
+            double te = GetMillisecs();
+            printf("base:%zu, dim:%d, search num:%zu, QPS:%.4f\n",
+                ntotal, dim, n, MILLI_SECOND * n * loopTimes / (te - ts));
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
 }
 } // namespace

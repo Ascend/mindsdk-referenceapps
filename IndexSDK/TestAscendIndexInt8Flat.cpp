@@ -119,36 +119,40 @@ TEST(TestAscendIndexInt8Flat, QPS)
     int dim = 512;
     size_t ntotal = 7000000;
     std::vector<int> searchNum = { 8, 16, 32, 64, 128, 256 };
-
-    faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_L2, conf);
-    index.verbose = true;
-
-    printf("generate data\n");
-    std::vector<int8_t> base(ntotal * dim);
-    GenerateCodes(base.data(), ntotal, dim);
-
-    printf("add data\n");
-    index.add(ntotal, base.data());
-    int warmUpTimes = 10 ;
-    std::vector<float> distw(127 * 10, 0);
-    std::vector<faiss::idx_t> labelw(127 * 10, 0);
-    for (int i = 0; i < warmUpTimes; i++) {
-        index.search(127, base.data(), 10, distw.data(), labelw.data());
-    }
+    try {
+        faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
+        faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_L2, conf);
+        index.verbose = true;
     
-    for (size_t n = 0; n < searchNum.size(); n++) {
-        int k = 128;
-        int loopTimes = 10;
-        std::vector<float> dist(searchNum[n] * k, 0);
-        std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
-        double ts = GetMillisecs();
-        for (int l = 0; l < loopTimes; l++) {
-            index.search(searchNum[n], base.data(), k, dist.data(), label.data());
+        printf("generate data\n");
+        std::vector<int8_t> base(ntotal * dim);
+        GenerateCodes(base.data(), ntotal, dim);
+    
+        printf("add data\n");
+        index.add(ntotal, base.data());
+        int warmUpTimes = 10 ;
+        std::vector<float> distw(127 * 10, 0);
+        std::vector<faiss::idx_t> labelw(127 * 10, 0);
+        for (int i = 0; i < warmUpTimes; i++) {
+            index.search(127, base.data(), 10, distw.data(), labelw.data());
         }
-        double te = GetMillisecs();
-        printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
-            MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        
+        for (size_t n = 0; n < searchNum.size(); n++) {
+            int k = 128;
+            int loopTimes = 10;
+            std::vector<float> dist(searchNum[n] * k, 0);
+            std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
+            double ts = GetMillisecs();
+            for (int l = 0; l < loopTimes; l++) {
+                index.search(searchNum[n], base.data(), k, dist.data(), label.data());
+            }
+            double te = GetMillisecs();
+            printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
+                MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
 }
 
@@ -157,49 +161,53 @@ TEST(TestAscendIndexInt8Flat, Acc)
     size_t dim = 512;
     size_t ntotal = 1000000;
     int searchNum = 8;
-
-    faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_L2, conf);
-    index.verbose = true;
-
-    printf("generate data\n");
-    std::vector<int8_t> base(ntotal * dim);
-    GenerateCodes(base.data(), ntotal, dim);
-
-    printf("add data\n");
-    index.add(ntotal, base.data());
-    printf("add finish\n");
-    size_t k = 100;
-    std::vector<float> dist(searchNum * k, 0);
-    std::vector<faiss::idx_t> label(searchNum * k, 0);
-    printf("search start\n");
-    index.search(searchNum, base.data(), k, dist.data(), label.data());
-    printf("search finish\n");
-    printf("search compute distance by cpu\n");
-    std::vector<faiss::idx_t> gtLabel;
-    for (int q = 0; q < searchNum; q++) {
-        std::vector<float> cpuDist(ntotal, 0);
-            for (size_t i = 0; i < ntotal; i++) {
-                int sum = 0;
-                for (size_t d = 0; d < dim; d++) {
-                    sum += (base[q * dim +d] - base[i * dim + d]) * (base[q * dim +d] - base[i * dim + d]);
+    try {
+        faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
+        faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_L2, conf);
+        index.verbose = true;
+    
+        printf("generate data\n");
+        std::vector<int8_t> base(ntotal * dim);
+        GenerateCodes(base.data(), ntotal, dim);
+    
+        printf("add data\n");
+        index.add(ntotal, base.data());
+        printf("add finish\n");
+        size_t k = 100;
+        std::vector<float> dist(searchNum * k, 0);
+        std::vector<faiss::idx_t> label(searchNum * k, 0);
+        printf("search start\n");
+        index.search(searchNum, base.data(), k, dist.data(), label.data());
+        printf("search finish\n");
+        printf("search compute distance by cpu\n");
+        std::vector<faiss::idx_t> gtLabel;
+        for (int q = 0; q < searchNum; q++) {
+            std::vector<float> cpuDist(ntotal, 0);
+                for (size_t i = 0; i < ntotal; i++) {
+                    int sum = 0;
+                    for (size_t d = 0; d < dim; d++) {
+                        sum += (base[q * dim +d] - base[i * dim + d]) * (base[q * dim +d] - base[i * dim + d]);
+                    }
+                    cpuDist[i] = sqrt(sum);
                 }
-                cpuDist[i] = sqrt(sum);
-            }
-            std::vector<std::pair<int, float>> cpuRes;
-            for (size_t i = 0; i < ntotal; ++i) {
-                cpuRes.push_back({i, cpuDist[i]});
-            }
-            std::sort(cpuRes.begin(), cpuRes.end(),
-                [](std::pair<int, float> a, std::pair<int, float> b) -> bool {return a.second < b.second;});
-            for (size_t d = 0; d < k; ++d) {
-                gtLabel.push_back(cpuRes[d].first);
-            }
+                std::vector<std::pair<int, float>> cpuRes;
+                for (size_t i = 0; i < ntotal; ++i) {
+                    cpuRes.push_back({i, cpuDist[i]});
+                }
+                std::sort(cpuRes.begin(), cpuRes.end(),
+                    [](std::pair<int, float> a, std::pair<int, float> b) -> bool {return a.second < b.second;});
+                for (size_t d = 0; d < k; ++d) {
+                    gtLabel.push_back(cpuRes[d].first);
+                }
+        }
+        recallMap top = calRecall(label, gtLabel.data(), searchNum);
+    
+        printf("Recall %zu: @1 = %.2f, @10 = %.2f, @100 = %.2f \n", k,
+            top[RECMAP_KEY_1], top[RECMAP_KEY_10], top[RECMAP_KEY_100]);
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
-    recallMap top = calRecall(label, gtLabel.data(), searchNum);
-
-    printf("Recall %zu: @1 = %.2f, @10 = %.2f, @100 = %.2f \n", k,
-        top[RECMAP_KEY_1], top[RECMAP_KEY_10], top[RECMAP_KEY_100]);
 }
 
 } // namespace

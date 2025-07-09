@@ -137,49 +137,53 @@ TEST(TestAscendIndexFlat, QPS)
     int dim = 512;
     size_t ntotal = 7000000;
     size_t maxSize = ntotal * dim;
-
-    std::vector<float> data(maxSize);
-    for (size_t i = 0; i < maxSize; i++) {
-        data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
-    }
-
-    faiss::ascend::AscendIndexFlatConfig conf({ 0 }, 1024 * 1024 * 1500);
-    faiss::ascend::AscendIndexFlat index(dim, faiss::METRIC_L2, conf);
-    index.verbose = true;
+    try {
+        std::vector<float> data(maxSize);
+        for (size_t i = 0; i < maxSize; i++) {
+            data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
+        }
     
-    // 标准化
-    Norm(data.data(), ntotal, dim);
-
-    index.add(ntotal, data.data());
-    {
-        size_t getTotal = 0;
-        for (size_t i = 0; i < conf.deviceList.size(); i++) {
-            size_t tmpTotal = index.getBaseSize(conf.deviceList[i]);
-            getTotal += tmpTotal;
-        }
-        EXPECT_EQ(getTotal, ntotal);
-    }
+        faiss::ascend::AscendIndexFlatConfig conf({ 0 }, 1024 * 1024 * 1500);
+        faiss::ascend::AscendIndexFlat index(dim, faiss::METRIC_L2, conf);
+        index.verbose = true;
+        
+        // 标准化
+        Norm(data.data(), ntotal, dim);
     
-        int warmUpTimes = 10 ;
-        std::vector<float> distw(127 * 10, 0);
-        std::vector<faiss::idx_t> labelw(127 * 10, 0);
-        for (int i = 0; i < warmUpTimes; i++) {
-            index.search(127, data.data(), 10, distw.data(), labelw.data());
+        index.add(ntotal, data.data());
+        {
+            size_t getTotal = 0;
+            for (size_t i = 0; i < conf.deviceList.size(); i++) {
+                size_t tmpTotal = index.getBaseSize(conf.deviceList[i]);
+                getTotal += tmpTotal;
+            }
+            EXPECT_EQ(getTotal, ntotal);
         }
-
-    std::vector<int> searchNum = {  8, 16, 32, 64, 128, 256};
-    for (size_t n = 0; n < searchNum.size(); n++) {
-        int k = 10;
-        int loopTimes = 100;
-        std::vector<float> dist(searchNum[n] * k, 0);
-        std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
-        double ts = GetMillisecs();
-        for (int i = 0; i < loopTimes; i++) {
-            index.search(searchNum[n], data.data(), k, dist.data(), label.data());
+        
+            int warmUpTimes = 10 ;
+            std::vector<float> distw(127 * 10, 0);
+            std::vector<faiss::idx_t> labelw(127 * 10, 0);
+            for (int i = 0; i < warmUpTimes; i++) {
+                index.search(127, data.data(), 10, distw.data(), labelw.data());
+            }
+    
+        std::vector<int> searchNum = {  8, 16, 32, 64, 128, 256};
+        for (size_t n = 0; n < searchNum.size(); n++) {
+            int k = 10;
+            int loopTimes = 100;
+            std::vector<float> dist(searchNum[n] * k, 0);
+            std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
+            double ts = GetMillisecs();
+            for (int i = 0; i < loopTimes; i++) {
+                index.search(searchNum[n], data.data(), k, dist.data(), label.data());
+            }
+            double te = GetMillisecs();
+            printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
+                MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
         }
-        double te = GetMillisecs();
-        printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
-            MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
 }
 
@@ -192,32 +196,37 @@ TEST(TestAscendIndexFlat, Acc) {
     int queryNum = 8;
     printf("generate data\n");
     std::vector<float> data(maxSize);
-    for (size_t i = 0; i < maxSize; i++) {
-        data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
-    }
-    faiss::ascend::AscendIndexFlatConfig conf({ 0 }, 1024 * 1024 * 1500);
-    faiss::ascend::AscendIndexFlat index(dim, faiss::METRIC_L2, conf);
-    index.verbose = true;
+    try {
+        for (size_t i = 0; i < maxSize; i++) {
+            data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
+        }
+        faiss::ascend::AscendIndexFlatConfig conf({ 0 }, 1024 * 1024 * 1500);
+        faiss::ascend::AscendIndexFlat index(dim, faiss::METRIC_L2, conf);
+        index.verbose = true;
+        
+        // 标准化
+        Norm(data.data(), ntotal, dim);
     
-    // 标准化
-    Norm(data.data(), ntotal, dim);
-
-    index.add(ntotal, data.data());
-    printf("start search by npu\n");
-    std::vector<float> dist(queryNum * topk, 0);
-    std::vector<faiss::idx_t> label(queryNum * topk, 0);
-    index.search(queryNum, data.data(), topk, dist.data(), label.data());
-
-    printf("start add by cpu\n");
-    faiss::IndexFlat faissIndex(dim, type);
-    faissIndex.add(ntotal, data.data());
-    std::vector<float> cpuDist(queryNum * topk, 0);
-    std::vector<faiss::idx_t> cpuLabel(queryNum * topk, 0);
-    printf("start search by cpu\n");
-    faissIndex.search(queryNum, data.data(), topk, cpuDist.data(), cpuLabel.data());
-    recallMap top = calRecall(label, cpuLabel.data(), queryNum);
-    printf("Recall %d: @1 = %.2f, @10 = %.2f, @100 = %.2f \n", topk,
-        top[RECMAP_KEY_1], top[RECMAP_KEY_10], top[RECMAP_KEY_100]);
+        index.add(ntotal, data.data());
+        printf("start search by npu\n");
+        std::vector<float> dist(queryNum * topk, 0);
+        std::vector<faiss::idx_t> label(queryNum * topk, 0);
+        index.search(queryNum, data.data(), topk, dist.data(), label.data());
+    
+        printf("start add by cpu\n");
+        faiss::IndexFlat faissIndex(dim, type);
+        faissIndex.add(ntotal, data.data());
+        std::vector<float> cpuDist(queryNum * topk, 0);
+        std::vector<faiss::idx_t> cpuLabel(queryNum * topk, 0);
+        printf("start search by cpu\n");
+        faissIndex.search(queryNum, data.data(), topk, cpuDist.data(), cpuLabel.data());
+        recallMap top = calRecall(label, cpuLabel.data(), queryNum);
+        printf("Recall %d: @1 = %.2f, @10 = %.2f, @100 = %.2f \n", topk,
+            top[RECMAP_KEY_1], top[RECMAP_KEY_10], top[RECMAP_KEY_100]);
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
+    }
 }
 
 

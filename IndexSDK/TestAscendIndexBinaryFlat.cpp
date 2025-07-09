@@ -16,6 +16,7 @@
 
 // 需要生成aicpu算子+binary_flat算子(-d 512)
 
+#include <exception>
 #include <random>
 #include <sys/time.h>
 #include <gtest/gtest.h>
@@ -61,28 +62,32 @@ TEST(TestAscendIndexBinaryFlat, QPS)
     printf("generate data\n");
     std::vector<uint8_t> base(ntotal * index.code_size, 0);
     FeatureGenerator(base);
-
-    printf("add data\n");
-    index.add(ntotal, base.data());
-    int warmUpTimes = 10 ;
-    std::vector<int32_t> distw(127 * 10, 0);
-    std::vector<faiss::idx_t> labelw(127 * 10, 0);
-    for (int i = 0; i < warmUpTimes; i++) {
-        index.search(127, base.data(), 10, distw.data(), labelw.data());
-    }
-    
-    for (size_t n = 0; n < searchNum.size(); n++) {
-        int k = 128;
-        int loopTimes = 10;
-        std::vector<int32_t> dist(searchNum[n] * k, 0);
-        std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
-        double ts = GetMillisecs();
-        for (int l = 0; l < loopTimes; l++) {
-            index.search(searchNum[n], base.data(), k, dist.data(), label.data());
+    try {
+        printf("add data\n");
+        index.add(ntotal, base.data());
+        int warmUpTimes = 10 ;
+        std::vector<int32_t> distw(127 * 10, 0);
+        std::vector<faiss::idx_t> labelw(127 * 10, 0);
+        for (int i = 0; i < warmUpTimes; i++) {
+            index.search(127, base.data(), 10, distw.data(), labelw.data());
         }
-        double te = GetMillisecs();
-        printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
-            MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        
+        for (size_t n = 0; n < searchNum.size(); n++) {
+            int k = 128;
+            int loopTimes = 10;
+            std::vector<int32_t> dist(searchNum[n] * k, 0);
+            std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
+            double ts = GetMillisecs();
+            for (int l = 0; l < loopTimes; l++) {
+                index.search(searchNum[n], base.data(), k, dist.data(), label.data());
+            }
+            double te = GetMillisecs();
+            printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
+                MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
 }
 } // namespace

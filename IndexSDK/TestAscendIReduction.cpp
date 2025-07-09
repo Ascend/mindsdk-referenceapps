@@ -25,29 +25,30 @@
 // 请在第36行导入对应的NN降维模型
 
 namespace {
-    int g_dimin = 256;
-    int g_dimout = 64;
-    std::string g_nnom;
-    std::string g_metricTypeName = "INNER_PRODUCT";
-    faiss::MetricType MetricType = g_metricTypeName == "L2" ? faiss::METRIC_L2 : faiss::METRIC_INNER_PRODUCT;
+int g_dimin = 256;
+int g_dimout = 64;
+std::string g_nnom;
+std::string g_metricTypeName = "INNER_PRODUCT";
+faiss::MetricType MetricType = g_metricTypeName == "L2" ? faiss::METRIC_L2 : faiss::METRIC_INNER_PRODUCT;
 
-    void ReadModel()
-    {
-        std::string modelPath = "./"; // 导入对应的NN降维模型
-        std::ifstream istrm(modelPath.c_str(), std::ios::binary);
-        std::stringstream buffer;
-        buffer << istrm.rdbuf();
-        g_nnom = buffer.str();
-        istrm.close();
-    }
+void ReadModel()
+{
+    std::string modelPath = "./"; // 导入对应的NN降维模型
+    std::ifstream istrm(modelPath.c_str(), std::ios::binary);
+    std::stringstream buffer;
+    buffer << istrm.rdbuf();
+    g_nnom = buffer.str();
+    istrm.close();
+}
 
-    void TestSampleNNInfer()
-    {
-        std::vector<int> deviceList = { 0 };
-        int ntotal = 100000;
-        int maxSize = ntotal * g_dimin;
-        std::vector<float> data(maxSize);
-        std::vector<float> outputData(ntotal * g_dimout);
+void TestSampleNNInfer()
+{
+    std::vector<int> deviceList = { 0 };
+    int ntotal = 100000;
+    int maxSize = ntotal * g_dimin;
+    std::vector<float> data(maxSize);
+    std::vector<float> outputData(ntotal * g_dimout);
+    try{
         for (int i = 0; i < maxSize; i++) {
             data[i] = drand48();
         }
@@ -60,42 +61,52 @@ namespace {
             reinterpret_cast<char*>(outputData.data()));
 
         std::cout << "TestSampleNNInfer end " << std::endl;
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
+}
 
-    void TestSampleNNReduce()
-    {
-        std::vector<int> deviceList = { 0 };
-        int ntotal = 100000;
-        int maxSize = ntotal * g_dimin;
-        std::vector<float> data(maxSize);
-        std::vector<float> outputData(ntotal * g_dimout);
+void TestSampleNNReduce()
+{
+    std::vector<int> deviceList = { 0 };
+    int ntotal = 100000;
+    int maxSize = ntotal * g_dimin;
+    std::vector<float> data(maxSize);
+    std::vector<float> outputData(ntotal * g_dimout);
+    try {
         for (int i = 0; i < maxSize; i++) {
             data[i] = drand48();
         }
-
+    
         std::cout << "TestSampleNNReduce start " << std::endl;
         ReadModel();
-
+    
         faiss::ascend::ReductionConfig reductionConfig(deviceList, g_nnom.data(), g_nnom.size());
         std::string method = "NN";
         faiss::ascend::IReduction* reduction = CreateReduction(method, reductionConfig);
         reduction->train(ntotal, data.data());
         reduction->reduce(ntotal, data.data(), outputData.data());
-
+    
         std::cout << "TestSampleNNReduce end " << std::endl;
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
+}
 
-    void TestSamplePcarReduce()
-    {
-        std::vector<int> deviceList = { 0 };
-        int ntotal = 100000;
-        int maxSize = ntotal * g_dimin;
-        std::vector<float> data(maxSize);
-        std::vector<float> outputData(ntotal * g_dimout);
+void TestSamplePcarReduce()
+{
+    std::vector<int> deviceList = { 0 };
+    int ntotal = 100000;
+    int maxSize = ntotal * g_dimin;
+    std::vector<float> data(maxSize);
+    std::vector<float> outputData(ntotal * g_dimout);
+    try {
         for (int i = 0; i < maxSize; i++) {
             data[i] = drand48();
         }
-
+    
         std::cout << "TestSamplePcarReduce start " << std::endl;
         // Pcar IReduction
         faiss::ascend::ReductionConfig reductionConfig(g_dimin, g_dimout, 0, false);
@@ -103,9 +114,13 @@ namespace {
         faiss::ascend::IReduction* reduction = CreateReduction(method, reductionConfig);
         reduction->train(ntotal, data.data());
         reduction->reduce(ntotal, data.data(), outputData.data());
-
+    
         std::cout << "TestSamplePcarReduce end " << std::endl;
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+        throw std::exception();
     }
+}
 }
 
 int main(int argc, char **argv)

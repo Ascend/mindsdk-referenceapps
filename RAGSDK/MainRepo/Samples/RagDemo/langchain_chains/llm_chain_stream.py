@@ -52,6 +52,7 @@ class StreamingLLMCallbackHandler(BaseCallbackHandler):
             except Exception as e:
                 logger.error(f"Exception:{e}")
 
+
 class LLMInfo:
     def __init__(self, base_url, model_name, handler, ssl, ca_path, cert_path, key_path, pwd):
         self.base_url = base_url

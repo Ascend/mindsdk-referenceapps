@@ -68,14 +68,14 @@ ENV LD_LIBRARY_PATH=${OPENBLAS_INSTALL_PATH}/lib:$LD_LIBRARY_PATH
 
 
 # 安装faiss
-ARG FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
+ARG FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.10.0
 RUN . /tmp/urls.conf && wget $FAISS_URL && \
-    tar -xf v1.7.4.tar.gz && \
-    cd faiss-1.7.4/faiss && \
-    sed -i "131 i virtual void search_with_filter (idx_t n, const float *x, idx_t k, float *distances, idx_t *lables, const void *mask = nullptr) const{}" Index.h && \
-    sed -i "38 i template <typename IndexT> IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids): index (index), own_fields (false) { this->is_trained = index->is_trained; this->metric_type = index->metric_type; this->verbose = index->verbose; this->d = index->d; id_map = ids; }" IndexIDMap.cpp && \
-    sed -i "29 i explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids);" IndexIDMap.h && \
-    sed -i "199 i utils/sorting.h" CMakeLists.txt && \
+    tar -xf v1.10.0.tar.gz && \
+    cd faiss-1.10.0/faiss && \
+    sed -i "149 i virtual void search_with_filter (idx_t n, const float *x, idx_t k, float *distances, idx_t *lables, const void *mask = nullptr) const{}" Index.h && \
+    sed -i "49 i template <typename IndexT> IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids): index (index), own_fields (false) { this->is_trained = index->is_trained; this->metric_type = index->metric_type; this->verbose = index->verbose; this->d = index->d; id_map = ids; }" IndexIDMap.cpp && \
+    sed -i "30 i explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids);" IndexIDMap.h && \
+    sed -i "217 i utils/sorting.h" CMakeLists.txt && \
     cd .. && cmake -B build . -DFAISS_ENABLE_GPU=OFF -DPython_EXECUTABLE=/usr/bin/python3 -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${FAISS_INSTALL_PATH} && \
     make -C build -j faiss && \
     make -C build -j swigfaiss && \
@@ -83,7 +83,7 @@ RUN . /tmp/urls.conf && wget $FAISS_URL && \
     cd ../../.. && make -C build install && \
     cd build/faiss/python && cp libfaiss_python_callbacks.so ${FAISS_INSTALL_PATH}/lib && \
     cd dist && \
-    pip3 install faiss-1.7.4*.whl
+    pip3 install faiss-1.10.0*.whl
 
 # 安装index
 COPY ./package/Ascend-mindxsdk-mxindex*_linux-${ARCH}.run /tmp/
@@ -92,7 +92,7 @@ ENV MX_INDEX_MODELPATH=/home/ascend/modelpath
 RUN cd /usr/local/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p /home/ascend/modelpath
 
 # 安装ascendfaiss，到这里了
-ARG FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.7.4
+ARG FAISS_INSTALL_PATH=/usr/local/faiss/faiss1.10.0
 ARG MXINDEX_INSTALL_PATH=/usr/local/Ascend/mxIndex
 ARG PYTHON_HEADER=/usr/include/${PYTHON_VERSION}/
 ARG ASCEND_INSTALL_PATH=/usr/local/Ascend/ascend-toolkit/latest
@@ -111,7 +111,7 @@ RUN unzip master.zip && \
     cd dist && pip3 install ascendfaiss*.whl
 
     
-#ENV LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.7.4/lib:$LD_LIBRARY_PATH
+#ENV LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH
 
 
 # 安装toch_npu
@@ -134,7 +134,7 @@ RUN sed -i '$a\export PYTHONPATH=/root/.local/lib/$PYTHON_VERSION/site-packages/
     sed -i '$a\source /usr/local/Ascend/ascend-toolkit/set_env.sh' /root/.bashrc && \
     sed -i '$a\source /usr/local/Ascend/nnal/atb/set_env.sh' /root/.bashrc && \
 	sed -i '$a\source /usr/local/Ascend/mxRag/script/set_env.sh' /root/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.7.4/lib:$LD_LIBRARY_PATH' /root/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' /root/.bashrc && \
     sed -i '$a\export PATH=/usr/local/bin:$PATH' /root/.bashrc && \
     sed -i 's/$PYTHON_VERSION/'"$PYTHON_VERSION"'/g' /root/.bashrc && \
 	sed -i '$a\export LOGURU_FORMAT="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message!r}</level>"' /root/.bashrc
@@ -156,7 +156,7 @@ RUN sed -i '$a\export PYTHONPATH=/home/HwHiAiUser/.local/lib/$PYTHON_VERSION/sit
     sed -i '$a\source /usr/local/Ascend/ascend-toolkit/set_env.sh' /home/HwHiAiUser/.bashrc && \
     sed -i '$a\source /usr/local/Ascend/nnal/atb/set_env.sh' /home/HwHiAiUser/.bashrc && \
 	sed -i '$a\source /home/HwHiAiUser/Ascend/mxRag/script/set_env.sh' /home/HwHiAiUser/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.7.4/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/lib:/usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
 	sed -i '$a\export PATH=/usr/local/bin:$PATH' /home/HwHiAiUser/.bashrc && \
     sed -i 's/$PYTHON_VERSION/'"$PYTHON_VERSION"'/g' /home/HwHiAiUser/.bashrc && \
 	sed -i '$a\export LOGURU_FORMAT="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message!r}</level>"' /home/HwHiAiUser/.bashrc

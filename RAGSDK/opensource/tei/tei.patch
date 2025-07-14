@@ -1,0 +1,744 @@
+diff --git a/backends/grpc-client/src/client.rs b/backends/grpc-client/src/client.rs
+index 2f4868f..98e9cca 100644
+--- a/backends/grpc-client/src/client.rs
++++ b/backends/grpc-client/src/client.rs
+@@ -18,7 +18,7 @@ impl Client {
+         let channel = Channel::builder(uri).connect().await?;
+ 
+         Ok(Self {
+-            stub: EmbeddingServiceClient::new(channel),
++            stub: EmbeddingServiceClient::new(channel).max_decoding_message_size(100*1024*1024).max_encoding_message_size(100*1024*1024),
+         })
+     }
+ 
+@@ -32,7 +32,7 @@ impl Client {
+             .await?;
+ 
+         Ok(Self {
+-            stub: EmbeddingServiceClient::new(channel),
++            stub: EmbeddingServiceClient::new(channel).max_decoding_message_size(100*1024*1024).max_encoding_message_size(100*1024*1024),
+         })
+     }
+ 
+@@ -65,6 +65,27 @@ impl Client {
+         Ok(response.embeddings)
+     }
+ 
++    #[instrument(skip_all)]
++    pub async fn embed_all(
++        &mut self,
++        input_ids: Vec<u32>,
++        token_type_ids: Vec<u32>,
++        position_ids: Vec<u32>,
++        cu_seq_lengths: Vec<u32>,
++        max_length: u32,
++    ) -> Result<Vec<TokenEmbedding>> {
++        let request = tonic::Request::new(EmbedRequest {
++            input_ids,
++            token_type_ids,
++            position_ids,
++            max_length,
++            cu_seq_lengths,
++        })
++        .inject_context();
++        let response = self.stub.embed_all(request).await?.into_inner();
++        Ok(response.allembeddings)
++    }
++    
+     #[instrument(skip_all)]
+     pub async fn predict(
+         &mut self,
+diff --git a/backends/proto/embed.proto b/backends/proto/embed.proto
+index 036f3db..71d72e0 100644
+--- a/backends/proto/embed.proto
++++ b/backends/proto/embed.proto
+@@ -5,6 +5,7 @@ package embedding.v1;
+ service EmbeddingService {
+     /// Decode token for a list of prefilled batches
+     rpc Embed (EmbedRequest) returns (EmbedResponse);
++    rpc Embed_all (EmbedRequest) returns (RawEmbedResponse);
+     /// Health check
+     rpc Health (HealthRequest) returns (HealthResponse);
+     /// Predict
+@@ -38,3 +39,11 @@ message Score {
+ message PredictResponse {
+     repeated Score scores = 1;
+ }
++
++message TokenEmbedding {
++    repeated Embedding embeddings = 1;
++}
++
++message RawEmbedResponse {
++    repeated TokenEmbedding allembeddings = 1;
++}
+\ No newline at end of file
+diff --git a/backends/python/server/Makefile b/backends/python/server/Makefile
+index 6402d63..8ad0028 100644
+--- a/backends/python/server/Makefile
++++ b/backends/python/server/Makefile
+@@ -1,9 +1,3 @@
+-include Makefile-flash-att
+-include Makefile-flash-att-v2
+-
+-unit-tests:
+-	pytest -s -vv -m "not private" tests
+-
+ gen-server:
+ 	# Compile protos
+ 	pip install grpcio-tools==1.62.2 mypy-protobuf==3.6.0 'types-protobuf' --no-cache-dir
+diff --git a/backends/python/server/pyproject.toml b/backends/python/server/pyproject.toml
+index 0654eb7..46c3ca2 100644
+--- a/backends/python/server/pyproject.toml
++++ b/backends/python/server/pyproject.toml
+@@ -29,9 +29,9 @@ grpcio-tools = "^1.51.1"
+ pytest = "^7.3.0"
+ 
+ [[tool.poetry.source]]
+-name = "pytorch-gpu-src"
+-url = "https://download.pytorch.org/whl/cu118"
+-priority = "explicit"
++name = "mirrors"
++url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
++priority = "default"
+ 
+ [tool.pytest.ini_options]
+ markers = ["private: marks tests as requiring an admin hf token (deselect with '-m \"not private\"')"]
+diff --git a/backends/python/server/requirements.txt b/backends/python/server/requirements.txt
+index 687ec10..79cee7a 100644
+--- a/backends/python/server/requirements.txt
++++ b/backends/python/server/requirements.txt
+@@ -6,10 +6,10 @@ deprecated==1.2.15 ; python_version >= "3.9" and python_version < "3.13"
+ filelock==3.16.1 ; python_version >= "3.9" and python_version < "3.13"
+ fsspec==2024.10.0 ; python_version >= "3.9" and python_version < "3.13"
+ googleapis-common-protos==1.66.0 ; python_version >= "3.9" and python_version < "3.13"
+-grpc-interceptor==0.15.4 ; python_version >= "3.9" and python_version < "3.13"
+-grpcio-reflection==1.62.3 ; python_version >= "3.9" and python_version < "3.13"
+-grpcio-status==1.62.3 ; python_version >= "3.9" and python_version < "3.13"
+-grpcio==1.68.0 ; python_version >= "3.9" and python_version < "3.13"
++grpc-interceptor==0.15.3 ; python_version >= "3.9" and python_version < "3.13"
++grpcio-reflection==1.58.0 ; python_version >= "3.9" and python_version < "3.13"
++grpcio-status==1.58.0 ; python_version >= "3.9" and python_version < "3.13"
++grpcio==1.58.0 ; python_version >= "3.9" and python_version < "3.13"
+ huggingface-hub==0.26.2 ; python_version >= "3.9" and python_version < "3.13"
+ idna==3.10 ; python_version >= "3.9" and python_version < "3.13"
+ importlib-metadata==7.1.0 ; python_version >= "3.9" and python_version < "3.13"
+@@ -19,7 +19,7 @@ loguru==0.6.0 ; python_version >= "3.9" and python_version < "3.13"
+ markupsafe==3.0.2 ; python_version >= "3.9" and python_version < "3.13"
+ mpmath==1.3.0 ; python_version >= "3.9" and python_version < "3.13"
+ networkx==3.2.1 ; python_version >= "3.9" and python_version < "3.13"
+-numpy==2.0.2 ; python_version >= "3.9" and python_version < "3.13"
++numpy==1.24.0 ; python_version >= "3.9" and python_version < "3.13"
+ nvidia-cublas-cu12==12.4.5.8 ; platform_system == "Linux" and platform_machine == "x86_64" and python_version >= "3.9" and python_version < "3.13"
+ nvidia-cuda-cupti-cu12==12.4.127 ; platform_system == "Linux" and platform_machine == "x86_64" and python_version >= "3.9" and python_version < "3.13"
+ nvidia-cuda-nvrtc-cu12==12.4.127 ; platform_system == "Linux" and platform_machine == "x86_64" and python_version >= "3.9" and python_version < "3.13"
+@@ -48,17 +48,17 @@ protobuf==4.25.5 ; python_version >= "3.9" and python_version < "3.13"
+ pyyaml==6.0.2 ; python_version >= "3.9" and python_version < "3.13"
+ regex==2024.11.6 ; python_version >= "3.9" and python_version < "3.13"
+ requests==2.32.3 ; python_version >= "3.9" and python_version < "3.13"
+-safetensors==0.4.5 ; python_version >= "3.9" and python_version < "3.13"
++safetensors==0.4.1 ; python_version >= "3.9" and python_version < "3.13"
+ scikit-learn==1.5.2 ; python_version >= "3.9" and python_version < "3.13"
+ scipy==1.13.1 ; python_version >= "3.9" and python_version < "3.13"
+-sentence-transformers==3.3.1 ; python_version >= "3.9" and python_version < "3.13"
++sentence-transformers==3.4.1 ; python_version >= "3.9" and python_version < "3.13"
+ setuptools==75.6.0 ; python_version >= "3.9" and python_version < "3.13"
+ sympy==1.13.1 ; python_version >= "3.9" and python_version < "3.13"
+ threadpoolctl==3.5.0 ; python_version >= "3.9" and python_version < "3.13"
+ tokenizers==0.20.3 ; python_version >= "3.9" and python_version < "3.13"
+-torch==2.5.1 ; python_version >= "3.9" and python_version < "3.13"
++torch==2.1.0 ; python_version >= "3.9" and python_version < "3.13"
+ tqdm==4.67.1 ; python_version >= "3.9" and python_version < "3.13"
+-transformers==4.46.3 ; python_version >= "3.9" and python_version < "3.13"
++transformers==4.51.3 ; python_version >= "3.9" and python_version < "3.13"
+ triton==3.1.0 ; platform_system == "Linux" and platform_machine == "x86_64" and python_version < "3.13" and python_version >= "3.9"
+ typer==0.6.1 ; python_version >= "3.9" and python_version < "3.13"
+ typing-extensions==4.12.2 ; python_version >= "3.9" and python_version < "3.13"
+diff --git a/backends/python/server/text_embeddings_server/models/__init__.py b/backends/python/server/text_embeddings_server/models/__init__.py
+index 9f56065..0e47676 100644
+--- a/backends/python/server/text_embeddings_server/models/__init__.py
++++ b/backends/python/server/text_embeddings_server/models/__init__.py
+@@ -13,22 +13,16 @@ from text_embeddings_server.models.default_model import DefaultModel
+ from text_embeddings_server.models.classification_model import ClassificationModel
+ from text_embeddings_server.utils.device import get_device, use_ipex
+ 
++from modeling_bert_adapter import enable_bert_speed
++from modeling_roberta_adapter import enable_roberta_speed
++from modeling_xlm_roberta_adapter import enable_xlm_roberta_speed
++
+ __all__ = ["Model"]
+ 
+ TRUST_REMOTE_CODE = os.getenv("TRUST_REMOTE_CODE", "false").lower() in ["true", "1"]
+ # Disable gradients
+ torch.set_grad_enabled(False)
+ 
+-FLASH_ATTENTION = True
+-try:
+-    from text_embeddings_server.models.flash_bert import FlashBert
+-except ImportError as e:
+-    logger.warning(f"Could not import Flash Attention enabled models: {e}")
+-    FLASH_ATTENTION = False
+-
+-if FLASH_ATTENTION:
+-    __all__.append(FlashBert)
+-
+ 
+ def get_model(model_path: Path, dtype: Optional[str], pool: str):
+     if dtype == "float32":
+@@ -40,11 +34,20 @@ def get_model(model_path: Path, dtype: Optional[str], pool: str):
+     else:
+         raise RuntimeError(f"Unknown dtype {dtype}")
+ 
++
++    enable_boost = os.getenv("ENABLE_BOOST", "False")
++    if enable_boost not in("True", "False"):
++        raise ValueError("env ENABLE_BOOST value must be True or False")
++    
++    if enable_boost == "True":
++        dtype == torch.float16
++        
+     device = get_device()
+     logger.info(f"backend device: {device}")
+ 
+     config = AutoConfig.from_pretrained(model_path, trust_remote_code=TRUST_REMOTE_CODE)
+-    if config.model_type == "bert":
++    if config.model_type == "bert" or config.model_type == "qwen2" or config.model_type == "qwen3" or \
++        config.model_type == "roberta" or config.model_type == "xlm-roberta" :
+         config: BertConfig
+         if (
+             use_ipex()
+diff --git a/backends/python/server/text_embeddings_server/models/default_model.py b/backends/python/server/text_embeddings_server/models/default_model.py
+index f5c569f..20c13b3 100644
+--- a/backends/python/server/text_embeddings_server/models/default_model.py
++++ b/backends/python/server/text_embeddings_server/models/default_model.py
+@@ -1,17 +1,24 @@
++import os
+ import inspect
+ import torch
+ 
+ from pathlib import Path
+ from typing import Type, List
+-from transformers import AutoModel
++from transformers import AutoModel, AutoConfig, AutoTokenizer
+ from opentelemetry import trace
++
++from collections import defaultdict
++import numpy as np
++from loguru import logger
++
+ from text_embeddings_server.models.pooling import DefaultPooling
+ 
+ from text_embeddings_server.models import Model
+-from text_embeddings_server.models.types import PaddedBatch, Embedding, Score
++from text_embeddings_server.models.types import PaddedBatch, Embedding, Score, TokenEmbedding
+ 
+ tracer = trace.get_tracer(__name__)
+ 
++IS_CAUSAL = os.getenv("IS_CAUSAL", "").lower()
+ 
+ class DefaultModel(Model):
+     def __init__(
+@@ -26,9 +33,11 @@ class DefaultModel(Model):
+             AutoModel.from_pretrained(model_path, trust_remote_code=trust_remote)
+             .to(dtype)
+             .to(device)
++            .eval()
+         )
+         self.hidden_size = model.config.hidden_size
+-        self.pooling = DefaultPooling(self.hidden_size, pooling_mode=pool)
++        
++        self.pool = pool
+ 
+         position_offset = 0
+         model_type = model.config.model_type
+@@ -50,6 +59,18 @@ class DefaultModel(Model):
+             is not None
+         )
+ 
++        if self.pool == "splade":
++            self.tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
++            self.config = AutoConfig.from_pretrained(model_path)
++            self.vocab_size = self.config.vocab_size
++        
++            self.sparse_linear = torch.nn.Linear(self.hidden_size, 1).to(device).to(dtype)
++            sparse_model_path = os.path.join(model_path, "sparse_linear.pt")
++            sparse_state_dict = torch.load(sparse_model_path, map_location="cpu", weights_only=True)
++            self.sparse_linear.load_state_dict(sparse_state_dict)
++        else:
++            self.pooling = DefaultPooling(self.hidden_size, pooling_mode=pool)
++                
+         super(DefaultModel, self).__init__(model=model, dtype=dtype, device=device)
+ 
+     @property
+@@ -63,19 +84,75 @@ class DefaultModel(Model):
+             kwargs["token_type_ids"] = batch.token_type_ids
+         if self.has_position_ids:
+             kwargs["position_ids"] = batch.position_ids
+-        output = self.model(**kwargs)
+ 
+-        embedding = self.pooling.forward(output, batch.attention_mask)
++        if self.pool == "splade":
++            return self._process_splade(batch, kwargs)
++        else:
++            return self._process_default(batch, kwargs)
+ 
++    def _process_splade(self, batch: PaddedBatch, kwargs: dict):
++        with torch.no_grad():
++            last_hidden_state = self.model(**kwargs, return_dict=True).last_hidden_state
++        sparse_vecs = torch.relu(self.sparse_linear(last_hidden_state))
++        token_weights = sparse_vecs.squeeze(-1)
++        unused_tokens = {self.tokenizer.cls_token_id, self.tokenizer.eos_token_id, self.tokenizer.pad_token_id,
++                         self.tokenizer.unk_token_id}
++        all_token_weights = torch.zeros((len(batch), self.vocab_size), dtype=token_weights.dtype, device=token_weights.device)
++        
++        for i in range(len(batch)):
++            all_token_weights[i, batch.input_ids[i]] = token_weights[i]
++        
++        all_token_weights[:, list(unused_tokens)] = 0
++        
++        embeddings = [
++            Embedding(
++                values=all_token_weights[i].detach().cpu().numpy().tolist()
++            )
++            for i in range(len(batch))
++        ]
++        
++        return embeddings
++    
++    def _process_default(self, batch: PaddedBatch, kwargs: dict):
++        if IS_CAUSAL in ["false", "0"]:
++            with torch.no_grad():
++                output = self.model(**kwargs, is_causal=False)
++        else:
++            with torch.no_grad():
++                output = self.model(**kwargs)
++            
++        embedding = self.pooling.forward(output, batch.attention_mask)
+         cpu_results = embedding.view(-1).tolist()
+-
++        
+         return [
+             Embedding(
+                 values=cpu_results[i * self.hidden_size : (i + 1) * self.hidden_size]
+             )
+             for i in range(len(batch))
+         ]
++    
++    @tracer.start_as_current_span("embed_all")
++    def embed_all(self, batch: PaddedBatch):
++        kwargs = {"input_ids": batch.input_ids, "attention_mask": batch.attention_mask}
++        if self.has_token_type_ids:
++            kwargs["token_type_ids"] = batch.token_type_ids
++        if self.has_position_ids:
++            kwargs["position_ids"] = batch.position_ids
++        output = self.model(**kwargs)
++        embedding = output[0].contiguous()
++        cpu_results = embedding.view(-1).tolist()
++        embedding_result=[]
++        for i in range(len(batch)):
++            embedding_tmp=[
++                Embedding(values=cpu_results[(j+i * batch.max_length) * self.hidden_size :
++                                             (j + 1 + i * batch.max_length) * self.hidden_size])
++                for j in range(batch.input_ids.size()[1])
++            ]
++            token_embeddings=TokenEmbedding(embeddings=embedding_tmp)
++            embedding_result.append(token_embeddings)
+ 
++        return embedding_result
++    
+     @tracer.start_as_current_span("predict")
+     def predict(self, batch: PaddedBatch) -> List[Score]:
+         pass
+diff --git a/backends/python/server/text_embeddings_server/models/pooling.py b/backends/python/server/text_embeddings_server/models/pooling.py
+index 43f77b1..69c69f9 100644
+--- a/backends/python/server/text_embeddings_server/models/pooling.py
++++ b/backends/python/server/text_embeddings_server/models/pooling.py
+@@ -25,7 +25,7 @@ class DefaultPooling(_Pooling):
+     def forward(self, model_output, attention_mask) -> Tensor:
+         pooling_features = {
+             "token_embeddings": model_output[0],
+-            "attention_mask": attention_mask,
++            "attention_mask": attention_mask.type(model_output[0].dtype),
+         }
+         return self.pooling.forward(pooling_features)["sentence_embedding"]
+ 
+diff --git a/backends/python/server/text_embeddings_server/models/types.py b/backends/python/server/text_embeddings_server/models/types.py
+index 4f2cfa4..fbd8c2d 100644
+--- a/backends/python/server/text_embeddings_server/models/types.py
++++ b/backends/python/server/text_embeddings_server/models/types.py
+@@ -7,7 +7,7 @@ from dataclasses import dataclass
+ from opentelemetry import trace
+ 
+ from text_embeddings_server.pb import embed_pb2
+-from text_embeddings_server.pb.embed_pb2 import Embedding, Score
++from text_embeddings_server.pb.embed_pb2 import Embedding, Score, TokenEmbedding
+ 
+ tracer = trace.get_tracer(__name__)
+ PAD_SEQUENCE_TO_MULTIPLE_OF = int(os.environ.get("PAD_SEQUENCE_TO_MULTIPLE_OF", 128))
+@@ -34,6 +34,7 @@ class PaddedBatch(Batch):
+     token_type_ids: torch.Tensor
+     position_ids: torch.Tensor
+     attention_mask: torch.Tensor
++    max_length: int
+ 
+     @classmethod
+     @tracer.start_as_current_span("from_pb")
+@@ -78,6 +79,7 @@ class PaddedBatch(Batch):
+             token_type_ids=all_tensors[1],
+             position_ids=all_tensors[2],
+             attention_mask=all_tensors[3],
++            max_length=max_length,
+         )
+ 
+     def __len__(self):
+diff --git a/backends/python/server/text_embeddings_server/server.py b/backends/python/server/text_embeddings_server/server.py
+index 646d79b..da8f6a1 100644
+--- a/backends/python/server/text_embeddings_server/server.py
++++ b/backends/python/server/text_embeddings_server/server.py
+@@ -1,5 +1,8 @@
+ import asyncio
+ import torch
++import torch_npu
++import os
++
+ from grpc import aio
+ from loguru import logger
+ 
+@@ -13,6 +16,9 @@ from text_embeddings_server.utils.tracing import UDSOpenTelemetryAioServerInterc
+ from text_embeddings_server.utils.interceptor import ExceptionInterceptor
+ 
+ 
++clean_npu_cache = os.getenv("CLEAN_NPU_CACHE", "False")
++
++
+ class EmbeddingService(embed_pb2_grpc.EmbeddingServiceServicer):
+     def __init__(self, model: Model):
+         self.model = model
+@@ -31,9 +37,22 @@ class EmbeddingService(embed_pb2_grpc.EmbeddingServiceServicer):
+         )
+ 
+         embeddings = self.model.embed(batch)
++        if clean_npu_cache == "True":
++            torch_npu.npu.empty_cache()
+ 
+         return embed_pb2.EmbedResponse(embeddings=embeddings)
+ 
++    async def Embed_all(self, request, context):
++        max_input_length = self.model.max_input_length
++        batch = self.model.batch_type.from_pb(request, self.model.device, max_input_length)
++
++        embeddings = self.model.embed_all(batch)
++        
++        if clean_npu_cache == "True":
++            torch_npu.npu.empty_cache()
++            
++        return embed_pb2.RawEmbedResponse(allembeddings=embeddings)
++    
+     async def Predict(self, request, context):
+         max_input_length = self.model.max_input_length
+         batch = self.model.batch_type.from_pb(
+@@ -42,6 +61,9 @@ class EmbeddingService(embed_pb2_grpc.EmbeddingServiceServicer):
+ 
+         scores = self.model.predict(batch)
+ 
++        if clean_npu_cache == "True":
++            torch_npu.npu.empty_cache()
++            
+         return embed_pb2.PredictResponse(scores=scores)
+ 
+ 
+@@ -67,6 +89,10 @@ def serve(
+             interceptors=[
+                 ExceptionInterceptor(),
+                 UDSOpenTelemetryAioServerInterceptor(),
++            ],
++            options = [
++                ('grpc_max_send_message_length', 100 * 1024 * 1024),
++                ('grpc_max_recieve_message_length', 100 * 1024 * 1024),
+             ]
+         )
+         embed_pb2_grpc.add_EmbeddingServiceServicer_to_server(
+diff --git a/backends/python/server/text_embeddings_server/utils/device.py b/backends/python/server/text_embeddings_server/utils/device.py
+index 3f3b04d..2168cf6 100644
+--- a/backends/python/server/text_embeddings_server/utils/device.py
++++ b/backends/python/server/text_embeddings_server/utils/device.py
+@@ -4,6 +4,7 @@ import importlib.metadata
+ import importlib.util
+ from packaging import version
+ import torch
++import torch_npu
+ import subprocess
+ 
+ ALLOW_REDUCED_PRECISION = os.getenv(
+@@ -54,11 +55,19 @@ def use_ipex() -> bool:
+     value = os.environ.get("USE_IPEX", "True").lower()
+     return value in ["true", "1"] and _is_ipex_available()
+ 
+-
++    
+ def get_device():
+     device = torch.device("cpu")
+     if torch.cuda.is_available():
+         device = torch.device("cuda")
++    elif torch.npu.is_available():
++        device = torch.device("npu")
++        torch.npu.set_compile_mode(jit_compile=False)
++        option = {"NPU_FUZZY_COMPILE_BLACKLIST": "ReduceProd"}
++        torch.npu.set_option(option)
++        deviceIdx = os.environ.get('TEI_NPU_DEVICE')
++        if deviceIdx != None and deviceIdx.isdigit() and int(deviceIdx) >= 0 and int(deviceIdx) <= 7:
++            torch.npu.set_device(torch.device(f"npu:{deviceIdx}"))
+     elif is_hpu():
+         import habana_frameworks.torch.core as htcore
+ 
+diff --git a/backends/python/src/lib.rs b/backends/python/src/lib.rs
+index 53255b0..4d24016 100644
+--- a/backends/python/src/lib.rs
++++ b/backends/python/src/lib.rs
+@@ -73,31 +73,53 @@ impl Backend for PythonBackend {
+     }
+ 
+     fn embed(&self, batch: Batch) -> Result<Embeddings, BackendError> {
+-        if !batch.raw_indices.is_empty() {
+-            return Err(BackendError::Inference(
+-                "raw embeddings are not supported for the Python backend.".to_string(),
+-            ));
+-        }
+         let batch_size = batch.len();
+ 
+-        let results = self
+-            .tokio_runtime
+-            .block_on(self.backend_client.clone().embed(
+-                batch.input_ids,
+-                batch.token_type_ids,
+-                batch.position_ids,
+-                batch.cumulative_seq_lengths,
+-                batch.max_length,
+-            ))
+-            .map_err(|err| BackendError::Inference(err.to_string()))?;
+-        let pooled_embeddings: Vec<Vec<f32>> = results.into_iter().map(|r| r.values).collect();
+-
+         let mut embeddings =
+             HashMap::with_capacity_and_hasher(batch_size, BuildNoHashHasher::default());
+-        for (i, e) in pooled_embeddings.into_iter().enumerate() {
+-            embeddings.insert(i, Embedding::Pooled(e));
+-        }
+ 
++        if !batch.pooled_indices.is_empty() {
++            let results = self
++                .tokio_runtime
++                .block_on(self.backend_client.clone().embed(
++                    batch.input_ids,
++                    batch.token_type_ids,
++                    batch.position_ids,
++                    batch.cumulative_seq_lengths,
++                    batch.max_length,
++                ))
++                .map_err(|err| BackendError::Inference(err.to_string()))?;
++
++            let pooled_embeddings: Vec<Vec<f32>> = results.into_iter().map(|r| r.values).collect();
++            for (i, e) in pooled_embeddings.into_iter().enumerate() {
++                embeddings.insert(i, Embedding::Pooled(e));
++            }
++        }
++        else if !batch.raw_indices.is_empty() {
++            let results = self
++                .tokio_runtime
++                .block_on(self.backend_client.clone().embed_all(
++                    batch.input_ids,
++                    batch.token_type_ids,
++                    batch.position_ids,
++                    batch.cumulative_seq_lengths,
++                    batch.max_length,
++                ))
++                .map_err(|err| BackendError::Inference(err.to_string()))?;
++            
++            let mut raw_embeddings = Vec::new();
++            for token_embedding in results {
++                let mut two_dim_list = Vec::new();
++                for embeddings in token_embedding.embeddings {
++                    let values = embeddings.values.clone();
++                    two_dim_list.push(values);
++                }
++                raw_embeddings.push(two_dim_list);
++            }
++            for (i, e) in raw_embeddings.into_iter().enumerate() {
++                embeddings.insert(i, Embedding::All(e));
++            }
++        }
+         Ok(embeddings)
+     }
+ 
+diff --git a/backends/src/dtype.rs b/backends/src/dtype.rs
+index 3b08e92..960148e 100644
+--- a/backends/src/dtype.rs
++++ b/backends/src/dtype.rs
+@@ -59,7 +59,7 @@ impl Default for DType {
+         }
+         #[cfg(feature = "python")]
+         {
+-            DType::Bfloat16
++            DType::Float16
+         }
+     }
+ }
+diff --git a/core/src/queue.rs b/core/src/queue.rs
+index 3fd8b77..61b38dc 100644
+--- a/core/src/queue.rs
++++ b/core/src/queue.rs
+@@ -153,6 +153,7 @@ fn queue_blocking_task(
+                     };
+ 
+                     if total_tokens > max_batch_tokens {
++                        tracing::info!("split new batch because cur up to max_batch_tokens:{max_batch_tokens:?}");
+                         entries.push_front(entry);
+                         break;
+                     }
+@@ -174,7 +175,8 @@ fn queue_blocking_task(
+ 
+                     entry_index += 1;
+ 
+-                    if Some(metadata.len()) == max_batch_requests {
++                    if Some(metadata.len()) == Some(capacity) {
++                        tracing::info!("split new batch because cur up to:{capacity:?}");
+                         break;
+                     }
+                 }
+@@ -183,6 +185,7 @@ fn queue_blocking_task(
+                 let next_batch = if metadata.is_empty() {
+                     None
+                 } else {
++                    tracing::info!("inference batch size is:{batch_size:?}");
+                     Some((
+                         metadata,
+                         Batch {
+diff --git a/router/src/http/server.rs b/router/src/http/server.rs
+index cadb6c1..1f0de1e 100644
+--- a/router/src/http/server.rs
++++ b/router/src/http/server.rs
+@@ -1785,8 +1785,7 @@ pub async fn run(
+         routes = routes.layer(axum::middleware::from_fn(auth));
+     }
+ 
+-    let app = Router::new()
+-        .merge(SwaggerUi::new("/docs").url("/api-doc/openapi.json", doc))
++    let mut app = Router::new()
+         .merge(routes)
+         .merge(public_routes)
+         .layer(Extension(infer))
+@@ -1796,6 +1795,14 @@ pub async fn run(
+         .layer(DefaultBodyLimit::max(payload_limit))
+         .layer(cors_layer);
+ 
++    if let Ok(swagger_ui) = std::env::var("ENABLE_SWAGGER_UI") {
++        tracing::info!("try to set swagger ui");
++        let _swagger_ui_on = String::from("true");
++            match swagger_ui.to_lowercase() {
++            _swagger_ui_on =>
++                app =app.merge(SwaggerUi::new("/docs").url("/api-doc/openapi.json", doc))
++            }
++        }
+     // Run server
+     let listener = tokio::net::TcpListener::bind(&addr)
+         .await
+diff --git a/router/src/lib.rs b/router/src/lib.rs
+index 49e0581..044eb21 100644
+--- a/router/src/lib.rs
++++ b/router/src/lib.rs
+@@ -63,6 +63,7 @@ pub async fn run(
+     api_key: Option<String>,
+     otlp_endpoint: Option<String>,
+     otlp_service_name: String,
++    prometheus_port: u16,
+     cors_allow_origin: Option<Vec<String>>,
+ ) -> Result<()> {
+     let model_id_path = Path::new(&model_id);
+@@ -250,8 +251,9 @@ pub async fn run(
+ 
+     if !backend.padded_model {
+         tracing::info!("Warming up model");
++        let max_batch_requests = Some(3);
+         backend
+-            .warmup(max_input_length, max_batch_tokens, max_batch_requests)
++            .warmup(4, 4, max_batch_requests)
+             .await
+             .context("Model backend is not healthy")?;
+     }
+@@ -314,7 +316,7 @@ pub async fn run(
+         }
+     };
+ 
+-    let prom_builder = prometheus::prometheus_builer(info.max_input_length)?;
++    let prom_builder = prometheus::prometheus_builer(addr, prometheus_port, info.max_input_length)?;
+ 
+     #[cfg(all(feature = "grpc", feature = "http"))]
+     compile_error!("Features `http` and `grpc` cannot be enabled at the same time.");
+@@ -363,7 +365,7 @@ fn get_backend_model_type(
+             continue;
+         }
+ 
+-        if Some(text_embeddings_backend::Pool::Splade) == pooling && arch.ends_with("MaskedLM") {
++        if Some(text_embeddings_backend::Pool::Splade) == pooling && (arch.ends_with("MaskedLM") || arch.ends_with("RobertaModel")) {
+             return Ok(text_embeddings_backend::ModelType::Embedding(
+                 text_embeddings_backend::Pool::Splade,
+             ));
+diff --git a/router/src/main.rs b/router/src/main.rs
+index e4a902d..7b152e4 100644
+--- a/router/src/main.rs
++++ b/router/src/main.rs
+@@ -48,7 +48,7 @@ struct Args {
+     /// The maximum amount of concurrent requests for this particular deployment.
+     /// Having a low limit will refuse clients requests instead of having them
+     /// wait for too long and is usually good to handle backpressure correctly.
+-    #[clap(default_value = "512", long, env)]
++    #[clap(default_value = "64", long, env)]
+     max_concurrent_requests: usize,
+ 
+     /// **IMPORTANT** This is one critical control to allow maximum usage
+@@ -164,6 +164,10 @@ struct Args {
+     #[clap(default_value = "text-embeddings-inference.server", long, env)]
+     otlp_service_name: String,
+ 
++    /// The Prometheus port to listen on.
++    #[clap(default_value = "9000", long, short, env)]
++    prometheus_port: u16,
++
+     /// Unused for gRPC servers
+     #[clap(long, env)]
+     cors_allow_origin: Option<Vec<String>>,
+@@ -227,6 +231,7 @@ async fn main() -> Result<()> {
+         args.api_key,
+         args.otlp_endpoint,
+         args.otlp_service_name,
++        args.prometheus_port,
+         args.cors_allow_origin,
+     )
+     .await?;
+diff --git a/router/src/prometheus.rs b/router/src/prometheus.rs
+index bded390..4c5fb38 100644
+--- a/router/src/prometheus.rs
++++ b/router/src/prometheus.rs
+@@ -1,6 +1,13 @@
++use std::net::SocketAddr;
+ use metrics_exporter_prometheus::{BuildError, Matcher, PrometheusBuilder};
+ 
+-pub(crate) fn prometheus_builer(max_input_length: usize) -> Result<PrometheusBuilder, BuildError> {
++pub(crate) fn prometheus_builer(
++    addr: SocketAddr,
++    port: u16,
++    max_input_length: usize,
++) -> Result<PrometheusBuilder, BuildError> {
++    let mut addr = addr;
++    addr.set_port(port);
+     // Duration buckets
+     let duration_matcher = Matcher::Suffix(String::from("duration"));
+     let n_duration_buckets = 35;
+@@ -30,6 +37,7 @@ pub(crate) fn prometheus_builer(max_input_length: usize) -> Result<PrometheusBui
+ 
+     // Prometheus handler
+     PrometheusBuilder::new()
++        .with_http_listener(addr)
+         .set_buckets_for_metric(duration_matcher, &duration_buckets)?
+         .set_buckets_for_metric(input_length_matcher, &input_length_buckets)?
+         .set_buckets_for_metric(batch_size_matcher, &batch_size_buckets)?
+

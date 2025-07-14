@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y vim tar zip unzip git curl wget dos2uni
 
 RUN apt-get update && apt-get install -y build-essential ${PYTHON_VERSION}  ${PYTHON_VERSION}-dev ${PYTHON_VERSION}-distutils ${PYTHON_VERSION}-venv 
 COPY ./package/urls.conf /tmp/urls.conf
-RUN . /tmp/urls.conf && curl -k $PYPI_URL | ${PYTHON_VERSION} &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/${PYTHON_VERSION} 1
+RUN . /tmp/urls.conf && curl $PYPI_URL | ${PYTHON_VERSION} &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/${PYTHON_VERSION} 1
 
 #配置 python3-config
 RUN ln -sf /usr/bin/${PYTHON_VERSION}-config /usr/local/bin/python3-config

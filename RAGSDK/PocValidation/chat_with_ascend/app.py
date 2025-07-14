@@ -675,7 +675,7 @@ if __name__ == '__main__':
     def create_gradio(ports):
         demo = build_demo()
         demo.queue()
-        demo.launch(share=True, server_name="0.0.0.0", server_port=ports)
+        demo.launch(share=True, server_name="127.0.0.1", server_port=ports)
 
 
     # 启动gradio

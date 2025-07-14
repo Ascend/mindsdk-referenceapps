@@ -562,12 +562,12 @@ if __name__ == "__main__":
     mxrag_component: Dict[str, Any] = {}
 
     # mis tei rerank
-    mis_tei_reranker_url = "http://ip:port/rerank"
+    mis_tei_reranker_url = "http://127.0.0.1:port/rerank"
     # mis tei embed
-    mis_tei_embedding_url = "http://ip:port/embed"
+    mis_tei_embedding_url = "http://127.0.0.1:port/embed"
 
     # mindie llm server
-    llm_url = "http://ip:port/v1/chat/completions"
+    llm_url = "http://127.0.0.1:port/v1/chat/completions"
 
     # llm model name like Llama3-8B-Chinese-Chat etc
     llm_model_name = "Llama3-8B-Chinese-Chat"

@@ -189,7 +189,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=CustomFormatter)
     parser.add_argument("--document_path", type=str, default="", help="语料文档路径,支持doc、txt、md格式")
     parser.add_argument("--generate_dataset_path", type=str, default="", help="生成数据保存路径")
-    parser.add_argument("--llm_url", type=str, default="", help="大模型推理服务地址")
+    parser.add_argument("--llm_url", type=str, default="http://127.0.0.1/v1/chat/completions", help="大模型推理服务地址")
     parser.add_argument("--llm_model_name", type=str, default="", help="大模型推理服务对应的模型名称")
     parser.add_argument("--use_http", type=bool, default=False, help="是否是http")
     parser.add_argument("--embedding_model_path", type=str, default="", help="embedding模型路径")

@@ -62,5 +62,5 @@ render_markdown_with_images(markdown_text)
 
 WEB服务启动命令：
 ```
-streamlit run st.py --server.address "服务IP" --server.port 服务端口
+streamlit run st.py --server.address "127.0.0.1" --server.port 服务端口
 ```

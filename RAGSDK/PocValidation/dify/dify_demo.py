@@ -670,7 +670,7 @@ def main():
                         help="vlm大模型服务base url地址")
     parser.add_argument("--llm_model_name", type=str, default="Qwen2.5-32B-Instruct", help="llm大模型名")
     parser.add_argument("--vlm_model_name", type=str, default="Qwen2.5-VL-7B-Instruct", help="vlm大模型名")
-    parser.add_argument("--host", type=str, default="0.0.0.0", help="服务host")
+    parser.add_argument("--host", type=str, default="127.0.0.1", help="服务host")
     parser.add_argument("--port", type=int, default="9098", help="服务端口")
     parser.add_argument("--white_path", type=str, nargs='+', default=["/home", "/mnt"],
                         help="知识文档入库时所在目录白名单")

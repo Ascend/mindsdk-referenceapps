@@ -6,18 +6,18 @@
 从网站上下载：https://github.com/protocolbuffers/protobuf/releases/tag/v29.3
 如下载29.3版本：protoc-29.3-linux-aarch_64.zip
 
-4 package目录存放Ascend-cann-kernels  Ascend-cann-toolkit  Ascend-cann-nnal, Ascend-mindxsdk-mxrag相关软件包，确保正确配套的卡和系统架构
+4 package目录存放Ascend-cann-kernels  Ascend-cann-toolkit  Ascend-cann-nnal, Ascend-mindxsdk-mxrag相关软件包，确保正确配套系统架构
 
 5 构建环境上提前准备好ubuntu:20.04基础镜像
 
 6 在Dockerfile同级目录下执行构建命令
-docker build -t 镜像tag --network host --build-arg ARCH=$(uname -m)  --build-arg PLATFORM=<chip-type> -f Dockerfile .
+docker build -t 镜像tag --network host --build-arg ARCH=$(uname -m)  --build-arg CANN_VERSION=<cann版本> --build-arg RAG_SDK_VERSION=<RAG SDK版本> --build-arg PLATFORM=<chip-type> -f Dockerfile .
 
 chip-type取值请根据在服务器上执行npu-smi info 命令进行查询，将查询到的"Name"字段最后一位数字删除后值修改PLATFORM字段
 
 安装rust相关 依赖依赖网络，可能比较慢
 
-7 在package目录下执行 nodejs server.js &
+7 在package目录下执行 后台运行本地sftp服务器 nodejs server.js &
 ```
 准备server.js文件，和上述软件包放置于相同目录
 const http = require('http');

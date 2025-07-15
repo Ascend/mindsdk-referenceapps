@@ -85,7 +85,7 @@ RUN  bash -c "source $HOME/.cargo/env && cargo install --path router -F python -
 
 # 以HwHiAiUser用户安装RAG SDK
 RUN wget -q http://172.17.0.1:3000/Ascend-mindxsdk-mxrag_${RAG_SDK_VERSION}_linux-${ARCH}.run -P /tmp
-RUN bash /tmp/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run --install --install-path=/home/HwHiAiUser/Ascend --quiet --platform=310P --whitelist=operator
+RUN bash /tmp/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run --install --install-path=/home/HwHiAiUser/Ascend --quiet --platform=${PLATFORM} --whitelist=operator
 
 USER root
 
@@ -97,7 +97,7 @@ RUN pip3 install einops
 
 # 以root用户安装RAG SDK
 COPY ./package/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run /tmp
-RUN bash /tmp/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run --install --install-path=/usr/local/Ascend --quiet --platform=310P --whitelist=operator
+RUN bash /tmp/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run --install --install-path=/usr/local/Ascend --quiet --platform=${PLATFORM} --whitelist=operator
 
 # 安装cann-toolkit和kernel
 RUN wget -q http://172.17.0.1:3000/Ascend-cann-toolkit_${CANN_VERSION}_linux-aarch64.run -P /tmp && \

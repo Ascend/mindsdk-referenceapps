@@ -11,7 +11,7 @@ streamlit
 
 2 部署mis-tei emb,reranker服务（[部署参考链接](https://www.hiascend.com/developer/ascendhub/detail/07a016975cc341f3a5ae131f2b52399d)）
 
-3 如果需要解析docx、pdf文件中的图片进行图文并茂回答，需部署VLM模型服务（[部署参考链接](https://www.hiascend.com/developer/ascendhub/detail/9eedc82e0c0644b2a2a9d0821ed5e7ad)）, LLM服务（[部署参考链接](https://www.hiascend.com/developer/ascendhub/detail/125b5fb4e7184b8dabc3ae4b18c6ff99)）
+3 如果需要解析docx、pdf文件中的图片进行图文并茂回答，启动demo时请配置 --parse_image 使能图片解析功能,需部署VLM模型服务（[部署参考链接](https://www.hiascend.com/developer/ascendhub/detail/9eedc82e0c0644b2a2a9d0821ed5e7ad)）, LLM服务（[部署参考链接](https://www.hiascend.com/developer/ascendhub/detail/125b5fb4e7184b8dabc3ae4b18c6ff99)），注意如果图片尺寸长或宽小于256，由于信息小，将被丢弃处理。
 
 4 执行dify_demo.py运行服务,具体参数可执行 --help查看
 ```
@@ -21,7 +21,7 @@ python3 dify_demo.py
 
 6 支持在dify界面配置外接知识库，[部署参考参考链接](https://docs.dify.ai/zh-hans/guides/knowledge-base/connect-external-knowledge-base)
 
-7 可调用/query接口问答测试，如需图片并茂内容，启动demo时请配置 --parse_image 使能图片解析功能,代码执行路径下存放了LLM回答文件response.md，可通过如下代码启动web网页可直观展示答复内容，复制如下代码在dify_demo.py同级目录下创建st.py
+7 可调用/query接口问答测试,代码执行路径下存放了LLM回答文件response.md，可通过如下代码启动web网页可直观展示答复内容，复制如下代码在dify_demo.py同级目录下创建st.py
 
 ```
 import streamlit as st

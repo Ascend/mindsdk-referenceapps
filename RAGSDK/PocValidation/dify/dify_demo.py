@@ -426,8 +426,9 @@ def extract_images_info_by_vlm(image_out_dir, file_name):
         if res:
             info.append({"image_path": image_file, "image_description": res})
 
-    with open(os.path.join(image_dir, "image_info.json"), "w", encoding='utf-8') as f:
-        f.write(json.dumps(info, indent=4, ensure_ascii=False))
+    if len(info) > 0:
+        with open(os.path.join(image_dir, "image_info.json"), "w", encoding='utf-8') as f:
+            f.write(json.dumps(info, indent=4, ensure_ascii=False))
 
     logger.info(f"extract images info successfully")
 
@@ -615,6 +616,7 @@ async def deleteallfiles():
     # 删除从文件解析出来的图片
     try:
         shutil.rmtree(upload_file_dir)
+        shutil.rmtree(images_store_dir)
     except Exception as e:
         logger.info(f"-------- delete {upload_file_dir} failed: {e}")
 

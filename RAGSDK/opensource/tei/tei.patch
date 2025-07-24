@@ -223,86 +223,16 @@ index 1e919f2..90d9487 100644
              return create_model(DefaultModel, model_path, device, datatype, pool)
  
 diff --git a/backends/python/server/text_embeddings_server/models/classification_model.py b/backends/python/server/text_embeddings_server/models/classification_model.py
-index 91f33ed..ab24f71 100644
+index 91f33ed..a1395ef 100644
 --- a/backends/python/server/text_embeddings_server/models/classification_model.py
 +++ b/backends/python/server/text_embeddings_server/models/classification_model.py
-@@ -1,9 +1,10 @@
- import inspect
- import torch
-+import os
- 
- from pathlib import Path
- from typing import Type, List
--from transformers import AutoModelForSequenceClassification
-+from transformers import AutoModelForSequenceClassification, Qwen3ForCausalLM, AutoTokenizer, AutoModelForCausalLM
- from opentelemetry import trace
- 
- from text_embeddings_server.models import Model
-@@ -21,36 +22,40 @@ class ClassificationModel(Model):
-         pool: str = "cls",
-         trust_remote: bool = False,
-     ):
--        model = AutoModelForSequenceClassification.from_pretrained(
-+
-+        # Check environment variable to decide reranker mode
-+        position_offset = 0
-+        self.model = AutoModelForSequenceClassification.from_pretrained(
-             model_path, trust_remote_code=trust_remote
-         )
--        model = model.to(dtype).to(device)
-+        self.model = self.model.to(dtype).to(device)
- 
--        self.hidden_size = model.config.hidden_size
--        position_offset = 0
--        model_type = model.config.model_type
-+        self.hidden_size = self.model.config.hidden_size
-+        model_type = self.model.config.model_type
-         if model_type in ["xlm-roberta", "camembert", "roberta"]:
--            position_offset = model.config.pad_token_id + 1
--        if hasattr(model.config, "max_seq_length"):
--            self.max_input_length = model.config.max_seq_length
--        else:
--            self.max_input_length = (
--                model.config.max_position_embeddings - position_offset
--            )
-+            position_offset = self.model.config.pad_token_id + 1
- 
-         self.has_position_ids = (
--            inspect.signature(model.forward).parameters.get("position_ids", None)
-+            inspect.signature(self.model.forward).parameters.get("position_ids", None)
-             is not None
-         )
-         self.has_token_type_ids = (
--            inspect.signature(model.forward).parameters.get("token_type_ids", None)
-+            inspect.signature(self.model.forward).parameters.get("token_type_ids", None)
-             is not None
-         )
- 
-+        if hasattr(self.model.config, "max_seq_length"):
-+            self.max_input_length = self.model.config.max_seq_length
-+        else:
-+            self.max_input_length = (
-+                    self.model.config.max_position_embeddings - position_offset
-+            )
-+
-         super(ClassificationModel, self).__init__(
--            model=model, dtype=dtype, device=device
-+            model=self.model, dtype=dtype, device=device
-         )
- 
-+
-     @property
-     def batch_type(self) -> Type[PaddedBatch]:
-         return PaddedBatch
-@@ -70,3 +75,6 @@ class ClassificationModel(Model):
+@@ -70,3 +70,4 @@ class ClassificationModel(Model):
          output = self.model(**kwargs, return_dict=True)
          all_scores = output.logits.tolist()
          return [Score(values=scores) for scores in all_scores]
 +
-+
-+
 diff --git a/backends/python/server/text_embeddings_server/models/default_model.py b/backends/python/server/text_embeddings_server/models/default_model.py
-index 66a9b6b..6a728ab 100644
+index 66a9b6b..c9385e3 100644
 --- a/backends/python/server/text_embeddings_server/models/default_model.py
 +++ b/backends/python/server/text_embeddings_server/models/default_model.py
 @@ -1,17 +1,24 @@
@@ -313,7 +243,7 @@ index 66a9b6b..6a728ab 100644
  from pathlib import Path
  from typing import Type, List
 -from transformers import AutoModel
-+from transformers import RobertaModel as AutoModel,RobertaConfig as AutoConfig, RobertaTokenizer as AutoTokenizer
++from transformers import AutoModel, AutoConfig, AutoTokenizer
  from opentelemetry import trace
 +
 +from collections import defaultdict
@@ -332,7 +262,7 @@ index 66a9b6b..6a728ab 100644
  
  class DefaultModel(Model):
      def __init__(
-@@ -19,16 +26,21 @@ class DefaultModel(Model):
+@@ -19,16 +26,18 @@ class DefaultModel(Model):
          model_path: Path,
          device: torch.device,
          dtype: torch.dtype,
@@ -340,16 +270,12 @@ index 66a9b6b..6a728ab 100644
 +        pool: str,
          trust_remote: bool = False,
      ):
-+        self.config = AutoConfig.from_pretrained(model_path)
-+        self.config.is_decoder = True
          model = (
--            AutoModel.from_pretrained(model_path, trust_remote_code=trust_remote)
-+            AutoModel.from_pretrained(model_path, trust_remote_code=trust_remote, config=self.config)
+             AutoModel.from_pretrained(model_path, trust_remote_code=trust_remote)
              .to(dtype)
              .to(device)
 +            .eval()
          )
-+
          self.hidden_size = model.config.hidden_size
 -        self.pooling = DefaultPooling(self.hidden_size, pooling_mode=pool)
 +        
@@ -357,22 +283,13 @@ index 66a9b6b..6a728ab 100644
  
          position_offset = 0
          model_type = model.config.model_type
-@@ -40,7 +52,7 @@ class DefaultModel(Model):
-             self.max_input_length = (
-                 model.config.max_position_embeddings - position_offset
-             )
--
-+        self.max_input_length=512
-         self.has_position_ids = (
-             inspect.signature(model.forward).parameters.get("position_ids", None)
-             is not None
-@@ -49,7 +61,17 @@ class DefaultModel(Model):
-             inspect.signature(model.forward).parameters.get("token_type_ids", None)
+@@ -50,6 +59,18 @@ class DefaultModel(Model):
              is not None
          )
--
-+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
+ 
 +        if self.pool == "splade":
++            self.tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
++            self.config = AutoConfig.from_pretrained(model_path)
 +            self.vocab_size = self.config.vocab_size
 +        
 +            self.sparse_linear = torch.nn.Linear(self.hidden_size, 1).to(device).to(dtype)
@@ -385,7 +302,7 @@ index 66a9b6b..6a728ab 100644
          super(DefaultModel, self).__init__(model=model, dtype=dtype, device=device)
  
      @property
-@@ -63,12 +85,46 @@ class DefaultModel(Model):
+@@ -63,19 +84,76 @@ class DefaultModel(Model):
              kwargs["token_type_ids"] = batch.token_type_ids
          if self.has_position_ids:
              kwargs["position_ids"] = batch.position_ids
@@ -435,10 +352,10 @@ index 66a9b6b..6a728ab 100644
          return [
              Embedding(
                  values=cpu_results[i * self.hidden_size : (i + 1) * self.hidden_size]
-@@ -76,6 +132,28 @@ class DefaultModel(Model):
+             )
              for i in range(len(batch))
          ]
- 
++    
 +    @tracer.start_as_current_span("embed_all")
 +    def embed_all(self, batch: PaddedBatch):
 +        kwargs = {"input_ids": batch.input_ids, "attention_mask": batch.attention_mask}
@@ -458,12 +375,13 @@ index 66a9b6b..6a728ab 100644
 +            ]
 +            token_embeddings=TokenEmbedding(embeddings=embedding_tmp)
 +            embedding_result.append(token_embeddings)
-+        
+ 
 +        return embedding_result
 +    
      @tracer.start_as_current_span("predict")
      def predict(self, batch: PaddedBatch) -> List[Score]:
          pass
++
 diff --git a/backends/python/server/text_embeddings_server/models/pooling.py b/backends/python/server/text_embeddings_server/models/pooling.py
 index 43f77b1..69c69f9 100644
 --- a/backends/python/server/text_embeddings_server/models/pooling.py

@@ -7,9 +7,6 @@ ARG PYTHON_VERSION=python3.11
 ARG TORCH_VERSION=2.1.0
 # 设置时区禁用交互式配置
 ENV DEBIAN_FRONTEND=noninteractive
-
-COPY ./package/setup.ca.sh .
-RUN mkdir -p /usr/local/share/ca-certificates && bash setup.ca.sh
     
 RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt-get update
 RUN apt-get update && apt-get install -y vim tar zip unzip git curl wget dos2unix make gcc g++ ccache gfortran libssl-dev libpq-dev swig ffmpeg

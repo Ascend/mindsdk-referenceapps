@@ -12,10 +12,10 @@ bash /opt/package/Ascend-cann-toolkit*_linux-${ARCH}.run --install --install-for
 bash /opt/package/Ascend-cann-kernels*_linux-${ARCH}.run --install --install-for-all --quiet
 #安装 nnal
 if [[ $usr_id -eq 0 ]]; then
-    bash -c "source /usr/local/Ascend/ascend-toolkit/set_env.sh && bash /opt/package/Ascend-cann-nnal*_linux-${ARCH}.run --install --quiet" 
+    #bash -c "source /usr/local/Ascend/ascend-toolkit/set_env.sh && bash /opt/package/Ascend-cann-nnal*_linux-${ARCH}.run --install --quiet" 
     
-    commands=("source /usr/local/Ascend/ascend-toolkit/set_env.sh", "source /usr/local/Ascend/nnal/atb/set_env.sh","export ASCEND_VERSION=/usr/local/Ascend/ascend-toolkit/latest", "export ASCEND_HOME=/usr/local/Ascend")
-    for cmd in ${commands[@]};
+    commands=("source /usr/local/Ascend/ascend-toolkit/set_env.sh" "source /usr/local/Ascend/nnal/atb/set_env.sh" "export ASCEND_VERSION=/usr/local/Ascend/ascend-toolkit/latest" "export ASCEND_HOME=/usr/local/Ascend")
+    for cmd in "${commands[@]}";
     do
       if ! grep -Fxq "$cmd" "/root/.bashrc"; then
         # 如果不存在，将命令追加到文件中
@@ -32,9 +32,9 @@ if [[ $usr_id -eq 0 ]]; then
     
     cd /usr/local/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
 else
-    bash -c "source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh && bash /opt/package/Ascend-cann-nnal*_linux-${ARCH}.run --install --quiet" 
-    commands=("source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh", "source /home/HwHiAiUser/Ascend/nnal/atb/set_env.sh", "export ASCEND_HOME=/home/HwHiAiUser/Ascend", "export ASCEND_VERSION=/home/HwHiAiUser/Ascend/ascend-toolkit/latest")
-    for cmd in ${commands[@]};
+    #bash -c "source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh && bash /opt/package/Ascend-cann-nnal*_linux-${ARCH}.run --install --quiet" 
+    commands=("source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh" "source /home/HwHiAiUser/Ascend/nnal/atb/set_env.sh" "export ASCEND_HOME=/home/HwHiAiUser/Ascend" "export ASCEND_VERSION=/home/HwHiAiUser/Ascend/ascend-toolkit/latest")
+    for cmd in "${commands[@]}";
     do
       if ! grep -Fxq "$cmd" "/home/HwHiAiUser/.bashrc"; then
         # 如果不存在，将命令追加到文件中

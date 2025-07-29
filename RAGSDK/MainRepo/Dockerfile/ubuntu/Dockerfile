@@ -88,7 +88,7 @@ RUN pip3 install torch-npu=="${TORCH_VERSION}".post8
 COPY ./package/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run /tmp/
 RUN bash /tmp/Ascend-mindxsdk-mxrag_*_linux-${ARCH}.run --install --install-path=/usr/local/Ascend --quiet --platform=${PLATFORM}
 RUN pip3 install -r /usr/local/Ascend/mxRag/requirements.txt
-
+RUN pip3 install torch-npu=="${TORCH_VERSION}".post12 pymilvus==2.5.12
 # 安装mxrag第三方依赖
 RUN pip3 install ragas==0.1.9 rank_bm25==0.2.2 readability_lxml==0.8.1 html_text==0.6.2 gradio==3.50.2 streamlit
 #清理临时目录

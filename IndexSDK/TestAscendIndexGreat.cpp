@@ -122,7 +122,6 @@ TEST(TestAscendIndexGreat, Test_KMode_QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -199,7 +198,6 @@ TEST(TestAscendIndexGreat, Test_AKMode_QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 } // namespace

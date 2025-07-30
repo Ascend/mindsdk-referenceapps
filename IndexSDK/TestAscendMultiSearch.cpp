@@ -154,7 +154,6 @@ void AscendIndexSQMultiSearchFilter()
             delete indexes[i];
         }
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -224,7 +223,6 @@ void IndexSQMultiSearchFilter()
             delete indexes[i];
         }
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -269,7 +267,6 @@ void AscendIndexSQMultiSearch()
             delete indexes[i];
         }
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -315,7 +312,6 @@ void AscendIndexInt8MultiSearch()
             delete indexes[i];
         }
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 }

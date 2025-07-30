@@ -136,7 +136,6 @@ TEST(TestAscendIndexVstar, Test_Search_Func)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 } // namespace

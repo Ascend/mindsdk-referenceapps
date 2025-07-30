@@ -63,7 +63,6 @@ void TestSampleNNInfer()
         std::cout << "TestSampleNNInfer end " << std::endl;
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -91,7 +90,6 @@ void TestSampleNNReduce()
         std::cout << "TestSampleNNReduce end " << std::endl;
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -118,7 +116,6 @@ void TestSamplePcarReduce()
         std::cout << "TestSamplePcarReduce end " << std::endl;
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 }

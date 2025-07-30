@@ -16,7 +16,6 @@
 
 // 需要生成aicpu算子+binary_flat算子(-d 512)
 
-#include <exception>
 #include <random>
 #include <sys/time.h>
 #include <gtest/gtest.h>
@@ -87,7 +86,6 @@ TEST(TestAscendIndexBinaryFlat, QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 } // namespace

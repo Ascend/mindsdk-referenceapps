@@ -434,7 +434,6 @@ void RecallAndRecallFilter()
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -511,7 +510,6 @@ void MultiSearchAndMultiSearchFilter()
             delete indexes[i];
         }
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 

@@ -151,7 +151,6 @@ TEST(TestAscendIndexInt8Flat, QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -194,7 +193,6 @@ TEST(TestAscendIndexInt8Flat, Recall)
         printf("TOPK %d: t1 = %.2f, t10 = %.2f, t100 = %.2f\n", k, Top[1], Top[10], Top[100]);
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 

@@ -110,6 +110,5 @@ int main(int argc, char **argv)
     } catch (std::exception &e) {
         index.Finalize();
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }

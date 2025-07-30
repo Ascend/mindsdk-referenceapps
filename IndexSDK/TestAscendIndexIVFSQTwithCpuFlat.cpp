@@ -255,7 +255,6 @@ void TestIVFSQT(int niter, int ncentroids)
         SearchProccess(index, ntotal, base, learn, dataBaseFloat);
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 

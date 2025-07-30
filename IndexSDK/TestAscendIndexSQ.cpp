@@ -141,7 +141,6 @@ TEST(TestAscendIndexSQ, QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 } // namespace

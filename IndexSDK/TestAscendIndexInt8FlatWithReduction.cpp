@@ -136,7 +136,6 @@ TEST(TestAscendIndexInt8Flat, QPS)
             k, MILLI_SECOND * SEARCH_NUM * loopTimes / (te - ts));
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 

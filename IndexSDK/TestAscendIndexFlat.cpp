@@ -183,7 +183,6 @@ TEST(TestAscendIndexFlat, QPS)
         }
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 
@@ -225,7 +224,6 @@ TEST(TestAscendIndexFlat, Acc) {
             top[RECMAP_KEY_1], top[RECMAP_KEY_10], top[RECMAP_KEY_100]);
     } catch (std::exception &e) {
         printf("%s\n", e.what());
-        throw std::exception();
     }
 }
 

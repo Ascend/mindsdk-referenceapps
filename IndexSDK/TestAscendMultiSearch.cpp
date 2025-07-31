@@ -93,6 +93,8 @@ void DoSearchFilter(int ntotal, int dim, std::vector<float> &data)
     int searchNum = 2;
     int indexNum = 10;
     std::vector<faiss::ascend::AscendIndex *> indexes(indexNum);
+    faiss::ascend::AscendIndexSQConfig conf({ 0 });
+    conf.filterable = true;
     std::vector<int64_t> ids(ntotal, 0);
     int seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine e1(seed);
@@ -142,8 +144,6 @@ void AscendIndexSQMultiSearchFilter()
 {
     int dim = 64;
     try {
-        faiss::ascend::AscendIndexSQConfig conf({ 0 });
-        conf.filterable = true;
         int ntotal = 128;
         std::vector<float> data(dim * ntotal);
         for (int i = 0; i < dim * ntotal; i++) {
@@ -163,6 +163,8 @@ void DoIndexSearchFilter(int ntotal, int dim, std::vector<float> &data)
     int indexNum = 10;
     std::vector<faiss::Index *> indexes(indexNum);
     std::vector<int64_t> ids(ntotal, 0);
+    faiss::ascend::AscendIndexSQConfig conf({ 0 });
+    conf.filterable = true;
     int seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine e1(seed);
     std::uniform_int_distribution<int32_t> id(0, std::numeric_limits<int32_t>::max());
@@ -210,9 +212,6 @@ void IndexSQMultiSearchFilter()
 {
     int dim = 64;
     try {
-        faiss::ascend::AscendIndexSQConfig conf({ 0 });
-        conf.filterable = true;
-    
         int ntotal = 128;
         std::vector<float> data(dim * ntotal);
         for (int i = 0; i < dim * ntotal; i++) {

@@ -130,7 +130,6 @@ void search_warm(int topk, std::vector<float> &data, std::shared_ptr<AscendIndex
  
     
     // search检索
-    int topk = 100;
     int warmUpTimes = 10;
     size_t nq = 9000;
     std::vector<float> distsWarm(nq * topk);
@@ -158,7 +157,7 @@ TEST(TestAscendIndexGreat, Test_AKMode_QPS)
     int convPQM = 128;
     int evaluationType = 0;
     int expandingFactor = 300;
-
+    int topk = 100;
     int nlist = 1024;
     int subSpaceDim = 128;
     std::vector<int> devices = {0};

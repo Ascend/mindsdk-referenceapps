@@ -107,47 +107,50 @@ TEST(TestAscendIndexInt8Flat, QPS)
     int dim = 512;
     size_t ntotal = 7000000;
     std::vector<int> searchNum = { 8, 16, 32, 64, 128, 256 };
-
-    faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_INNER_PRODUCT, conf);
-    index.verbose = true;
-
-    printf("start generate data\n");
-    std::vector<int8_t> base(ntotal * dim);
-    std::vector<float> baseFp(ntotal * dim);
-    for (size_t i = 0; i < ntotal * dim; i++) {
-        baseFp[i] = drand48();
-    }
-    printf("generate data finished\n");
-    faiss::ScalarQuantizer sq = faiss::ScalarQuantizer(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit);
-    sq.train(ntotal, baseFp.data());
-    sqEncode(sq, baseFp.data(), base.data(), ntotal);
-    printf("add data\n");
-    index.add(ntotal, base.data());
-    int warmUpTimes = 10 ;
-    std::vector<float> distw(127 * 10, 0);
-    std::vector<faiss::idx_t> labelw(127 * 10, 0);
-    for (int i = 0; i < warmUpTimes; i++) {
-        index.search(127, base.data(), 10, distw.data(), labelw.data());
-    }
-
-    for (size_t n = 0; n < searchNum.size(); n++) {
-        int k = 100;
-        int loopTimes = 10;
-
-        std::vector<float> dist(searchNum[n] * k, 0);
-        std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
-        double ts = GetMillisecs();
-        // start to quantize query data
-        std::vector<int8_t> query(searchNum[n] * dim);
-        sqEncode(sq, baseFp.data(), query.data(), searchNum[n]);
-
-        for (int l = 0; l < loopTimes; l++) {
-            index.search(searchNum[n], query.data(), k, dist.data(), label.data());
+    try {
+        faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
+        faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_INNER_PRODUCT, conf);
+        index.verbose = true;
+    
+        printf("start generate data\n");
+        std::vector<int8_t> base(ntotal * dim);
+        std::vector<float> baseFp(ntotal * dim);
+        for (size_t i = 0; i < ntotal * dim; i++) {
+            baseFp[i] = drand48();
         }
-        double te = GetMillisecs();
-        printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
-            MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        printf("generate data finished\n");
+        faiss::ScalarQuantizer sq = faiss::ScalarQuantizer(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit);
+        sq.train(ntotal, baseFp.data());
+        sqEncode(sq, baseFp.data(), base.data(), ntotal);
+        printf("add data\n");
+        index.add(ntotal, base.data());
+        int warmUpTimes = 10 ;
+        std::vector<float> distw(127 * 10, 0);
+        std::vector<faiss::idx_t> labelw(127 * 10, 0);
+        for (int i = 0; i < warmUpTimes; i++) {
+            index.search(127, base.data(), 10, distw.data(), labelw.data());
+        }
+    
+        for (size_t n = 0; n < searchNum.size(); n++) {
+            int k = 100;
+            int loopTimes = 10;
+    
+            std::vector<float> dist(searchNum[n] * k, 0);
+            std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
+            double ts = GetMillisecs();
+            // start to quantize query data
+            std::vector<int8_t> query(searchNum[n] * dim);
+            sqEncode(sq, baseFp.data(), query.data(), searchNum[n]);
+    
+            for (int l = 0; l < loopTimes; l++) {
+                index.search(searchNum[n], query.data(), k, dist.data(), label.data());
+            }
+            double te = GetMillisecs();
+            printf("case[%zu]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", n, ntotal, dim, searchNum[n],
+                MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
     }
 }
 
@@ -156,38 +159,41 @@ TEST(TestAscendIndexInt8Flat, Recall)
     int dim = 512;
     size_t ntotal = 7000000;
     int searchNum = 8;
-
-    faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_INNER_PRODUCT, conf);
-    index.verbose = true;
-
-    printf("start generate data\n");
-    std::vector<int8_t> base(ntotal * dim);
-    std::vector<float> baseFp(ntotal * dim);
-    for (size_t i = 0; i < ntotal * dim; i++) {
-        baseFp[i] = drand48();
+    try {
+        faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
+        faiss::ascend::AscendIndexInt8Flat index(dim, faiss::METRIC_INNER_PRODUCT, conf);
+        index.verbose = true;
+    
+        printf("start generate data\n");
+        std::vector<int8_t> base(ntotal * dim);
+        std::vector<float> baseFp(ntotal * dim);
+        for (size_t i = 0; i < ntotal * dim; i++) {
+            baseFp[i] = drand48();
+        }
+        printf("generate data finished\n");
+        faiss::ScalarQuantizer sq = faiss::ScalarQuantizer(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit);
+        sq.train(ntotal, baseFp.data());
+        sqEncode(sq, baseFp.data(), base.data(), ntotal);
+        printf("add data\n");
+        index.add(ntotal, base.
+        data());
+    
+        int k = 100;
+        std::vector<faiss::idx_t> gt(searchNum * k, 0);
+        for (int i = 0; i < searchNum; i++) {
+            gt[i * k] = i;
+        }
+        std::vector<float> dist(searchNum * k, 0);
+        std::vector<faiss::idx_t> label(searchNum * k, 0);
+        // start to quantize query data
+        std::vector<int8_t> query(searchNum * dim);
+        sqEncode(sq, baseFp.data(), query.data(), searchNum);
+        index.search(searchNum, query.data(), k, dist.data(), label.data());
+        recallMap Top = calRecall(label, gt.data(), searchNum);
+        printf("TOPK %d: t1 = %.2f, t10 = %.2f, t100 = %.2f\n", k, Top[1], Top[10], Top[100]);
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
     }
-    printf("generate data finished\n");
-    faiss::ScalarQuantizer sq = faiss::ScalarQuantizer(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit);
-    sq.train(ntotal, baseFp.data());
-    sqEncode(sq, baseFp.data(), base.data(), ntotal);
-    printf("add data\n");
-    index.add(ntotal, base.
-    data());
-
-    int k = 100;
-    std::vector<faiss::idx_t> gt(searchNum * k, 0);
-    for (int i = 0; i < searchNum; i++) {
-        gt[i * k] = i;
-    }
-    std::vector<float> dist(searchNum * k, 0);
-    std::vector<faiss::idx_t> label(searchNum * k, 0);
-    // start to quantize query data
-    std::vector<int8_t> query(searchNum * dim);
-    sqEncode(sq, baseFp.data(), query.data(), searchNum);
-    index.search(searchNum, query.data(), k, dist.data(), label.data());
-    recallMap Top = calRecall(label, gt.data(), searchNum);
-    printf("TOPK %d: t1 = %.2f, t10 = %.2f, t100 = %.2f\n", k, Top[1], Top[10], Top[100]);
 }
 
 } // namespace

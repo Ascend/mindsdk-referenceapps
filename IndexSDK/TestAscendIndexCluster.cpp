@@ -75,6 +75,7 @@ int main(int argc, char **argv)
     ret = index.AddFeatures(ntotal, addVec.data(), ids.data());
     if (ret != 0) {
         printf("[ERROR] AddFeatures fail ret = %d \r\n", ret);
+        index.Finalize();
         return 1;
     }
 
@@ -83,26 +84,31 @@ int main(int argc, char **argv)
     uint32_t codeStartIdx = 0;
     uint32_t codeNum = 1000;
     float threshold = 0.75;
-    std::vector<uint32_t> queryIdArr(nq);
-    std::iota(queryIdArr.begin(), queryIdArr.end(), start);
-
-    bool aboveFilter = true;
-    std::vector<std::vector<float>> resDist(nq);
-    std::vector<std::vector<uint32_t>> resIdx(nq);
-
-    ret = index.ComputeDistanceByThreshold(queryIdArr, codeStartIdx, codeNum, threshold, aboveFilter, resDist, resIdx);
-    if (ret != 0) {
-        printf("[ERROR] ComputeDistanceByThreshold fail ret = %d \r\n", ret);
-        return 1;
-    }
-
-    for (uint32_t i = 0; i < nq; i++) {
-        uint32_t len = resDist[i].size();
-        printf("queryFeature(%d/%d), %u feature dist greater than the threshold:\r\n", i, nq, len);
-        for (uint32_t j = 0; j < len; j++) {
-            printf("   id: %u, dist: %.4lf\r\n", resIdx[i][j], resDist[i][j]);
+    try {
+        std::vector<uint32_t> queryIdArr(nq);
+        std::iota(queryIdArr.begin(), queryIdArr.end(), start);
+    
+        bool aboveFilter = true;
+        std::vector<std::vector<float>> resDist(nq);
+        std::vector<std::vector<uint32_t>> resIdx(nq);
+    
+        ret = index.ComputeDistanceByThreshold(queryIdArr, codeStartIdx, codeNum, threshold, aboveFilter, resDist, resIdx);
+        if (ret != 0) {
+            printf("[ERROR] ComputeDistanceByThreshold fail ret = %d \r\n", ret);
+            return 1;
         }
+    
+        for (uint32_t i = 0; i < nq; i++) {
+            uint32_t len = resDist[i].size();
+            printf("queryFeature(%d/%d), %u feature dist greater than the threshold:\r\n", i, nq, len);
+            for (uint32_t j = 0; j < len; j++) {
+                printf("   id: %u, dist: %.4lf\r\n", resIdx[i][j], resDist[i][j]);
+            }
+        }
+    
+        index.Finalize();
+    } catch (std::exception &e) {
+        index.Finalize();
+        printf("%s\n", e.what());
     }
-
-    index.Finalize();
 }

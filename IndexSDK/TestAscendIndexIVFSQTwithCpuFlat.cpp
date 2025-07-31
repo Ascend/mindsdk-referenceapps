@@ -165,7 +165,7 @@ void SearchProccess(faiss::ascend::AscendIndexIVFSQT &index, size_t ntotal, std:
 {
     int fuzzyK = 3;
     float threshold = 1.6;
-    int trainSize = 500000;
+    int trainSize = learn.size() / DIM_IN;
     int topk = 100;
     int searchNum = 10240;
     index.verbose = true;
@@ -207,51 +207,51 @@ void TestIVFSQT(int niter, int ncentroids)
     size_t learnNum = ntotal / 10;
     int gtNum = 100;
     int centroid = 256;
-    std::vector<int> devices = { 0 };
-    int64_t resourceSize = static_cast<int64_t>(1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexIVFSQTConfig conf(devices, resourceSize);
-    conf.cp.niter = niter;
-    conf.useKmeansPP = true;
-    conf.cp.max_points_per_centroid = centroid;
-    faiss::ascend::AscendIndexIVFSQT index(DIM_IN, DIM_OUT, ncentroids, faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                                           faiss::METRIC_INNER_PRODUCT, conf);
-    printf("start generate data\n");
-    std::vector<int8_t> baseInt8(ntotal * DIM_IN);
-    for (size_t i = 0; i < ntotal * DIM_IN; i++) {
-        baseInt8[i] = RandomInt8();
-    }
-    std::vector<int8_t> learnInt8(learnNum * DIM_IN);
-    for (size_t i = 0; i < learnNum * DIM_IN; i++) {
-        learnInt8[i] = RandomInt8();
-    }
-    std::vector<int8_t> queryInt8(queryNum * DIM_IN);
-    std::vector<int64_t> gt(queryNum * gtNum, 0);
-    for (size_t q = 0; q < queryNum; q++) {
-        size_t idx;
-        GeneratorRandomIndex(ntotal, idx);
-        for (size_t d = 0; d < DIM_IN; d++) {
-            queryInt8[q * DIM_IN + d] = baseInt8[idx * DIM_IN + d];
+    try {
+        // resource size 1024 * 1024 * 1024 = 1GB
+        faiss::ascend::AscendIndexIVFSQTConfig conf({ 0 }, static_cast<int64_t>(1024 * 1024 * 1024));
+        conf.cp.niter = niter;
+        conf.useKmeansPP = true;
+        conf.cp.max_points_per_centroid = centroid;
+        faiss::ascend::AscendIndexIVFSQT index(DIM_IN, DIM_OUT, ncentroids,
+             faiss::ScalarQuantizer::QuantizerType::QT_8bit, faiss::METRIC_INNER_PRODUCT, conf);
+        std::vector<int8_t> baseInt8(ntotal * DIM_IN);
+        for (size_t i = 0; i < ntotal * DIM_IN; i++) {
+            baseInt8[i] = RandomInt8();
         }
-        gt[q * gtNum] = static_cast<int64_t>(idx);
+        std::vector<int8_t> learnInt8(learnNum * DIM_IN);
+        for (size_t i = 0; i < learnNum * DIM_IN; i++) {
+            learnInt8[i] = RandomInt8();
+        }
+        std::vector<int8_t> queryInt8(queryNum * DIM_IN);
+        std::vector<int64_t> gt(queryNum * gtNum, 0);
+        for (size_t q = 0; q < queryNum; q++) {
+            size_t idx;
+            GeneratorRandomIndex(ntotal, idx);
+            for (size_t d = 0; d < DIM_IN; d++) {
+                queryInt8[q * DIM_IN + d] = baseInt8[idx * DIM_IN + d];
+            }
+            gt[q * gtNum] = static_cast<int64_t>(idx);
+        }
+        // int8 to float，除以128.0是为了将其映射到-1.0到1.0的区间内。
+        float intToFloat = 128.0;
+        std::vector<float> base(ntotal * DIM_IN);
+        for (size_t i = 0; i < ntotal * DIM_IN; i++) {
+            base[i] = static_cast<float>(baseInt8[i]) / intToFloat;
+        }
+        std::vector<float> query(queryNum * DIM_IN);
+        for (size_t i = 0; i < queryNum * DIM_IN; i++) {
+            query[i] = static_cast<float>(queryInt8[i]) / intToFloat;
+        }
+        std::vector<float> learn(learnNum * DIM_IN);
+        for (size_t i = 0; i < learnNum * DIM_IN; i++) {
+            learn[i] = static_cast<float>(learnInt8[i]) / intToFloat;
+        }
+        dataFloat dataBaseFloat(base, learn, query, gt);
+        SearchProccess(index, ntotal, base, learn, dataBaseFloat);
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
     }
-
-    // int8 to float，除以128.0是为了将其映射到-1.0到1.0的区间内。
-    float intToFloat = 128.0;
-    std::vector<float> base(ntotal * DIM_IN);
-    for (size_t i = 0; i < ntotal * DIM_IN; i++) {
-        base[i] = static_cast<float>(baseInt8[i]) / intToFloat;
-    }
-    std::vector<float> query(queryNum * DIM_IN);
-    for (size_t i = 0; i < queryNum * DIM_IN; i++) {
-        query[i] = static_cast<float>(queryInt8[i]) / intToFloat;
-    }
-    std::vector<float> learn(learnNum * DIM_IN);
-    for (size_t i = 0; i < learnNum * DIM_IN; i++) {
-        learn[i] = static_cast<float>(learnInt8[i]) / intToFloat;
-    }
-    dataFloat dataBaseFloat(base, learn, query, gt);
-    printf("generate data ok\n");
-    SearchProccess(index, ntotal, base, learn, dataBaseFloat);
 }
 
 } // namespace

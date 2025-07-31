@@ -408,41 +408,68 @@ void RecallAndRecallFilter()
     // query data
     std::vector<float> qData(QUERY_NUM * dim);
     std::vector<int64_t> gts(QUERY_NUM * TOPK, 0);
-    InitData(data, qData, gts, dim, ntotal);
+    try {
+        InitData(data, qData, gts, dim, ntotal);
+    
+        faiss::ascend::AscendIndexIVFSPConfig conf({0});
+        conf.handleBatch = handleBatch; // 和OM算子保持一致
+        conf.nprobe = handleBatch; // 64 32 128    16的倍数，且0 < nprobe <= nlist
+        conf.searchListSize = searchListSize; // 大于等于512 且为2的幂次。
+        conf.filterable = true;
+    
+        faiss::ascend::AscendIndexIVFSP index(dim, nonzeroNum, nlist,
+                codeBookPath.c_str(),
+                faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+                faiss::MetricType::METRIC_L2, conf);
+        index.setVerbose(true);
+        index.add(ntotal, data.data());
+        std::cout << "index.ntotal: " << index.ntotal << std::endl;
+    
+        std::vector<int> nprobeList = {handleBatch, handleBatch * 2, handleBatch / 2};
+        for (int tmpNprobe : nprobeList) {
+            printf("-------------set nprobe: %d-------------------\n", tmpNprobe);
+            index.setNumProbes(tmpNprobe);
+            SearchData(index, batches, qData, dim, gts);
+            SearchFilter(index, batches, qData, dim, gts);
+        }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
+    }
+}
 
-    faiss::ascend::AscendIndexIVFSPConfig conf({0});
-    conf.handleBatch = handleBatch; // 和OM算子保持一致
-    conf.nprobe = handleBatch; // 64 32 128    16的倍数，且0 < nprobe <= nlist
-    conf.searchListSize = searchListSize; // 大于等于512 且为2的幂次。
-    conf.filterable = true;
+void CreateMultiIndex(std::vector<faiss::ascend::AscendIndex*> &indexes,
+                      int dim, faiss::ascend::AscendIndexIVFSPConfig &conf)
+{
+    int nonzeroNum = 64;
+    int nlist = 256;
+    std::string basePath = " ";
+    // codeBook 码本
+    std::string codeBookPath = basePath + "codebook.bin";
+    for (int i = 0; i < INDEX_NUM; ++i) {
+        faiss::ascend::AscendIndexIVFSP* index;
+        if (i == 0) {
+            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
+                codeBookPath.c_str(), faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+                faiss::MetricType::METRIC_L2, conf);
+        } else {
+            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
+                *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+                faiss::MetricType::METRIC_L2, conf);
+        }
 
-    faiss::ascend::AscendIndexIVFSP index(dim, nonzeroNum, nlist,
-            codeBookPath.c_str(),
-            faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-            faiss::MetricType::METRIC_L2, conf);
-    index.setVerbose(true);
-    index.add(ntotal, data.data());
-    std::cout << "index.ntotal: " << index.ntotal << std::endl;
-
-    std::vector<int> nprobeList = {handleBatch, handleBatch * 2, handleBatch / 2};
-    for (int tmpNprobe : nprobeList) {
-        printf("-------------set nprobe: %d-------------------\n", tmpNprobe);
-        index.setNumProbes(tmpNprobe);
-        SearchData(index, batches, qData, dim, gts);
-        SearchFilter(index, batches, qData, dim, gts);
+        index->setVerbose(true);
+        indexes.emplace_back(index);
+        printf("create index:%d\n", i);
     }
 }
 
 void MultiSearchAndMultiSearchFilter()
 {
     // 数据集（特征数据、查询数据、groundtruth数据）、码本， 所在的目录。请根据实际情况填写。
-    std::string basePath = " ";
-    // codeBook 码本
-    std::string codeBookPath = basePath + "codebook.bin";
+    
     // 参数值 dim、nlist、nonzeroNum、searchListSize，应该和使用的codeBook 码本保持一致，即和训练码本时指定的参数保持一致。
     int dim = 256;
-    int nonzeroNum = 64;
-    int nlist = 256;
+    
     int handleBatch = 64;
     std::vector<int> batches = {1, 2, 4, 8, 16, 32, 64};
     int searchListSize = 32768;
@@ -465,40 +492,32 @@ void MultiSearchAndMultiSearchFilter()
     conf.filterable = true;
 
     std::vector<faiss::ascend::AscendIndex*> indexes;
-    for (int i = 0; i < INDEX_NUM; ++i) {
-        faiss::ascend::AscendIndexIVFSP* index;
-        if (i == 0) {
-            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                codeBookPath.c_str(), faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                faiss::MetricType::METRIC_L2, conf);
-        } else {
-            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                faiss::MetricType::METRIC_L2, conf);
+    try {
+        CreateMultiIndex(indexes, dim, conf);
+    
+        LoadAndSaveData(indexes, ntotal, data);
+    
+        std::vector<int> nprobeList = {handleBatch, handleBatch * 2, handleBatch / 2};
+        for (int tmpNprobe : nprobeList) {
+            printf("-------------set nprobe: %d-------------------\n", tmpNprobe);
+            for (int i = 0; i < INDEX_NUM; ++i) {
+                faiss::ascend::AscendIndexIVFSP* index = dynamic_cast<faiss::ascend::AscendIndexIVFSP*>(indexes[i]);
+                index->setNumProbes(tmpNprobe);
+            }
+            
+            MultiSearch(indexes, batches, qData, dim, gts);
+            MultiSearchWithSameFilter(indexes, batches, qData, dim, gts);
+            MultiSearchWithDifFilter(indexes, batches, qData, dim, gts);
         }
-
-        index->setVerbose(true);
-        indexes.emplace_back(index);
-        printf("create index:%d\n", i);
-    }
-
-    LoadAndSaveData(indexes, ntotal, data);
-
-    std::vector<int> nprobeList = {handleBatch, handleBatch * 2, handleBatch / 2};
-    for (int tmpNprobe : nprobeList) {
-        printf("-------------set nprobe: %d-------------------\n", tmpNprobe);
+    
         for (int i = 0; i < INDEX_NUM; ++i) {
-            faiss::ascend::AscendIndexIVFSP* index = dynamic_cast<faiss::ascend::AscendIndexIVFSP*>(indexes[i]);
-            index->setNumProbes(tmpNprobe);
+            delete indexes[i];
         }
-        
-        MultiSearch(indexes, batches, qData, dim, gts);
-        MultiSearchWithSameFilter(indexes, batches, qData, dim, gts);
-        MultiSearchWithDifFilter(indexes, batches, qData, dim, gts);
-    }
-
-    for (int i = 0; i < INDEX_NUM; ++i) {
-        delete indexes[i];
+    } catch (std::exception &e) {
+        for (int i = 0; i < INDEX_NUM; ++i) {
+            delete indexes[i];
+        }
+        printf("%s\n", e.what());
     }
 }
 

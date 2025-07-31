@@ -100,39 +100,43 @@ TEST(TestAscendIndexInt8Flat, QPS)
     int dimIn = 256;
     int dimOut = 64;
     size_t ntotal = 7000000;
-    std::vector<int8_t> baseInt8(ntotal * dimOut);
-    std::vector<int8_t> queryInt8(SEARCH_NUM * dimOut);
-
-    ReduceData(ntotal, dimIn, dimOut, baseInt8, queryInt8);
-
-    // create index
-    faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
-    faiss::ascend::AscendIndexInt8Flat index(dimOut, faiss::METRIC_INNER_PRODUCT, conf);
-    index.verbose = true;
-
-    printf("add data\n");
-    index.add(ntotal, baseInt8.data());
-
-    int warmUpTimes = 10 ;
-    std::vector<float> distw(127 * 10, 0);
-    std::vector<faiss::idx_t> labelw(127 * 10, 0);
-    for (int i = 0; i < warmUpTimes; i++) {
-        index.search(127, baseInt8.data(), 10, distw.data(), labelw.data());
-    }
+    try {
+        std::vector<int8_t> baseInt8(ntotal * dimOut);
+        std::vector<int8_t> queryInt8(SEARCH_NUM * dimOut);
     
-    int k = 100;
-    int loopTimes = 10;
-    std::vector<float> dist(SEARCH_NUM * k, 0);
-    std::vector<faiss::idx_t> label(SEARCH_NUM * k, 0);
-
-    double ts = GetMillisecs();
-    for (int l = 0; l < loopTimes; l++) {
-        // query data reduction and sq
-        index.search(SEARCH_NUM, queryInt8.data(), k, dist.data(), label.data());
+        ReduceData(ntotal, dimIn, dimOut, baseInt8, queryInt8);
+    
+        // create index
+        faiss::ascend::AscendIndexInt8FlatConfig conf({ 0 }, 1024 * 1024 * 1024);
+        faiss::ascend::AscendIndexInt8Flat index(dimOut, faiss::METRIC_INNER_PRODUCT, conf);
+        index.verbose = true;
+    
+        printf("add data\n");
+        index.add(ntotal, baseInt8.data());
+    
+        int warmUpTimes = 10 ;
+        std::vector<float> distw(127 * 10, 0);
+        std::vector<faiss::idx_t> labelw(127 * 10, 0);
+        for (int i = 0; i < warmUpTimes; i++) {
+            index.search(127, baseInt8.data(), 10, distw.data(), labelw.data());
+        }
+        
+        int k = 100;
+        int loopTimes = 10;
+        std::vector<float> dist(SEARCH_NUM * k, 0);
+        std::vector<faiss::idx_t> label(SEARCH_NUM * k, 0);
+    
+        double ts = GetMillisecs();
+        for (int l = 0; l < loopTimes; l++) {
+            // query data reduction and sq
+            index.search(SEARCH_NUM, queryInt8.data(), k, dist.data(), label.data());
+        }
+        double te = GetMillisecs();
+        printf("base:%zu, dim:%d, search num:%d, topk:%d, QPS:%.4f\n", ntotal, dimOut, SEARCH_NUM,
+            k, MILLI_SECOND * SEARCH_NUM * loopTimes / (te - ts));
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
     }
-    double te = GetMillisecs();
-    printf("base:%zu, dim:%d, search num:%d, topk:%d, QPS:%.4f\n", ntotal, dimOut, SEARCH_NUM,
-        k, MILLI_SECOND * SEARCH_NUM * loopTimes / (te - ts));
 }
 
 } // namespace

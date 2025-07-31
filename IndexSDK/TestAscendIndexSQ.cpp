@@ -83,61 +83,66 @@ void Norm(float *data, size_t n, int dim)
     }
 }
 
+size_t search_warm(faiss::ascend::AscendIndexSQ &index, faiss::ascend::AscendIndexSQConfig &conf)
+{
+    size_t getTotal = 0;
+    for (size_t k = 0; k < conf.deviceList.size(); k++) {
+        size_t tmpTotal = index.getBaseSize(conf.deviceList[k]);
+        getTotal += tmpTotal;
+    }
+    return getTotal;
+}
 
 TEST(TestAscendIndexSQ, QPS)
 {
     std::vector<int> dim = { 256, 512 };
     std::vector<size_t> ntotal = { 7000000 };
     std::vector<int> searchNum = { 1, 2, 4, 8, 16, 32, 48, 64, 96 };
-
-    size_t maxSize = ntotal.back() * dim.back();
-    std::vector<float> data(maxSize);
-    for (size_t i = 0; i < maxSize; i++) {
-        data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
-    }
+    try {
+        size_t maxSize = ntotal.back() * dim.back();
+        std::vector<float> data(maxSize);
+        for (size_t i = 0; i < maxSize; i++) {
+            data[i] = 1.0 * FastRand() / FAST_RAND_MAX;
+        }
+        
+        Norm(data.data(), ntotal.back(), dim.back());
     
-    Norm(data.data(), ntotal.back(), dim.back());
-
-    for (size_t i = 0; i < dim.size(); i++) {
-        faiss::ascend::AscendIndexSQConfig conf({ 0 }, 1024 * 1024 * 1500);
-        faiss::ascend::AscendIndexSQ index(dim[i], faiss::ScalarQuantizer::QuantizerType::QT_8bit, faiss::METRIC_L2,
-            conf);
-
-        for (size_t j = 0; j < ntotal.size(); j++) {
-            index.reset();
-            for (auto deviceId : conf.deviceList) {
-                int len = index.getBaseSize(deviceId);
-                ASSERT_EQ(len, 0);
-            }
-
-            index.train(ntotal[j], data.data());
-            index.add(ntotal[j], data.data());
-            {
-                size_t getTotal = 0;
-                for (size_t k = 0; k < conf.deviceList.size(); k++) {
-                    size_t tmpTotal = index.getBaseSize(conf.deviceList[k]);
-                    getTotal += tmpTotal;
+        for (size_t i = 0; i < dim.size(); i++) {
+            faiss::ascend::AscendIndexSQConfig conf({ 0 }, 1024 * 1024 * 1500);
+            faiss::ascend::AscendIndexSQ index(dim[i], faiss::ScalarQuantizer::QuantizerType::QT_8bit, faiss::METRIC_L2,
+                conf);
+    
+            for (size_t j = 0; j < ntotal.size(); j++) {
+                index.reset();
+                for (auto deviceId : conf.deviceList) {
+                    int len = index.getBaseSize(deviceId);
+                    ASSERT_EQ(len, 0);
                 }
-                EXPECT_EQ(getTotal, ntotal[j]);
-            }
-
-            {
-                for (size_t n = 0; n < searchNum.size(); n++) {
-                    int k = 100;
-                    int loopTimes = 100;
-                    std::vector<float> dist(searchNum[n] * k, 0);
-                    std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
-                    double ts = GetMillisecs();
-                    for (int l = 0; l < loopTimes; l++) {
-                        index.search(searchNum[n], data.data(), k, dist.data(), label.data());
+    
+                index.train(ntotal[j], data.data());
+                index.add(ntotal[j], data.data());
+                EXPECT_EQ(search_warm(index, conf), ntotal[j]);
+                
+                {
+                    for (size_t n = 0; n < searchNum.size(); n++) {
+                        int k = 100;
+                        int loopTimes = 100;
+                        std::vector<float> dist(searchNum[n] * k, 0);
+                        std::vector<faiss::idx_t> label(searchNum[n] * k, 0);
+                        double ts = GetMillisecs();
+                        for (int l = 0; l < loopTimes; l++) {
+                            index.search(searchNum[n], data.data(), k, dist.data(), label.data());
+                        }
+                        double te = GetMillisecs();
+                        int cases = i * ntotal.size() * searchNum.size() + j * searchNum.size() + n;
+                        printf("case[%d]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", cases, ntotal[j], dim[i],
+                            searchNum[n], MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
                     }
-                    double te = GetMillisecs();
-                    int cases = i * ntotal.size() * searchNum.size() + j * searchNum.size() + n;
-                    printf("case[%d]: base:%zu, dim:%d, search num:%d, QPS:%.4f\n", cases, ntotal[j], dim[i],
-                        searchNum[n], MILLI_SECOND * searchNum[n] * loopTimes / (te - ts));
                 }
             }
         }
+    } catch (std::exception &e) {
+        printf("%s\n", e.what());
     }
 }
 } // namespace

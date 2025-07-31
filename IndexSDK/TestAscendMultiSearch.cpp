@@ -88,81 +88,127 @@ struct IDFilter {
     uint32_t timeRange[2] = { 0 };        // 时间戳
 };
 
-void AscendIndexSQMultiSearchFilter()
+void DoSearchFilter(int ntotal, int dim, std::vector<float> &data)
 {
-    int dim = 64;
     int searchNum = 2;
     int indexNum = 10;
     std::vector<faiss::ascend::AscendIndex *> indexes(indexNum);
+    std::vector<int64_t> ids(ntotal, 0);
+    int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine e1(seed);
+    std::uniform_int_distribution<int32_t> id(0, std::numeric_limits<int32_t>::max());
+    std::uniform_int_distribution<uint8_t> searchCid(0, K_MAX_CAMERA_NUM - 1);
+
+    for (int i = 0; i < ntotal; i++) {
+        // 默认拼接方式时间戳在第10位bit开始，cid在第42位bit开始
+        ids[i] = (static_cast<int64_t>(searchCid(e1)) << 42) + (static_cast<int64_t>(id(e1)) << 10);
+    }
+
+    std::cout << "AscendIndex SQ MultiSearch with different filter start" << std::endl;
+    for (int i = 0; i < indexNum; i++) {
+        indexes[i] = new faiss::ascend::AscendIndexSQ(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+            METRIC_TYPE, conf);
+
+        indexes[i]->train(ntotal, data.data());
+        indexes[i]->add_with_ids(ntotal, data.data(), ids.data());
+    }
+
+    void *multiFilters[searchNum];
+    IDFilter idFilters[indexNum * searchNum];
+    for (int query = 0; query < searchNum; query++) {
+        for (int indexId = 0; indexId < indexNum; indexId++) {
+            IDFilter idFilter;
+            idFilter.timeRange[0] = 0;
+            idFilter.timeRange[1] = 0x7fffffff;
+            // 16个uint8_t表示128位的cid
+            for (int i = 0; i < 16; i++) {
+                idFilter.cameraIdMask[i] = searchCid(e1);
+            }
+            idFilters[query * indexNum + indexId] = idFilter;
+        }
+        multiFilters[query] = &idFilters[query * indexNum];
+    }
+    int k = 10;
+    std::vector<float> dist(indexNum * k * searchNum, 0);
+    std::vector<faiss::idx_t> label(indexNum * k * searchNum, 0);
+    SearchWithFilter(indexes, searchNum, data.data(), k, dist.data(), label.data(), multiFilters, false);
+
+    for (int i = 0; i < indexNum; i++) {
+        delete indexes[i];
+    }
+}
+
+void AscendIndexSQMultiSearchFilter()
+{
+    int dim = 64;
     try {
         faiss::ascend::AscendIndexSQConfig conf({ 0 });
         conf.filterable = true;
-    
         int ntotal = 128;
         std::vector<float> data(dim * ntotal);
         for (int i = 0; i < dim * ntotal; i++) {
             data[i] = drand48();
         }
         Norm(data.data(), ntotal, dim);
-    
-        std::vector<int64_t> ids(ntotal, 0);
-        int seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine e1(seed);
-        std::uniform_int_distribution<int32_t> id(0, std::numeric_limits<int32_t>::max());
-        std::uniform_int_distribution<uint8_t> searchCid(0, K_MAX_CAMERA_NUM - 1);
-    
-        for (int i = 0; i < ntotal; i++) {
-            // 默认拼接方式时间戳在第10位bit开始，cid在第42位bit开始
-            ids[i] = (static_cast<int64_t>(searchCid(e1)) << 42) + (static_cast<int64_t>(id(e1)) << 10);
-        }
-    
-        std::cout << "AscendIndex SQ MultiSearch with different filter start" << std::endl;
-        for (int i = 0; i < indexNum; i++) {
-            indexes[i] = new faiss::ascend::AscendIndexSQ(dim, faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                METRIC_TYPE, conf);
-    
-            indexes[i]->train(ntotal, data.data());
-            indexes[i]->add_with_ids(ntotal, data.data(), ids.data());
-        }
-    
-        void *multiFilters[searchNum];
-        IDFilter idFilters[indexNum * searchNum];
-        for (int query = 0; query < searchNum; query++) {
-            for (int indexId = 0; indexId < indexNum; indexId++) {
-                IDFilter idFilter;
-                idFilter.timeRange[0] = 0;
-                idFilter.timeRange[1] = 0x7fffffff;
-                // 16个uint8_t表示128位的cid
-                for (int i = 0; i < 16; i++) {
-                    idFilter.cameraIdMask[i] = searchCid(e1);
-                }
-                idFilters[query * indexNum + indexId] = idFilter;
-            }
-            multiFilters[query] = &idFilters[query * indexNum];
-        }
-        int k = 10;
-        std::vector<float> dist(indexNum * k * searchNum, 0);
-        std::vector<faiss::idx_t> label(indexNum * k * searchNum, 0);
-        SearchWithFilter(indexes, searchNum, data.data(), k, dist.data(), label.data(), multiFilters, false);
-    
-        for (int i = 0; i < indexNum; i++) {
-            delete indexes[i];
-        }
+        DoSearchFilter(ntotal, dim, data);
         std::cout << "AscendIndex SQ MultiSearch with different filter end" << std::endl;
     } catch (std::exception &e) {
-        for (int i = 0; i < indexNum; i++) {
-            delete indexes[i];
-        }
         printf("%s\n", e.what());
+    }
+}
+
+void DoIndexSearchFilter(int ntotal, int dim, std::vector<float> &data)
+{
+    int searchNum = 2;
+    int indexNum = 10;
+    std::vector<faiss::Index *> indexes(indexNum);
+    std::vector<int64_t> ids(ntotal, 0);
+    int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine e1(seed);
+    std::uniform_int_distribution<int32_t> id(0, std::numeric_limits<int32_t>::max());
+    std::uniform_int_distribution<uint8_t> searchCid(0, K_MAX_CAMERA_NUM - 1);
+
+    for (int i = 0; i < ntotal; i++) {
+        // 默认拼接方式时间戳在第10位bit开始，cid在第42位bit开始
+        ids[i] = (static_cast<int64_t>(searchCid(e1)) << 42) + (static_cast<int64_t>(id(e1)) << 10);
+    }
+
+    std::cout << "Index SQ MultiSearch with different filter start" << std::endl;
+    for (int i = 0; i < indexNum; i++) {
+        indexes[i] = new faiss::ascend::AscendIndexSQ(dim,
+            faiss::ScalarQuantizer::QuantizerType::QT_8bit, METRIC_TYPE, conf);
+
+        indexes[i]->train(ntotal, data.data());
+        indexes[i]->add_with_ids(ntotal, data.data(), ids.data());
+    }
+
+    void *multiFilters[searchNum];
+    IDFilter idFilters[indexNum * searchNum];
+    for (int query = 0; query < searchNum; query++) {
+        for (int indexId = 0; indexId < indexNum; indexId++) {
+            IDFilter idFilter;
+            idFilter.timeRange[0] = 0;
+            idFilter.timeRange[1] = 0x7fffffff;
+            // 16个uint8_t表示128位的cid
+            for (int i = 0; i < 16; i++) {
+                idFilter.cameraIdMask[i] = searchCid(e1);
+            }
+            idFilters[query * indexNum + indexId] = idFilter;
+        }
+        multiFilters[query] = &idFilters[query * indexNum];
+    }
+    int k = 10;
+    std::vector<float> dist(indexNum * k * searchNum, 0);
+    std::vector<faiss::idx_t> label(indexNum * k * searchNum, 0);
+    faiss::ascend::SearchWithFilter(indexes, searchNum, data.data(), k, dist.data(), label.data(), multiFilters, false);
+    for (int i = 0; i < indexNum; i++) {
+        delete indexes[i];
     }
 }
 
 void IndexSQMultiSearchFilter()
 {
     int dim = 64;
-    int searchNum = 2;
-    int indexNum = 10;
-    std::vector<faiss::Index *> indexes(indexNum);
     try {
         faiss::ascend::AscendIndexSQConfig conf({ 0 });
         conf.filterable = true;
@@ -173,55 +219,9 @@ void IndexSQMultiSearchFilter()
             data[i] = drand48();
         }
         Norm(data.data(), ntotal, dim);
-    
-        std::vector<int64_t> ids(ntotal, 0);
-        int seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine e1(seed);
-        std::uniform_int_distribution<int32_t> id(0, std::numeric_limits<int32_t>::max());
-        std::uniform_int_distribution<uint8_t> searchCid(0, K_MAX_CAMERA_NUM - 1);
-    
-        for (int i = 0; i < ntotal; i++) {
-            // 默认拼接方式时间戳在第10位bit开始，cid在第42位bit开始
-            ids[i] = (static_cast<int64_t>(searchCid(e1)) << 42) + (static_cast<int64_t>(id(e1)) << 10);
-        }
-    
-        std::cout << "Index SQ MultiSearch with different filter start" << std::endl;
-        for (int i = 0; i < indexNum; i++) {
-            indexes[i] = new faiss::ascend::AscendIndexSQ(dim,
-                faiss::ScalarQuantizer::QuantizerType::QT_8bit, METRIC_TYPE, conf);
-    
-            indexes[i]->train(ntotal, data.data());
-            indexes[i]->add_with_ids(ntotal, data.data(), ids.data());
-        }
-    
-        void *multiFilters[searchNum];
-        IDFilter idFilters[indexNum * searchNum];
-        for (int query = 0; query < searchNum; query++) {
-            for (int indexId = 0; indexId < indexNum; indexId++) {
-                IDFilter idFilter;
-                idFilter.timeRange[0] = 0;
-                idFilter.timeRange[1] = 0x7fffffff;
-                // 16个uint8_t表示128位的cid
-                for (int i = 0; i < 16; i++) {
-                    idFilter.cameraIdMask[i] = searchCid(e1);
-                }
-                idFilters[query * indexNum + indexId] = idFilter;
-            }
-            multiFilters[query] = &idFilters[query * indexNum];
-        }
-        int k = 10;
-        std::vector<float> dist(indexNum * k * searchNum, 0);
-        std::vector<faiss::idx_t> label(indexNum * k * searchNum, 0);
-        faiss::ascend::SearchWithFilter(indexes, searchNum, data.data(), k, dist.data(), label.data(), multiFilters, false);
-    
-        for (int i = 0; i < indexNum; i++) {
-            delete indexes[i];
-        }
+        DoIndexSearchFilter(ntotal, dim, data);
         std::cout << "Index SQ MultiSearch with different filter end" << std::endl;
     } catch (std::exception &e) {
-        for (int i = 0; i < indexNum; i++) {
-            delete indexes[i];
-        }
         printf("%s\n", e.what());
     }
 }

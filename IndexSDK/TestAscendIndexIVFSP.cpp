@@ -437,8 +437,8 @@ void RecallAndRecallFilter()
     }
 }
 
-void CreateMultiIndex(std::vector<faiss::ascend::AscendIndex*> &indexes，
-                      faiss::ascend::AscendIndexIVFSPConfig &conf)
+void CreateMultiIndex(std::vector<faiss::ascend::AscendIndex*> &indexes,
+                      int dim, faiss::ascend::AscendIndexIVFSPConfig &conf)
 {
     int nonzeroNum = 64;
     int nlist = 256;
@@ -493,7 +493,7 @@ void MultiSearchAndMultiSearchFilter()
 
     std::vector<faiss::ascend::AscendIndex*> indexes;
     try {
-        CreateMultiIndex(indexes, conf);
+        CreateMultiIndex(indexes, dim, conf);
     
         LoadAndSaveData(indexes, ntotal, data);
     

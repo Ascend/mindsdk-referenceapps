@@ -127,8 +127,7 @@ TEST(TestAscendIndexGreat, Test_KMode_QPS)
 
 void search_warm(int topk, std::vector<float> &data, std::shared_ptr<AscendIndexGreat> &index)
 {
-    index->GetNTotal(total);
-    EXPECT_EQ(total, ntotal);
+ 
     
     // search检索
     int topk = 100;
@@ -136,7 +135,11 @@ void search_warm(int topk, std::vector<float> &data, std::shared_ptr<AscendIndex
     size_t nq = 9000;
     std::vector<float> distsWarm(nq * topk);
     std::vector<int64_t> labelsWarm(nq * topk);
-    
+    // warm up
+    for (int i = 0; i < warmUpTimes; ++i) {
+        AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
+        index->Search(searchParamsWarm);
+    }
 }
 
 /**
@@ -178,12 +181,10 @@ TEST(TestAscendIndexGreat, Test_AKMode_QPS)
         // add底库
         index->Add(data);
         size_t total = 0;
+        index->GetNTotal(total);
+        EXPECT_EQ(total, ntotal);
         search_warm(topk, data, index);
-        // warm up
-        for (int i = 0; i < warmUpTimes; ++i) {
-            AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};
-            index->Search(searchParamsWarm);
-        }
+        
     
         // search
         std::vector<size_t> searchNum = {1, 8, 16, 32, 64, 128, 256};

@@ -125,6 +125,20 @@ TEST(TestAscendIndexGreat, Test_KMode_QPS)
     }
 }
 
+void search_warm(int topk, std::vector<float> &data, std::shared_ptr<AscendIndexGreat> &index)
+{
+    index->GetNTotal(total);
+    EXPECT_EQ(total, ntotal);
+    
+    // search检索
+    int topk = 100;
+    int warmUpTimes = 10;
+    size_t nq = 9000;
+    std::vector<float> distsWarm(nq * topk);
+    std::vector<int64_t> labelsWarm(nq * topk);
+    
+}
+
 /**
  * AKMode需要提前生成算子和码本
  * 码本和算子参数根据实际情况调整, dim nlistL1 subDimL1 要与创建的索引一致
@@ -164,16 +178,7 @@ TEST(TestAscendIndexGreat, Test_AKMode_QPS)
         // add底库
         index->Add(data);
         size_t total = 0;
-        index->GetNTotal(total);
-        EXPECT_EQ(total, ntotal);
-        
-        // search检索
-        int topk = 100;
-        int warmUpTimes = 10;
-        size_t nq = 9000;
-        std::vector<float> distsWarm(nq * topk);
-        std::vector<int64_t> labelsWarm(nq * topk);
-    
+        search_warm(topk, data, index);
         // warm up
         for (int i = 0; i < warmUpTimes; ++i) {
             AscendIndexSearchParams searchParamsWarm {100, data, topk, distsWarm, labelsWarm};

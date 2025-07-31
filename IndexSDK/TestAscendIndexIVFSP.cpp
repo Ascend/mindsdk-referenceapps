@@ -437,16 +437,39 @@ void RecallAndRecallFilter()
     }
 }
 
-void MultiSearchAndMultiSearchFilter()
+void CreateMultiIndex(std::vector<faiss::ascend::AscendIndex*> &indexes，
+                      faiss::ascend::AscendIndexIVFSPConfig &conf)
 {
-    // 数据集（特征数据、查询数据、groundtruth数据）、码本， 所在的目录。请根据实际情况填写。
+    int nonzeroNum = 64;
+    int nlist = 256;
     std::string basePath = " ";
     // codeBook 码本
     std::string codeBookPath = basePath + "codebook.bin";
+    for (int i = 0; i < INDEX_NUM; ++i) {
+        faiss::ascend::AscendIndexIVFSP* index;
+        if (i == 0) {
+            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
+                codeBookPath.c_str(), faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+                faiss::MetricType::METRIC_L2, conf);
+        } else {
+            index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
+                *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
+                faiss::MetricType::METRIC_L2, conf);
+        }
+
+        index->setVerbose(true);
+        indexes.emplace_back(index);
+        printf("create index:%d\n", i);
+    }
+}
+
+void MultiSearchAndMultiSearchFilter()
+{
+    // 数据集（特征数据、查询数据、groundtruth数据）、码本， 所在的目录。请根据实际情况填写。
+    
     // 参数值 dim、nlist、nonzeroNum、searchListSize，应该和使用的codeBook 码本保持一致，即和训练码本时指定的参数保持一致。
     int dim = 256;
-    int nonzeroNum = 64;
-    int nlist = 256;
+    
     int handleBatch = 64;
     std::vector<int> batches = {1, 2, 4, 8, 16, 32, 64};
     int searchListSize = 32768;
@@ -470,22 +493,7 @@ void MultiSearchAndMultiSearchFilter()
 
     std::vector<faiss::ascend::AscendIndex*> indexes;
     try {
-        for (int i = 0; i < INDEX_NUM; ++i) {
-            faiss::ascend::AscendIndexIVFSP* index;
-            if (i == 0) {
-                index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                    codeBookPath.c_str(), faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                    faiss::MetricType::METRIC_L2, conf);
-            } else {
-                index = new faiss::ascend::AscendIndexIVFSP(dim, nonzeroNum, nlist,
-                    *(faiss::ascend::AscendIndexIVFSP*)indexes[0], faiss::ScalarQuantizer::QuantizerType::QT_8bit,
-                    faiss::MetricType::METRIC_L2, conf);
-            }
-    
-            index->setVerbose(true);
-            indexes.emplace_back(index);
-            printf("create index:%d\n", i);
-        }
+        CreateMultiIndex(indexes, conf);
     
         LoadAndSaveData(indexes, ntotal, data);
     

@@ -83,6 +83,15 @@ void Norm(float *data, size_t n, int dim)
     }
 }
 
+size_t search_warm(faiss::ascend::AscendIndexSQ &index, faiss::ascend::AscendIndexSQConfig &conf)
+{
+    size_t getTotal = 0;
+    for (size_t k = 0; k < conf.deviceList.size(); k++) {
+        size_t tmpTotal = index.getBaseSize(conf.deviceList[k]);
+        getTotal += tmpTotal;
+    }
+    return getTotal;
+}
 
 TEST(TestAscendIndexSQ, QPS)
 {
@@ -112,15 +121,8 @@ TEST(TestAscendIndexSQ, QPS)
     
                 index.train(ntotal[j], data.data());
                 index.add(ntotal[j], data.data());
-                {
-                    size_t getTotal = 0;
-                    for (size_t k = 0; k < conf.deviceList.size(); k++) {
-                        size_t tmpTotal = index.getBaseSize(conf.deviceList[k]);
-                        getTotal += tmpTotal;
-                    }
-                    EXPECT_EQ(getTotal, ntotal[j]);
-                }
-    
+                EXPECT_EQ(search_warm(index, conf), ntotal[j]);
+                
                 {
                     for (size_t n = 0; n < searchNum.size(); n++) {
                         int k = 100;

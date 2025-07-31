@@ -208,6 +208,7 @@ void TestIVFSQT(int niter, int ncentroids)
     int gtNum = 100;
     int centroid = 256;
     try {
+        // resource size 1024 * 1024 * 1024 = 1GB
         faiss::ascend::AscendIndexIVFSQTConfig conf({ 0 }, static_cast<int64_t>(1024 * 1024 * 1024));
         conf.cp.niter = niter;
         conf.useKmeansPP = true;

@@ -7,6 +7,7 @@ import os
 import time
 import traceback
 from loguru import logger
+from paddle.base import libpaddle
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from mx_rag.cache import CacheConfig, SimilarityCacheConfig, MxRAGCache, CacheChainChat, \
@@ -128,7 +129,7 @@ def rag_cache_demo():
         knowledge_db = KnowledgeDB(knowledge_store=knowledge_store,
                                    chunk_store=chunk_store,
                                    vector_store=vector_store,
-                                   knowledge_name="test",
+                                   knowledge_name="rag",
                                    white_paths=args.white_path,
                                    user_id="Default01"
                                    )

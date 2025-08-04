@@ -169,6 +169,7 @@ TEST(TestAscendIndexTS, GetFeatureByLabel)
     for (int i = 0; i < ntotal * dim / 8; i++) {
         EXPECT_EQ(base[i], getBase[i]);
     }
+    delete index;
 }
 
 TEST(TestAscendIndexTS, DeleteFeatureByLabel)
@@ -203,6 +204,7 @@ TEST(TestAscendIndexTS, DeleteFeatureByLabel)
     index->DeleteFeatureByLabel(delCount, delLabel.data());
     index->GetFeatureNum(&validNum);
     EXPECT_EQ(validNum, ntotal - delCount);
+    delete index;
 }
 
 TEST(TestAscendIndexTS, DeleteFeatureByToken)
@@ -231,6 +233,7 @@ TEST(TestAscendIndexTS, DeleteFeatureByToken)
     printf("DeleteFeatureByToken delete cost totoal %f ms\n", te - ts);
     index->GetFeatureNum(&validNum);
     EXPECT_EQ(validNum, ntotal / 2);
+    delete index;
 }
 
 TEST(TestAscendIndexTS, Acc)

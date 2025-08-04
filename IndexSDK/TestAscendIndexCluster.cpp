@@ -65,6 +65,7 @@ int main(int argc, char **argv)
     auto ret = index.Init(dim, capacity, meticType, deciveList, resourceSize);
     if (ret != 0) {
         printf("[ERROR] Init fail ret = %d \r\n", ret);
+        index.Finalize();
         return 1;
     }
 
@@ -88,11 +89,10 @@ int main(int argc, char **argv)
         std::vector<uint32_t> queryIdArr(nq);
         std::iota(queryIdArr.begin(), queryIdArr.end(), start);
     
-        bool aboveFilter = true;
         std::vector<std::vector<float>> resDist(nq);
         std::vector<std::vector<uint32_t>> resIdx(nq);
     
-        ret = index.ComputeDistanceByThreshold(queryIdArr, codeStartIdx, codeNum, threshold, aboveFilter, resDist, resIdx);
+        ret = index.ComputeDistanceByThreshold(queryIdArr, codeStartIdx, codeNum, threshold, true, resDist, resIdx);
         if (ret != 0) {
             printf("[ERROR] ComputeDistanceByThreshold fail ret = %d \r\n", ret);
             index.Finalize();

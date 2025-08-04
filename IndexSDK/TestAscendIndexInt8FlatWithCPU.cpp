@@ -297,7 +297,7 @@ int main(int argc, char **argv)
         printf("-------------------search 3-------------------\n");
         PrintSearch(dist, label);
         LoadAndSearch(ascendIndex, cpuIDMap, base, dist, label);
-
+        delete cpuSQ;
         delete cpuIDMap;
     } catch (std::exception &e) {
         printf("Exception caught:%s!\n", e.what());

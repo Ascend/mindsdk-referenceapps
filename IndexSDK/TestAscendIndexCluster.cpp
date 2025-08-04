@@ -95,6 +95,7 @@ int main(int argc, char **argv)
         ret = index.ComputeDistanceByThreshold(queryIdArr, codeStartIdx, codeNum, threshold, aboveFilter, resDist, resIdx);
         if (ret != 0) {
             printf("[ERROR] ComputeDistanceByThreshold fail ret = %d \r\n", ret);
+            index.Finalize();
             return 1;
         }
     

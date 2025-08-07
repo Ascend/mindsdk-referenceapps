@@ -5,6 +5,7 @@ import argparse
 import threading
 import traceback
 from loguru import logger
+from paddle.base import libpaddle
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from mx_rag.document import LoaderMng
@@ -17,7 +18,6 @@ from mx_rag.knowledge.knowledge import KnowledgeStore
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.utils import ClientParam
-from paddle.base import libpaddle
 
 
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter):

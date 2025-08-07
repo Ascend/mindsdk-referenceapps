@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
+from paddle.base import libpaddle
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from mx_rag.chain import SingleText2TextChain
 from mx_rag.document import LoaderMng
@@ -21,7 +22,6 @@ from mx_rag.retrievers import Retriever
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.utils import ClientParam
-from paddle.base import libpaddle
 
 
 

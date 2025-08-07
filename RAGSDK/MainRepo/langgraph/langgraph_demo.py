@@ -6,10 +6,10 @@ from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
 from langchain_core.retrievers import BaseRetriever
 from loguru import logger
+from paddle.base import libpaddle
 from mx_rag.llm import LLMParameterConfig
 from mx_rag.storage.vectorstore import MindFAISS
 from mx_rag.utils import ClientParam
-from paddle.base import libpaddle
 
 
 def evaluate_creator(evaluator, evaluate_type: str):

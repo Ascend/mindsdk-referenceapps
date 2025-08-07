@@ -4,6 +4,7 @@
 import argparse
 from loguru import logger
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from paddle.base import libpaddle
 from mx_rag.document import LoaderMng
 from mx_rag.document.loader import DocxLoader, PdfLoader
 from mx_rag.embedding.local import TextEmbedding
@@ -14,7 +15,6 @@ from mx_rag.recursive_tree import TreeBuilderConfig, TreeRetrieverConfig, TreeRe
 from mx_rag.recursive_tree.tree_structures import save_tree
 from mx_rag.storage.document_store import SQLiteDocstore
 from mx_rag.utils import ClientParam
-from paddle.base import libpaddle
 from transformers import AutoTokenizer
 
 

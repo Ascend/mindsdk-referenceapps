@@ -8,10 +8,10 @@ from loguru import logger
 from paddle.base import libpaddle
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
-from mx_rag.document import LoaderMng
-from mx_rag.document.loader import DocxLoader, PdfLoader
 from mx_rag.embedding.local import TextEmbedding
 from mx_rag.embedding.service import TEIEmbedding
+from mx_rag.document import LoaderMng
+from mx_rag.document.loader import DocxLoader, PdfLoader
 from mx_rag.knowledge import KnowledgeDB
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.knowledge import KnowledgeStore

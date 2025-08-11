@@ -3,7 +3,7 @@
 ## 环境准备(容器化部署)
 
 1.下载RAG
-SDK镜像并按操作步骤启动容器,下载参考地址：https://www.hiascend.com/developer/ascendhub/detail/27c1cba133384f59ac7ec2500b0e3ffc
+SDK镜像并按操作步骤启动容器,下载参考地址：https://www.hiascend.com/developer/ascendhub/detail/ragsdk
 
 2.下载mindie镜像并按操作步骤启动大模型,下载参考地址：https://www.hiascend.com/developer/ascendhub/detail/af85b724a7e5469ebd7ea13c3439d48f
 

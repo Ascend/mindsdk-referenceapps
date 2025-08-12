@@ -3,6 +3,7 @@
 
 import argparse
 import os
+from paddle.base import libpaddle
 import torch
 import torch_npu
 from datasets import load_dataset
@@ -16,7 +17,6 @@ from mx_rag.reranker.local import LocalReranker
 from mx_rag.tools.finetune.generator import TrainDataGenerator, DataProcessConfig
 from mx_rag.utils import ClientParam
 from mx_rag.utils.file_check import FileCheck
-from paddle.base import libpaddle
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import SentenceTransformerTrainer
 from sentence_transformers import SentenceTransformerTrainingArguments

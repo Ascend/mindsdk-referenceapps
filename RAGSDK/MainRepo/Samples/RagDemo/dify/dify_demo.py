@@ -23,11 +23,12 @@ from pydantic import BaseModel
 from pymilvus import MilvusClient
 from starlette.responses import JSONResponse
 
+from paddle.base import libpaddle
+from mx_rag.embedding.service import TEIEmbedding
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from mx_rag.document import LoaderMng
 from mx_rag.document.loader import DocxLoader, PdfLoader
-from mx_rag.embedding.service import TEIEmbedding
 from mx_rag.knowledge import KnowledgeStore, KnowledgeDB
 from mx_rag.reranker.service import TEIReranker
 from mx_rag.retrievers import Retriever, FullTextRetriever

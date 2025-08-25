@@ -115,6 +115,5 @@ def rag_demo_upload():
         stack_trace = traceback.format_exc()
         logger.error(stack_trace)
 
-
 if __name__ == '__main__':
     rag_demo_upload()

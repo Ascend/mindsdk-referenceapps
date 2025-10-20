@@ -29,7 +29,7 @@ RAG SDK是昇腾面向大语言模型的知识增强开发套件，为解决大�
 
 | 目录         | 说明                                                           |
 |------------|--------------------------------------------------------------|
-| Dockerfile | 部署RAG SDK容器,用户若自行准备镜像文件的参考样例，对应用户手册《安装RAG SDK》章节。            |
+| Dockerfile | 部署RAG SDK容器,用户若自行准备镜像文件的参考样例，对应[《RAG SDK 用户指南》](https://www.hiascend.com/document/detail/zh/mindsdk/71rc1/rag/ragug/mxragug_0001.html)"安装部署/安装RAG SDK"章节。            |
 | Samples    | RAG SDK完整开发流程的开发参考样例,包含"创建知识库"、"在线问答"、"MxRAGCache缓存和自动生成QA"。 |
 | langgraph  | Agentic RAG样例。                                               |
 | sd_samples | 安装并运行stable_diffusion模型参考样例。                                 |

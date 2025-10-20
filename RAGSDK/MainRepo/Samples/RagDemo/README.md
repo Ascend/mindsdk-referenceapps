@@ -2,12 +2,12 @@
 
 ## 前提条件
 
-执行Demo前请先阅读《RAG SDK 用户指南》，并按照其中"安装部署"章节的要求完成必要软、硬件安装。
+执行Demo前请先阅读[《RAG SDK 用户指南》](https://www.hiascend.com/document/detail/zh/mindsdk/71rc1/rag/ragug/mxragug_0001.html)，并按照其中"安装部署"章节的要求完成必要软、硬件安装。
 本章节为"应用开发"章节提供开发样例代码,便于开发者快速开发。
 
 ## 样例说明
 
-详细的样例介绍请参考《RAG SDK 用户指南》"应用开发"章节说明。 其中：
+详细的样例介绍请参考[《RAG SDK 用户指南》](https://www.hiascend.com/document/detail/zh/mindsdk/71rc1/rag/ragug/mxragug_0001.html)"应用开发"章节说明。 其中：
 
 1.rag_demo_knowledge.py为"创建知识库"样例代码; rag_demo_query为"在线问答"样例代码。
 

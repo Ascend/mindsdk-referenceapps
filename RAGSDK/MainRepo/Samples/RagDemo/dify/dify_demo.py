@@ -15,6 +15,7 @@ import fitz
 import httpx
 import uvicorn
 from PIL import Image
+import getpass
 from fastapi import FastAPI, UploadFile
 from langchain_openai import ChatOpenAI
 from loguru import logger
@@ -679,7 +680,6 @@ def main():
                         help="知识文档入库时所在目录白名单")
     parser.add_argument("--ssl_keyfile", type=str, help="ssl_keyfile")
     parser.add_argument("--ssl_certfile", type=str, help="ssl_certfile")
-    parser.add_argument("--ssl_keyfile_password", type=str, help="ssl_keyfile_password")
     parser.add_argument("--ssl_ca_certs", type=str, help="ssl_ca_certs")
     parser.add_argument("--ssl_cert_reqs", type=str, help="ssl_cert_reqs")
     parser.add_argument("--embedding_url", type=str, default="http://127.0.0.1:9123/embed", help="向量模型服务地址")
@@ -705,7 +705,7 @@ def main():
                 port=int(args.get("port")),
                 ssl_keyfile=args.get("ssl_keyfile", None),
                 ssl_certfile=args.get("ssl_certfile", None),
-                ssl_keyfile_password=args.get("ssl_keyfile_password", None),
+                ssl_keyfile_password=getpass.getpass(),
                 ssl_ca_certs=args.get("ssl_ca_certs", None),
                 ssl_cert_reqs=args.get("ssl_cert_reqs", None))
 

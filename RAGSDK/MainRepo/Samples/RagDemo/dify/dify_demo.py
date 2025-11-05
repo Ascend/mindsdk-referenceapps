@@ -574,7 +574,7 @@ async def uploadfile(file: UploadFile):
 
     logger.info(f"upload file {file.filename} to knowledge successfully")
 
-    return JSONResponse(content={"info": f"upload file:{file.file.name} successfully"})
+    return JSONResponse(content={"info": f"upload file:{file.filename} successfully"})
 
 
 class DeleteFileParam(BaseModel):
@@ -593,7 +593,8 @@ async def deletefile(file: DeleteFileParam):
         os.remove(os.path.join(upload_file_dir, file.file_name))
 
         # 删除从文件解析出来的图片
-        shutil.rmtree(os.path.join(images_store_dir, file.file_name))
+        if os.environ["parse_image"] == "True":
+            shutil.rmtree(os.path.join(images_store_dir, file.file_name))
 
     except Exception as e:
         logger.error(f"delete file [{file.file_name}] failed: {e}")
@@ -618,7 +619,8 @@ async def deleteallfiles():
     # 删除从文件解析出来的图片
     try:
         shutil.rmtree(upload_file_dir)
-        shutil.rmtree(images_store_dir)
+        if os.environ["parse_image"] == "True":
+            shutil.rmtree(images_store_dir)
     except Exception as e:
         logger.info(f"-------- delete {upload_file_dir} failed: {e}")
 
@@ -705,7 +707,7 @@ def main():
                 port=int(args.get("port")),
                 ssl_keyfile=args.get("ssl_keyfile", None),
                 ssl_certfile=args.get("ssl_certfile", None),
-                ssl_keyfile_password=getpass.getpass(),
+                ssl_keyfile_password=getpass.getpass() if args.get("ssl_keyfile") else None,
                 ssl_ca_certs=args.get("ssl_ca_certs", None),
                 ssl_cert_reqs=args.get("ssl_cert_reqs", None))
 

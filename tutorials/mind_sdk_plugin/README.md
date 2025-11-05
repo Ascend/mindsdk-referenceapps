@@ -34,10 +34,10 @@ Atlas 300I pro、Atlas 300V pro
 
 ```
 # Vision SDK环境变量:
-.${SDK-path}/set_env.sh
+. ${SDK-path}/set_env.sh
 
 # CANN环境变量:
-.${ascend-toolkit-path}/set_env.sh
+. ${ascend-toolkit-path}/set_env.sh
 
 # 环境变量介绍
 SDK-path:SDK Vision SDK安装路径

@@ -8,16 +8,16 @@
 打开百度图片https://image.baidu.com/，输入任何关键字，然后搜索，右击任意图片，点击另存为。把图片保存在DvppWrapperSample目录下。
 
 ## 编译与运行
-**步骤1** 修改CMakeLists.txt文件 将set(MX_SDK_HOME ${SDK安装路径}) 中的${SDK安装路径}替换为实际的SDK安装路径
+**步骤1** 修改CMakeLists.txt文件 将set(MX_SDK_HOME \${SDK安装路径}) 中的\${SDK安装路径}替换为实际的SDK安装路径
 
 **步骤2** 设置环境变量
-ASCEND_HOME Ascend安装的路径，一般为/usr/local/Ascend
-LD_LIBRARY_PATH 指定程序运行时依赖的动态库查找路径
-```
-export ASCEND_HOME=/usr/local/Ascend
-export ASCEND_VERSION=nnrt/latest
-export ARCH_PATTERN=.
-export LD_LIBRARY_PATH=${MX_SDK_HOME}/lib/modelpostprocessors:${MX_SDK_HOME}/lib:${MX_SDK_HOME}/opensource/lib:${MX_SDK_HOME}/opensource/lib64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:/usr/local/Ascend/ascend-toolkit/latest/acllib/lib64:${LD_LIBRARY_PATH}
+
+```bash
+#设置CANN环境变量，ascend-toolkit-path为cann安装路径
+. ${ascend-toolkit-path}/set_env.sh
+
+#设置Vision SDK 环境变量，SDK-path为Vision SDK 安装路径
+. ${SDK-path}/set_env.sh
 ```
 
 **步骤3** cd到DvppWrapperSample目录下，执行如下编译命令：
@@ -28,7 +28,7 @@ cmake ..
 make
 ```
 
-**步骤4** cd到DvppWrapperSample目录下，可看到可执行文件DvppWrapperSample， 实行命令：
+**步骤4** cd到DvppWrapperSample目录下，可看到可执行文件DvppWrapperSample， 执行命令：
 ```
 ./DvppWrapperSample ./保存的图片
 ```

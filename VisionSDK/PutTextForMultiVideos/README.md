@@ -72,7 +72,7 @@ _1. deviceNum 需为整数，取值范围为 [1, min(NPU设备个数, 5)]。`npu
 
 _2. saveVideo 需为整数，取值范围为 [0, 1]，0代表不保存贴字后视频，1代表保存贴字后视频。_
 
-_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值；第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理；rtsp流视频格式需为H264，推流教程可参考[链接](https://gitee.com/ascend/mindsdk-referenceapps/blob/master/docs/参考资料/Live555离线视频转RTSP说明文档.md)。_
+_3. stream.ch{i} 用于指定第 i 个rtsp流地址。其中，i 的取值需要包含 [0, 25 * deviceNum -1] 区间的所有整数值；第 i 个rtsp流地址 stream.ch{i} 默认分配到第 i / 25 个NPU设备上进行处理；rtsp流视频格式需为H264，推流教程可参考[链接](https://gitcode.com/Ascend/mindsdk-referenceapps/blob/master/docs/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/Live555%E7%A6%BB%E7%BA%BF%E8%A7%86%E9%A2%91%E8%BD%ACRTSP%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)。_
 
 **步骤4： 编译**
 

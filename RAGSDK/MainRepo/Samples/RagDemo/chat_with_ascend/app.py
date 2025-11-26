@@ -41,6 +41,7 @@ from pymilvus import MilvusClient
 from mx_rag.graphrag import GraphRAGPipeline
 from mx_rag.llm import LLMParameterConfig, Text2TextLLM
 from mx_rag.utils import Lang
+from mx_rag.cache import CacheConfig, EvictPolicy, SimilarityCacheConfig, MxRAGCache
 
 import streamlit as st
 
@@ -411,6 +412,14 @@ def get_graph_dir():
 
 
 @catch_errors
+def get_cache_dir():
+    work_dir = f"{WORKSPACE_DIR}/cache_save_folder/"
+    if not os.path.exists(work_dir):
+        os.makedirs(work_dir)
+    return work_dir
+
+
+@catch_errors
 def create_new_db():
     get_knowledge_db(st.session_state.knowledge_name)
 
@@ -477,6 +486,61 @@ def get_pipeline():
     pipeline = GraphRAGPipeline(work_dir, llm, embedding_model, st.session_state.embedding_dim,
                                 graph_name=graph_name, graph_type=graph_type, graph_conf=graph_conf)
     return pipeline, graph_name, graph_type
+
+
+@catch_errors
+def get_policy(key):
+    policy_dict = {"LRU": EvictPolicy.LRU,
+                   "FIFO": EvictPolicy.FIFO,
+                   "RR": EvictPolicy.RR,
+                   "LFU": EvictPolicy.LFU}
+    try:
+        return policy_dict[key]
+    except KeyError as e:
+        valid_keys = list(policy_dict.keys())
+        raise ValueError(f"unvalid key：{key}, support {valid_keys}") from e
+
+
+@catch_errors
+def get_cache(cache_type):
+    if cache_type == "memory_cache":
+        cache_config = CacheConfig(
+            cache_size=st.session_state.cache_size,
+            eviction_policy=get_policy(st.session_state.cache_update_strategy),
+            auto_flush=1,
+            data_save_folder=get_cache_dir()
+        )
+        cache = MxRAGCache("memory_cache", cache_config)
+        return cache
+
+    elif cache_type == "similarity_cache":
+        dim = st.session_state.embedding_dim
+        client = MilvusClient(st.session_state["milvus_url"])
+        similarity_config = SimilarityCacheConfig(
+            vector_config={
+                "vector_type": "milvus_db",
+                "x_dim": dim,
+                "client": client,
+
+            },
+            cache_config="sqlite",
+            emb_config={
+                "embedding_type": "tei_embedding",
+                "url": st.session_state["embedding_url"],
+                "client_param": ClientParam(use_http=True)
+            },
+            similarity_config={
+                "similarity_type": "tei_reranker",
+                "url": st.session_state["reranker_url"],  # reranker 模型路径
+                "client_param": ClientParam(use_http=True)
+            },
+            cache_size=st.session_state.cache_size,
+            data_save_folder=get_cache_dir(),  # 落盘路径
+            disable_report=True,
+            eviction_policy=get_policy(st.session_state.cache_update_strategy)
+        )
+        similarity_cache = MxRAGCache("similarity_cache", similarity_config)
+        return similarity_cache
 
 
 @catch_errors
@@ -927,7 +991,38 @@ def render_markdown_with_images(markdown_text):
 
 
 @catch_errors
+def cache_update(cache_type, query, answer):
+    cache = get_cache(cache_type)
+    ans = json.dumps(answer)
+    cache.update(query, ans)
+
+
+@catch_errors
+def answer_with_cache(query):
+    has_cache = False
+    cache_type = st.session_state.cache_type
+    if cache_type in ["memory_cache", "similarity_cache"]:
+        cache = get_cache(cache_type)
+        cache_ans = cache.search(query=query)
+        if cache_ans is not None:
+            with st.chat_message("user"):
+                st.markdown(query)
+            answer = json.loads(cache_ans)
+            with st.chat_message("ai"):
+                st.markdown(answer)
+            st.session_state["messages"].append({'content': answer, 'type': "ai"})  # 保存ai msg
+            has_cache = True
+
+    return has_cache
+
+
+@catch_errors
 def answer_without_knowledge(llm_chain, query):
+    cache_type = st.session_state.cache_type
+    if cache_type in ["memory_cache", "similarity_cache"]:
+        has_cache = answer_with_cache(query)
+        if has_cache:
+            return
     # 构造请求消息
     messages = [
         {"role": "system", "content": "你是一个专业的知识问答助手"},
@@ -948,11 +1043,20 @@ def answer_without_knowledge(llm_chain, query):
     with st.chat_message("ai"):  # 不用 container; user
         st.markdown(full_answer)
 
+    if cache_type in ["memory_cache", "similarity_cache"]:
+        cache_update(cache_type, query, full_answer)
+
     st.session_state["messages"].append({'content': full_answer, 'type': "ai"})  # 保存ai msg
 
 
 @catch_errors
 def answer_with_knowledge(llm_chain, query):
+    cache_type = st.session_state.cache_type
+    if cache_type in ["memory_cache", "similarity_cache"]:
+        has_cache = answer_with_cache(query)
+        if has_cache:
+            return
+        
     if st.session_state.graph_pipeline == "True":
         pipeline, graph_name, graph_type = get_pipeline()
         contexts = pipeline.retrieve_graph(graph_name, query, batch_size=st.session_state.batch_size,
@@ -1017,6 +1121,10 @@ def answer_with_knowledge(llm_chain, query):
     contexts = q_docs
     st.session_state["messages"].append({'content': full_answer, 'type': "ai",
                                          "contexts": contexts})  # 保存ai msg
+    
+    if cache_type in ["memory_cache", "similarity_cache"]:
+        cache_update(cache_type, query, full_answer)
+
     with st.expander("背景知识"):
         for i, context in enumerate(contexts):
             st.markdown(f"## -----------------context {i + 1}----------------------")
@@ -1056,7 +1164,7 @@ def init_config():
         "ocr_name": "Qwen3-32B",
         "vlm_url": "http://127.0.0.1:9097/v1",
         "vlm_name": "Qwen2.5-VL-7B-Instruct",
-        "embedding_url": "http://127.0.0.19:9123/embed",
+        "embedding_url": "http://127.0.0.1:9123/embed",
         "embedding_dim": 1024,
         "reranker_url": "http://127.0.0.1:9124/rerank",
         "rerank_top_k": 3,
@@ -1086,6 +1194,9 @@ def init_config():
         "similarity_threshold": 0.5,
         "modify_query": "False",
         "history_n": 3,
+        "cache_type": "nocache",
+        "cache_update_strategy": "LRU",
+        "cache_size": 100
     }
 
     if not os.path.exists(CONFIG_FILE_PATH):
@@ -1122,7 +1233,8 @@ def auto_save_config():
         "oghost", "ogport", "ogdatabase", "oguser", "ogpassword", "retrieval_top_k", #"reranker_top_k",
         "similarity_tail_threshold", "subgraph_depth", "batch_size", "knowledge_name", "parse_image",
         "interleaved_answer", "interleaved_prompt", "text_prompt", "temperature", "top_p", "max_length",
-        "top_k", "similarity_threshold", "modify_query", "history_n"
+        "top_k", "similarity_threshold", "modify_query", "history_n", "cache_type", "cache_update_strategy",
+        "cache_size"
     }
 
     # 动态收集：只保留 session_state 中已存在的键
@@ -1303,13 +1415,35 @@ def set_web():
         with st.expander("设置大模型对话参数"):
             st.slider("temperature", 0.1, 1.0, st.session_state["temperature"], step=0.1,
                       on_change=lambda: [refresh_chat(), auto_save_config()],
-                      key="temperature")
+                      key="temperature",
+                      help="温度系数，控制输出的随机性，值越大，回答越随机")
             st.slider("top_p", 0.1, 1.0, st.session_state["top_p"], step=0.1,
                       on_change=lambda: [refresh_chat(), auto_save_config()],
-                      key="top_p")
+                      key="top_p",
+                      help="核采样阈值，控制输出多样性（与 temperature 互补）：值越低越精准，值越高越多元")
             st.slider("max_length", min_value=64, max_value=2048, step=128, value=st.session_state["max_length"],
                       key="max_length", on_change=lambda: [refresh_chat(), auto_save_config()],
                       help="大模型输出的最大token数")
+
+        st.selectbox("选择缓存类型", ["nocache", "memory_cache", "similarity_cache"],
+                     index=0 if st.session_state["cache_type"] == "nocache" else (
+                         1 if st.session_state["cache_type"] == "memory_cache" else 2
+                     ),
+                     on_change=lambda: [get_cache(st.session_state["cache_type"]), auto_save_config()],
+                     key="cache_type",
+                     help="缓存类型说明，nocache：不使用缓存，每次问答都重新推理，memory_cache：仅匹配完全相同的问题，similarity_cache：匹配语义相似的问题")
+        if st.session_state["cache_type"] in ["memory_cache", "similarity_cache"]:
+            with st.expander("设置缓存参数"):
+                st.radio("缓存老化策略", options=["LRU", "LFU", "FIFO", "RR"],
+                         index=["LRU", "LFU", "FIFO", "RR"].index(st.session_state.get("cache_update_strategy")),
+                         horizontal=True,  # 横向排列
+                         on_change=lambda: auto_save_config(),  # 切换时自动保存配置
+                         key="cache_update_strategy",
+                         help="缓存满时的更新策略：LRU-替换最久没有访问的，LFU-替换使用频率最低的，FIFO-先进先出，RR-随机替换")
+                st.slider("缓存大小", 1, 100000, st.session_state["cache_size"], step=5,
+                          on_change=lambda: [refresh_chat(), auto_save_config()],
+                          key="cache_size",
+                          help="缓存大小，配置缓存条目数")
 
         st.radio("是否开启问题改写：", ["True", "False"], index=0 if st.session_state["modify_query"] == "True" else 1,
                  help="开启问题改写，会根据历史问题进行改写当前问题，更准确理解当前问题语义",

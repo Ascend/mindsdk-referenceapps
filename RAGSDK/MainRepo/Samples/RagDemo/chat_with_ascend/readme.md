@@ -5,12 +5,12 @@
 需按以下顺序完成依赖服务部署，确保各服务可正常通信：
 
 1. 部署RAG SDK（[参考链接](https://www.hiascend.com/developer/ascendhub/detail/b875f781df984480b0385a96fa1b03c9)）
-2. 部署LLM服务，（推荐：qwen2.5-32b-instruct，[参考链接](https://www.hiascend.com/developer/ascendhub/detail/125b5fb4e7184b8dabc3ae4b18c6ff99)）
+2. 部署LLM服务，（推荐模型：qwen2.5-32b-instruct，[参考链接](https://www.hiascend.com/developer/ascendhub/detail/125b5fb4e7184b8dabc3ae4b18c6ff99)）
 3. 部署Milvus服务（支持v2.5.0及以上版本，[参考链接](https://milvus.io/docs/zh/install_standalone-docker.md)）
 4. 部署mis-tei embedding与reranker服务（[参考链接](https://www.hiascend.com/developer/ascendhub/detail/07a016975cc341f3a5ae131f2b52399d)）
-5. 部署OCR服务（[参考链接](https://vllm-ascend.readthedocs.io/en/latest/tutorials/single_npu_qwen2.5_vl.html)）
+5. 部署OCR服务（推荐模型：MinerU2.5-2509-1.2B，[部署参考链接](https://vllm-ascend.readthedocs.io/en/latest/tutorials/single_npu_qwen2.5_vl.html)）
 6. 图文并茂回答支持（可选）：  
-   若需解析docx、pdf文件中的图片并生成图文回答，需额外部署VLM模型服务（推荐：qwen2.5-vl-7b-instruct，[参考链接](https://www.hiascend.com/developer/ascendhub/detail/9eedc82e0c0644b2a2a9d0821ed5e7ad)）。  
+   若需解析docx、pdf文件中的图片并生成图文回答，需额外部署VLM模型服务（推荐模型：qwen2.5-vl-7b-instruct，[参考链接](https://www.hiascend.com/developer/ascendhub/detail/9eedc82e0c0644b2a2a9d0821ed5e7ad)）。  
    > 注：长或宽小于256像素的图片因信息不足，将被自动丢弃。
 
 ## 运行Demo步骤
@@ -23,7 +23,9 @@
 apt-get install -y libreoffice fonts-noto-cjk
 
 # 安装Python依赖包
-pip3 install mineru streamlit
+pip3 install streamlit
+pip3 install mineru --trusted-host https://mirrors.aliyun.com/pypi/simple/
+pip3 install numpy==1.26.4 --trusted-host https://mirrors.aliyun.com/pypi/simple/
 
 # 创建Demo工作目录并进入
 mkdir -p /home/HwHiAiUser/workspace

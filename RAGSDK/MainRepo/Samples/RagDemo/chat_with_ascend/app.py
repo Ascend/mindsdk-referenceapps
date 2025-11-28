@@ -1070,7 +1070,7 @@ def answer_with_knowledge(llm_chain, query):
         q_docs = retrieve_similarity_docs(st.session_state.knowledge_name, query, st.session_state.top_k,
                                           st.session_state.similarity_threshold)
 
-        text_reranker = TEIReranker(url=st.session_state["reranker_url"], k=st.session_state.top_k,
+        text_reranker = TEIReranker(url=st.session_state["reranker_url"], k=st.session_state.rerank_top_k,
                                     client_param=ClientParam(use_http=True))
 
         if text_reranker is not None and len(q_docs) > 0:

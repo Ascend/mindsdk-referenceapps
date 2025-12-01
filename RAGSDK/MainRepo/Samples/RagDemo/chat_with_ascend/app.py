@@ -27,7 +27,7 @@ from mineru.backend.vlm.vlm_middle_json_mkcontent import union_make as vlm_union
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from langchain_opengauss import OpenGaussSettings
+from langchain_opengauss import OpenGaussSettings, OpenGaussAGEGraph
 from mx_rag.document import LoaderMng
 from mx_rag.document.loader import DocxLoader, PdfLoader, ExcelLoader, PowerPointLoader
 from mx_rag.embedding.service import TEIEmbedding
@@ -382,7 +382,7 @@ def new_kgfile_upload():
 
 @catch_errors
 def graphrag_build(file):
-    pipeline, _, _ = get_pipeline()
+    pipeline = get_pipeline()
 
     logger.info(f"start to upload file: {file}")
     _, upload_kgfile_dir = get_graph_dir()
@@ -481,11 +481,12 @@ def get_pipeline():
         graph_conf = OpenGaussSettings(user=st.session_state.oguser, password=st.session_state.ogpassword,
                                        host=st.session_state.oghost, port=st.session_state.ogport,
                                        database=st.session_state.ogdatabase)
+        age_graph = OpenGaussAGEGraph(graph_name, graph_conf)
     else:
-        graph_conf = None
+        age_graph = None
     pipeline = GraphRAGPipeline(work_dir, llm, embedding_model, st.session_state.embedding_dim,
-                                graph_name=graph_name, graph_type=graph_type, graph_conf=graph_conf)
-    return pipeline, graph_name, graph_type
+                                graph_name=graph_name, graph_type=graph_type, age_graph=age_graph)
+    return pipeline
 
 
 @catch_errors
@@ -1058,11 +1059,10 @@ def answer_with_knowledge(llm_chain, query):
             return
         
     if st.session_state.graph_pipeline == "True":
-        pipeline, graph_name, graph_type = get_pipeline()
-        contexts = pipeline.retrieve_graph(graph_name, query, batch_size=st.session_state.batch_size,
+        pipeline = get_pipeline()
+        contexts = pipeline.retrieve_graph(query, batch_size=st.session_state.batch_size,
                                            similarity_tail_threshold=st.session_state.similarity_tail_threshold,
                                            retrieval_top_k=st.session_state.retrieval_top_k,
-                                           # reranker_top_k=st.session_state.reranker_top_k,
                                            subgraph_depth=st.session_state.subgraph_depth)
         q_docs = [Document(page_content=context, metadata={"source": "graph", "type": "text"}) for context in contexts]
         logger.debug(f"检索到的相关的文本： {q_docs}")
@@ -1078,8 +1078,7 @@ def answer_with_knowledge(llm_chain, query):
             q_docs = text_reranker.rerank_top_k(q_docs, score)
 
     img_docs = [doc for doc in q_docs if doc.metadata.get("type", "") == "image"]
-    # for doc in q_docs:
-    #     logger.info(f"00000000000000000000 {doc}")
+
     full_answer = ""
     with st.chat_message("user"):  # 不用 container; user
         st.markdown(query)

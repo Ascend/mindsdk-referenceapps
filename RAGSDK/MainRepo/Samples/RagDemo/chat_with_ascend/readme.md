@@ -17,23 +17,12 @@
 
 ### 1. 容器内环境准备
 
-进入ragsdk容器后，依次执行以下命令安装依赖、创建工作目录并准备代码：
+在ragsdk容器中，打开样例代码目录：
 ```bash
-# 安装文档转换依赖（libreoffice）与中文字体
-apt-get install -y libreoffice fonts-noto-cjk
-
-# 安装Python依赖包
-pip3 install streamlit
-pip3 install mineru --trusted-host https://mirrors.aliyun.com/pypi/simple/
-pip3 install numpy==1.26.4 --trusted-host https://mirrors.aliyun.com/pypi/simple/
-
-# 创建Demo工作目录并进入
-mkdir -p /home/HwHiAiUser/workspace
-cd /home/HwHiAiUser/workspace
-
-# 编辑Demo代码文件（将仓库中的app.py内容复制到文件中）
-vim app.py
+cd /opt/package/mindsdk-referenceapps/RAGSDK/MainRepo/Samples/RagDemo/chat_with_ascend/
 ```
+> 容器内代码可能未同步至最新版本，建议从代码仓库拉取最新版本以确保一致性
+
 
 ### 2. 启动WEB服务
 执行以下命令启动Streamlit服务，替换`服务端口`为实际可用端口（如8501）：

@@ -1,5 +1,5 @@
 diff --git a/backends/grpc-client/src/client.rs b/backends/grpc-client/src/client.rs
-index 2f4868f..98e9cca 100644
+index 1f6036e..27ffa0d 100644
 --- a/backends/grpc-client/src/client.rs
 +++ b/backends/grpc-client/src/client.rs
 @@ -18,7 +18,7 @@ impl Client {
@@ -134,7 +134,7 @@ index 687ec10..e46f148 100644
  typer==0.6.1 ; python_version >= "3.9" and python_version < "3.13"
  typing-extensions==4.12.2 ; python_version >= "3.9" and python_version < "3.13"
 diff --git a/backends/python/server/text_embeddings_server/models/__init__.py b/backends/python/server/text_embeddings_server/models/__init__.py
-index 1e919f2..90d9487 100644
+index 1e919f2..8a2031b 100644
 --- a/backends/python/server/text_embeddings_server/models/__init__.py
 +++ b/backends/python/server/text_embeddings_server/models/__init__.py
 @@ -11,31 +11,21 @@ from text_embeddings_server.models.model import Model
@@ -181,7 +181,7 @@ index 1e919f2..90d9487 100644
          raise RuntimeError(f"Unknown dtype {dtype}")
  
 +
-+    enable_boost = os.getenv("ENABLE_BOOST", "False")
++    enable_boost = os.getenv("ENABLE_BOOST", "True")
 +    if enable_boost not in("True", "False"):
 +        raise ValueError("env ENABLE_BOOST value must be True or False")
 +    
@@ -397,7 +397,7 @@ index 43f77b1..69c69f9 100644
  
 diff --git a/backends/python/server/text_embeddings_server/models/qwen3_rerank_model.py b/backends/python/server/text_embeddings_server/models/qwen3_rerank_model.py
 new file mode 100644
-index 0000000..fb009f6
+index 0000000..dff655a
 --- /dev/null
 +++ b/backends/python/server/text_embeddings_server/models/qwen3_rerank_model.py
 @@ -0,0 +1,97 @@
@@ -444,7 +444,7 @@ index 0000000..fb009f6
 +        # 用于从 logits 提取 "yes" 和 "no" 的得分
 +        self.token_true_id = self.tokenizer.convert_tokens_to_ids("yes")
 +        self.token_false_id = self.tokenizer.convert_tokens_to_ids("no")
-+        prefix = "<|im_start|>system\nDetermine whether the problem is related to the document. Note that the answer can only be \"yes\" or \"no\".<|im_end|>\n<|im_start|>user\n"
++        prefix = "<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be \"yes\" or \"no\".<|im_end|>\n<|im_start|>user\n"
 +        suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
 +        self.prefix_tokens = self.tokenizer.encode(prefix, add_special_tokens=False)
 +        self.suffix_tokens = self.tokenizer.encode(suffix, add_special_tokens=False)
@@ -837,7 +837,7 @@ index 3fd8b77..61b38dc 100644
                          metadata,
                          Batch {
 diff --git a/core/src/tokenization.rs b/core/src/tokenization.rs
-index 7636afa..ab9a222 100644
+index 3639b98..e571d7a 100644
 --- a/core/src/tokenization.rs
 +++ b/core/src/tokenization.rs
 @@ -293,7 +293,7 @@ fn tokenize_input(
@@ -900,7 +900,7 @@ index 7636afa..ab9a222 100644
          EncodingInput::Ids(ids) => {
              if let Some(mut pre_prompt) = pre_prompt {
 diff --git a/router/src/http/server.rs b/router/src/http/server.rs
-index f805744..1a5244a 100644
+index a22af96..339a5e1 100644
 --- a/router/src/http/server.rs
 +++ b/router/src/http/server.rs
 @@ -7,7 +7,7 @@ use crate::http::types::{
@@ -912,7 +912,7 @@ index f805744..1a5244a 100644
  };
  use crate::{
      logging, shutdown, ClassifierModel, EmbeddingModel, ErrorResponse, ErrorType, Info, ModelType,
-@@ -1296,6 +1296,207 @@ async fn openai_embed(
+@@ -1301,6 +1301,207 @@ async fn openai_embed(
      Ok((headers, Json(response)))
  }
  
@@ -1120,7 +1120,7 @@ index f805744..1a5244a 100644
  /// Tokenize inputs
  #[utoipa::path(
  post,
-@@ -1641,7 +1842,10 @@ pub async fn run(
+@@ -1646,7 +1847,10 @@ pub async fn run(
      EmbedSparseResponse,
      RerankRequest,
      Rank,
@@ -1131,7 +1131,7 @@ index f805744..1a5244a 100644
      EmbedRequest,
      EmbedResponse,
      ErrorResponse,
-@@ -1733,6 +1937,7 @@ pub async fn run(
+@@ -1738,6 +1942,7 @@ pub async fn run(
          .route("/embed_sparse", post(embed_sparse))
          .route("/predict", post(predict))
          .route("/rerank", post(rerank))
@@ -1139,7 +1139,7 @@ index f805744..1a5244a 100644
          .route("/similarity", post(similarity))
          .route("/tokenize", post(tokenize))
          .route("/decode", post(decode))
-@@ -1825,8 +2030,7 @@ pub async fn run(
+@@ -1830,8 +2035,7 @@ pub async fn run(
          routes = routes.layer(axum::middleware::from_fn(auth));
      }
  
@@ -1149,7 +1149,7 @@ index f805744..1a5244a 100644
          .merge(routes)
          .merge(public_routes)
          .layer(Extension(infer))
-@@ -1839,6 +2043,14 @@ pub async fn run(
+@@ -1844,6 +2048,14 @@ pub async fn run(
          .layer(DefaultBodyLimit::max(payload_limit))
          .layer(cors_layer);
  
@@ -1164,13 +1164,13 @@ index f805744..1a5244a 100644
      // Run server
      let listener = tokio::net::TcpListener::bind(&addr)
          .await
-@@ -1899,3 +2111,4 @@ impl From<serde_json::Error> for ErrorResponse {
+@@ -1904,3 +2116,4 @@ impl From<serde_json::Error> for ErrorResponse {
          }
      }
  }
 +
 diff --git a/router/src/http/types.rs b/router/src/http/types.rs
-index 6012288..85aca6b 100644
+index dedaab6..505ae86 100644
 --- a/router/src/http/types.rs
 +++ b/router/src/http/types.rs
 @@ -271,6 +271,26 @@ pub(crate) struct Rank {
@@ -1200,8 +1200,8 @@ index 6012288..85aca6b 100644
  #[derive(Deserialize, ToSchema, Debug)]
  #[serde(untagged)]
  pub(crate) enum InputType {
-@@ -325,6 +345,29 @@ pub(crate) struct OpenAICompatRequest {
-     pub encoding_format: EncodingFormat,
+@@ -327,6 +347,29 @@ pub(crate) struct OpenAICompatRequest {
+     pub dimensions: Option<usize>,
  }
  
 +#[derive(Deserialize, ToSchema)]
@@ -1230,13 +1230,13 @@ index 6012288..85aca6b 100644
  #[derive(Serialize, ToSchema)]
  #[serde(untagged)]
  pub(crate) enum Embedding {
-@@ -590,3 +633,4 @@ pub(crate) enum VertexPrediction {
+@@ -601,3 +644,4 @@ pub(crate) enum VertexPrediction {
  pub(crate) struct VertexResponse {
      pub predictions: Vec<VertexPrediction>,
  }
 +
 diff --git a/router/src/lib.rs b/router/src/lib.rs
-index f1b8ba2..0cdb23c 100644
+index d83bd95..be13290 100644
 --- a/router/src/lib.rs
 +++ b/router/src/lib.rs
 @@ -36,6 +36,7 @@ use tokenizers::processors::sequence::Sequence;
@@ -1247,7 +1247,7 @@ index f1b8ba2..0cdb23c 100644
  
  pub use logging::init_logging;
  
-@@ -109,24 +110,42 @@ pub async fn run(
+@@ -110,24 +111,42 @@ pub async fn run(
      let backend_model_type = get_backend_model_type(&config, &model_root, pooling)?;
  
      // Info model type
@@ -1293,7 +1293,7 @@ index f1b8ba2..0cdb23c 100644
          text_embeddings_backend::ModelType::Embedding(pool) => {
              ModelType::Embedding(EmbeddingModel {
                  pooling: pool.to_string(),
-@@ -249,11 +268,14 @@ pub async fn run(
+@@ -279,11 +298,14 @@ pub async fn run(
          .await
          .context("Model backend is not healthy")?;
  
@@ -1313,7 +1313,7 @@ index f1b8ba2..0cdb23c 100644
  
      let max_batch_requests = backend
          .max_batch_size
-@@ -362,11 +384,11 @@ fn get_backend_model_type(
+@@ -392,11 +414,11 @@ fn get_backend_model_type(
              continue;
          }
  
@@ -1328,7 +1328,7 @@ index f1b8ba2..0cdb23c 100644
                  tracing::warn!(
                      "`--pooling` arg is set but model is a classifier. Ignoring `--pooling` arg."
 diff --git a/router/src/main.rs b/router/src/main.rs
-index 39b975d..2966cd4 100644
+index 52bb8e9..ca9f09a 100644
 --- a/router/src/main.rs
 +++ b/router/src/main.rs
 @@ -48,7 +48,7 @@ struct Args {

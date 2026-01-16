@@ -74,10 +74,10 @@ RUN curl https://sh.rustup.rs -sSf | bash -s -- -y --no-update-default-toolchain
 #安装 TEI
 WORKDIR /home/HwHiAiUser
 
-RUN git clone https://github.com/huggingface/text-embeddings-inference.git && cd text-embeddings-inference && git checkout v1.7.4
+RUN git clone https://github.com/huggingface/text-embeddings-inference.git && cd text-embeddings-inference && git checkout v1.8.3
 COPY ./package/tei.patch /tmp
 RUN cd /home/HwHiAiUser/text-embeddings-inference && patch -p1 < /tmp/tei.patch
-#RUN sed -i 's/channel = .*/channel = "1.83.0"/g' /home/HwHiAiUser/text-embeddings-inference/rust-toolchain.toml
+RUN sed -i 's/channel = .*/channel = "1.88.0"/g' /home/HwHiAiUser/text-embeddings-inference/rust-toolchain.toml
 WORKDIR /home/HwHiAiUser/text-embeddings-inference
 #ENV RUSTUP_DIST_SERVER=""
 #ENV RUSTUP_UPDATE_ROOT=""

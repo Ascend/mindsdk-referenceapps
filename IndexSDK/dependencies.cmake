@@ -48,7 +48,7 @@ LINK_LIBRARIES(
         gtest
         c_sec
         openblas
-        acl_op_compiler
+        ascendcl
 )
 
 

@@ -15,7 +15,7 @@ ENV RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 ENV RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
-RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt-get update
+RUN apt-get update && apt-get install -y software-properties-common 
 RUN apt-get update && apt-get install -y curl wget git git-lfs ca-certificates libssl-dev zlib1g-dev unzip tar gcc make cmake libffi-dev g++ libprotobuf-dev pkg-config build-essential libbz2-dev libreadline-dev libsqlite3-dev llvm xz-utils liblzma-dev libopenblas-dev vim
 
 #RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v29.2/protoc-29.2-linux-aarch_64.zip
@@ -27,10 +27,9 @@ RUN mv protoc-*-linux-aarch_64.zip /tmp && \
 	rm -rf /tmp/*
 
 ARG PYTHON_VERSION=python3.11
-
-RUN apt-get update && apt-get install -y build-essential ${PYTHON_VERSION}  ${PYTHON_VERSION}-dev ${PYTHON_VERSION}-distutils ${PYTHON_VERSION}-venv 
-RUN curl https://bootstrap.pypa.io/get-pip.py | ${PYTHON_VERSION} &&  update-alternatives --install /usr/bin/python3 python3 /usr/bin/${PYTHON_VERSION} 1
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz && tar -xzvf Python-3.11.0.tgz && cd Python-3.11.0 && ./configure --enable-optimizations --prefix=/usr/local && make && make install
+RUN ln -s /usr/local/bin/python3 /usr/local/bin/python && ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+ENV PATH=/usr/local/bin:$PATH
 
 RUN pip3 install grpcio-tools mypy-protobuf
 

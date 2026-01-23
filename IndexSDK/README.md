@@ -31,9 +31,7 @@ cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
 .
 |-- CMakeLists.txt
 |-- Dockerfile
-|   |-- Dockerfile-ascend-toolkit.txt              # 昇腾镜像文件
-|   |-- Dockerfile-ascendbase-infer.txt            # 基础镜像文件
-|   `-- install_deps.sh                            # 依赖下载安装脚本
+|   `-- Dockerfile-index                           # 昇腾镜像文件
 |-- README.md
 |-- TestAscendIReduction.cpp                       # 降维算法 NN降维 Pcar降维  demo
 |-- TestAscendIndexAggressTs.cpp                   # 时空库 IP距离，带属性过滤 支持组batch demo

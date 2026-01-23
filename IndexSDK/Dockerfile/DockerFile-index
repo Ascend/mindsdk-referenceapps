@@ -1,19 +1,22 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 WORKDIR /tmp
 ARG ARCH=aarch64
-ARG PLATFORM=310P
+ARG PLATFORM=910B
 RUN chmod 777 /tmp
 # 系统包 + Pip3.9
 RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak && \
     sed -i "s@http://.*archive.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
     sed -i "s@http://.*security.ubuntu.com@http://mirrors.huaweicloud.com@g" /etc/apt/sources.list
-RUN apt update && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    export TZ=Asia/Shanghai && \
+    apt update && \
     apt install --no-install-recommends ca-certificates -y && \
     apt install --no-install-recommends wget vim dos2unix net-tools ssh lsof sshpass -y && \
-    apt install --no-install-recommends curl gcc g++ make pkg-config unzip autoconf autoconf -y && \
-    apt install --no-install-recommends libblas3 liblapack3 gfortran libxml2 -y && \
+    apt install --no-install-recommends curl gcc-9 g++-9 make pkg-config unzip autoconf git patch -y && \
+    apt install --no-install-recommends libblas3 liblapack3 gfortran openmpi-bin libopenmpi-dev libxml2 -y && \
     apt install --no-install-recommends pciutils liblapack-dev libblas-dev libffi-dev libssl-dev -y && \
     apt install --no-install-recommends zlib1g-dev xz-utils libgmpxx4ldbl -y && \
+    apt install --no-install-recommends libcapture-tiny-perl libdatetime-perl libtimedate-perl -y && \
     apt clean && rm -rf /var/lib/apt/lists/*
 # 安装Python
 RUN wget https://repo.huaweicloud.com/python/3.9.11/Python-3.9.11.tar.xz && \
@@ -59,25 +62,23 @@ RUN wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz -O OpenBLAS-0
     ln -s /opt/OpenBLAS/lib/libopenblas.so /usr/lib/libopenblas.so && \
     cd .. && rm -f OpenBLAS-0.3.10.tar.gz && rm -rf OpenBLAS-0.3.10
 
-ARG install_path=/usr/local/faiss/faiss1.10.0
+ARG install_path=/usr/local/faiss
 RUN wget https://github.com/facebookresearch/faiss/archive/v1.10.0.tar.gz -O faiss-1.10.0.tar.gz && \
     tar -xf faiss-1.10.0.tar.gz && cd faiss-1.10.0/faiss && \
-    sed -i "131 i virtual void search_with_filter (idx_t n, const float *x, idx_t k, float *distances, idx_t *labels, const void *mask = nullptr) const {}" Index.h && \
-    sed -i "38 i template <typename IndexT> IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids): index (index), own_fields (false) {this->is_trained = index->is_trained; this->metric_type = index->metric_type; this->verbose = index->verbose; this->d = index->d; id_map = ids;}" IndexIDMap.cpp && \
-    sed -i "29 i explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids); " IndexIDMap.h &&\
-    sed -i "199 i utils/sorting.h" CMakeLists.txt &&\
+    sed -i "149 i virtual void search_with_filter (idx_t n, const float *x, idx_t k, float *distances, idx_t *labels, const void *mask = nullptr) const {}" Index.h && \
+    sed -i "49 i template <typename IndexT> IndexIDMapTemplate<IndexT>::IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids): index (index), own_fields (false) {this->is_trained = index->is_trained; this->metric_type = index->metric_type; this->verbose = index->verbose; this->d = index->d; id_map = ids;}" IndexIDMap.cpp && \
+    sed -i "30 i explicit IndexIDMapTemplate (IndexT *index, std::vector<idx_t> &ids); " IndexIDMap.h &&\
+    sed -i "217 i utils/sorting.h" CMakeLists.txt &&\
     cd .. && \
     cmake -B build . -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${install_path} && \
     cd build && make -j && make install && \
-    cd ../.. && rm -f v1.10.0.tar.gz && rm -rf faiss-1.10.0
+    cd ../.. && rm -f faiss-1.10.0.tar.gz && rm -rf faiss-1.10.0  && \
+    cp ${install_path}/lib/libfaiss.so /usr/local/lib
 
-RUN sed -i '$a\export LD_LIBRARY_PATH=/usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' ~/.bashrc
-
-RUN wget https://github.com/google/googletest/archive/refs/tags/release-1.8.1.tar.gz && \
-    cp release-1.8.1.tar.gz /tmp/googletest-release-1.8.1.tar.gz && \
-    tar xf release-1.8.1.tar.gz && cd googletest-release-1.8.1 && \
-    cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local/gtest . && make -j && make install && \
-    cd .. && rm -rf release-1.8.1.tar.gz googletest-release-1.8.1
+RUN wget https://github.com/linux-test-project/lcov/releases/download/v2.0/lcov-2.0.tar.gz && \
+    tar -xzf lcov-2.0.tar.gz && \
+    cd lcov-2.0 && make install  && \
+    cd .. && rm -rf lcov-2.0.tar.gz lcov-2.0
 
 # 清理临时目录
 RUN rm -rf ./*
@@ -86,14 +87,12 @@ ARG BASE_VERSION:v1.0
 ARG BASE=ascendbase-infer:$BASE_VERSION
 ARG CHIP=all
 WORKDIR /tmp
-ARG ASCEND_BASE=/home/HwHiAiUser/Ascend
+ARG ASCEND_BASE=/usr/local/Ascend
 ARG TOOLKIT_PKG=Ascend-cann-toolkit*_linux-${ARCH}.run
 ARG TOOLKIT_PATH=$ASCEND_BASE/ascend-toolkit/latest
 
-RUN groupadd HwHiAiUser && useradd -g HwHiAiUser -d /home/HwHiAiUser -m HwHiAiUser -s /bin/bash
-COPY --chown=HwHiAiUser:HwHiAiUser ./driver $ASCEND_BASE/driver
-COPY --chown=HwHiAiUser:HwHiAiUser $TOOLKIT_PKG ./
-USER HwHiAiUser:HwHiAiUser
+COPY $TOOLKIT_PKG ./
+USER root
 RUN chmod +x $TOOLKIT_PKG && \
     ./$TOOLKIT_PKG --quiet --full --install-path=$ASCEND_BASE --install-for-all && \
     rm -f $TOOLKIT_PKG
@@ -106,27 +105,21 @@ ENV ASCEND_OPP_PATH=$TOOLKIT_PATH/opp
 ENV ASCEND_AICPU_PATH=$TOOLKIT_PATH
 ENV PYTHONPATH=$TBE_IMPL_PATH:$PYTHONPATH
 
-COPY --chown=HwHiAiUser:HwHiAiUser ./Ascend-mindxsdk-mxindex*_linux-${ARCH}.run ./
-RUN bash Ascend-mindxsdk-mxindex*_linux-${ARCH}.run --quiet --install --install-path=/home/HwHiAiUser/Ascend/ --platform=${PLATFORM}
-ENV MX_INDEX_MODELPATH=/home/HwHiAiUser/Ascend/modelpath
-RUN cd /home/HwHiAiUser/Ascend/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
-ENV ASCEND_HOME=/home/HwHiAiUser/Ascend/
+COPY ./Ascend-mindxsdk-mxindex*_linux-${ARCH}.run ./
+RUN bash Ascend-mindxsdk-mxindex*_linux-${ARCH}.run --install --platform=${PLATFORM}
+ENV MX_INDEX_MODELPATH=/home/Ascend/modelpath
+RUN cd ${ASCEND_BASE}/mxIndex/ops && ./custom_opp_${ARCH}.run && mkdir -p ${MX_INDEX_MODELPATH}
+ENV ASCEND_HOME=${ASCEND_BASE}
 
-RUN sed -i '$a\source /home/HwHiAiUser/Ascend/ascend-toolkit/set_env.sh' /home/HwHiAiUser/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/mxIndex/host/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=usr/local/faiss/faiss1.10.0/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=/opt/OpenBLAS/lib:$LD_LIBRARY_PATH' /home/HwHiAiUser/.bashrc && \
-    sed -i '$a\export LD_LIBRARY_PATH=/home/HwHiAiUser/Ascend/driver/lib64/driver' /home/HwHiAiUser/.bashrc
+COPY ./CANN-runtime-*-minios.${ARCH}.run ./
+RUN echo y | ./CANN-runtime-*-minios.${ARCH}.run --full --quiet --install-path=/usr/local/AscendMiniOs
+
+RUN sed -i '$a\source /usr/local/Ascend/ascend-toolkit/set_env.sh' ~/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/usr/local/Ascend/mxIndex/host/lib:$LD_LIBRARY_PATH' ~/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/usr/local/faiss/lib:$LD_LIBRARY_PATH' ~/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/opt/OpenBLAS/lib:$LD_LIBRARY_PATH' ~/.bashrc && \
+    sed -i '$a\export LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/driver:$LD_LIBRARY_PATH' ~/.bashrc
 
 RUN pip3 install numpy==1.26.4
-
-USER root
 RUN rm -rf ./*
-
-USER HwHiAiUser:HwHiAiUser
-RUN touch /home/HwHiAiUser/.vimrc && \
-    echo 'set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936' >> /home/HwHiAiUser/.vimrc && \
-    sed -i '$a\set termencoding=utf-8' /home/HwHiAiUser/.vimrc && \
-    sed -i '$a\set encoding=utf-8' /home/HwHiAiUser/.vimrc
-
-WORKDIR /home/HwHiAiUser
+WORKDIR /root

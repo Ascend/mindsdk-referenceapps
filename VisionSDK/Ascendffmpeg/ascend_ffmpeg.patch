@@ -1,12 +1,12 @@
-diff -ruNb --new-file FFmpeg-n4.4.1/.gitattributes Ascendffmpeg/.gitattributes
+diff -urN FFmpeg-n4.4.1/.gitattributes FFmpeg-n4.4.1-patch/.gitattributes
 --- FFmpeg-n4.4.1/.gitattributes	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/.gitattributes	1970-01-01 08:00:00.000000000 +0800
++++ FFmpeg-n4.4.1-patch/.gitattributes	1970-01-01 08:00:00.000000000 +0800
 @@ -1,2 +0,0 @@
 -*.pnm -diff -text
 -tests/ref/fate/sub-scc eol=crlf
-diff -ruNb --new-file FFmpeg-n4.4.1/.gitignore Ascendffmpeg/.gitignore
+diff -urN FFmpeg-n4.4.1/.gitignore FFmpeg-n4.4.1-patch/.gitignore
 --- FFmpeg-n4.4.1/.gitignore	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/.gitignore	1970-01-01 08:00:00.000000000 +0800
++++ FFmpeg-n4.4.1-patch/.gitignore	1970-01-01 08:00:00.000000000 +0800
 @@ -1,39 +0,0 @@
 -*.a
 -*.o
@@ -47,9 +47,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/.gitignore Ascendffmpeg/.gitignore
 -/src
 -/mapfile
 -/tools/python/__pycache__/
-diff -ruNb --new-file FFmpeg-n4.4.1/.mailmap Ascendffmpeg/.mailmap
+diff -urN FFmpeg-n4.4.1/.mailmap FFmpeg-n4.4.1-patch/.mailmap
 --- FFmpeg-n4.4.1/.mailmap	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/.mailmap	1970-01-01 08:00:00.000000000 +0800
++++ FFmpeg-n4.4.1-patch/.mailmap	1970-01-01 08:00:00.000000000 +0800
 @@ -1,25 +0,0 @@
 -<james.darnley@gmail.com> <jdarnley@obe.tv>
 -<jeebjp@gmail.com> <jan.ekstrom@aminocom.com>
@@ -76,9 +76,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/.mailmap Ascendffmpeg/.mailmap
 -<thilo.borgmann@mail.de> <thilo.borgmann@googlemail.com>
 -<liuqi05@kuaishou.com> <lq@chinaffmpeg.org>
 -<ruiling.song83@gmail.com> <ruiling.song@intel.com>
-diff -ruNb --new-file FFmpeg-n4.4.1/.travis.yml Ascendffmpeg/.travis.yml
+diff -urN FFmpeg-n4.4.1/.travis.yml FFmpeg-n4.4.1-patch/.travis.yml
 --- FFmpeg-n4.4.1/.travis.yml	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/.travis.yml	1970-01-01 08:00:00.000000000 +0800
++++ FFmpeg-n4.4.1-patch/.travis.yml	1970-01-01 08:00:00.000000000 +0800
 @@ -1,30 +0,0 @@
 -language: c
 -sudo: false
@@ -110,9 +110,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/.travis.yml Ascendffmpeg/.travis.yml
 -  - make -j 8
 -  - make fate-rsync
 -  - make check -j 8
-diff -ruNb --new-file FFmpeg-n4.4.1/configure Ascendffmpeg/configure
+diff -urN FFmpeg-n4.4.1/configure FFmpeg-n4.4.1-patch/configure
 --- FFmpeg-n4.4.1/configure	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/configure	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/configure	2026-01-22 23:35:40.839350300 +0800
 @@ -349,6 +349,7 @@
    --disable-vaapi          disable Video Acceleration API (mainly Unix/Intel) code [autodetect]
    --disable-vdpau          disable Nvidia Video Decode and Presentation API for Unix code [autodetect]
@@ -147,9 +147,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/configure Ascendffmpeg/configure
  h264_cuvid_decoder_deps="cuvid"
  h264_cuvid_decoder_select="h264_mp4toannexb_bsf"
  h264_mediacodec_decoder_deps="mediacodec"
-diff -ruNb --new-file FFmpeg-n4.4.1/fftools/ffmpeg.c Ascendffmpeg/fftools/ffmpeg.c
+diff -urN FFmpeg-n4.4.1/fftools/ffmpeg.c FFmpeg-n4.4.1-patch/fftools/ffmpeg.c
 --- FFmpeg-n4.4.1/fftools/ffmpeg.c	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/fftools/ffmpeg.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/fftools/ffmpeg.c	2026-01-22 23:35:40.856352200 +0800
 @@ -651,6 +651,7 @@
              av_log(NULL, AV_LOG_ERROR,
                     "Error closing vstats file, loss of information possible: %s\n",
@@ -158,9 +158,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/fftools/ffmpeg.c Ascendffmpeg/fftools/ffmpeg
      }
      av_freep(&vstats_filename);
  
-diff -ruNb --new-file FFmpeg-n4.4.1/fftools/ffmpeg_hw.c Ascendffmpeg/fftools/ffmpeg_hw.c
+diff -urN FFmpeg-n4.4.1/fftools/ffmpeg_hw.c FFmpeg-n4.4.1-patch/fftools/ffmpeg_hw.c
 --- FFmpeg-n4.4.1/fftools/ffmpeg_hw.c	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/fftools/ffmpeg_hw.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/fftools/ffmpeg_hw.c	2026-01-22 23:35:40.871351700 +0800
 @@ -339,8 +339,15 @@
          } else if (ist->hwaccel_id == HWACCEL_GENERIC) {
              type = ist->hwaccel_device_type;
@@ -178,9 +178,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/fftools/ffmpeg_hw.c Ascendffmpeg/fftools/ffm
          } else {
              dev = hw_device_match_by_codec(ist->dec);
              if (!dev) {
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/Makefile Ascendffmpeg/libavcodec/Makefile
+diff -urN FFmpeg-n4.4.1/libavcodec/Makefile FFmpeg-n4.4.1-patch/libavcodec/Makefile
 --- FFmpeg-n4.4.1/libavcodec/Makefile	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavcodec/Makefile	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/Makefile	2026-01-22 23:35:40.887351700 +0800
 @@ -25,6 +25,9 @@
            videotoolbox.h                                                \
            vorbis_parser.h                                               \
@@ -223,9 +223,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/Makefile Ascendffmpeg/libavcodec/
  GEN_HEADERS = cbrt_tables.h cbrt_fixed_tables.h aacps_tables.h aacps_fixed_tables.h \
                dv_tables.h     \
                sinewin_tables.h sinewin_fixed_tables.h mpegaudio_tables.h \
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/allcodecs.c Ascendffmpeg/libavcodec/allcodecs.c
+diff -urN FFmpeg-n4.4.1/libavcodec/allcodecs.c FFmpeg-n4.4.1-patch/libavcodec/allcodecs.c
 --- FFmpeg-n4.4.1/libavcodec/allcodecs.c	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavcodec/allcodecs.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/allcodecs.c	2026-01-22 23:35:40.902351800 +0800
 @@ -787,6 +787,11 @@
  extern AVCodec ff_av1_qsv_decoder;
  extern AVCodec ff_libopenh264_encoder;
@@ -238,9 +238,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/allcodecs.c Ascendffmpeg/libavcod
  extern AVCodec ff_h264_amf_encoder;
  extern AVCodec ff_h264_cuvid_decoder;
  extern AVCodec ff_h264_mf_encoder;
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_dec.c Ascendffmpeg/libavcodec/ascend_dec.c
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_dec.c FFmpeg-n4.4.1-patch/libavcodec/ascend_dec.c
 --- FFmpeg-n4.4.1/libavcodec/ascend_dec.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_dec.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_dec.c	2026-01-22 23:35:40.913349900 +0800
 @@ -0,0 +1,886 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved.
@@ -1129,9 +1129,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_dec.c Ascendffmpeg/libavco
 +ASCEND_DEC_CODEC(h265, H265)
 +#endif
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_dec.h Ascendffmpeg/libavcodec/ascend_dec.h
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_dec.h FFmpeg-n4.4.1-patch/libavcodec/ascend_dec.h
 --- FFmpeg-n4.4.1/libavcodec/ascend_dec.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_dec.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_dec.h	2026-01-22 23:35:40.921350700 +0800
 @@ -0,0 +1,148 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -1282,10 +1282,10 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_dec.h Ascendffmpeg/libavco
 +
 +#endif // FFMPEG_ASCEND_ASCEND_DEC_H
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavcodec/ascend_enc.c
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_enc.c FFmpeg-n4.4.1-patch/libavcodec/ascend_enc.c
 --- FFmpeg-n4.4.1/libavcodec/ascend_enc.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_enc.c	2025-06-03 15:41:26.000000000 +0800
-@@ -0,0 +1,943 @@
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_enc.c	2026-01-27 11:05:04.816167000 +0800
+@@ -0,0 +1,1194 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved.
 + *
@@ -1304,6 +1304,19 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +
 +
 +#include "ascend_enc.h"
++// NAL unit type definitions
++#define H264_NAL_IDR  5
++#define H264_NAL_SPS  7
++#define H264_NAL_PPS  8
++#define H265_NAL_IDR_W_RADL 19
++#define H265_NAL_IDR_N_LP   20
++#define H265_NAL_VPS 32
++#define H265_NAL_SPS 33
++#define H265_NAL_PPS 34
++
++// Max reasonable parameter set size (avoid mis-detection causing memory issues)
++#define MAX_PARAMETER_SET_SIZE (64 * 1024)  // 64KB
++#define HEADER_CHECK_SIZE 1024
 +
 +static void CloseEpoll(int32_t epollFd)
 +{
@@ -1807,6 +1820,7 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +    ctx->eos_post_flag = 0;
 +    ctx->eos_received = 0;
 +    ctx->codec_abort_flag = 0;
++    ctx->extradata_extracted = 0;
 +    sem_init(&(ctx->eos_sema), 0, 0);
 +    ff_mutex_init(&ctx->queue_mutex, NULL);
 +    ctx->frame_queue = av_fifo_alloc(1000 * sizeof(StreamInfo_t));
@@ -1951,6 +1965,197 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +    return 0;
 +}
 +
++// Find the start code in AnnexB format
++static const uint8_t* find_start_code(const uint8_t *data, int size, int *start_code_len)
++{
++    for (int i = 0; i < size - 3; i++) {
++        if (data[i] == 0 && data[i+1] == 0) {
++            if (data[i+2] == 1) {
++                *start_code_len = 3;
++                return data + i;
++            } else if (data[i+2] == 0 && i < size - 4 && data[i+3] == 1) {
++                *start_code_len = 4;
++                return data + i;
++            }
++        }
++    }
++    return NULL;
++}
++
++// Check whether data is an H.264 parameter set (AnnexB format)
++static int is_h264_parameter_set_annexb(const uint8_t *data, int size, int *param_size)
++{
++    int start_code_len = 0;
++    const uint8_t *start = find_start_code(data, size, &start_code_len);
++
++    if (!start || start_code_len == 0) {
++        return 0;
++    }
++
++    int nal_type = start[start_code_len] & 0x1F;
++    if (nal_type != H264_NAL_SPS && nal_type != H264_NAL_PPS) {
++        return 0;
++    }
++
++    // Find the next start code to determine this NAL unit size
++    int next_start_len = 0;
++    const uint8_t *next_start = find_start_code(start + start_code_len,
++                                                  size - (start - data) - start_code_len,
++                                                  &next_start_len);
++
++    if (next_start) {
++        *param_size = next_start - data;
++    } else {
++        *param_size = size;
++    }
++
++    // Defensive check: parameter sets should not be too large
++    if (*param_size > MAX_PARAMETER_SET_SIZE) {
++        av_log(NULL, AV_LOG_WARNING, "Suspicious parameter set size: %d bytes, ignoring.\n", *param_size);
++        return 0;
++    }
++
++    return 1;
++}
++
++// Check whether data is an H.265 parameter set (AnnexB format)
++static int is_h265_parameter_set_annexb(const uint8_t *data, int size, int *param_size)
++{
++    int start_code_len = 0;
++    const uint8_t *start = find_start_code(data, size, &start_code_len);
++
++    if (!start || start_code_len == 0) {
++        return 0;
++    }
++
++    int nal_type = (start[start_code_len] >> 1) & 0x3F;
++    if (nal_type != H265_NAL_VPS && nal_type != H265_NAL_SPS && nal_type != H265_NAL_PPS) {
++        return 0;
++    }
++
++    // Find the next start code
++    int next_start_len = 0;
++    const uint8_t *next_start = find_start_code(start + start_code_len,
++                                                  size - (start - data) - start_code_len,
++                                                  &next_start_len);
++
++    if (next_start) {
++        *param_size = next_start - data;
++    } else {
++        *param_size = size;
++    }
++
++    // Defensive check
++    if (*param_size > MAX_PARAMETER_SET_SIZE) {
++        av_log(NULL, AV_LOG_WARNING, "Suspicious parameter set size: %d bytes, ignoring.\n", *param_size);
++        return 0;
++    }
++
++    return 1;
++}
++
++// Extract and set extradata
++static void extract_extradata(AVCodecContext *avctx, const uint8_t *data, int size)
++{
++    ASCENDEncContext_t *ctx = (ASCENDEncContext_t*)avctx->priv_data;
++
++    // Skip if already extracted
++    if (ctx->extradata_extracted) {
++        return;
++    }
++
++    // Defensive check: input data size
++    if (size <= 0 || size > MAX_PARAMETER_SET_SIZE) {
++        av_log(avctx, AV_LOG_DEBUG, "Skipping extradata extraction, size: %d bytes.\n", size);
++        return;
++    }
++
++    int is_param_set = 0;
++    int param_size = 0;
++
++    if (avctx->codec->id == AV_CODEC_ID_H264) {
++        is_param_set = is_h264_parameter_set_annexb(data, size, &param_size);
++    } else if (avctx->codec->id == AV_CODEC_ID_H265) {
++        is_param_set = is_h265_parameter_set_annexb(data, size, &param_size);
++    }
++
++    // Not a parameter set; return
++    if (!is_param_set || param_size <= 0) {
++        return;
++    }
++
++    av_log(avctx, AV_LOG_INFO, "Found parameter set, size: %d bytes.\n", param_size);
++
++    // Allocate extradata memory
++    if (avctx->extradata) {
++        // If already present, extend it (there may be multiple parameter sets)
++        int new_size = avctx->extradata_size + param_size;
++
++        // Defensive check: total size must not exceed the limit
++        if (new_size > MAX_PARAMETER_SET_SIZE) {
++            av_log(avctx, AV_LOG_ERROR, "Extradata size would exceed limit: %d bytes.\n", new_size);
++            return;
++        }
++
++        uint8_t *new_extradata = av_realloc(avctx->extradata,
++                                             new_size + AV_INPUT_BUFFER_PADDING_SIZE);
++        if (!new_extradata) {
++            av_log(avctx, AV_LOG_ERROR, "Failed to reallocate extradata.\n");
++            return;
++        }
++        memcpy(new_extradata + avctx->extradata_size, data, param_size);
++        memset(new_extradata + new_size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
++        avctx->extradata = new_extradata;
++        avctx->extradata_size = new_size;
++    } else {
++        // First allocation
++        avctx->extradata = av_mallocz(param_size + AV_INPUT_BUFFER_PADDING_SIZE);
++        if (!avctx->extradata) {
++            av_log(avctx, AV_LOG_ERROR, "Failed to allocate extradata.\n");
++            return;
++        }
++        memcpy(avctx->extradata, data, param_size);
++        avctx->extradata_size = param_size;
++    }
++
++    av_log(avctx, AV_LOG_INFO, "Extradata updated, total size: %d bytes.\n", avctx->extradata_size);
++
++    // Check whether collection is complete
++    if (avctx->codec->id == AV_CODEC_ID_H264) {
++        // H.264 needs SPS + PPS (at least 2 start codes)
++        int nal_count = 0;
++        for (int i = 0; i < avctx->extradata_size - 3; i++) {
++            if (avctx->extradata[i] == 0 && avctx->extradata[i+1] == 0) {
++                if (avctx->extradata[i+2] == 1 ||
++                    (avctx->extradata[i+2] == 0 && i < avctx->extradata_size - 4 && avctx->extradata[i+3] == 1)) {
++                    nal_count++;
++                }
++            }
++        }
++        if (nal_count >= 2) {
++            ctx->extradata_extracted = 1;
++            av_log(avctx, AV_LOG_INFO, "H.264 extradata extraction completed (found %d NALs).\n", nal_count);
++        }
++    } else if (avctx->codec->id == AV_CODEC_ID_H265) {
++        // H.265 needs VPS + SPS + PPS (at least 3 start codes)
++        int nal_count = 0;
++        for (int i = 0; i < avctx->extradata_size - 3; i++) {
++            if (avctx->extradata[i] == 0 && avctx->extradata[i+1] == 0) {
++                if (avctx->extradata[i+2] == 1 ||
++                    (avctx->extradata[i+2] == 0 && i < avctx->extradata_size - 4 && avctx->extradata[i+3] == 1)) {
++                    nal_count++;
++                }
++            }
++        }
++        if (nal_count >= 3) {
++            ctx->extradata_extracted = 1;
++            av_log(avctx, AV_LOG_INFO, "H.265 extradata extraction completed (found %d NALs).\n", nal_count);
++        }
++    }
++
++    return;
++}
++
 +static int hi_mpi_get_pkt(AVCodecContext *avctx, AVPacket *avpkt)
 +{
 +    ASCENDEncContext_t *ctx = (ASCENDEncContext_t*)avctx->priv_data;
@@ -1971,7 +2176,21 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +    if (stream_info.event_type == EVENT_EOS) {
 +        return AVERROR_EOF;
 +    }
++    if (!ctx->extradata_extracted) {
++        // Extract extradata (SPS/PPS/VPS)
++        // Only inspect the prefix to avoid copying the entire frame to host
++        uint8_t temp_buffer[HEADER_CHECK_SIZE];
++        int check_size = FFMIN(stream_info.data_size, HEADER_CHECK_SIZE);
 +
++        ret = aclrtMemcpy(temp_buffer, check_size, stream_info.data, check_size,
++                          ACL_MEMCPY_DEVICE_TO_HOST);
++        if (ret == 0) {
++            // Pass only the bytes to inspect, not the full frame size
++            extract_extradata(avctx, temp_buffer, check_size);
++        } else {
++            av_log(avctx, AV_LOG_WARNING, "Failed to copy data for extradata extraction, ret: %d.\n", ret);
++        }
++    }
 +    ret = ff_get_encode_buffer(avctx, avpkt, stream_info.data_size, stream_info.data_size);
 +    if (ret < 0) {
 +        av_log(avctx, AV_LOG_ERROR, "FFmpeg get frame buffer failed, ret is %d.\n", ret);
@@ -1987,9 +2206,41 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +    }
 +
 +    avpkt->pts = stream_info.pts;
++    avpkt->dts = stream_info.pts;  // Set DTS
 +    avpkt->size = stream_info.data_size;
++    // Mark keyframes by checking the NAL type
++    if (avpkt->size >= 5 && avpkt->data[0] == 0 && avpkt->data[1] == 0) {
++        int is_key = 0;
++        int nal_offset = 0;
++
++        if (avpkt->data[2] == 0 && avpkt->data[3] == 1) {
++            nal_offset = 4;
++        } else if (avpkt->data[2] == 1) {
++            nal_offset = 3;
++        }
++
++        if (nal_offset > 0) {
++            if (avctx->codec->id == AV_CODEC_ID_H264) {
++                int nal_type = avpkt->data[nal_offset] & 0x1F;
++                if (nal_type == H264_NAL_IDR || nal_type == H264_NAL_SPS || nal_type == H264_NAL_PPS) {
++                    is_key = 1;
++                }
++            } else if (avctx->codec->id == AV_CODEC_ID_H265) {
++                int nal_type = (avpkt->data[nal_offset] >> 1) & 0x3F;
++                if ((nal_type >= H265_NAL_IDR_W_RADL && nal_type <= H265_NAL_IDR_N_LP) ||
++                    (nal_type >= H265_NAL_VPS && nal_type <= H265_NAL_PPS)) {
++                    is_key = 1;
++                }
++            }
++
++            if (is_key) {
++                avpkt->flags |= AV_PKT_FLAG_KEY;
++            }
++        }
++    }
 +
 +    return 0;
++
 +}
 +
 +static int ff_himpi_enc_receive_packet(AVCodecContext *avctx, AVPacket *avpkt)
@@ -2229,11 +2480,10 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.c Ascendffmpeg/libavco
 +#if CONFIG_H265_ASCEND_ENCODER
 +ASCEND_ENC_CODEC(h265, H265)
 +#endif
-\ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.h Ascendffmpeg/libavcodec/ascend_enc.h
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_enc.h FFmpeg-n4.4.1-patch/libavcodec/ascend_enc.h
 --- FFmpeg-n4.4.1/libavcodec/ascend_enc.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_enc.h	2025-06-03 15:41:26.000000000 +0800
-@@ -0,0 +1,153 @@
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_enc.h	2026-01-22 23:23:17.634763100 +0800
+@@ -0,0 +1,154 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
 + *
@@ -2349,6 +2599,7 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.h Ascendffmpeg/libavco
 +    volatile int                    eos_received;
 +    volatile int                    hi_mpi_init_flag;
 +    volatile int                    frame_send_sum;
++    int                             extradata_extracted;
 +
 +    hi_venc_chn_attr                chn_attr_;
 +    int                             profile;
@@ -2388,9 +2639,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_enc.h Ascendffmpeg/libavco
 +
 +#endif // FFMPEG_ASCEND_ASCEND_ENC_H
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.c Ascendffmpeg/libavcodec/ascend_mjpeg_dec.c
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.c FFmpeg-n4.4.1-patch/libavcodec/ascend_mjpeg_dec.c
 --- FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_mjpeg_dec.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_mjpeg_dec.c	2026-01-22 23:35:40.950350400 +0800
 @@ -0,0 +1,571 @@
 +/*
 + * Copyright(c) 2024. Huawei Technologies Co.,Ltd. All rights reserved.
@@ -2964,9 +3215,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.c Ascendffmpeg/l
 +ASCEND_DEC_CODEC(mjpeg, MJPEG)
 +#endif
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.h Ascendffmpeg/libavcodec/ascend_mjpeg_dec.h
+diff -urN FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.h FFmpeg-n4.4.1-patch/libavcodec/ascend_mjpeg_dec.h
 --- FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavcodec/ascend_mjpeg_dec.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/ascend_mjpeg_dec.h	2026-01-22 23:35:40.958350700 +0800
 @@ -0,0 +1,63 @@
 +/*
 + * Copyright(c) 2025. Huawei Technologies Co.,Ltd. All rights reserved.
@@ -3031,9 +3282,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/ascend_mjpeg_dec.h Ascendffmpeg/l
 +int ff_mjpeg_ascend_receive_frame(AVCodecContext *avctx, AVFrame *frame);
 +
 +#endif
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/avcodec.h Ascendffmpeg/libavcodec/avcodec.h
+diff -urN FFmpeg-n4.4.1/libavcodec/avcodec.h FFmpeg-n4.4.1-patch/libavcodec/avcodec.h
 --- FFmpeg-n4.4.1/libavcodec/avcodec.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavcodec/avcodec.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/avcodec.h	2026-01-22 23:35:40.975350600 +0800
 @@ -28,6 +28,7 @@
   */
  
@@ -3052,9 +3303,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/avcodec.h Ascendffmpeg/libavcodec
 +} AscendEncPrivateData_t;
 +
  #endif /* AVCODEC_AVCODEC_H */
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/hwaccels.h Ascendffmpeg/libavcodec/hwaccels.h
+diff -urN FFmpeg-n4.4.1/libavcodec/hwaccels.h FFmpeg-n4.4.1-patch/libavcodec/hwaccels.h
 --- FFmpeg-n4.4.1/libavcodec/hwaccels.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hwaccels.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/hwaccels.h	2026-01-22 23:35:40.992350900 +0800
 @@ -35,6 +35,7 @@
  extern const AVHWAccel ff_h264_vaapi_hwaccel;
  extern const AVHWAccel ff_h264_vdpau_hwaccel;
@@ -3063,9 +3314,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/hwaccels.h Ascendffmpeg/libavcode
  extern const AVHWAccel ff_hevc_d3d11va_hwaccel;
  extern const AVHWAccel ff_hevc_d3d11va2_hwaccel;
  extern const AVHWAccel ff_hevc_dxva2_hwaccel;
-diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/hwconfig.h Ascendffmpeg/libavcodec/hwconfig.h
+diff -urN FFmpeg-n4.4.1/libavcodec/hwconfig.h FFmpeg-n4.4.1-patch/libavcodec/hwconfig.h
 --- FFmpeg-n4.4.1/libavcodec/hwconfig.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavcodec/hwconfig.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavcodec/hwconfig.h	2026-01-22 23:35:41.007351000 +0800
 @@ -80,6 +80,8 @@
      HW_CONFIG_HWACCEL(0, 0, 1, D3D11VA_VLD,  NONE,         ff_ ## codec ## _d3d11va_hwaccel)
  #define HWACCEL_XVMC(codec) \
@@ -3075,9 +3326,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavcodec/hwconfig.h Ascendffmpeg/libavcode
  
  #define HW_CONFIG_ENCODER(device, frames, ad_hoc, format, device_type_) \
      &(const AVCodecHWConfigInternal) { \
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/Makefile Ascendffmpeg/libavutil/Makefile
+diff -urN FFmpeg-n4.4.1/libavutil/Makefile FFmpeg-n4.4.1-patch/libavutil/Makefile
 --- FFmpeg-n4.4.1/libavutil/Makefile	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/Makefile	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/Makefile	2026-01-22 23:35:41.018971400 +0800
 @@ -35,6 +35,7 @@
            hdr_dynamic_metadata.h                                        \
            hmac.h                                                        \
@@ -3102,9 +3353,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/Makefile Ascendffmpeg/libavutil/Ma
  SKIPHEADERS-$(HAVE_CUDA_H)             += hwcontext_cuda.h
  SKIPHEADERS-$(CONFIG_CUDA)             += hwcontext_cuda_internal.h     \
                                            cuda_check.h
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext.c Ascendffmpeg/libavutil/hwcontext.c
+diff -urN FFmpeg-n4.4.1/libavutil/hwcontext.c FFmpeg-n4.4.1-patch/libavutil/hwcontext.c
 --- FFmpeg-n4.4.1/libavutil/hwcontext.c	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/hwcontext.c	2026-01-22 23:35:41.032971000 +0800
 @@ -62,6 +62,9 @@
  #if CONFIG_VULKAN
      &ff_hwcontext_type_vulkan,
@@ -3123,9 +3374,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext.c Ascendffmpeg/libavutil
  };
  
  enum AVHWDeviceType av_hwdevice_find_type_by_name(const char *name)
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext.h Ascendffmpeg/libavutil/hwcontext.h
+diff -urN FFmpeg-n4.4.1/libavutil/hwcontext.h FFmpeg-n4.4.1-patch/libavutil/hwcontext.h
 --- FFmpeg-n4.4.1/libavutil/hwcontext.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/hwcontext.h	2026-01-22 23:35:41.046971100 +0800
 @@ -37,6 +37,7 @@
      AV_HWDEVICE_TYPE_OPENCL,
      AV_HWDEVICE_TYPE_MEDIACODEC,
@@ -3134,9 +3385,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext.h Ascendffmpeg/libavutil
  };
  
  typedef struct AVHWDeviceInternal AVHWDeviceInternal;
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_ascend.c Ascendffmpeg/libavutil/hwcontext_ascend.c
+diff -urN FFmpeg-n4.4.1/libavutil/hwcontext_ascend.c FFmpeg-n4.4.1-patch/libavutil/hwcontext_ascend.c
 --- FFmpeg-n4.4.1/libavutil/hwcontext_ascend.c	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_ascend.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/hwcontext_ascend.c	2026-01-22 23:35:41.054970400 +0800
 @@ -0,0 +1,326 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -3465,9 +3716,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_ascend.c Ascendffmpeg/li
 +    .pix_fmts               = (const enum AVPixelFormat[]) {AV_PIX_FMT_ASCEND, AV_PIX_FMT_NONE},
 +};
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_ascend.h Ascendffmpeg/libavutil/hwcontext_ascend.h
+diff -urN FFmpeg-n4.4.1/libavutil/hwcontext_ascend.h FFmpeg-n4.4.1-patch/libavutil/hwcontext_ascend.h
 --- FFmpeg-n4.4.1/libavutil/hwcontext_ascend.h	1970-01-01 08:00:00.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_ascend.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/hwcontext_ascend.h	2026-01-22 23:35:41.062969900 +0800
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright(c) 2020. Huawei Technologies Co.,Ltd. All rights reserved. 
@@ -3502,9 +3753,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_ascend.h Ascendffmpeg/li
 +
 +#endif //FFMPEG_ASCEND_HWCONTEXT_ASCEND_H
 \ No newline at end of file
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_internal.h Ascendffmpeg/libavutil/hwcontext_internal.h
+diff -urN FFmpeg-n4.4.1/libavutil/hwcontext_internal.h FFmpeg-n4.4.1-patch/libavutil/hwcontext_internal.h
 --- FFmpeg-n4.4.1/libavutil/hwcontext_internal.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/hwcontext_internal.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/hwcontext_internal.h	2026-01-22 23:35:41.078970500 +0800
 @@ -174,5 +174,6 @@
  extern const HWContextType ff_hwcontext_type_videotoolbox;
  extern const HWContextType ff_hwcontext_type_mediacodec;
@@ -3512,9 +3763,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/hwcontext_internal.h Ascendffmpeg/
 +extern const HWContextType ff_hwcontext_type_ascend;
  
  #endif /* AVUTIL_HWCONTEXT_INTERNAL_H */
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/pixdesc.c Ascendffmpeg/libavutil/pixdesc.c
+diff -urN FFmpeg-n4.4.1/libavutil/pixdesc.c FFmpeg-n4.4.1-patch/libavutil/pixdesc.c
 --- FFmpeg-n4.4.1/libavutil/pixdesc.c	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/pixdesc.c	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/pixdesc.c	2026-01-22 23:35:41.097970200 +0800
 @@ -2395,6 +2395,10 @@
          .name = "vulkan",
          .flags = AV_PIX_FMT_FLAG_HWACCEL,
@@ -3526,9 +3777,9 @@ diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/pixdesc.c Ascendffmpeg/libavutil/p
  };
  #if FF_API_PLUS1_MINUS1
  FF_ENABLE_DEPRECATION_WARNINGS
-diff -ruNb --new-file FFmpeg-n4.4.1/libavutil/pixfmt.h Ascendffmpeg/libavutil/pixfmt.h
+diff -urN FFmpeg-n4.4.1/libavutil/pixfmt.h FFmpeg-n4.4.1-patch/libavutil/pixfmt.h
 --- FFmpeg-n4.4.1/libavutil/pixfmt.h	2021-10-24 05:31:29.000000000 +0800
-+++ Ascendffmpeg/libavutil/pixfmt.h	2025-06-03 15:41:26.000000000 +0800
++++ FFmpeg-n4.4.1-patch/libavutil/pixfmt.h	2026-01-22 23:35:41.111970900 +0800
 @@ -232,6 +232,7 @@
       * HW acceleration through CUDA. data[i] contain CUdeviceptr pointers
       * exactly as for system memory frames.

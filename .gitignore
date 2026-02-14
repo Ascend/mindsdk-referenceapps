@@ -30,3 +30,4 @@
 *.exe
 *.out
 *.app
+/AgentSDK/data_generation_platform/frontend/.gitkeep

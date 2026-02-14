@@ -1,0 +1,19 @@
+{
+  "data_dir": "./data",
+  "llm_provider": "openai",
+  "llm_model": "deepseek-chat",
+  "llm_api": "https://api.deepseek.com/v1/chat/completions",
+  "default_dataset_format": "alpaca",
+  "default_dataset_file_type": "jsonl",
+  "system_prompt": "你是一个分析专家",
+  "generate_prompt": "请基于内容生成问题, 每个trunck生成1个问题, 输出格式不需要有标题, 每行就是一个问题, 要求全中文",
+  "answer_prompt": "请基于文档内容以及问题生成答案",
+  "chain_of_thought_prompt": "请基于生成的问题和答案结合文档内容生成思考过程",
+  "chunk_size": 5000,
+  "chunk_overlap": 100,
+  "max_tokens": 8192,
+  "temperature": 0.2,
+  "custom_question_key": "context",
+  "custom_answer_key": "answer",
+  "custom_system_key": "system"
+}

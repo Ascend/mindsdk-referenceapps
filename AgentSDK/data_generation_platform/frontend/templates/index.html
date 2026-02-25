@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 数据集合成工具</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            safelist: [
+                'bg-white', 'bg-gray-50', 'bg-gray-100', 'bg-gray-200',
+                'text-gray-100', 'text-gray-200', 'text-gray-300', 'text-gray-400', 'text-gray-500', 'text-gray-600', 'text-gray-700', 'text-gray-800', 'text-gray-900',
+                'border-gray-200', 'border-gray-300',
+                'hover:bg-gray-50', 'hover:bg-gray-100',
+                'rounded-lg', 'rounded-xl', 'rounded-full',
+                'shadow-sm', 'shadow-md',
+                'transition', 'duration-200', 'ease-in-out',
+                'cursor-pointer', 'pointer-events-none',
+                'flex', 'items-center', 'justify-between', 'justify-center',
+                'space-x-2', 'space-x-4', 'space-y-2', 'space-y-4', 'space-y-6',
+                'p-2', 'p-3', 'p-4', 'p-6', 'p-8',
+                'px-2', 'px-3', 'px-4', 'px-6', 'py-1', 'py-2', 'py-3',
+                'm-2', 'm-4', 'mb-2', 'mb-4', 'mb-6', 'mb-8', 'mt-2', 'mt-4', 'mt-6', 'mt-8',
+                'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl',
+                'font-medium', 'font-semibold', 'font-bold',
+                'w-full', 'h-full', 'min-h-screen',
+                'grid', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'md:grid-cols-2', 'lg:grid-cols-3',
+                'gap-4', 'gap-6', 'gap-8',
+                'border', 'border-2', 'border-dashed', 'rounded', 'rounded-lg', 'rounded-xl', 'rounded-full',
+                'overflow-hidden', 'overflow-y-auto',
+                'relative', 'absolute', 'fixed', 'sticky', 'top-0', 'z-40', 'z-50',
+                'inline-flex', 'inline-block', 'block',
+                'opacity-50', 'opacity-100', 'disabled:opacity-50',
+                'appearance-none', 'outline-none',
+                'select-none'
+            ],
+            theme: {
+                extend: {
+                    colors: {
+                        instagram: {
+                            light: '#f09433',
+                            default: '#e6683c',
+                            dark: '#dc2743',
+                            darker: '#cc2366',
+                            darkest: '#bc1888'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=-apple-system,BlinkMacSystemFont,Segoe+UI,Roboto,Helvetica,Arial,sans-serif&display=swap');
+
+        * {
+            font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #fafafa;
+        }
+
+        .instagram-gradient {
+            background: linear-gradient(45deg, #405de6 0%, #5851db 25%, #833ab4 50%, #c13584 75%, #e1306c 100%);
+        }
+
+        .instagram-gradient-text {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: #8e8e8e;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #262626;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .instagram-card {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+        }
+
+        .instagram-input {
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .instagram-input:focus {
+            outline: none;
+            border-color: #a0a0a0;
+        }
+
+        .instagram-button {
+            background: #ef4444;
+            color: white;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #ef4444;
+            transition: all 0.2s;
+        }
+
+        .instagram-button:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .instagram-button:hover {
+            opacity: 0.9;
+        }
+
+        .instagram-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .instagram-button-white {
+            background: white;
+            color: #262626;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .instagram-button-white:hover {
+            background: #fafafa;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .story-ring {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 3px;
+            border-radius: 50%;
+        }
+
+        .story-inner {
+            background: white;
+            padding: 3px;
+            border-radius: 50%;
+        }
+
+        .post-card {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: #fef3e2;
+            color: #d4a574;
+            border: 1px solid #f5e6d5;
+        }
+
+        .status-completed {
+            background-color: #e8f0fe;
+            color: #7ba3d8;
+            border: 1px solid #d0e2f7;
+        }
+
+        .status-reviewed {
+            background-color: #fce8e8;
+            color: #c17b7b;
+            border: 1px solid #f5d0d0;
+        }
+
+        .command-option {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .command-option:hover {
+            background-color: #fafafa;
+        }
+
+        .log-output {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+
+        .modal-backdrop {
+            backdrop-filter: blur(4px);
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0095f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .heart-animation {
+            animation: heartBeat 0.3s ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div x-data="app()" class="min-h-screen">
+        <!-- Navigation Bar - Instagram Style -->
+        <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="flex items-center justify-between h-14">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <h1 class="instagram-gradient-text text-2xl font-light tracking-tight">
+                            AI数据集工具
+                        </h1>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <div class="flex items-center space-x-6">
+                        <button @click="currentView = 'intro'" :class="currentView === 'intro' ? 'active' : ''" class="nav-link text-base">
+                            功能介绍
+                        </button>
+                        <button @click="currentView = 'config'" :class="currentView === 'config' ? 'active' : ''" class="nav-link text-base">
+                            配置管理
+                        </button>
+                        <button @click="currentView = 'execute'" :class="currentView === 'execute' ? 'active' : ''" class="nav-link text-base">
+                            数据处理
+                        </button>
+                        <button @click="currentView = 'projects'" :class="currentView === 'projects' ? 'active' : ''" class="nav-link text-base">
+                            项目列表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-5xl mx-auto px-4 py-6">
+            <!-- Introduction View -->
+            <div x-show="currentView === 'intro'" class="fade-in">
+                <!-- Hero Section -->
+                <div class="instagram-gradient p-8 mb-6 text-center rounded-lg text-white">
+                    <h1 class="text-3xl font-light mb-3">
+                        <span class="font-semibold">AI 数据集合成工具</span>
+                    </h1>
+                    <p class="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
+                        一款基于大语言模型的智能数据集生成工具，帮你快速创建高质量的训练数据
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button @click="currentView = 'execute'" class="instagram-button-white px-6 py-3 text-sm">
+                            <i class="fas fa-rocket mr-2"></i>开始使用
+                        </button>
+                        <button @click="currentView = 'projects'" class="px-6 py-3 text-sm bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 border border-white/30">
+                            <i class="fas fa-folder mr-2"></i>查看项目
+                        </button>
+                    </div>
+                </div>
+
+                <!-- What is this -->
+                <div class="instagram-card p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-question-circle mr-2 text-gray-700"></i>
+                        这是什么工具？
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <p class="text-gray-700 leading-relaxed">
+                                这是一个帮助你<strong class="text-gray-900">快速创建 AI 训练数据集</strong>的工具。
+                            </p>
+                            <p class="text-gray-700 leading-relaxed">
+                                比如，你有一份产品文档，想要训练一个客服机器人。这个工具可以：
+                            </p>
+                            <ul class="text-gray-700 space-y-2 ml-4">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                    <span>自动将文档切分成小段落</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                    <span>基于段落生成相关问题</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                    <span>生成准确的答案和推理过程</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                    <span>导出标准格式（JSONL、JSON 等）</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-500 mb-2"><i class="fas fa-lightbulb mr-1"></i> 使用场景</p>
+                            <ul class="text-sm text-gray-700 space-y-2">
+                                <li><i class="fas fa-book mr-2 text-gray-400"></i><strong>知识库问答：</strong>基于文档生成 QA 对</li>
+                                <li><i class="fas fa-robot mr-2 text-gray-400"></i><strong>客服机器人：</strong>产品手册转训练数据</li>
+                                <li><i class="fas fa-graduation-cap mr-2 text-gray-400"></i><strong>教育辅导：</strong>教材生成分步讲解</li>
+                                <li><i class="fas fa-briefcase mr-2 text-gray-400"></i><strong>企业培训：</strong>制度文档生成学习题</li>
+                                <li><i class="fas fa-flask mr-2 text-gray-400"></i><strong>专业领域：</strong>论文报告生成问答</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workflow -->
+                <div class="instagram-card p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-route mr-2 text-gray-700"></i>
+                        使用流程
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mx-auto mb-3">1</div>
+                            <h3 class="font-semibold text-sm mb-1">上传文档</h3>
+                            <p class="text-xs text-gray-500">支持 PDF、Word、TXT</p>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <i class="fas fa-arrow-right text-gray-300"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mx-auto mb-3">2</div>
+                            <h3 class="font-semibold text-sm mb-1">AI 处理</h3>
+                            <p class="text-xs text-gray-500">自动切片+生成</p>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <i class="fas fa-arrow-right text-gray-300"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mx-auto mb-3">3</div>
+                            <h3 class="font-semibold text-sm mb-1">导出数据</h3>
+                            <p class="text-xs text-gray-500">多种格式可选</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="post-card">
+                        <div class="p-5 border-b border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">智能文档切片</p>
+                                    <p class="text-xs text-gray-500">Document Chunking</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-700 mb-3">自动将长文档按语义切分成合适大小的片段，保留上下文连贯性。</p>
+                            <div class="bg-gray-50 rounded p-3 text-xs text-gray-600">
+                                <p><strong>支持：</strong>TXT、PDF、DOC、DOCX</p>
+                                <p><strong>切片大小：</strong>可自定义（默认 5000 字符）</p>
+                                <p><strong>重叠：</strong>避免语义断裂（默认 100 字符）</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="p-5 border-b border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">问题生成</p>
+                                    <p class="text-xs text-gray-500">Question Generation</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-700 mb-3">基于文档内容自动生成高质量、有针对性的问题。</p>
+                            <div class="bg-gray-50 rounded p-3 text-xs text-gray-600">
+                                <p><strong>生成方式：</strong>LLM 智能生成</p>
+                                <p><strong>数量：</strong>每个切片 1 个问题</p>
+                                <p><strong>质量：</strong>支持人工审核和修改</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="p-5 border-b border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">答案生成</p>
+                                    <p class="text-xs text-gray-500">Answer Generation</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-700 mb-3">为生成的问题提供准确答案，并生成思维链（Chain-of-Thought）推理过程。</p>
+                            <div class="bg-gray-50 rounded p-3 text-xs text-gray-600">
+                                <p><strong>答案：</strong>基于文档内容生成</p>
+                                <p><strong>思维链：</strong>完整的推理步骤</p>
+                                <p><strong>格式：</strong>便于模型学习</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="p-5 border-b border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600">
+                                    <i class="fas fa-download"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">数据集导出</p>
+                                    <p class="text-xs text-gray-500">Dataset Export</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-700 mb-3">一键导出标准格式的训练数据集，直接用于模型微调。</p>
+                            <div class="bg-gray-50 rounded p-3 text-xs text-gray-600">
+                                <p><strong>格式：</strong>Alpaca、ShareGPT、自定义</p>
+                                <p><strong>文件：</strong>JSONL、JSON</p>
+                                <p><strong>兼容：</strong>主流训练框架</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Start -->
+                <div class="instagram-card p-6 mt-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-bolt mr-2 text-gray-700"></i>
+                        快速开始
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
+                            <div>
+                                <h3 class="font-semibold text-sm mb-1">配置 LLM</h3>
+                                <p class="text-sm text-gray-600">在"配置管理"中设置你的 API（支持 OpenAI、DeepSeek 等）</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
+                            <div>
+                                <h3 class="font-semibold text-sm mb-1">上传文档</h3>
+                                <p class="text-sm text-gray-600">在"数据处理"中上传你的文档，输入项目名称</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
+                            <div>
+                                <h3 class="font-semibold text-sm mb-1">执行处理</h3>
+                                <p class="text-sm text-gray-600">选择需要的命令（切片、生成问题、生成答案、导出）</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center font-bold flex-shrink-0">4</div>
+                            <div>
+                                <h3 class="font-semibold text-sm mb-1">查看和导出</h3>
+                                <p class="text-sm text-gray-600">在"项目列表"中查看结果，审核质量后导出数据集</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration View -->
+            <div x-show="currentView === 'config'" class="fade-in">
+                <div class="instagram-card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-cog mr-2 text-gray-700"></i>配置管理
+                        </h2>
+                        <div class="flex items-center space-x-2">
+                            <button @click="resetConfig()" class="text-gray-600 hover:text-gray-900 text-sm">
+                                <i class="fas fa-undo mr-1"></i>重置
+                            </button>
+                            <button @click="saveConfig()" :disabled="configSaveStatus === 'saving'" class="instagram-button text-sm">
+                                <i class="fas fa-save mr-1"></i>
+                                <span x-text="configSaveStatus === 'saving' ? '保存中...' : '保存配置'"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm">
+                        <div class="flex items-center text-blue-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <span>最后更新时间：<span x-text="configLastModified"></span></span>
+                        </div>
+                    </div>
+
+                    <form @submit.prevent="saveConfig()" class="space-y-4">
+                        <!-- LLM Provider Selection -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    LLM 提供商
+                                </label>
+                                <input type="text" value="OpenAI" disabled class="instagram-input w-full opacity-50 cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    API 密钥
+                                </label>
+                                <input type="password" x-model="config.llm_api_key" class="instagram-input w-full">
+                            </div>
+                        </div>
+
+                        <!-- Model and API Settings -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    模型名称
+                                </label>
+                                <input type="text" x-model="config.llm_model" class="instagram-input w-full">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    API 地址
+                                </label>
+                                <input type="url" x-model="config.llm_api" class="instagram-input w-full">
+                            </div>
+                        </div>
+
+                        <!-- Dataset Settings -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    数据集格式
+                                </label>
+                                <select x-model="config.default_dataset_format" class="instagram-input w-full">
+                                    <option value="alpaca">Alpaca</option>
+                                    <option value="sharegpt">ShareGPT</option>
+                                    <option value="custom">自定义</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    文件类型
+                                </label>
+                                <select x-model="config.default_dataset_file_type" class="instagram-input w-full">
+                                    <option value="jsonl">JSONL</option>
+                                    <option value="json">JSON</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Custom Dataset Keys (only show when custom format is selected) -->
+                        <div x-show="config.default_dataset_format === 'custom'" x-transition class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    自定义问题键名
+                                </label>
+                                <input type="text" x-model="config.custom_question_key" class="instagram-input w-full" placeholder="例如: context">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    自定义答案键名
+                                </label>
+                                <input type="text" x-model="config.custom_answer_key" class="instagram-input w-full" placeholder="例如: answer">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    自定义系统键名
+                                </label>
+                                <input type="text" x-model="config.custom_system_key" class="instagram-input w-full" placeholder="例如: system">
+                            </div>
+                        </div>
+
+                        <!-- Processing Parameters -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    切片大小
+                                </label>
+                                <input type="number"
+                                       x-model="config.chunk_size"
+                                       @input="config.chunk_size = validateRange(config.chunk_size, 1, 100000)"
+                                       class="instagram-input w-full"
+                                       placeholder="建议: 1000-10000">
+                                <p class="text-xs text-gray-500 mt-1">文档切分的字符大小（1-100000）</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    切片重叠
+                                </label>
+                                <input type="number"
+                                       x-model="config.chunk_overlap"
+                                       @input="config.chunk_overlap = Math.min(validateRange(config.chunk_overlap, 0, 10000), parseInt(config.chunk_size || 100000) - 1)"
+                                       class="instagram-input w-full"
+                                       placeholder="建议: 100-500">
+                                <p class="text-xs text-gray-500 mt-1">相邻切片重叠的字符数（0-10000，需小于切片大小）</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    最大 Token
+                                </label>
+                                <input type="number"
+                                       x-model="config.max_tokens"
+                                       @input="config.max_tokens = validateRange(config.max_tokens, 1, 8192)"
+                                       class="instagram-input w-full"
+                                       placeholder="建议: 2048-4096"
+                                       value="8192">
+                                <p class="text-xs text-gray-500 mt-1">单次响应最大输出 token 数（1-8192，DeepSeek 限制）</p>
+                            </div>
+                        </div>
+
+                        <!-- Temperature Setting -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                温度参数 (0.0 - 1.0)
+                            </label>
+                            <input type="range" min="0" max="1" step="0.1" x-model="config.temperature" class="w-full">
+                            <div class="text-center text-sm text-gray-600 mt-1">
+                                当前值: <span x-text="config.temperature"></span>
+                            </div>
+                        </div>
+
+                        <!-- Prompt Settings -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    系统提示词
+                                </label>
+                                <textarea x-model="config.system_prompt" rows="2" class="instagram-input w-full"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    问题生成提示词
+                                </label>
+                                <textarea x-model="config.generate_prompt" rows="3" class="instagram-input w-full"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    答案生成提示词
+                                </label>
+                                <textarea x-model="config.answer_prompt" rows="3" class="instagram-input w-full"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                    思维链生成提示词
+                                </label>
+                                <textarea x-model="config.chain_of_thought_prompt" rows="3" class="instagram-input w-full"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Data Directory -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                数据目录
+                            </label>
+                            <input type="text" x-model="config.data_dir" class="instagram-input w-full">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Command Execution View -->
+            <div x-show="currentView === 'execute'" class="fade-in">
+                <div class="instagram-card p-6">
+                    <h2 class="text-lg font-semibold mb-6">
+                        <i class="fas fa-play mr-2 text-gray-700"></i>数据处理
+                    </h2>
+
+                    <form @submit.prevent="executeCommand()" class="space-y-4">
+                        <!-- Project Name -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                项目名称
+                            </label>
+
+                            <!-- 下拉选择已有项目 -->
+                            <div x-show="!executeForm.isNewProject">
+                                <select x-model="executeForm.projectName" @change="executeForm.projectName === '__new__' ? (executeForm.isNewProject = true) : null" class="instagram-input w-full cursor-pointer">
+                                    <option value="" disabled selected>选择已有项目</option>
+                                    <template x-for="project in projects" :key="project.id">
+                                        <option x-text="project.name"></option>
+                                    </template>
+                                    <option value="__new__">+ 新建项目</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-list mr-1"></i>从下拉列表选择项目，或选择"新建项目"
+                                </p>
+                            </div>
+
+                            <!-- 新建项目输入框 -->
+                            <div x-show="executeForm.isNewProject" class="space-y-2">
+                                <input type="text" x-model="executeForm.newProjectName" class="instagram-input w-full" placeholder="输入新项目名称">
+                                <button type="button" @click="executeForm.isNewProject = false; executeForm.newProjectName = ''; executeForm.projectName = ''" class="text-xs text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-arrow-left mr-1"></i>返回选择已有项目
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Document Upload -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                上传文档（可选）
+                            </label>
+                            <div
+                                class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition cursor-pointer"
+                                @drop.prevent="handleDrop($event)"
+                                @dragover.prevent="$event.dataTransfer.dropEffect = 'copy'"
+                            >
+                                <input type="file" x-ref="fileInput" @change="handleFileUpload($event)" accept=".txt,.pdf,.doc,.docx" class="hidden" id="documentUpload">
+                                <label for="documentUpload" class="cursor-pointer" @click="if($refs.fileInput) $refs.fileInput.value = ''">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                                    <p class="text-gray-600 text-sm">点击上传文档或拖拽文件到此处</p>
+                                    <p class="text-xs text-gray-500 mt-1">支持 TXT, PDF, DOC, DOCX 格式（一次只能上传一个文件）</p>
+                                </label>
+                                <div x-show="uploadedFile" class="mt-4">
+                                    <p class="text-sm text-green-600">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        已上传: <span x-text="uploadedFile"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Uploaded Files List -->
+                        <div x-show="uploadedFiles.length > 0" class="mt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-semibold text-gray-600 uppercase">
+                                    已上传文件
+                                </label>
+                            </div>
+                            <div class="space-y-2 max-h-60 overflow-y-auto">
+                                <template x-for="file in uploadedFiles" :key="file.filename">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-medium text-gray-800 truncate" x-text="file.original_filename"></p>
+                                            <p class="text-xs text-gray-500">
+                                                <span x-text="file.size_str"></span>
+                                                <span class="mx-1">•</span>
+                                                <span x-text="file.modified"></span>
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center space-x-2 ml-3">
+                                            <a :href="`/download_dataset?file_path=${encodeURIComponent(file.file_path)}`"
+                                               target="_blank"
+                                               class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                                               title="下载/查看">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <button type="button" @click="deleteUploadedFile(file.file_path, file.original_filename)"
+                                                    class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="删除">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Command Options -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                                选择执行命令
+                            </label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="option in commandOptions" :key="option.value">
+                                    <label class="command-option flex items-center p-3 border rounded-lg">
+                                        <input type="checkbox" :value="option.value" x-model="executeForm.commands" class="mr-3">
+                                        <div>
+                                            <div class="font-medium text-sm" x-text="option.label"></div>
+                                            <div class="text-xs text-gray-500" x-text="option.description"></div>
+                                        </div>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Dataset Name -->
+                        <div x-show="executeForm.commands.includes('create_dataset') || executeForm.commands.includes('export_dataset')">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                                数据集名称
+                            </label>
+                            <input type="text" x-model="executeForm.datasetName" class="instagram-input w-full" placeholder="输入数据集名称">
+                        </div>
+
+                        <!-- Answer Generation Mode -->
+                        <div x-show="executeForm.commands.includes('generate_answers')" x-transition class="p-4 bg-gray-50 rounded-lg space-y-3">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase">
+                                答案生成模式
+                            </label>
+                            <p class="text-xs text-gray-500">选择生成答案时是否包含思维链推理过程</p>
+                            <div class="flex items-center space-x-4">
+                                <!-- Include Chain of Thought -->
+                                <label class="flex items-center cursor-pointer group">
+                                    <input type="radio" name="answer_mode" x-model="executeForm.answerMode" value="with_cot" class="w-4 h-4 text-red-500 border-gray-300 focus:ring-red-500">
+                                    <span class="ml-2 text-sm text-gray-700 group-hover:text-red-500 transition-colors">包含思维链</span>
+                                </label>
+                                <!-- Exclude Chain of Thought -->
+                                <label class="flex items-center cursor-pointer group">
+                                    <input type="radio" name="answer_mode" x-model="executeForm.answerMode" value="without_cot" class="w-4 h-4 text-red-500 border-gray-300 focus:ring-red-500">
+                                    <span class="ml-2 text-sm text-gray-700 group-hover:text-red-500 transition-colors">不包含思维链</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" :disabled="isExecuting" class="instagram-button px-4 py-1.5 text-sm" :class="{'opacity-50 cursor-not-allowed': isExecuting}">
+                                <i class="fas fa-play mr-2"></i>
+                                <span x-text="isExecuting ? '执行中...' : '开始执行'"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Projects View -->
+            <div x-show="currentView === 'projects'" class="fade-in">
+                <!-- Stories Section -->
+                <div x-show="!showProjectDetail" class="bg-white border border-gray-200 rounded-lg p-4 mb-6 overflow-x-auto">
+                    <div class="flex space-x-4">
+                        <template x-for="(project, index) in filteredProjects.slice(0, 6)" :key="index">
+                            <div @click="openProject(project)" class="flex flex-col items-center space-y-2 cursor-pointer">
+                                <div class="story-ring">
+                                    <div class="story-inner">
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xl font-bold" x-text="project.name.charAt(0).toUpperCase()"></div>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-600 truncate w-16 text-center" x-text="project.name"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Projects Grid -->
+                <div x-show="!showProjectDetail" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="project in filteredProjects" :key="project.id">
+                        <div @click="openProject(project)" class="post-card cursor-pointer">
+                            <div class="p-4 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-bold" x-text="project.name.charAt(0).toUpperCase()"></div>
+                                        <div>
+                                            <p class="font-semibold text-sm" x-text="project.name"></p>
+                                            <p class="text-xs text-gray-500" x-text="project.created_at ? new Date(project.created_project_at).toLocaleDateString('zh-CN') : '未知时间'"></p>
+                                        </div>
+                                    </div>
+                                    <button @click.stop="deleteProject(project)" class="text-gray-400 hover:text-red-500">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">问题总数</span>
+                                    <span class="font-medium" x-text="projectQuestionStats[project.id]?.total || 0"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">未回答</span>
+                                    <span class="font-medium text-yellow-600" x-text="projectQuestionStats[project.id]?.pending || 0"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">已回答</span>
+                                    <span class="font-medium text-green-600" x-text="projectQuestionStats[project.id]?.completed || 0"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">已审核</span>
+                                    <span class="font-medium text-blue-600" x-text="projectQuestionStats[project.id]?.reviewed || 0"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Project Detail View -->
+                <div x-show="showProjectDetail" class="space-y-4">
+                    <!-- Back Button -->
+                    <button @click="showProjectDetail = false" class="flex items-center space-x-2 text-gray-700 hover:text-pink-500 mb-4 transition-colors font-medium">
+                        <i class="fas fa-arrow-left text-purple-500"></i>
+                        <span>返回项目列表</span>
+                    </button>
+
+                    <!-- Project Header -->
+                    <div class="instagram-card">
+                        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xl font-bold" x-text="currentProject?.name.charAt(0).toUpperCase()"></div>
+                                <div>
+                                    <p class="font-bold text-lg" x-text="currentProject?.name"></p>
+                                    <p class="text-xs text-gray-500">问题列表</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 space-y-4">
+                            <!-- Question Statistics -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Stats Cards -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="p-3 rounded-lg" style="background-color: #f5f5f5;">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-xs text-gray-500 mb-1">总问题数</p>
+                                                <p class="text-2xl font-bold text-gray-700" x-text="projectQuestionStats[currentProject?.id]?.total || 0"></p>
+                                            </div>
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #e8f4fd;">
+                                                <i class="fas fa-list-ul text-lg" style="color: #6b9bd1;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-lg" style="background-color: #fef3e2;">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-xs text-gray-500 mb-1">未回答</p>
+                                                <p class="text-2xl font-bold" style="color: #d4a574;" x-text="projectQuestionStats[currentProject?.id]?.pending || 0"></p>
+                                            </div>
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #f5e6d5;">
+                                                <i class="fas fa-clock text-lg" style="color: #d4a574;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-lg" style="background-color: #e8f0fe;">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-xs text-gray-500 mb-1">已回答</p>
+                                                <p class="text-2xl font-bold" style="color: #7ba3d8;" x-text="projectQuestionStats[currentProject?.id]?.completed || 0"></p>
+                                            </div>
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #d0e2f7;">
+                                                <i class="fas fa-check text-lg" style="color: #7ba3d8;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 rounded-lg" style="background-color: #fce8e8;">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-xs text-gray-500 mb-1">已审核</p>
+                                                <p class="text-2xl font-bold" style="color: #c17b7b;" x-text="projectQuestionStats[currentProject?.id]?.reviewed || 0"></p>
+                                            </div>
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #f5d0d0;">
+                                                <i class="fas fa-clipboard-check text-lg" style="color: #c17b7b;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Progress Chart -->
+                                <div class="p-4 rounded-lg border border-gray-200">
+                                    <p class="text-sm font-semibold text-gray-600 mb-3">完成进度</p>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                                <span>未回答</span>
+                                                <span x-text="Math.round((projectQuestionStats[currentProject?.id]?.pending || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100) + '%'"></span>
+                                            </div>
+                                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                                <div class="h-2 rounded-full transition-all" :style="`width: ${(projectQuestionStats[currentProject?.id]?.pending || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100}%; background-color: #d4a574;`"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                                <span>已回答</span>
+                                                <span x-text="Math.round((projectQuestionStats[currentProject?.id]?.completed || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100) + '%'"></span>
+                                            </div>
+                                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                                <div class="h-2 rounded-full transition-all" :style="`width: ${(projectQuestionStats[currentProject?.id]?.completed || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100}%; background-color: #7ba3d8;`"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                                <span>已审核</span>
+                                                <span x-text="Math.round((projectQuestionStats[currentProject?.id]?.reviewed || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100) + '%'"></span>
+                                            </div>
+                                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                                <div class="h-2 rounded-full transition-all" :style="`width: ${(projectQuestionStats[currentProject?.id]?.reviewed || 0) / (projectQuestionStats[currentProject?.id]?.total || 1) * 100}%; background-color: #c17b7b;`"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Filters and Actions -->
+                            <!-- Filters and Actions -->
+                            <div class="flex flex-wrap items-center gap-3">
+                                <select x-model="questionFilter" @change="loadQuestions()" class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:border-gray-300 transition-colors">
+                                    <option value="">全部状态</option>
+                                    <option value="0">未回答</option>
+                                    <option value="1">已回答</option>
+                                    <option value="2">已审核</option>
+                                </select>
+                                <button @click="exportDataset()" class="text-sm px-4 py-2 rounded-lg font-medium transition-colors" style="background-color: #e8f4fd; color: #6b9bd1; border: 1px solid #d0e7f7;">
+                                    <i class="fas fa-download mr-1"></i>导出数据集
+                                </button>
+                                <button @click="importQuestions()" class="text-sm px-4 py-2 rounded-lg font-medium transition-colors" style="background-color: #e8f5e9; color: #7cb380; border: 1px solid #d0e8d5;">
+                                    <i class="fas fa-upload mr-1"></i>批量导入问题
+                                </button>
+                            </div>
+
+                            <div class="flex justify-between items-center text-sm text-gray-600">
+                                <span><i class="fas fa-list-ul mr-2" style="color: #a0a0a0;"></i>共 <span x-text="questions.length"></span> 条记录</span>
+                                <div class="flex space-x-2">
+                                    <button @click="selectAllQuestions()" x-show="selectedQuestions.length !== questions.length" class="text-sm px-4 py-2 rounded-lg font-medium transition-colors" style="background-color: #f5f5f5; color: #666; border: 1px solid #e0e0e0;">
+                                        <i class="fas fa-check-square mr-1" style="color: #9e9e9e;"></i>全选
+                                    </button>
+                                    <button @click="deselectAllQuestions()" x-show="selectedQuestions.length === questions.length && questions.length > 0" class="text-sm px-4 py-2 rounded-lg font-medium transition-colors" style="background-color: #f5f5f5; color: #666; border: 1px solid #e0e0e0;">
+                                        <i class="fas fa-times-square mr-1" style="color: #9e9e9e;"></i>取消全选
+                                    </button>
+                                    <button @click="batchDeleteQuestions()" x-show="selectedQuestions.length > 0" class="text-sm px-4 py-2 rounded-lg font-medium transition-colors" style="background-color: #fce8e8; color: #c17b7b; border: 1px solid #f5d0d0;">
+                                        <i class="fas fa-trash-alt mr-1"></i>批量删除 (<span x-text="selectedQuestions.length"></span>)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Questions List -->
+                            <div class="space-y-4">
+                                <!-- Empty State -->
+                                <div x-show="questions.length === 0" class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-folder-open text-5xl mb-3" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                                    <p>暂无问题数据</p>
+                                    <p class="text-xs mt-1">请先执行"生成问题"命令</p>
+                                </div>
+
+                                <!-- Questions -->
+                                <template x-for="question in questions" :key="question.id">
+                                    <div class="border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-300 hover:shadow-sm transition-all">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="checkbox" x-model="selectedQuestions" :value="question.id" class="mt-1 w-4 h-4 accent-gray-400 rounded">
+                                            <div class="flex-1 space-y-3">
+                                                <div>
+                                                    <label class="text-xs font-medium text-gray-400 uppercase tracking-wide flex items-center mb-1">
+                                                        <i class="fas fa-question-circle mr-1" style="color: #d4a574;"></i>问题
+                                                    </label>
+                                                    <textarea x-model="question.content" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-gray-300 focus:ring-1 focus:ring-gray-200 transition-all" rows="2"></textarea>
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs font-medium text-gray-400 uppercase tracking-wide flex items-center mb-1">
+                                                        <i class="fas fa-lightbulb mr-1" style="color: #e6c87a;"></i>答案
+                                                    </label>
+                                                    <textarea x-model="question.answer" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-gray-300 focus:ring-1 focus:ring-gray-200 transition-all" rows="3"></textarea>
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs font-medium text-gray-400 uppercase tracking-wide flex items-center mb-1">
+                                                        <i class="fas fa-brain mr-1" style="color: #b8a5c4;"></i>思维链
+                                                    </label>
+                                                    <textarea x-model="question.chain_of_thought" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-gray-300 focus:ring-1 focus:ring-gray-200 transition-all" rows="3"></textarea>
+                                                </div>
+                                                <div class="flex justify-between items-center pt-2">
+                                                    <div class="flex items-center space-x-3">
+                                                        <select x-model="question.status" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-gray-300 transition-colors">
+                                                            <option value="0">未回答</option>
+                                                            <option value="1">已回答</option>
+                                                            <option value="2">已审核</option>
+                                                        </select>
+                                                        <span class="status-badge text-xs px-3 py-1 rounded-full" :class="{
+                                                            'status-pending': question.status == 0,
+                                                            'status-completed': question.status == 1,
+                                                            'status-reviewed': question.status == 2
+                                                        }">
+                                                            <span x-text="question.status == 0 ? '未回答' : question.status == 1 ? '已回答' : '已审核'"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex items-center space-x-2">
+                                                        <button @click="regenerateQuestion(question)" class="text-sm px-4 py-1.5 rounded-lg font-medium transition-colors" style="background-color: #e8f0fe; color: #7ba3d8; border: 1px solid #d0e2f7;">
+                                                            <i class="fas fa-sync-alt mr-1"></i>重新生成
+                                                        </button>
+                                                        <button @click="saveQuestion(question)" class="text-sm px-4 py-1.5 rounded-lg font-medium transition-colors hover:bg-red-600" style="background: #ef4444; color: white; border: 1px solid #ef4444;">
+                                                            <i class="fas fa-check mr-1"></i>保存
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button @click.stop="deleteQuestion(question)" class="text-gray-400 hover:text-red-400 hover:bg-red-50 transition-all p-2 rounded-full">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="flex justify-center py-4">
+                                <nav class="flex space-x-2">
+                                    <button @click="changePage(currentPage - 1)" :disabled="currentPage <= 1" class="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                    <template x-for="page in pagination.pageNumbers" :key="page">
+                                        <button @click="changePage(page)" :class="{'font-medium': page === currentPage, 'text-gray-600 hover:bg-gray-50': page !== currentPage}" class="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all" :style="page === currentPage ? 'background-color: #f5f5f5; color: #666;' : ''" x-text="page"></button>
+                                    </template>
+                                    <button @click="changePage(currentPage + 1)" :disabled="currentPage >= pagination.pages" class="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+                                        <i class="fas fa-chevron-right text-sm"></i>
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="filteredProjects.length === 0 && !showProjectDetail" class="text-center py-12">
+                    <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">暂无项目，请先创建项目</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Success Modal -->
+        <div x-show="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
+            <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-50" @click="showSuccessModal = false"></div>
+            <div class="instagram-card p-8 max-w-md w-full mx-4 text-center relative z-10">
+                <div class="bg-gradient-to-br from-sky-300 to-blue-400 w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">操作成功！</h3>
+                <p class="text-gray-600 text-sm mb-6" x-text="successMessage"></p>
+                <button @click="showSuccessModal = false" class="instagram-button px-6 py-2">
+                    确定
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div x-show="isLoading" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
+            <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-50"></div>
+            <div class="instagram-card p-8 text-center">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-gray-600 text-sm" x-text="loadingMessage"></p>
+            </div>
+        </div>
+
+        <!-- Execution Log Modal -->
+        <div x-show="isExecuting" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+            <div class="modal-backdrop fixed inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div class="w-full max-w-3xl max-h-[85vh] flex flex-col relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-900/10 overflow-hidden">
+                <!-- Header -->
+                <div class="p-6 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" :class="{
+                                'bg-green-100': executionStatus === 'executing',
+                                'bg-green-100': executionStatus === 'success',
+                                'bg-red-100': executionStatus === 'failed'
+                            }">
+                                <i class="fas text-xl" :class="{
+                                    'fa-cog animate-spin text-green-500': executionStatus === 'executing',
+                                    'fa-check text-green-500': executionStatus === 'success',
+                                    'fa-times text-red-500': executionStatus === 'failed'
+                                }"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xl text-gray-800" x-text="executionStatus === 'executing' ? '数据处理中' : executionStatus === 'success' ? '处理完成' : '处理失败'"></h3>
+                                <p class="text-sm text-gray-500 mt-0.5" x-text="executeForm.projectName"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div x-show="executionStatus === 'executing'" class="text-right">
+                                <div class="text-3xl font-bold text-green-500" x-text="executionProgress + '%'"></div>
+                                <div class="text-xs text-gray-400 mt-1">完成进度</div>
+                            </div>
+                            <button x-show="executionStatus !== 'executing'" @click="closeExecutionModal()" class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all">
+                                <i class="fas fa-times text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar - only show during execution -->
+                <div x-show="executionStatus === 'executing'" class="px-6 py-4 bg-gradient-to-b from-gray-50 to-white">
+                    <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 ease-out bg-green-500 shadow-lg" :style="`width: ${executionProgress}%`"></div>
+                    </div>
+                </div>
+
+                <!-- Log Output -->
+                <div class="flex-1 overflow-hidden flex flex-col min-h-0">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <h4 class="font-semibold text-sm text-gray-700">执行日志</h4>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="text-xs text-gray-400 flex items-center space-x-1">
+                                <i class="fas fa-list-ul"></i>
+                                <span x-text="executionLogs.length"></span> 条
+                            </div>
+                            <div x-show="executionStatus !== 'executing'" class="px-3 py-1.5 rounded-xl text-xs font-semibold" :class="{
+                                'bg-green-100 text-green-600': executionStatus === 'success',
+                                'bg-red-100 text-red-500': executionStatus === 'failed'
+                            }" x-text="executionStatus === 'success' ? '✓ 成功' : '✗ 失败'"></div>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto bg-gradient-to-b from-gray-900 to-gray-800 p-5 min-h-0">
+                        <template x-for="(log, index) in executionLogs" :key="index">
+                            <div class="text-sm mb-1.5 font-mono leading-relaxed" :class="{
+                                'text-emerald-400': !log.includes('ERROR:') && !log.includes('错误'),
+                                'text-red-400': log.includes('ERROR:') || log.includes('错误'),
+                                'text-amber-400': log.includes('WARNING:') || log.includes('警告')
+                            }">
+                                <span class="text-gray-600 mr-2 select-none" x-text="String(index + 1).padStart(3, '0')"></span>
+                                <span x-text="log"></span>
+                            </div>
+                        </template>
+                        <div x-show="executionLogs.length === 0 && executionStatus === 'executing'" class="text-emerald-400 text-sm flex items-center space-x-2">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>正在启动...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100">
+                    <div class="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                        <i class="fas fa-info-circle"></i>
+                        <p x-show="executionStatus === 'executing'">请勿关闭此窗口，处理完成后可查看结果</p>
+                        <p x-show="executionStatus !== 'executing'">请查看执行日志后关闭窗口</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                currentView: 'intro',
+                introFeatures: [
+                    { name: '文档切片', icon: '📄' },
+                    { name: '问题生成', icon: '❓' },
+                    { name: '答案生成', icon: '💡' },
+                    { name: '数据集导出', icon: '📦' },
+                    { name: '智能审核', icon: '✅' },
+                    { name: '批量处理', icon: '⚡' }
+                ],
+                mainFeatures: [
+                    {
+                        title: '文档切片',
+                        icon: '📄',
+                        description: '上传文档，自动进行智能切片处理，支持 TXT、PDF、DOC、DOCX 等多种格式'
+                    },
+                    {
+                        title: '问题生成',
+                        icon: '❓',
+                        description: '基于文档内容自动生成高质量问题，每个切片生成 1 个相关问题'
+                    },
+                    {
+                        title: '答案生成',
+                        icon: '💡',
+                        description: '智能生成答案和思维链过程，提供完整的推理步骤'
+                    },
+                    {
+                        title: '数据集导出',
+                        icon: '📦',
+                        description: '一键导出标准格式的训练数据集，支持 Alpaca、ShareGPT 等格式'
+                    }
+                ],
+                defaultConfig: {
+                    llm_provider: 'openai',  // 固定为 OpenAI
+                    llm_model: 'gpt-3.5-turbo',
+                    llm_api: 'https://api.openai.com/v1/chat/completions',
+                    llm_api_key: '',
+                    default_dataset_format: 'alpaca',
+                    default_dataset_file_type: 'jsonl',
+                    data_dir: './data',
+                    system_prompt: '你是一个分析专家',
+                    generate_prompt: '请基于内容生成问题, 每个trunck生成1个问题, 输出格式不需要有标题, 每行就是一个问题, 要求全中文',
+                    answer_prompt: '请基于文档内容以及问题生成答案',
+                    chain_of_thought_prompt: '请基于生成的问题和答案结合文档内容生成思考过程',
+                    chunk_size: 5000,
+                    chunk_overlap: 100,
+                    max_tokens: 8192,
+                    temperature: 0.7,
+                    use_chain_of_thought: true,
+                    custom_question_key: 'context',
+                    custom_answer_key: 'answer',
+                    custom_system_key: 'system'
+                },
+                config: {},
+                originalConfig: {},
+                configSaveStatus: '',
+                configLastModified: '',
+                projects: [],
+                filteredProjects: [],
+                projectSearch: '',
+                projectQuestionStats: {},
+                questions: [],
+                selectedQuestions: [],
+                currentProject: null,
+                currentPage: 1,
+                perPage: 5,
+                pagination: {},
+                questionFilter: '',
+                showProjectDetail: false,
+                showSuccessModal: false,
+                successMessage: '',
+                isLoading: false,
+                loadingMessage: '',
+                isExecuting: false,
+                executionStatus: 'executing', // 'executing', 'success', 'failed'
+                executionLogs: [],
+                executionProgress: 0,
+                uploadedFile: null,
+                completedQuestions: 0,
+                totalQuestionsToProcess: 0,
+                uploadedFilePath: null,
+                uploadedFiles: [],
+                executeForm: {
+                    projectName: '',
+                    newProjectName: '',
+                    isNewProject: false,
+                    datasetName: '',
+                    commands: [],
+                    answerMode: 'with_cot'  // 'with_cot' or 'without_cot'
+                },
+                commandOptions: [
+                    {
+                        value: 'document',
+                        label: '文档切片',
+                        description: '将上传的文档进行切片处理'
+                    },
+                    {
+                        value: 'generate_questions',
+                        label: '生成问题',
+                        description: '基于文档内容生成问题'
+                    },
+                    {
+                        value: 'generate_answers',
+                        label: '生成答案',
+                        description: '为生成的问题提供答案'
+                    },
+                    // {
+                    //     value: 'create_dataset',
+                    //     label: '创建数据集',
+                    //     description: '创建标准格式的数据集'
+                    // },
+                    // {
+                    //     value: 'export_dataset',
+                    //     label: '导出数据集',
+                    //     description: '导出数据集文件'
+                    // }
+                ],
+
+                init() {
+                    this.loadConfig();
+                    this.loadProjects();
+                    // 不在初始化时自动加载已上传文件列表，保持为空
+                    // 用户可以点击"刷新"按钮或在上传文件后查看
+                },
+
+                validateRange(value, min, max) {
+                    const num = parseInt(value);
+                    if (isNaN(num)) return min;
+                    if (num < min) return min;
+                    if (num > max) return max;
+                    return num;
+                },
+
+                async loadConfig() {
+                    try {
+                        const response = await fetch('/config');
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        this.config = data;
+                        this.originalConfig = JSON.parse(JSON.stringify(data));
+
+                        // 不在加载配置时调用 onProviderChange()，保留用户设置的值
+
+                        // 获取文件修改时间
+                        this.configLastModified = new Date().toLocaleString('zh-CN');
+                    } catch (error) {
+                        console.error('加载配置失败:', error);
+                        this.config = {...this.defaultConfig};
+                        this.onProviderChange();  // 只有使用默认配置时才调用
+                        this.configLastModified = '使用默认配置';
+                        this.showError('加载配置失败，已使用默认配置: ' + error.message);
+                    }
+                },
+
+                onProviderChange() {
+                    // 固定使用 OpenAI，不做任何处理
+                    // 保留此方法以避免调用错误
+                },
+
+                async resetConfig() {
+                    await this.loadConfig();
+                    this.config.data_dir = './data';
+                },
+
+                async saveConfig() {
+                    try {
+                        const requiredFields = ['llm_provider', 'llm_model', 'default_dataset_format', 'default_dataset_file_type'];
+                        const missingFields = requiredFields.filter(field => !this.config[field]);
+
+                        if (missingFields.length > 0) {
+                            this.showError('以下字段不能为空: ' + missingFields.join(', '));
+                            return;
+                        }
+
+                        // 验证切片参数范围
+                        const chunkSize = parseInt(this.config.chunk_size);
+                        const chunkOverlap = parseInt(this.config.chunk_overlap);
+                        const maxTokens = parseInt(this.config.max_tokens);
+
+                        // 验证切片大小
+                        if (isNaN(chunkSize) || chunkSize < 1 || chunkSize > 100000) {
+                            this.showError('切片大小必须在 1-100000 之间');
+                            return;
+                        }
+
+                        // 验证切片重叠
+                        if (isNaN(chunkOverlap) || chunkOverlap < 0 || chunkOverlap > 10000) {
+                            this.showError('切片重叠必须在 0-10000 之间');
+                            return;
+                        }
+
+                        // 验证切片重叠不能超过切片大小
+                        if (chunkOverlap >= chunkSize) {
+                            this.showError('切片重叠必须小于切片大小（当前切片大小: ' + chunkSize + '，重叠: ' + chunkOverlap + '）');
+                            return;
+                        }
+
+                        // 验证最大 Token
+                        if (isNaN(maxTokens) || maxTokens < 1 || maxTokens > 8192) {
+                            this.showError('最大 Token 必须在 1-8192 之间（DeepSeek API 限制）');
+                            return;
+                        }
+
+                        // 自定义格式时验证自定义键名
+                        if (this.config.default_dataset_format === 'custom') {
+                            if (!this.config.custom_question_key || !this.config.custom_answer_key || !this.config.custom_system_key) {
+                                this.showError('选择自定义格式时，自定义键名不能为空');
+                                return;
+                            }
+                        }
+
+                        this.configSaveStatus = 'saving';
+
+                        const formData = new FormData();
+                        Object.keys(this.config).forEach(key => {
+                            formData.append(key, this.config[key]);
+                        });
+
+                        const response = await fetch('/config', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.configSaveStatus = 'success';
+                            this.showSuccess('配置保存成功！');
+                            this.configLastModified = new Date().toLocaleString('zh-CN');
+                            this.originalConfig = JSON.parse(JSON.stringify(this.config));
+                            setTimeout(() => {
+                                this.configSaveStatus = '';
+                            }, 3000);
+                        } else {
+                            this.configSaveStatus = 'error';
+                            this.showError('配置保存失败: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('保存配置失败:', error);
+                        this.configSaveStatus = 'error';
+                        this.showError('保存配置失败: ' + error.message);
+                    }
+                },
+
+                async loadProjects() {
+                    try {
+                        const response = await fetch('/projects');
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            this.projects = data.data;
+                            this.filteredProjects = data.data;
+                            this.projects.forEach(project => {
+                                this.loadProjectStats(project.id);
+                            });
+                            // 如果当前在项目详情页面，刷新问题列表
+                            if (this.showProjectDetail && this.currentProject) {
+                                this.loadQuestions();
+                            }
+                        } else if (data.status === 'error') {
+                            console.error('加载项目列表失败:', data.message);
+                            this.showError('加载项目列表失败: ' + data.message);
+                        }
+                    } catch (error) {
+                        console.error('加载项目列表失败:', error);
+                        this.showError('加载项目列表失败: ' + error.message);
+                    }
+                },
+
+                filterProjects() {
+                    if (!this.projectSearch) {
+                        this.filteredProjects = this.projects;
+                    } else {
+                        const search = this.projectSearch.toLowerCase();
+                        this.filteredProjects = this.projects.filter(project =>
+                            project.name.toLowerCase().includes(search) ||
+                            (project.description && project.description.toLowerCase().includes(search))
+                        );
+                    }
+                },
+
+                async loadProjectStats(projectId) {
+                    try {
+                        const response = await fetch(`/project_question_stats?project_id=${projectId}`);
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            const stats = data.data;
+                            this.projectQuestionStats[projectId] = {
+                                total: stats['0'] + stats['1'] + stats['2'],
+                                pending: stats['0'],
+                                completed: stats['1'],
+                                reviewed: stats['2']
+                            };
+                        } else {
+                            // 接口返回错误时，初始化为全0
+                            this.projectQuestionStats[projectId] = {
+                                total: 0,
+                                pending: 0,
+                                completed: 0,
+                                reviewed: 0
+                            };
+                        }
+                    } catch (error) {
+                        console.error('加载项目统计失败:', error);
+                        // 发生异常时，初始化为全0
+                        this.projectQuestionStats[projectId] = {
+                            total: 0,
+                            pending: 0,
+                            completed: 0,
+                            reviewed: 0
+                        };
+                    }
+                },
+
+                async openProject(project) {
+                    this.currentProject = project;
+                    this.showProjectDetail = true;
+                    this.currentPage = 1;
+                    this.selectedQuestions = [];
+                    await this.loadQuestions();
+                },
+
+                async loadQuestions() {
+                    if (!this.currentProject) return;
+
+                    try {
+                        const params = new URLSearchParams({
+                            project_id: this.currentProject.id,
+                            page: this.currentPage,
+                            per_page: this.perPage
+                        });
+                        if (this.questionFilter) {
+                            params.append('status', this.questionFilter);
+                        }
+
+                        const response = await fetch(`/project_questions?${params}`);
+                        const data = await response.json();
+
+                        if (data.status === 'success') {
+                            this.questions = data.data;
+                            this.pagination = data.pagination;
+                        } else {
+                            console.error('加载问题列表失败:', data.message);
+                            this.showError('加载问题列表失败: ' + data.message);
+                            this.questions = [];
+                        }
+                    } catch (error) {
+                        console.error('加载问题列表失败:', error);
+                        this.showError('加载问题列表失败: ' + error.message);
+                        this.questions = [];
+                    }
+                },
+
+                async changePage(page) {
+                    if (page < 1 || page > this.pagination.pages) return;
+                    this.currentPage = page;
+                    await this.loadQuestions();
+                },
+
+                async updateQuestion(question) {
+                    try {
+                        const response = await fetch('/update_question', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: this.currentProject.id,
+                                question_id: question.id,
+                                content: question.content,
+                                answer: question.answer,
+                                chain_of_thought: question.chain_of_thought,
+                                status: question.status
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.showSuccess('问题更新成功！');
+                            this.loadProjectStats(this.currentProject.id);
+                        }
+                    } catch (error) {
+                        console.error('更新问题失败:', error);
+                    }
+                },
+
+                async saveQuestion(question) {
+                    await this.updateQuestion(question);
+                },
+
+                async regenerateQuestion(question) {
+                    if (!confirm('确定要将此问题标记为未回答状态吗？\n标记后会清空答案和思维链，可以重新生成。')) return;
+
+                    try {
+                        const response = await fetch('/update_question', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: this.currentProject.id,
+                                question_id: question.id,
+                                content: question.content,
+                                answer: '',  // 清空答案
+                                chain_of_thought: '',  // 清空思维链
+                                status: 0  // 改为未回答状态
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.showSuccess('问题已标记为未回答，答案和思维链已清空！');
+                            question.answer = '';  // 更新本地数据
+                            question.chain_of_thought = '';
+                            question.status = 0;
+                            this.loadQuestions();
+                            this.loadProjectStats(this.currentProject.id);
+                        } else {
+                            this.showError('操作失败: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('更新问题状态失败:', error);
+                        this.showError('操作失败');
+                    }
+                },
+
+                async deleteQuestion(question) {
+                    if (!confirm('确定要删除这个问题吗？')) return;
+
+                    try {
+                        const response = await fetch('/delete_question', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: this.currentProject.id,
+                                question_id: question.id
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.showSuccess('问题删除成功！');
+                            this.loadQuestions();
+                            this.loadProjectStats(this.currentProject.id);
+                        }
+                    } catch (error) {
+                        console.error('删除问题失败:', error);
+                    }
+                },
+
+                async batchDeleteQuestions() {
+                    if (this.selectedQuestions.length === 0) {
+                        this.showError('请先选择要删除的问题');
+                        return;
+                    }
+
+                    if (!confirm(`确定要删除选中的 ${this.selectedQuestions.length} 个问题吗？`)) return;
+
+                    try {
+                        const response = await fetch('/delete_questions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: this.currentProject.id,
+                                question_ids: this.selectedQuestions
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success' || result.status === 'partial_success') {
+                            this.showSuccess(`成功删除 ${result.deleted_count} 个问题`);
+                            this.selectedQuestions = [];
+                            this.loadQuestions();
+                            this.loadProjectStats(this.currentProject.id);
+                        }
+                    } catch (error) {
+                        console.error('批量删除问题失败:', error);
+                        this.showError('批量删除问题失败');
+                    }
+                },
+
+                selectAllQuestions() {
+                    this.selectedQuestions = this.questions.map(q => q.id);
+                },
+
+                deselectAllQuestions() {
+                    this.selectedQuestions = [];
+                },
+
+                async batchReviewQuestions() {
+                    if (this.selectedQuestions.length === 0) {
+                        this.showError('请先选择要审核的问题');
+                        return;
+                    }
+
+                    if (!confirm(`确定要将选中的 ${this.selectedQuestions.length} 个问题标记为已审核吗？`)) return;
+
+                    try {
+                        let successCount = 0;
+                        for (const questionId of this.selectedQuestions) {
+                            const question = this.questions.find(q => q.id === questionId);
+                            if (question) {
+                                question.status = 2;
+                                await this.updateQuestion(question);
+                                successCount++;
+                            }
+                        }
+
+                        this.showSuccess(`成功审核 ${successCount} 个问题`);
+                        this.selectedQuestions = [];
+                        this.loadQuestions();
+                        this.loadProjectStats(this.currentProject.id);
+                    } catch (error) {
+                        console.error('批量审核失败:', error);
+                        this.showError('批量审核失败');
+                    }
+                },
+
+                async deleteProject(project) {
+                    if (!confirm(`确定要删除项目 "${project.name}" 吗？`)) return;
+
+                    try {
+                        const response = await fetch('/delete_project', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: project.id
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.showSuccess('项目删除成功！');
+                            this.loadProjects();
+                        }
+                    } catch (error) {
+                        console.error('删除项目失败:', error);
+                        this.showError('删除项目失败');
+                    }
+                },
+
+                handleDrop(event) {
+                    const files = event.dataTransfer.files;
+                    if (files.length > 1) {
+                        this.showError('一次只能上传一个文件');
+                        return;
+                    }
+                    if (files.length > 0) {
+                        const file = files[0];
+                        const allowedTypes = ['.txt', '.pdf', '.doc', '.docx'];
+                        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+                        if (!allowedTypes.includes(fileExtension)) {
+                            this.showError('不支持的文件类型');
+                            return;
+                        }
+
+                        // 直接调用上传逻辑，而不是通过 change 事件
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        fetch('/upload_document', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.status === 'success') {
+                                this.uploadedFile = result.filename;
+                                this.uploadedFilePath = result.file_path;
+                                this.showSuccess('文件上传成功！');
+                                // 直接添加到本地数组，不从后端获取历史文件
+                                this.uploadedFiles = [{
+                                    filename: result.filename,
+                                    original_filename: file.name,  // 使用原始文件名
+                                    file_path: result.file_path,
+                                    size: file.size,
+                                    size_str: this.formatFileSize(file.size)
+                                }];
+                                if (this.$refs.fileInput) {
+                                    this.$refs.fileInput.value = '';
+                                }
+                            } else {
+                                this.showError('文件上传失败: ' + result.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('文件上传失败:', error);
+                            this.showError('文件上传失败');
+                        });
+                    }
+                },
+
+                async handleFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    if (this.uploadedFiles.length > 0) {
+                        this.showError('已有上传文件，请先删除后再上传新文件');
+                        event.target.value = '';
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    try {
+                        const response = await fetch('/upload_document', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.uploadedFile = result.filename;
+                            this.uploadedFilePath = result.file_path;
+                            this.showSuccess('文件上传成功！');
+                            // 直接添加到本地数组，不从后端获取历史文件
+                            this.uploadedFiles = [{
+                                filename: result.filename,
+                                original_filename: file.name,  // 使用原始文件名
+                                file_path: result.file_path,
+                                size: file.size,
+                                size_str: this.formatFileSize(file.size)
+                            }];
+                            // 重置文件输入框
+                            if (this.$refs.fileInput) {
+                                this.$refs.fileInput.value = '';
+                            }
+                        } else {
+                            this.showError('文件上传失败: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('文件上传失败:', error);
+                        this.showError('文件上传失败');
+                    }
+                },
+
+                async loadUploadedFiles() {
+                    try {
+                        const response = await fetch('/list_files');
+                        const result = await response.json();
+
+                        if (result.status === 'success') {
+                            // 从目录树中提取 uploads 目录的文件
+                            const uploadsDir = this.findUploadsDirectory(result.data);
+                            if (uploadsDir && uploadsDir.children) {
+                                // 过滤出文件（不是目录）
+                                this.uploadedFiles = uploadsDir.children
+                                    .filter(item => item.type === 'file')
+                                    .map(file => {
+                                        // 获取原始文件名（去掉UUID前缀）
+                                        let originalFilename = file.name;
+                                        if (file.name.includes('_')) {
+                                            const parts = file.name.split('_', 2);
+                                            if (parts.length === 2) {
+                                                originalFilename = parts[1];
+                                            }
+                                        }
+                                        // 构建完整文件路径 (data/uploads/文件名)
+                                        const fullPath = `data/uploads/${file.name}`;
+                                        return {
+                                            filename: file.name,
+                                            original_filename: originalFilename,
+                                            file_path: fullPath,
+                                            size: file.size,
+                                            size_str: file.size_str,
+                                            modified: file.modified
+                                        };
+                                    });
+                            } else {
+                                this.uploadedFiles = [];
+                            }
+                        }
+                    } catch (error) {
+                        console.error('加载已上传文件列表失败:', error);
+                    }
+                },
+
+                findUploadsDirectory(node) {
+                    if (!node) return null;
+                    if (node.type === 'directory' && (node.name === 'uploads' || node.path?.includes('uploads'))) {
+                        return node;
+                    }
+                    if (node.children) {
+                        for (const child of node.children) {
+                            const result = this.findUploadsDirectory(child);
+                            if (result) return result;
+                        }
+                    }
+                    return null;
+                },
+
+                async deleteUploadedFile(filePath, filename) {
+                    if (!confirm(`确定要删除文件 "${filename}" 吗？`)) {
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/delete_upload_file', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ file_path: filePath })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            this.showSuccess('文件删除成功！');
+
+                            // 如果删除的是当前选中的文件，先标记需要重新选择
+                            const needReselect = this.uploadedFilePath === filePath;
+
+                            // 直接从本地数组中移除文件，不从后端重新加载
+                            this.uploadedFiles = this.uploadedFiles.filter(f => f.file_path !== filePath);
+
+                            // 如果删除的是当前选中的文件，清空选中状态
+                            if (needReselect) {
+                                this.uploadedFile = null;
+                                this.uploadedFilePath = null;
+                            }
+
+                            // 重置文件输入框，允许重新选择相同文件
+                            if (this.$refs.fileInput) {
+                                this.$refs.fileInput.value = '';
+                            }
+                        } else {
+                            this.showError('文件删除失败: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('文件删除失败:', error);
+                        this.showError('文件删除失败');
+                    }
+                },
+
+                // 格式化文件大小
+                formatFileSize(bytes) {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024;
+                    const sizes = ['B', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                },
+
+                async executeCommand() {
+                    // 获取实际的项目名称（如果是新建项目，使用新输入的名称）
+                    const actualProjectName = this.executeForm.isNewProject
+                        ? this.executeForm.newProjectName
+                        : this.executeForm.projectName;
+
+                    if (!actualProjectName) {
+                        this.showError('请输入或选择项目名称');
+                        return;
+                    }
+
+                    if (this.executeForm.commands.length === 0) {
+                        this.showError('请至少选择一个执行命令');
+                        return;
+                    }
+
+                    // 只有选择文档切片命令时才需要校验是否有上传文件
+                    if (this.executeForm.commands.includes('document')) {
+                        if (this.uploadedFiles.length === 0 && !this.uploadedFilePath) {
+                            this.showError('请先上传文档');
+                            return;
+                        }
+                    }
+
+                    // 如果包含生成答案命令，先获取待生成的问题数量
+                    if (this.executeForm.commands.includes('generate_answers') || this.executeForm.commands.includes('generate_answers_no_chain')) {
+                        try {
+                            // 先找到项目的ID
+                            const projectsResponse = await fetch('/projects');
+                            const projectsData = await projectsResponse.json();
+                            if (projectsData.status === 'success') {
+                                const project = projectsData.data.find(p => p.name === actualProjectName);
+                                if (project) {
+                                    // 获取项目统计信息
+                                    const statsResponse = await fetch(`/project_question_stats?project_id=${project.id}`);
+                                    const statsData = await statsResponse.json();
+                                    if (statsData.status === 'success') {
+                                        // 获取未回答的问题数量（status=0）
+                                        this.totalQuestionsToProcess = statsData.data[0] || 0;
+                                        this.completedQuestions = 0;
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            console.error('获取项目统计失败:', error);
+                        }
+                    }
+
+                    let command = `python3.9 main.py --config config.json --project ${actualProjectName}`;
+
+                    this.executeForm.commands.forEach(cmd => {
+                        switch(cmd) {
+                            case 'document':
+                                // 只有选择文档切片命令时才添加 --document 参数
+                                if (this.uploadedFilePath) {
+                                    command += ` --document "${this.uploadedFilePath}"`;
+                                }
+                                break;
+                            case 'generate_answers':
+                                // 根据answerMode选择正确的参数
+                                if (this.executeForm.answerMode === 'with_cot') {
+                                    command += ` --generate_answers`;
+                                } else {
+                                    command += ` --generate_answers_no_chain`;
+                                }
+                                break;
+                            case 'create_dataset':
+                            case 'export_dataset':
+                                if (this.executeForm.datasetName) {
+                                    command += ` --${cmd} ${this.executeForm.datasetName}`;
+                                }
+                                break;
+                            default:
+                                command += ` --${cmd}`;
+                        }
+                    });
+
+                    this.isExecuting = true;
+                    this.executionStatus = 'executing';
+                    this.executionLogs = [];
+                    this.executionProgress = 0;
+                    this.completedQuestions = 0;
+                    // 注意：不要重置 totalQuestionsToProcess，它已经在上面被设置过了
+
+                    const eventSource = new EventSource(`/execute?command=${encodeURIComponent(command)}`);
+
+                    eventSource.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+
+                        if (data.type === 'output') {
+                            this.executionLogs.push(data.content);
+                            this.updateProgress(data.content);
+                            this.$nextTick(() => {
+                                const logElement = document.querySelector('.log-output');
+                                if (logElement) {
+                                    logElement.scrollTop = logElement.scrollHeight;
+                                }
+                            });
+                        } else if (data.type === 'complete') {
+                            eventSource.close();
+                            this.executionProgress = 100;
+
+                            if (data.exitCode === 0) {
+                                this.executionStatus = 'success';
+                                this.loadProjects();
+                                // 如果当前在项目详情页面，刷新问题列表和统计数据
+                                if (this.showProjectDetail && this.currentProject) {
+                                    this.loadQuestions();
+                                    this.loadProjectStats(this.currentProject.id);
+                                }
+                            } else {
+                                this.executionStatus = 'failed';
+                                this.showError(`数据处理失败，退出码: ${data.exitCode}`);
+                            }
+                        }
+                    };
+
+                    eventSource.onerror = (error) => {
+                        console.error('SSE Error:', error);
+                        eventSource.close();
+                        this.isExecuting = false;
+                        this.showError('连接失败，请重试');
+                    };
+                },
+
+                updateProgress(log) {
+                    // 如果有待生成的问题，根据 update status 更新进度
+                    if (this.totalQuestionsToProcess > 0) {
+                        if (log.toLowerCase().includes('update status') ||
+                            log.toLowerCase().includes('updating') ||
+                            log.toLowerCase().includes('生成答案') ||
+                            log.toLowerCase().includes('已生成')) {
+                            this.completedQuestions++;
+                            const progress = Math.round((this.completedQuestions / this.totalQuestionsToProcess) * 100);
+                            this.executionProgress = Math.min(progress, 95); // 最多到95%，完成时设为100%
+                        }
+                    } else {
+                        // 没有待生成问题时，使用命令完成进度
+                        const commandMap = {
+                            'document': '文档切片',
+                            'generate_questions': '生成问题',
+                            'generate_answers': '生成答案',
+                            'generate_answers_no_chain': '生成答案',
+                            'create_dataset': '创建数据集',
+                            'export_dataset': '导出数据集',
+                            'import_questions': '导入问题'
+                        };
+
+                        for (const [cmd, name] of Object.entries(commandMap)) {
+                            if (log.includes(name) && !this.completedCommands?.has(cmd)) {
+                                this.completedCommands?.add(cmd);
+                                break;
+                            }
+                        }
+
+                        const activeCommands = this.executeForm.commands.filter(cmd => cmd !== 'document');
+                        if (activeCommands.length > 0) {
+                            const progressPerCommand = 90 / activeCommands.length;
+                            this.executionProgress = Math.min(
+                                Math.round((this.completedCommands?.size || 0) * progressPerCommand),
+                                90
+                            );
+                        }
+                    }
+
+                    // 如果出现完成或成功标志，直接设为100%
+                    if (log.includes('完成') || log.includes('success') || log.includes('Done') || log.includes('完成')) {
+                        this.executionProgress = 100;
+                    }
+                },
+
+                clearLogs() {
+                    this.executionLogs = [];
+                    this.executionProgress = 0;
+                    this.completedQuestions = 0;
+                    this.totalQuestionsToProcess = 0;
+                },
+
+                closeExecutionModal() {
+                    this.isExecuting = false;
+                    this.executionStatus = 'executing';
+                    this.executionLogs = [];
+                    this.executionProgress = 0;
+                    this.completedQuestions = 0;
+                    this.totalQuestionsToProcess = 0;
+                    // 清空表单
+                    this.executeForm.projectName = '';
+                    this.executeForm.newProjectName = '';
+                    this.executeForm.isNewProject = false;
+                    this.executeForm.datasetName = '';
+                    this.executeForm.commands = [];
+                    this.executeForm.answerMode = 'with_cot';
+                },
+
+                async exportDataset() {
+                    if (!this.currentProject) return;
+
+                    try {
+                        this.isLoading = true;
+                        this.loadingMessage = '正在导出数据集...';
+
+                        const response = await fetch('/export_dataset', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                project_id: this.currentProject.id
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            // result.paths 是一个数组，可能包含多个文件路径
+                            if (result.paths && result.paths.length > 0) {
+                                // 下载所有导出的文件
+                                result.paths.forEach((filePath, index) => {
+                                    setTimeout(() => {
+                                        const downloadUrl = `/download_dataset?file_path=${encodeURIComponent(filePath)}`;
+                                        window.open(downloadUrl, '_blank');
+                                    }, index * 500); // 每个文件间隔500ms下载，避免浏览器阻止
+                                });
+                                this.showSuccess(`数据集导出成功！共 ${result.paths.length} 个文件`);
+                            } else {
+                                this.showError('导出成功但未找到文件路径');
+                            }
+                        } else {
+                            this.showError('数据集导出失败: ' + result.message);
+                        }
+                    } catch (error) {
+                        console.error('导出数据集失败:', error);
+                        this.showError('导出数据集失败');
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                showSuccess(message) {
+                    this.successMessage = message;
+                    this.showSuccessModal = true;
+                    setTimeout(() => {
+                        this.showSuccessModal = false;
+                    }, 3000);
+                },
+
+                async importQuestions() {
+                    if (!this.currentProject) return;
+
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.xlsx';
+                    input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('project_id', this.currentProject.id);
+                        formData.append('project_name', this.currentProject.name);
+
+                        try {
+                            this.isLoading = true;
+                            this.loadingMessage = '正在导入问题...';
+
+                            const response = await fetch('/import_questions', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            const result = await response.json();
+                            if (result.status === 'success') {
+                                this.showSuccess(`成功导入 ${result.imported_count} 个问题`);
+                                this.loadQuestions();
+                                this.loadProjectStats(this.currentProject.id);
+                            } else {
+                                this.showError('问题导入失败: ' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('问题导入失败:', error);
+                            this.showError('问题导入失败');
+                        } finally {
+                            this.isLoading = false;
+                        }
+                    };
+                    input.click();
+                },
+
+                hasConfigChanges() {
+                    return JSON.stringify(this.config) !== JSON.stringify(this.originalConfig);
+                },
+
+                showError(message) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                    errorDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            <span>${message}</span>
+                            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(errorDiv);
+
+                    setTimeout(() => {
+                        if (errorDiv.parentElement) {
+                            errorDiv.remove();
+                        }
+                    }, 3000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

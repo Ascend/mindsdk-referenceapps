@@ -667,9 +667,8 @@
                                        x-model="config.max_tokens"
                                        @input="config.max_tokens = validateRange(config.max_tokens, 1, 8192)"
                                        class="instagram-input w-full"
-                                       placeholder="建议: 2048-4096"
-                                       value="8192">
-                                <p class="text-xs text-gray-500 mt-1">单次响应最大输出 token 数（1-8192，DeepSeek 限制）</p>
+                                       placeholder="建议: 2048-8192">
+                                <p class="text-xs text-gray-500 mt-1">单次响应最大输出 token 数（1-8192）</p>
                             </div>
                         </div>
 
@@ -712,12 +711,12 @@
                             </div>
                         </div>
 
-                        <!-- Data Directory -->
+                        <!-- Data Directory (Fixed to ./data) -->
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase">
                                 数据目录
                             </label>
-                            <input type="text" x-model="config.data_dir" class="instagram-input w-full">
+                            <input type="text" value="./data" disabled class="instagram-input w-full opacity-50 cursor-not-allowed">
                         </div>
                     </form>
                 </div>
@@ -746,7 +745,7 @@
                                     </template>
                                     <option value="__new__">+ 新建项目</option>
                                 </select>
-                                <p class="text-xs text-gray-500 mt-1">
+                                <p class="text-xs text-gray-500 mt-1">支持 TXT, PDF, DOC, DOCX, MD格式（一次只能上传一个文件）</p>
                                     <i class="fas fa-list mr-1"></i>从下拉列表选择项目，或选择"新建项目"
                                 </p>
                             </div>
@@ -774,7 +773,7 @@
                                 <label for="documentUpload" class="cursor-pointer" @click="if($refs.fileInput) $refs.fileInput.value = ''">
                                     <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
                                     <p class="text-gray-600 text-sm">点击上传文档或拖拽文件到此处</p>
-                                    <p class="text-xs text-gray-500 mt-1">支持 TXT, PDF, DOC, DOCX 格式（一次只能上传一个文件）</p>
+                                    <p class="text-xs text-gray-500 mt-1">支持 TXT, PDF, DOC, DOCX, MD 格式</p>
                                 </label>
                                 <div x-show="uploadedFile" class="mt-4">
                                     <p class="text-sm text-green-600">
@@ -1295,7 +1294,7 @@
                     {
                         title: '文档切片',
                         icon: '📄',
-                        description: '上传文档，自动进行智能切片处理，支持 TXT、PDF、DOC、DOCX 等多种格式'
+                        description: '上传文档，自动进行智能切片处理，支持 TXT、PDF、DOC、DOCX, MARKDOWN 等多种格式'
                     },
                     {
                         title: '问题生成',
@@ -1402,8 +1401,8 @@
                 init() {
                     this.loadConfig();
                     this.loadProjects();
-                    // 不在初始化时自动加载已上传文件列表，保持为空
-                    // 用户可以点击"刷新"按钮或在上传文件后查看
+                    // 初始化时自动加载已上传文件列表
+                    this.loadUploadedFiles();
                 },
 
                 validateRange(value, min, max) {
@@ -1834,9 +1833,9 @@
                 handleDrop(event) {
                     const files = event.dataTransfer.files;
                     if (files.length > 1) {
-                        this.showError('一次只能上传一个文件');
-                        return;
-                    }
+                         this.showError('一次只能上传一个文件');
+                         return;
+ 	                }
                     if (files.length > 0) {
                         const file = files[0];
                         const allowedTypes = ['.txt', '.pdf', '.doc', '.docx'];
@@ -1844,6 +1843,17 @@
 
                         if (!allowedTypes.includes(fileExtension)) {
                             this.showError('不支持的文件类型');
+                            return;
+                        }
+
+                        // 检查是否已有上传的文档
+                        const hasUploadedDoc = this.uploadedFiles.some(f => {
+                            const ext = f.original_filename?.split('.').pop()?.toLowerCase();
+                            return ['txt', 'pdf', 'doc', 'docx'].includes(ext);
+                        });
+                        
+                        if (hasUploadedDoc) {
+                            this.showError('已有上传文档，请先删除后再上传新文档');
                             return;
                         }
 
@@ -1861,13 +1871,14 @@
                                 this.uploadedFile = result.filename;
                                 this.uploadedFilePath = result.file_path;
                                 this.showSuccess('文件上传成功！');
-                                // 直接添加到本地数组，不从后端获取历史文件
+                                // 替换整个文件列表（只保留一个文档）
                                 this.uploadedFiles = [{
                                     filename: result.filename,
-                                    original_filename: file.name,  // 使用原始文件名
+                                    original_filename: file.name,
                                     file_path: result.file_path,
                                     size: file.size,
-                                    size_str: this.formatFileSize(file.size)
+                                    size_str: this.formatFileSize(file.size),
+                                    type: 'document'
                                 }];
                                 if (this.$refs.fileInput) {
                                     this.$refs.fileInput.value = '';
@@ -1887,8 +1898,14 @@
                     const file = event.target.files[0];
                     if (!file) return;
 
-                    if (this.uploadedFiles.length > 0) {
-                        this.showError('已有上传文件，请先删除后再上传新文件');
+                    // 检查是否已有上传的文档
+                    const hasUploadedDoc = this.uploadedFiles.some(f => {
+                        const ext = f.original_filename?.split('.').pop()?.toLowerCase();
+                        return ['txt', 'pdf', 'doc', 'docx'].includes(ext);
+                    });
+                    
+                    if (hasUploadedDoc) {
+                        this.showError('已有上传文档，请先删除后再上传新文档');
                         event.target.value = '';
                         return;
                     }
@@ -1907,13 +1924,14 @@
                             this.uploadedFile = result.filename;
                             this.uploadedFilePath = result.file_path;
                             this.showSuccess('文件上传成功！');
-                            // 直接添加到本地数组，不从后端获取历史文件
+                            // 替换整个文件列表（只保留一个文档）
                             this.uploadedFiles = [{
                                 filename: result.filename,
-                                original_filename: file.name,  // 使用原始文件名
+                                original_filename: file.name,
                                 file_path: result.file_path,
                                 size: file.size,
-                                size_str: this.formatFileSize(file.size)
+                                size_str: this.formatFileSize(file.size),
+                                type: 'document'
                             }];
                             // 重置文件输入框
                             if (this.$refs.fileInput) {
@@ -1934,38 +1952,80 @@
                         const result = await response.json();
 
                         if (result.status === 'success') {
-                            // 从目录树中提取 uploads 目录的文件
-                            const uploadsDir = this.findUploadsDirectory(result.data);
-                            if (uploadsDir && uploadsDir.children) {
-                                // 过滤出文件（不是目录）
-                                this.uploadedFiles = uploadsDir.children
-                                    .filter(item => item.type === 'file')
-                                    .map(file => {
-                                        // 获取原始文件名（去掉UUID前缀）
-                                        let originalFilename = file.name;
-                                        if (file.name.includes('_')) {
-                                            const parts = file.name.split('_', 2);
-                                            if (parts.length === 2) {
-                                                originalFilename = parts[1];
-                                            }
+                            // 收集所有uploads目录的文件
+                            const allFiles = [];
+                            this.collectAllUploadsFiles(result.data, allFiles);
+                            
+                            // 去重（基于文件名）
+                            const seen = new Set();
+                            const uniqueFiles = allFiles.filter(file => {
+                                const key = file.name.toLowerCase();
+                                if (seen.has(key)) return false;
+                                seen.add(key);
+                                return true;
+                            });
+                            
+                            // 转换为前端格式，区分文档和Excel
+                            this.uploadedFiles = uniqueFiles
+                                .filter(item => item.type === 'file')
+                                .map(file => {
+                                    // 获取原始文件名（去掉UUID前缀）
+                                    let originalFilename = file.name;
+                                    if (file.name.includes('_')) {
+                                        const parts = file.name.split('_', 2);
+                                        if (parts.length === 2) {
+                                            originalFilename = parts[1];
                                         }
-                                        // 构建完整文件路径 (data/uploads/文件名)
-                                        const fullPath = `data/uploads/${file.name}`;
-                                        return {
-                                            filename: file.name,
-                                            original_filename: originalFilename,
-                                            file_path: fullPath,
-                                            size: file.size,
-                                            size_str: file.size_str,
-                                            modified: file.modified
-                                        };
-                                    });
-                            } else {
-                                this.uploadedFiles = [];
-                            }
+                                    }
+                                    
+                                    // 判断文件类型
+                                    const ext = originalFilename.split('.').pop()?.toLowerCase();
+                                    const fileType = ['xlsx', 'xls'].includes(ext) ? 'excel' : 'document';
+                                    
+                                    return {
+                                        filename: file.name,
+                                        original_filename: originalFilename,
+                                        file_path: file.fullPath,
+                                        size: file.size,
+                                        size_str: file.size_str,
+                                        modified: file.modified,
+                                        type: fileType
+                                    };
+                                });
+                            
+                            // 恢复 uploadedFilePath（取第一个文档类型的文件）
+                            const docFile = this.uploadedFiles.find(f => f.type === 'document');
+                            this.uploadedFilePath = docFile ? docFile.file_path : null;
                         }
                     } catch (error) {
                         console.error('加载已上传文件列表失败:', error);
+                    }
+                },
+                
+                collectAllUploadsFiles(node, filesArray) {
+                    if (!node) return;
+                    
+                    // 如果是收集所有uploads目录，文件
+                    if (node.type === 'directory' && node.name === 'uploads') {
+                        if (node.children) {
+                            for (const child of node.children) {
+                                if (child.type === 'file') {
+                                    // 构建完整路径
+                                    const fullPath = node.path ? `${node.path}/${child.name}` : `data/uploads/${child.name}`;
+                                    filesArray.push({
+                                        ...child,
+                                        fullPath: fullPath
+                                    });
+                                }
+                            }
+                        }
+                        // 找到uploads目录后继续遍历（可能有嵌套的uploads）
+                    }
+                    
+                    if (node.children) {
+                        for (const child of node.children) {
+                            this.collectAllUploadsFiles(child, filesArray);
+                        }
                     }
                 },
 
@@ -2005,7 +2065,7 @@
                             const needReselect = this.uploadedFilePath === filePath;
 
                             // 直接从本地数组中移除文件，不从后端重新加载
-                            this.uploadedFiles = this.uploadedFiles.filter(f => f.file_path !== filePath);
+ 	                        this.uploadedFiles = this.uploadedFiles.filter(f => f.file_path !== filePath);
 
                             // 如果删除的是当前选中的文件，清空选中状态
                             if (needReselect) {
@@ -2025,16 +2085,14 @@
                         this.showError('文件删除失败');
                     }
                 },
-
                 // 格式化文件大小
                 formatFileSize(bytes) {
-                    if (bytes === 0) return '0 B';
-                    const k = 1024;
-                    const sizes = ['B', 'KB', 'MB', 'GB'];
-                    const i = Math.floor(Math.log(bytes) / Math.log(k));
-                    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                 if (bytes === 0) return '0 B';
+                 const k = 1024;
+                 const sizes = ['B', 'KB', 'MB', 'GB'];
+                 const i = Math.floor(Math.log(bytes) / Math.log(k));
+                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
                 },
-
                 async executeCommand() {
                     // 获取实际的项目名称（如果是新建项目，使用新输入的名称）
                     const actualProjectName = this.executeForm.isNewProject
@@ -2083,7 +2141,7 @@
                         }
                     }
 
-                    let command = `python3.9 main.py --config config.json --project ${actualProjectName}`;
+                    let command = `python main.py --config config.json --project ${actualProjectName}`;
 
                     this.executeForm.commands.forEach(cmd => {
                         switch(cmd) {
@@ -2309,6 +2367,27 @@
                                 this.showSuccess(`成功导入 ${result.imported_count} 个问题`);
                                 this.loadQuestions();
                                 this.loadProjectStats(this.currentProject.id);
+                                
+                                // 添加导入的Excel文件到列表
+                                const projectDataDir = `data/${this.currentProject.id}`;
+                                const filePath = `${projectDataDir}/${file.name}`;
+                                
+                                // 检查是否已存在
+                                const exists = this.uploadedFiles.some(f => 
+                                    f.original_filename === file.name || f.file_path === filePath
+                                );
+                                
+                                if (!exists) {
+                                    this.uploadedFiles.push({
+                                        filename: file.name,
+                                        original_filename: file.name,
+                                        file_path: filePath,
+                                        size: file.size,
+                                        size_str: this.formatFileSize(file.size),
+                                        type: 'excel',
+                                        imported: true
+                                    });
+                                }
                             } else {
                                 this.showError('问题导入失败: ' + result.message);
                             }

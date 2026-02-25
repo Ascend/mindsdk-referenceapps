@@ -42,6 +42,7 @@ from backend.models.constants import (
 from backend.utils.file_utils import read_file, save_file
 from backend.utils.logger import init_logger
 
+from backend.utils.validation_utils import validate_required_params
 logger = init_logger(__name__)
 
 
@@ -265,6 +266,12 @@ class DatasetService:
         Returns:
             Dataset: 创建的数据集对象
         """
+        # 使用 validate_required_params 验证必需参数
+        params = {'project_id': project_id, 'name': name}
+        missing_param = validate_required_params(params, ['project_id', 'name'])
+        if missing_param:
+            raise ValueError(f'{missing_param} 不能为空')
+
         # 构造数据集对象
         dataset = Dataset(
             project_id=project_id,

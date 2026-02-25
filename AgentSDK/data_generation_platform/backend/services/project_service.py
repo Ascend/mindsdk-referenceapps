@@ -23,7 +23,7 @@ import json
 
 from backend.models.project import Project
 from backend.utils.file_utils import read_file, save_file
-from backend.utils.validation_utils import validate_project_name
+from backend.utils.validation_utils import validate_project_name, validate_required_params
 from backend.models.constants import (
     ENCODING_UTF8,
     DEFAULT_LLM_PROVIDER,
@@ -131,6 +131,11 @@ class ProjectService:
         Raises:
             ValueError: 项目名称校验失败
         """
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params({'name': name}, ['name'])
+        if missing_param:
+            raise ValueError(f'{missing_param} 不能为空')
+
         # 校验项目名称
         name_error = validate_project_name(name)
         if name_error:

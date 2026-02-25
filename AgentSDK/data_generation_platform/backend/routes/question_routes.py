@@ -38,6 +38,7 @@ from backend.utils.validation_utils import (
     validate_string_length,
     validate_json_body,
     validate_in_set,
+    validate_required_params,
 )
 from backend.models.constants import (
     DEFAULT_CONFIG_PATH,
@@ -87,11 +88,13 @@ def get_project_questions() -> Tuple[Response, int]:
     """项目问题列表路由"""
     # 功能说明：按项目分页获取问题列表，支持状态过滤
     try:
-        project_id = request.args.get(FIELD_PROJECT_ID)
-        if not project_id:
-            logger.warning("Missing project_id parameter in get_project_questions request")
-            return missing_param_response(FIELD_PROJECT_ID)
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params(request.args, [FIELD_PROJECT_ID])
+        if missing_param:
+            logger.warning(f"Missing {missing_param} parameter in get_project_questions request")
+            return missing_param_response(missing_param)
 
+        project_id = request.args.get(FIELD_PROJECT_ID)
         id_err = validate_id_format(project_id, FIELD_PROJECT_ID)
         if id_err:
             return error_response(id_err)
@@ -144,11 +147,13 @@ def get_project_question_stats() -> Tuple[Response, int]:
     """问题统计路由"""
     # 功能说明：返回指定项目的问题统计信息
     try:
-        project_id = request.args.get(FIELD_PROJECT_ID)
-        if not project_id:
-            logger.warning(f"Project question stats request without project_id")
-            return missing_param_response(FIELD_PROJECT_ID)
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params(request.args, [FIELD_PROJECT_ID])
+        if missing_param:
+            logger.warning(f"Project question stats request without {missing_param}")
+            return missing_param_response(missing_param)
 
+        project_id = request.args.get(FIELD_PROJECT_ID)
         id_err = validate_id_format(project_id, FIELD_PROJECT_ID)
         if id_err:
             return error_response(id_err)
@@ -188,13 +193,14 @@ def update_question() -> Tuple[Response, int]:
     if not isinstance(data, dict):
         return error_response(MSG_INVALID_REQUEST_BODY)
 
+    # 使用 validate_required_params 验证必需参数
+    missing_param = validate_required_params(data, [FIELD_PROJECT_ID, FIELD_QUESTION_ID])
+    if missing_param:
+        logger.warning(f"Missing {missing_param} parameter")
+        return missing_param_response(missing_param)
+
     project_id = data.get(FIELD_PROJECT_ID)
     question_id = data.get(FIELD_QUESTION_ID)
-
-    if not project_id or not question_id:
-        logger.warning("Missing project_id or question_id parameter")
-        return missing_param_response('project_id or question_id')
-
     for param_name, param_val in [(FIELD_PROJECT_ID, project_id), (FIELD_QUESTION_ID, question_id)]:
         id_err = validate_id_format(param_val, param_name)
         if id_err:
@@ -269,13 +275,14 @@ def delete_question() -> Tuple[Response, int]:
         if not isinstance(data, dict):
             return error_response(MSG_INVALID_REQUEST_BODY)
 
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params(data, [FIELD_PROJECT_ID, FIELD_QUESTION_ID])
+        if missing_param:
+            logger.warning(f"Missing {missing_param} parameter")
+            return missing_param_response(missing_param)
+
         project_id = data.get(FIELD_PROJECT_ID)
         question_id = data.get(FIELD_QUESTION_ID)
-
-        if not project_id or not question_id:
-            logger.warning("Missing project_id or question_id parameter")
-            return missing_param_response('project_id or question_id')
-
         for param_name, param_val in [(FIELD_PROJECT_ID, project_id), (FIELD_QUESTION_ID, question_id)]:
             id_err = validate_id_format(param_val, param_name)
             if id_err:
@@ -328,13 +335,14 @@ def delete_questions() -> Tuple[Response, int]:
         if json_err:
             return error_response(json_err)
 
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params(data, [FIELD_PROJECT_ID, FIELD_QUESTION_IDS])
+        if missing_param:
+            logger.warning(f"Missing {missing_param} parameter")
+            return missing_param_response(missing_param)
+
         project_id = data.get(FIELD_PROJECT_ID)
         question_ids = data.get(FIELD_QUESTION_IDS)
-
-        if not project_id or not question_ids:
-            logger.warning("Missing project_id or question_ids parameter")
-            return missing_param_response('project_id or question_ids')
-
         if not isinstance(question_ids, list):
             logger.warning("question_ids must be a list")
             return error_response(BATCH_ERROR_QUESTION_IDS_LIST)

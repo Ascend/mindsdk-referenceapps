@@ -39,6 +39,7 @@ from backend.utils.validation_utils import (
     validate_id_format,
     validate_json_body,
     validate_string_length,
+    validate_required_params,
 )
 from backend.utils.file_utils import secure_filename
 from backend.models.constants import (
@@ -47,9 +48,11 @@ from backend.models.constants import (
     DEFAULT_DOCUMENTS_DIR,
     DEFAULT_DATASETS_DIR,
     ENCODING_UTF8,
+    FILE_PATH,
     HTTP_OK,
     SUBPROCESS_TIMEOUT_SECONDS,
     MAX_STRING_FIELD_LENGTH,
+    PROJECT_ID,
     QUESTION_STATUS_ANSWERED,
     QUESTION_STATUS_REVIEWED,
     IMPORT_RESULT_KEYWORD,
@@ -169,12 +172,14 @@ def delete_upload_file():
     if json_err:
         return error_response(json_err)
 
-    file_path = data.get('file_path')
-    if not file_path:
-        logger.warning("No file_path provided in delete_upload_file request")
-        return error_response('文件路径不能为空')
+    # 使用 validate_required_params 验证必需参数
+    missing_param = validate_required_params(data, [FILE_PATH])
+    if missing_param:
+        logger.warning(f"No {missing_param} provided in delete_upload_file request")
+        return error_response(f'{missing_param} 不能为空')
 
-    err = validate_string_length(file_path, MAX_STRING_FIELD_LENGTH, 'file_path')
+    file_path = data.get(FILE_PATH)
+    err = validate_string_length(file_path, MAX_STRING_FIELD_LENGTH, FILE_PATH)
     if err:
         return error_response(err)
 
@@ -259,12 +264,13 @@ def export_dataset() -> Tuple[Response, int]:
     if json_err:
         return error_response(json_err)
 
-    project_id = data.get('project_id')
+    # 使用 validate_required_params 验证必需参数
+    missing_param = validate_required_params(data, [PROJECT_ID])
+    if missing_param:
+        return error_response(f'{missing_param} 不能为空')
 
-    if not project_id:
-        return error_response('项目ID不能为空')
-
-    id_err = validate_id_format(project_id, 'project_id')
+    project_id = data.get(PROJECT_ID)
+    id_err = validate_id_format(project_id, PROJECT_ID)
     if id_err:
         return error_response(id_err)
 
@@ -416,11 +422,13 @@ def _validate_import_request() -> Optional[Tuple[Response, int]]:
     if not file.filename or not file.filename.lower().endswith('.xlsx'):
         return unsupported_media_type_response('只支持XLSX文件格式')
 
-    project_id = request.form.get('project_id')
-    if not project_id:
-        return error_response('缺少项目ID')
+    # 使用 validate_required_params 验证必需参数
+    missing_param = validate_required_params(request.form, [PROJECT_ID])
+    if missing_param:
+        return error_response(f'缺少 {missing_param}')
 
-    id_err = validate_id_format(project_id, 'project_id')
+    project_id = request.form.get(PROJECT_ID)
+    id_err = validate_id_format(project_id, PROJECT_ID)
     if id_err:
         return error_response(id_err)
 
@@ -503,6 +511,14 @@ def _find_document_path(data_dir: str, project_id: str) -> Optional[str]:
     return None
 
 
+def _get_available_python_command() -> str:
+    """检测系统可用的Python命令"""
+    import shutil
+    for cmd in ['python3', 'python', 'py']:
+        if shutil.which(cmd):
+            return cmd
+    return 'python3'
+
 def _build_import_command(
     project_name: str,
     uploaded_file_path: str,
@@ -520,7 +536,7 @@ def _build_import_command(
         List[str]: 命令参数列表
     """
     cmd_parts = [
-        'python', 'main.py',
+        _get_available_python_command(), 'main.py',
         '--config', 'config.json',
         '--project', project_name,
         '--import_questions', uploaded_file_path

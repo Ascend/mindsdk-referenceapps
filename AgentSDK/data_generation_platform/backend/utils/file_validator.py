@@ -36,7 +36,7 @@ class FileValidator:
     
     # 默认允许的文件类型
     DEFAULT_ALLOWED_EXTENSIONS = {
-        'txt', 'csv', 'json', 'md', 'yaml', 'yml', 'pdf', 'xlsx', 'doc', 'docx'
+        'txt', 'pdf', 'doc', 'docx', 'md', 'xlsx'
     }
     
     # 危险文件扩展名（严格禁止）

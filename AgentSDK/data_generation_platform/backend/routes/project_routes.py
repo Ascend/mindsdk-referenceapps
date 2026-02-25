@@ -30,7 +30,7 @@ from backend.utils.response_utils import (
     not_found_response,
     missing_param_response,
 )
-from backend.utils.validation_utils import validate_id_format, validate_json_body
+from backend.utils.validation_utils import validate_id_format, validate_json_body, validate_required_params
 from backend.utils.file_validator import validate_path_security
 from backend.models.constants import (
     DEFAULT_CONFIG_PATH,
@@ -105,12 +105,16 @@ def delete_project() -> Tuple[Response, int]:
         if json_err:
             return error_response(json_err)
 
+        # 使用 validate_required_params 验证必需参数
+        missing_param = validate_required_params(data, [FIELD_PROJECT_ID])
+        if missing_param:
+            logger.warning(f"Missing {missing_param} parameter in delete_project request")
+            return missing_param_response(missing_param)
+
+        project_id = data.get(FIELD_PROJECT_ID)
         project_id = data.get(FIELD_PROJECT_ID)
 
-        if not project_id:
-            logger.warning("Missing project_id parameter in delete_project request")
-            return missing_param_response(FIELD_PROJECT_ID)
-
+        id_err = validate_id_format(project_id, FIELD_PROJECT_ID)
         id_err = validate_id_format(project_id, FIELD_PROJECT_ID)
         if id_err:
             return error_response(id_err)

@@ -126,7 +126,7 @@ class LLMService:
 
         Args:
             text: 要分析的文本
-            num_questions: 生成的问题数量 (默认5)
+            num_questions: 生成的问题数量 (默认3)
             system_prompt: 自定义系统提示词 (默认None)
 
         Returns:

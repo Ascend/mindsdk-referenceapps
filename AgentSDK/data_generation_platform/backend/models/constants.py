@@ -112,7 +112,7 @@ DEFAULT_LLM_PROVIDER = "openai"
 DEFAULT_LLM_MODEL = "gpt-3.5-turbo"
 DEFAULT_MAX_TOKENS = 8192
 DEFAULT_TEMPERATURE = 0.0
-DEFAULT_NUM_QUESTIONS = 1
+DEFAULT_NUM_QUESTIONS = 3
 DEFAULT_LOCAL_API_URL = "http://localhost:11434/api/chat"
 
 # ==================== 默认提示词常量 ====================
@@ -366,6 +366,10 @@ MSG_QUESTION_FILE_NOT_FOUND = 'Question file not found'
 MSG_QUESTION_UPDATED_SUCCESS = 'Question updated successfully'
 MSG_QUESTION_DELETED_SUCCESS = 'Question deleted successfully'
 MSG_DELETE_BATCH_RESULT = "Successfully deleted {} questions"
+
+# dataset_routes 层响应常量
+FILE_PATH = 'file_path'
+PROJECT_ID = 'project_id'
 
 # ==================== 日志操作名称常量 ====================
 # 用于避免 routes 层日志操作名称中的魔法字符串

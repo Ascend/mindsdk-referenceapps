@@ -32,7 +32,7 @@ from backend.models.constants import (
 from backend.utils.file_utils import read_file, save_file
 from backend.utils.text_utils import split_text
 from backend.utils.logger import init_logger
-
+from backend.utils.validation_utils import validate_required_params
 logger = init_logger(__name__)
 
 # ==================== 文件类型到分割方法的映射 ====================
@@ -136,9 +136,15 @@ class DocumentService:
         Returns:
             Document: 创建的文档对象
         """
+        # 使用 validate_required_params 验证必需参数
+        params = {'project_id': project_id, 'file_path': file_path}
+        missing_param = validate_required_params(params, ['project_id', 'file_path'])
+        if missing_param:
+            raise ValueError(f'{missing_param} 不能为空')
+
         if file_name is None:
             file_name = os.path.basename(file_path)
-
+        
         # Determine file type from file name if not provided
         if file_type is None:
             _, ext = os.path.splitext(file_name)

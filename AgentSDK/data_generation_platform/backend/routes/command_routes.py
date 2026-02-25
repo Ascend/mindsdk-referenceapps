@@ -240,11 +240,29 @@ def _inject_python_unbuffered(args: List[str]) -> List[str]:
     Returns:
         List[str]: 处理后的参数列表
     """
-    if args and args[0] == "python" and "main.py" in args:
+    if args and args[0] in ("python", "python3") and "main.py" in args:
         args = args.copy()
         args.insert(1, "-u")
     return args
 
+
+
+def _get_available_python_command() -> str:
+    """
+    检测系统可用的Python命令，支持跨平台兼容
+
+    Returns:
+        str: 可用的Python命令（python3/python/py）
+    """
+    import shutil
+    # 优先使用 python3（Linux/WSL标准），其次 python，最后 py（Windows）
+    for cmd in ['python3', 'python', 'py']:
+        if shutil.which(cmd):
+            logger.debug(f"Using available Python command: {cmd}")
+            return cmd
+    # 默认返回 python3（大多数现代Linux发行版）
+    logger.warning("No Python command found, defaulting to python3")
+    return 'python3'
 
 def _setup_command_execution(
     args: List[str]
@@ -258,6 +276,12 @@ def _setup_command_execution(
     Returns:
         Tuple[Popen, Queue, Queue]: (进程对象, stdout队列, stderr队列)
     """
+    # 兼容处理：将传入的 python 命令替换为系统可用的命令
+    if args and args[0] in ALLOWED_PYTHON_COMMAND_PATTERNS:
+        args = args.copy()
+        args[0] = _get_available_python_command()
+        logger.debug(f"Python command replaced with: {args[0]}")
+
     llm_api_key = MemoryConfig.get_llm_api_key()
     stdin_data = ""
     if llm_api_key:

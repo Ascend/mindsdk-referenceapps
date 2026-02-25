@@ -18,7 +18,7 @@ import logging
 import sys
 
 # 日志格式配置
-_LOG_FORMAT_TEMPLATE = "%(levelname)s %(asctime)s [Dataset Python] [%(filename)s:%(lineno)d] %(funcName)s: %(message)s"
+_LOG_FORMAT_TEMPLATE = "%(levelname)s %(asctime)s [Data Generation Platform] [%(filename)s:%(lineno)d] %(funcName)s: %(message)s"
 _TIMESTAMP_FORMAT = "%m-%d %H:%M:%S"
 
 

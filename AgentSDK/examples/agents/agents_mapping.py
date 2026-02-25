@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from examples.agents.agents_configuartion import MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG, AgentConfig
+from examples.agents.agents_configuration import MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG, AgentConfig
 
 AGENTS_REGISTRY = {}
 

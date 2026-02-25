@@ -30,7 +30,6 @@ class RetrieverConfig:
         retrieval_topk (int): Number of top results to return, defaults to 10.
         index_path (str): Path to FAISS index file, defaults to example path.
         corpus_path (str): Path to corpus file, defaults to example path.
-        faiss_gpu (bool): Whether to use GPU acceleration, defaults to True.
         retrieval_model_path (str): Path to retrieval model, defaults to example.
         retrieval_pooling_method (str): Pooling method (e.g. "mean"), defaults to mean.
         retrieval_query_max_length (int): Max query length, defaults to 256.
@@ -44,15 +43,11 @@ class RetrieverConfig:
         retrieval_model_path: str,
         retrieval_method: str = "e5", 
         retrieval_topk: int = 10,
-        faiss_gpu: bool = True,
         retrieval_pooling_method: str = "mean",
         retrieval_query_max_length: int = 256,
         retrieval_use_fp16: bool = False,
         retrieval_batch_size: int = 128
     ):
-        if not isinstance(faiss_gpu, bool):
-            raise TypeError("faiss_gpu must be a boolean")
-
         if not isinstance(retrieval_use_fp16, bool):
             raise TypeError("retrieval_use_fp16 must be a boolean")
 
@@ -85,7 +80,6 @@ class RetrieverConfig:
         self.retrieval_topk = retrieval_topk
         self.index_path = index_path
         self.corpus_path = corpus_path
-        self.faiss_gpu = faiss_gpu
         self.retrieval_model_path = retrieval_model_path
         self.retrieval_pooling_method = retrieval_pooling_method
         self.retrieval_query_max_length = retrieval_query_max_length

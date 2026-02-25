@@ -138,12 +138,6 @@ class DenseRetriever(BaseRetriever):
             print(f"load faiss index time : {time_end-time_start:.3f}")
         except faiss.FaissException as e:
             raise RuntimeError(f"Failed to load index from {self.index_path}") from e
-        
-        if config_param.faiss_gpu:
-            co = faiss.GpuMultipleClonerOptions()
-            co.useFloat16 = True
-            co.shard = True
-            self.index = faiss.index_cpu_to_all_gpus(self.index, co=co)
 
         self.corpus = load_corpus(self.corpus_path)
         self.encoder = Encoder(

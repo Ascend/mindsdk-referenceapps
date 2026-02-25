@@ -44,7 +44,7 @@ class WebSearcherAgent(BaseAgent):
             raise TypeError("memory_config must be a dictionary if not None.")
         
         if memory_config is None:
-            from openAI import OpenAI
+            from openai import OpenAI
             client = OpenAI(base_url="/your/oai_model_url")
             memory_config = {
                 "simplify_thinking": False,

@@ -61,7 +61,6 @@ def start_backend_server(args, port: int, status_queue: multiprocessing.Queue, o
             index_path=args.index_path,
             corpus_path=args.corpus_path,
             retrieval_topk=args.topk,
-            faiss_gpu=args.faiss_gpu,
             retrieval_model_path=args.retriever_model,
             retrieval_pooling_method="mean",
             retrieval_query_max_length=256,
@@ -293,7 +292,6 @@ if __name__ == "__main__":
     parser.add_argument("--topk", type=int, default=5, help="Number of retrieved passages for one query.")
     parser.add_argument("--retriever_name", type=str, default="e5", help="Name of the retriever model.")
     parser.add_argument("--retriever_model", type=str, required=True, help="Path of the retriever model.")
-    parser.add_argument('--faiss_gpu', action='store_true', help='Use GPU for computation')
     parser.add_argument("--port", type=int, default=5005)
     parser.add_argument('--backend_count', type=int, default=3, help="Number of backend proxy load balancing threads")
 

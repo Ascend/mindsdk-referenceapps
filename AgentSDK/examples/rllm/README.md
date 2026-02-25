@@ -55,7 +55,7 @@ cd ..
 
 git clone https://github.com/Ascend/MindSpeed-RL.git
 cd MindSpeed-RL
-git checkout v2.2.0
+git checkout 2.2.0
 cd ..
 
 git clone https://github.com/rllm-org/rllm.git
@@ -95,14 +95,31 @@ export PYTHONPATH=$PYTHONPATH:/home/third-party/Megatron-LM/:/home/third-party/M
 ```sh
 vim /your_config_dir/your_config_file_name.yaml
 
-# 编辑配置参数
-tokenizer_name_or_path: ...
-data_path: ...
-load_params_path: ...
-save_params_path: ...
-epochs: ...
-agent_name: math
-agent_engine_wrapper: /your_workdir/AgentSDK/examples/rllm/rllm_engine_wrapper.py
+# 编辑配置参数（示例）
+tokenizer_name_or_path: /path/to/tokenizer
+agent_name: websearcher
+agent_engine_wrapper_path: /your_workdir/AgentSDK/examples/rllm/rllm_engine_wrapper.py
+use_stepwise_advantage: false
+train_backend: mindspeed_rl
+model_name: qwen2.5-7b
+num_gpus_per_node: 8
+max_model_len: 16384
+rollout_n: 2
+infer_tensor_parallel_size: 4
+gpu_memory_utilization: 0.4
+use_tensorboard: true
+
+mindspeed_rl:
+  data_path: /path/to/data
+  load_params_path: /path/to/model_weights
+  save_params_path: /path/to/model_weights_save
+  epochs: 1
+  train_iters: 1
+  save_interval: 1
+  global_batch_size: 16
+  mini_batch_size: 16
+  seq_length: 16384
+  tensor_model_parallel_size: 4
 ```
 
 **步骤3：** 进入`AgentSDK`目录，启动训练任务。

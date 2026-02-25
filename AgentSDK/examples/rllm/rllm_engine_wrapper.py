@@ -12,16 +12,9 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-RLLM Engine Wrapper for agent-based reinforcement learning.
-
-This module provides a wrapper around the RLLM agent execution engine,
-handling agent and environment initialization, trajectory generation,
-and resource management. 
 """
 
 import asyncio
-import logging
 import sys
 import types
 from concurrent.futures import as_completed
@@ -44,9 +37,7 @@ sys.modules["verl.utils"] = verl.utils
 sys.modules["verl.utils.torch_functional"] = verl.utils.torch_functional
 
 from examples.rllm.agent_execution_engine import AgentExecutionEngine, OpenAIRouter
-from examples.rllm.agents_configuration import MATH_AGENT_CONFIG
-
-logger = logging.getLogger(__name__)
+from examples.agents.agents_mapping import get_agent_by_name
 
 
 class RllmEngineWrapper(BaseEngineWrapper):
@@ -61,7 +52,7 @@ class RllmEngineWrapper(BaseEngineWrapper):
     DEFAULT_MAX_PROMPT_LENGTH = 8192
     DEFAULT_MAX_RESPONSE_LENGTH = 16384
     DEFAULT_N_PARALLEL_AGENTS = 8
-    DEFAULT_MAX_STEPS = 5
+    DEFAULT_MAX_STEPS = 128
     DEFAULT_ENV_CREATION_WORKERS = 64
     DEFAULT_AGENT_CREATION_WORKERS = 64
 
@@ -103,7 +94,8 @@ class RllmEngineWrapper(BaseEngineWrapper):
         )
 
         # Load agent configuration
-        agent_config = MATH_AGENT_CONFIG
+        agent_config = get_agent_by_name(agent_name)
+        print(f"Successfully retrieved configuration of {agent_name} agent")
 
         # Extract agent and environment classes and arguments
         self.agent_class = agent_config.agent_class
@@ -142,7 +134,7 @@ class RllmEngineWrapper(BaseEngineWrapper):
         except Exception as e:
             raise RuntimeError(f"Initialization of agent execution engine failed: {e}") from e
         
-        logger.info(
+        print(
             f"RLLM Engine Wrapper initialized with agent '{self.agent_name}' "
             f"with parallel agents: {self.n_parallel_agents}"
         )
@@ -157,7 +149,7 @@ class RllmEngineWrapper(BaseEngineWrapper):
         Raises:
             RuntimeError: If agents/envs update fails.
         """
-        logger.info(f"Initializing {len(tasks)} environments and agents...")
+        print(f"Initializing {len(tasks)} environments and agents...")
 
         # Create environments and agents in parallel
         envs = self._create_environments_parallel(tasks)
@@ -169,7 +161,82 @@ class RllmEngineWrapper(BaseEngineWrapper):
         except Exception as e:
             raise RuntimeError(f"Failed to update engine with created envs/agents: {e}") from e
         
-        logger.info(f"Successfully initialized {len(envs)} environments and {len(agents)} agents.")
+        print(f"Successfully initialized {len(envs)} environments and {len(agents)} agents.")
+    
+    def generate_agent_trajectories_async(self, tasks: List[dict]) -> List[Trajectory]:
+        """
+        Generate agent trajectories asynchronously for the given tasks using the agent
+        execution engine.
+
+        This method runs the asynchronous trajectory_generator in a separate thread and
+        collects results synchronously through a queue, allowing synchronous training
+        loops to consume asynchronously generated trajectories.
+
+        Args:
+            tasks (List[dict]): List of task dictionaries containing 'question', 'ground_truth', etc.
+        
+        Returns:
+            List[Trajectory]: List of generated agent trajectories.
+
+        Raises:
+            RuntimeError: If trajectory generation fails.
+        """
+        print(f"Generating trajectories asynchronously for {len(tasks)} tasks...")
+        try:
+            # Initialize environments and agents
+            self.init_envs_and_agents(tasks)
+
+            # Thread-safe queue to communication between threads
+            # Prevent unbounded memory usage with maxsize
+            results_queue: Queue = Queue(maxsize=1000)
+
+            def trajectory_runner() -> None:
+                """
+                Thread target function to run the asynchronous trajectory generator
+                and put results into the queue.
+                """
+                async def consume_trajectories() -> None:
+                    try:
+                        async for trajectory in self.engine.trajectory_generator(mode="Token"):
+                            results_queue.put(trajectory)
+                        results_queue.put(None)  # Sentinel value to indicate completion
+                    except Exception as e:
+                        print(f"Error in trajectory generation: {e}")
+                        results_queue.put(e)  # Put exception in the queue to indicate failure
+                try:
+                    asyncio.run(consume_trajectories())
+                except Exception as e:
+                    print(f"Error running trajectory generation: {e}")
+                    results_queue.put(e)  # Put exception in the queue to indicate failure
+            
+            # Start the trajectory runner thread
+            runner_thread = Thread(target=trajectory_runner, daemon=True, name="trajectory-generator-thread")
+            runner_thread.start()
+
+            # Collect results from the queue synchronously
+            trajectories: List[Trajectory] = []
+            while True:
+                try:
+                    result = results_queue.get(timeout=1000)  # Timeout to avoid indefinite blocking
+                    if result is None:
+                    # Completion sentinel
+                        break  
+                    elif isinstance(result, Exception):
+                        # Error occurred in the trajectory generation
+                        raise RuntimeError(f"Trajectory generation failed: {result}") from result
+                    else:
+                        # Valid trajectory result
+                        trajectories.append(Trajectory(**result))
+                except Exception as e:
+                    print(f"Error collecting trajectory from queue: {e}")
+                    raise RuntimeError(f"Error collecting trajectory from queue: {e}") from e
+            
+            print(f"Successfully generated {len(trajectories)} trajectories.")
+            return trajectories
+        
+        except Exception as e:
+            print(f"Failed to generate agent trajectories: {e}")
+            raise RuntimeError(f"Failed to generate agent trajectories: {e}") from e
 
     def _create_environments_parallel(self, tasks: List[dict]) -> List[Any]:
         """
@@ -256,83 +323,8 @@ class RllmEngineWrapper(BaseEngineWrapper):
                 max_workers=self.engine.max_workers,
                 thread_name_prefix="agent-env-executor"
             )
-            logger.warning(
+            print(
                 f"Engine's thread pool executor has been shut down. "
                 f"Recreating executor for {context}..."
             )
-    
-    def generate_agent_trajectories_async(self, tasks: List[dict]) -> List[Trajectory]:
-        """
-        Generate agent trajectories asynchronously for the given tasks using the agent
-        execution engine.
-
-        This method runs the asynchronous trajectory_generator in a separate thread and
-        collects results synchronously through a queue, allowing synchronous training
-        loops to consume asynchronously generated trajectories.
-
-        Args:
-            tasks (List[dict]): List of task dictionaries containing 'question', 'ground_truth', etc.
-        
-        Returns:
-            List[Trajectory]: List of generated agent trajectories.
-
-        Raises:
-            RuntimeError: If trajectory generation fails.
-        """
-        logger.info(f"Generating trajectories asynchronously for {len(tasks)} tasks...")
-
-        try:
-            # Initialize environments and agents
-            self.init_envs_and_agents(tasks)
-
-            # Thread-safe queue to communication between threads
-            # Prevent unbounded memory usage with maxsize
-            results_queue: Queue = Queue(maxsize=1000)
-
-            def trajectory_runner() -> None:
-                """
-                Thread target function to run the asynchronous trajectory generator
-                and put results into the queue.
-                """
-                async def consume_trajectories() -> None:
-                    try:
-                        async for trajectory in self.engine.trajectory_generator(mode="Token"):
-                            results_queue.put(trajectory)
-                        results_queue.put(None)  # Sentinel value to indicate completion
-                    except Exception as e:
-                        logger.error(f"Error in trajectory generation: {e}")
-                        results_queue.put(e)  # Put exception in the queue to indicate failure
-                try:
-                    asyncio.run(consume_trajectories())
-                except Exception as e:
-                    logger.error(f"Error running trajectory generation: {e}")
-                    results_queue.put(e)  # Put exception in the queue to indicate failure
             
-            # Start the trajectory runner thread
-            runner_thread = Thread(target=trajectory_runner, daemon=True, name="trajectory-generator-thread")
-            runner_thread.start()
-
-            # Collect results from the queue synchronously
-            trajectories: List[Trajectory] = []
-            while True:
-                try:
-                    result = results_queue.get(timeout=300)  # Timeout to avoid indefinite blocking
-                    if result is None:
-                    # Completion sentinel
-                        break  
-                    elif isinstance(result, Exception):
-                        # Error occurred in the trajectory generation
-                        raise RuntimeError(f"Trajectory generation failed: {result}") from result
-                    else:
-                        # Valid trajectory result
-                        trajectories.append(Trajectory(**result))
-                except Exception as e:
-                    logger.error(f"Error collecting trajectory from queue: {e}")
-                    raise RuntimeError(f"Error collecting trajectory from queue: {e}") from e
-            
-            logger.info(f"Successfully generated {len(trajectories)} trajectories.")
-            return trajectories
-        
-        except Exception as e:
-            logger.error(f"Failed to generate agent trajectories: {e}")
-            raise RuntimeError(f"Failed to generate agent trajectories: {e}") from e

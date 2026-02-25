@@ -13,3 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
+from backend.routes.config_routes import config_bp
+from backend.routes.file_routes import file_bp
+from backend.routes.project_routes import project_bp
+from backend.routes.question_routes import question_bp
+from backend.routes.command_routes import command_bp
+from backend.routes.dataset_routes import dataset_bp
+
+__all__ = [
+    'config_bp',
+    'file_bp',
+    'project_bp',
+    'question_bp',
+    'command_bp',
+    'dataset_bp',
+]

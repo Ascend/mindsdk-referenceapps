@@ -23,6 +23,7 @@ import json
 from backend.models.constants import (
     ENCODING_UTF8,
     JSON_INDENT,
+    MAX_FILENAME_LENGTH,
     TEXT_FILE_EXTENSIONS,
     JSON_FILE_EXTENSION,
     YAML_FILE_EXTENSIONS,
@@ -141,3 +142,69 @@ def ensure_dir_exists(directory: Optional[str]) -> None:
     path = Path(directory)
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
+
+
+def secure_filename(filename: str) -> str:
+    """
+    安全的文件名处理函数，支持中文文件名
+
+    与 werkzeug.utils.secure_filename 不同，此函数保留中文字符，
+    只移除或替换真正危险的字符
+
+    Args:
+        filename: 原始文件名
+
+    Returns:
+        str: 处理后的安全文件名
+    """
+    if not filename:
+        return ''
+
+    import unicodedata
+
+    # 保留中文字符、字母、数字、下划线、连字符、点和空格
+    # 移除路径分隔符和其他危险字符
+    # 允许的字符: 中文(\u4e00-\u9fff)、字母、数字、._-
+
+    # 首先规范化Unicode字符
+    filename = unicodedata.normalize('NFC', filename)
+
+    # 移除路径遍历相关字符
+    filename = filename.replace('..', '_')
+    filename = filename.replace('/', '_')
+    filename = filename.replace('\\', '_')
+
+    # 移除控制字符
+    filename = ''.join(char for char in filename if ord(char) >= 32)
+
+    # 替换其他危险字符为下划线
+    # 保留: 中文、字母、数字、空格、点、连字符、下划线
+    safe_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ._-')
+    result = []
+    for char in filename:
+        if (char in safe_chars or '\u4e00' <= char <= '\u9fff' or
+                '\u3000' <= char <= '\u303f' or '\uff00' <= char <= '\uffef'):
+            result.append(char)
+        else:
+            result.append('_')
+
+    filename = ''.join(result)
+
+    # 去除首尾空格和点
+    filename = filename.strip(' .')
+
+    # 如果文件名为空，返回默认名称
+    if not filename:
+        return 'unnamed_file'
+
+    # 限制文件名长度（保留扩展名）
+    max_len = MAX_FILENAME_LENGTH
+    if len(filename) > max_len:
+        name, ext = os.path.splitext(filename)
+        if ext:
+            name = name[:max_len - len(ext)] + ext
+        else:
+            name = name[:max_len]
+        filename = name
+
+    return filename

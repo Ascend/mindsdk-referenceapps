@@ -18,9 +18,8 @@ import mimetypes
 import os
 from typing import Dict, Optional, Tuple, Any
 
-from werkzeug.utils import secure_filename
-
 from backend.models.constants import BYTES_PER_MB
+from backend.utils.file_utils import secure_filename
 from backend.utils.logger import init_logger
 
 logger = init_logger(__name__)

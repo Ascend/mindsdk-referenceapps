@@ -12,23 +12,26 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-Agent execution engine for OpenAIRouter-compatible API interations.
-
-This module provides routing and execution capabilities for agents-based 
-reinforcement learning with OpenAI-compatible model servers.
 """
 
 import asyncio
 import concurrent.futures
-import logging
+import time
+import torch
 from typing import Any, Dict, List, Optional, Union, Callable
 
 from rllm.engine import AgentExecutionEngine as _AgentExecutionEngine
 from rllm.parser.chat_template import ChatTemplateParser
 from rllm.router.router import Router
+from rllm.agents.agent import Action
+from rllm.agents.utils import (
+    convert_messages_to_tokens_and_masks,
+    get_recent_assistant_user_messages,
+)
+from rllm.environments.env_utils import compute_mc_return
+from rllm.misc import colorful_print
 
-logger = logging.getLogger(__name__)
+from examples.rllm.utils.utils import compute_trajectory_reward
 
 
 class OpenAIRouter(Router):
@@ -84,7 +87,7 @@ class OpenAIRouter(Router):
         for retry in range(max_retries):
             try:
                 # Call the completion function
-                response = completion(completions_request)
+                response = await completion(completions_request)
                 return response
             except Exception as e:
                 import traceback
@@ -123,7 +126,7 @@ class OpenAIRouter(Router):
             response = await self._chat(completion, prompt=prompt, **merged_kwargs)
             return self._extract_response_text(response)
         except Exception as e:
-            logger.error(f"Error during chat completion for application {application_id}: {e}")
+            print(f"Error during chat completion for application {application_id}: {e}")
             raise RuntimeError(f"Chat completion failed for application {application_id}") from e
         finally:
             await self.release_address(completion, application_id)
@@ -235,7 +238,7 @@ class AgentExecutionEngine(_AgentExecutionEngine):
         # Router configuration
         self.router = router
         if self.router is None:
-            logger.warning("No router provided. Some functionalities may be limited.")
+            print("No router provided. Some functionalities may be limited.")
         else:
             if not isinstance(self.router, OpenAIRouter):
                 raise TypeError("router must be an instance of OpenAIRouter.")
@@ -259,7 +262,12 @@ class AgentExecutionEngine(_AgentExecutionEngine):
             self.chat_parser = chat_parser
 
         self._validate_initialization_params()
-        
+
+    def __del__(self):
+        """Clean up resources on deletion."""
+        if hasattr(self, 'executor') and self.executor:
+            self.executor.shutdown(wait=False)
+
     async def get_model_response(
         self,
         prompt: Union[str, List[Dict[str, str]]],
@@ -302,25 +310,7 @@ class AgentExecutionEngine(_AgentExecutionEngine):
             **kwargs
         )
         return response
-    
-    def _validate_initialization_params(self) -> None:
-        """
-        Validate the initialization parameters of the engine.
 
-        """
-        AgentExecutionEngine._validate_obj_params("router", self.router, OpenAIRouter)
-        AgentExecutionEngine._validate_obj_params("chat_parser", self.chat_parser, ChatTemplateParser)
-        AgentExecutionEngine._validate_obj_params("enforce_max_prompt_length", self.enforce_max_prompt_length, bool, expected_bool=True)
-        AgentExecutionEngine._validate_obj_params("overlong_filter", self.overlong_filter, bool, expected_bool=True)
-        AgentExecutionEngine._validate_numeric_params("max_workers", self.max_workers, int, min_value=1)
-        AgentExecutionEngine._validate_numeric_params("gamma", self.gamma, (float, int), min_value=0, max_value=1)
-        AgentExecutionEngine._validate_numeric_params("retry_limit", self.retry_limit, int, min_value=0)
-
-        if not isinstance(self.trajectory_timeout, int):
-            raise TypeError("trajectory_timeout must be an integer.")
-        if self.trajectory_timeout <= 0:
-            raise ValueError("trajectory_timeout must be a positive integer.")
-    
     @staticmethod
     def _validate_obj_params(param_name, param_value, expected_type, expected_bool=False):
         if not expected_bool:
@@ -339,7 +329,267 @@ class AgentExecutionEngine(_AgentExecutionEngine):
         if max_value is not None and param_value > max_value:
             raise ValueError(f"{param_name} must be at most {max_value}")
         
-    def __del__(self):
-        """Clean up resources on deletion."""
-        if hasattr(self, 'executor') and self.executor:
-            self.executor.shutdown(wait=False)
+    async def run_agent_trajectory_async(self, idx, application_id, seed=0, mode="Text", **kwargs):
+        """Run a single agent's trajectory asynchronously"""
+        agent = self.agents[idx]
+        env = self.envs[idx]
+
+        termination_reason = None
+        prompt_token_len = 0
+        prompt_tokens = []
+        response_token_len = 0
+        response_tokens = []
+        response_masks = []
+        total_time = 0.0
+        reward_time = None
+        llm_time = 0.0
+        env_time = 0.0
+        reward = 0.0
+
+        # for step return
+        episode_steps = []
+
+        # Reset environment with the task using the executor
+        loop = asyncio.get_event_loop()
+        observation, info = await loop.run_in_executor(self.executor, env.reset)
+        info["max_steps"] = self.max_steps
+
+        # Reset agent
+        agent.reset()
+        # Update agent internal state from environment.
+        agent.update_from_env(
+            observation=observation,  # Raw observation from environment
+            reward=0.0,
+            done=False,
+            info=info,
+        )
+        messages = agent.chat_completions
+        prompt_tokens, _ = convert_messages_to_tokens_and_masks(messages, tokenizer=self.tokenizer,
+                                                                parser=self.chat_parser, contains_first_msg=True,
+                                                                contains_generation_msg=True)
+        prompt_token_len = len(prompt_tokens)
+        # Note, this should never happen!
+        if prompt_token_len > self.max_prompt_length:
+            agent.reset()
+            raise Exception(
+                f"Trajectory {idx}: initial prompt length {prompt_token_len} already exceeded max_prompt_length {self.max_prompt_length}, retrying")
+
+        for step_idx in range(self.max_steps):
+            # Get action from agent
+            prompt_messages = agent.chat_completions.copy() 
+            # Max remaining tokens left for the response
+            # For enforced max prompt at each step, no need to deduct here
+            if not self.enforce_max_prompt_length:
+                max_tokens = self.max_response_length - response_token_len
+            else:
+                max_tokens = self.max_response_length
+
+                # since max prompt is enforced, we filter out too long prompts.
+                prompt_str = self.chat_parser.parse(prompt_messages, add_generation_prompt=True, is_first_msg=True)
+                prompt_len = len(self.tokenizer.encode(prompt_str, add_special_tokens=False))
+                if prompt_len > self.max_prompt_length:
+                    termination_reason = "PROMPT_TRUNCATION"
+                    break
+
+            kwargs["max_tokens"] = max_tokens
+
+            start_time = time.time()
+            response = await self.get_model_response(prompt_messages, application_id, **kwargs)           
+            delta_time = time.time() - start_time
+            llm_time += delta_time
+            total_time += delta_time
+            # Update steps
+            prompt_response_pair = {
+                "prompt": self.chat_parser.parse(prompt_messages, add_generation_prompt=True, is_first_msg=True),
+                "response": response,
+            }
+            episode_steps.append(prompt_response_pair)
+            # Update agent with model response
+            action: Action = agent.update_from_model(response)
+            action = action.action
+            # Take step in environment using the executor
+            start_time = time.time()
+
+            try:
+                next_observation, reward, done, info = await asyncio.wait_for(
+                    loop.run_in_executor(self.executor, env.step, action),
+                    timeout=(self.trajectory_timeout - total_time))
+            except asyncio.TimeoutError:
+                termination_reason = "ENV_TIMEOUT"
+                if step_idx == 0:
+                    colorful_print(
+                        f"Warning: Trajectory {idx} completed due to: {termination_reason} before able to perform 1 complete action. This might cause unexpected behavior. Consider increasing trajectory timeout limit.\n",
+                        "red")
+                reward = 0
+
+                cur_step = agent.get_current_state()
+                done = True
+                cur_step.done = done
+                break
+
+            delta_time = time.time() - start_time
+            env_time += delta_time
+            total_time += delta_time
+            info["max_steps"] = self.max_steps
+            info["cur_tokens"] = response_token_len
+
+            # Update agent internal state.
+            agent.update_from_env(
+                observation=next_observation,
+                reward=reward,
+                done=done,
+                info=info,
+            )
+            cur_step = agent.get_current_state()
+            cur_step.reward = reward
+            cur_step.done = done
+            cur_step.info.update(info)
+            chat_completions_messages = agent.chat_completions
+            assistant_message, env_messages = get_recent_assistant_user_messages(chat_completions_messages)
+
+            # Check and convert to tokens if necessary
+            if mode == "Token" and assistant_message is None:
+                raise ValueError("Assistant messages is none when accumulating token trajectories which should be conversations. This should not happen.")
+            if mode == "Token" and env_messages is None:
+                raise ValueError("Environment messages is none when accumulating token trajectories which should be conversations. This should not happen.")
+            
+            assistant_msg_tokens, assistant_msg_masks = [], []
+            env_msg_tokens, env_msg_masks = [], []
+            if assistant_message:
+                assistant_msg_tokens, assistant_msg_masks = convert_messages_to_tokens_and_masks([assistant_message],
+                                                                                                 tokenizer=self.tokenizer,
+                                                                                                 parser=self.chat_parser,
+                                                                                                 contains_first_msg=False,
+                                                                                                 contains_generation_msg=False)
+            if env_messages:
+                env_msg_tokens, env_msg_masks = convert_messages_to_tokens_and_masks(env_messages,
+                                                                                     tokenizer=self.tokenizer,
+                                                                                     parser=self.chat_parser,
+                                                                                     contains_first_msg=False,
+                                                                                     contains_generation_msg=True)
+
+            # Update repsonse token length
+            response_token_len += len(assistant_msg_tokens) + len(env_msg_tokens)
+            # Reached maximum number of tokens for the trajectory
+            if not self.enforce_max_prompt_length and response_token_len >= self.max_response_length:
+                # Truncation length
+                truncation_length = self.max_response_length - response_token_len
+                # Truncate the response and masks
+                if truncation_length < 0:
+                    truncated_response_tokens = (assistant_msg_tokens + env_msg_tokens)[:truncation_length]
+                    truncated_response_masks = (assistant_msg_masks + env_msg_masks)[:truncation_length]
+                else:
+                    # Edge case where the response is exactly the max response length.
+                    truncated_response_tokens = assistant_msg_tokens + env_msg_tokens
+                    truncated_response_masks = assistant_msg_masks + env_msg_masks
+                # Update token collections
+                response_tokens.extend(truncated_response_tokens)
+                response_masks.extend(truncated_response_masks)
+
+                cur_step = agent.get_current_state()
+                if response_token_len - len(env_msg_tokens) > self.max_response_length:
+                    cur_step.reward = 0.0
+                cur_step.done = True
+                termination_reason = "TRUNCATION"
+                # handle returning
+                break
+            # Update the token version of trajectory
+            response_tokens.extend(assistant_msg_tokens)
+            response_masks.extend(assistant_msg_masks)
+            observation = next_observation
+
+            if total_time >= self.trajectory_timeout:
+                termination_reason = "TIMEOUT"
+                cur_step = agent.get_current_state()
+                done = True
+                cur_step.done = done
+                break
+
+            # Check if episode is done
+            if done:
+                termination_reason = "ENV_DONE"
+                break
+
+            response_tokens.extend(env_msg_tokens)
+            response_masks.extend(env_msg_masks)
+
+            if step_idx == self.max_steps - 1:
+                termination_reason = "MAX_STEPS"
+
+        masked_out = False
+        if self.overlong_filter:
+            if termination_reason == "TRUNCATION" or termination_reason == "MAX_STEPS" or termination_reason == "TIMEOUT":
+                # Mask out the entire response for overlong trajectories if the reward is 0.
+                response_masks = [0] * len(response_masks)
+                masked_out = True
+
+        if hasattr(env, "compute_final_reward") and not masked_out:
+            cur_step = agent.get_current_state()
+            start_time = time.time()
+            reward = await loop.run_in_executor(self.executor, env.compute_final_reward)
+            reward_time = time.time() - start_time
+            cur_step.reward = reward
+        # Closing environment using the executor.
+        await loop.run_in_executor(self.executor, env.close)
+        if termination_reason:
+            if reward > 0:
+                color = "green"
+            else:
+                color = "yellow"
+            colorful_print(
+                f"Trajectory {idx} completed due to: {termination_reason}. Reward is {reward}. \n",
+                color,
+            )
+            if masked_out:
+                colorful_print(f"Trajectory {idx} is masked out due to overlong filter.", "red")
+
+        trajectory = agent.trajectory
+        # Aggregate final trajectory statistics
+        compute_trajectory_reward(trajectory)
+        compute_mc_return(trajectory, gamma=self.gamma)
+        
+        if mode == "Token":
+            token_result = {
+                "prompt_tokens": torch.tensor(prompt_tokens, dtype=torch.long),
+                "response_tokens": torch.tensor(response_tokens, dtype=torch.long),
+                "response_masks": torch.tensor(response_masks, dtype=torch.long),
+                "trajectory_reward": trajectory.reward,
+                "idx": env.idx,
+                "chat_completions": agent.chat_completions,
+                "metrics": {
+                    # Total number of steps taken in the trajectory
+                    "steps": len(trajectory.steps),
+                    # Time to calculate reward
+                    "reward_time": reward_time,
+                    # Total time spent in environment execution (env.step)
+                    "env_time": env_time,
+                    # Time to calculate response tokens
+                    "llm_time": llm_time,
+                    # Total time spent in the trajectory
+                    "total_time": total_time,
+                    "toolcall_reward": trajectory.toolcall_reward,
+                    "res_reward": trajectory.res_reward,
+                },
+            }
+            return token_result
+        else:
+            raise ValueError(f"Invalid mode: {mode}. Supported modes are 'Token'.")
+
+    def _validate_initialization_params(self) -> None:
+        """
+        Validate the initialization parameters of the engine.
+
+        """
+        AgentExecutionEngine._validate_obj_params("router", self.router, OpenAIRouter)
+        AgentExecutionEngine._validate_obj_params("chat_parser", self.chat_parser, ChatTemplateParser)
+        AgentExecutionEngine._validate_obj_params("enforce_max_prompt_length", self.enforce_max_prompt_length, bool, expected_bool=True)
+        AgentExecutionEngine._validate_obj_params("overlong_filter", self.overlong_filter, bool, expected_bool=True)
+        AgentExecutionEngine._validate_numeric_params("max_workers", self.max_workers, int, min_value=1)
+        AgentExecutionEngine._validate_numeric_params("gamma", self.gamma, (float, int), min_value=0, max_value=1)
+        AgentExecutionEngine._validate_numeric_params("retry_limit", self.retry_limit, int, min_value=0)
+
+        if not isinstance(self.trajectory_timeout, int):
+            raise TypeError("trajectory_timeout must be an integer.")
+        if self.trajectory_timeout <= 0:
+            raise ValueError("trajectory_timeout must be a positive integer.")
+        

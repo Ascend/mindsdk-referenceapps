@@ -69,8 +69,6 @@ class WebSearcherToolParser(QwenToolParser):
                 tool = ''
             if not isinstance(query, dict):
                 query = {}
-            with open('logs/token/tool_call.txt', 'a') as f:
-                f.write(str({"name": tool, "arguments": query}) + '\n')   
             return {"name": tool, "arguments": query}
         except Exception:
             return {"name": "error_tool", "arguments": {"response": WebSearcherKeyword.PARSE_TOOL_ERROR}}

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from examples.agents.agents_configuration import MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG, AgentConfig
+from examples.agents.agents_configuration import MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG, LANGGRAPH_WEBSEARCHER_AGENT_CONFIG, AgentConfig
 
 AGENTS_REGISTRY = {}
 
@@ -61,4 +61,4 @@ def register_agent(agent_configs: list[AgentConfig]):
             AGENTS_REGISTRY[agent_config.name] = agent_config
             print(f"Agent {agent_config.name} registered successfully")
 
-register_agent([MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG])
+register_agent([MATH_AGENT_CONFIG, WEBSEARCHER_AGENT_CONFIG, LANGGRAPH_WEBSEARCHER_AGENT_CONFIG])

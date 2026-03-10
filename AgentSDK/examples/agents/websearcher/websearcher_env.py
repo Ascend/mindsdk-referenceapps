@@ -115,7 +115,7 @@ class WebSearcherEnvironment(BaseEnv):
             raise TypeError("action must be a non-empty dictionary.")
 
         self.step_count += 1
-        tool_call_name = action.get("function").get("name", "") 
+        tool_call_name = action.get("function").get("name", "")
         finished = (tool_call_name == "finish")
 
         done = self.step_count >= self.max_steps or finished

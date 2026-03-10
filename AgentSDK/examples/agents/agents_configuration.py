@@ -25,6 +25,8 @@ from examples.agents.math_agent.math_agent import MathAgent
 from examples.agents.math_agent.math_env import MathEnvironment
 from examples.agents.websearcher.websearcher_agent import WebSearcherAgent
 from examples.agents.websearcher.websearcher_env import WebSearcherEnvironment
+from examples.agents.websearcher.langgraph_websearcher_agent import LangGraphWebSearchAgent
+from examples.agents.websearcher.langgraph_websearcher_env import LangGraphWebSearchEnv
 from examples.agents.websearcher.rewards.reward_fn import websearcher_reward_fn
 
 
@@ -108,6 +110,32 @@ WEBSEARCHER_AGENT_CONFIG = AgentConfig(
         }
     },
     env_class=WebSearcherEnvironment,
+    env_args={
+        "reward_fn": websearcher_reward_fn,
+        "max_tool_length": 4096,
+        "search_url": "http://127.0.0.1:11101/",
+        "tokenizer_path": "/path/to/tokenizer",
+        "search_mode": "local",
+        "max_step": 128
+    },
+)
+LANGGRAPH_WEBSEARCHER_AGENT_CONFIG = AgentConfig(
+    name="langgraph_websearcher",
+    agent_class=LangGraphWebSearchAgent,
+    agent_args={
+        "memory_config": {
+            "simplify_thinking": False,
+            "use_summary": False,
+            "max_summary_length": 1024,
+            "max_prompt_length": 8192,
+            "before_raw_message": 2,
+            "end_raw_message": -2,
+            "train_model_tokenizer_path": "/path/to/tokenizer",
+            "oai_client": client,
+            "oai_model_name": "qwen2.5-7b-instruct",
+        }
+    },
+    env_class=LangGraphWebSearchEnv,
     env_args={
         "reward_fn": websearcher_reward_fn,
         "max_tool_length": 4096,

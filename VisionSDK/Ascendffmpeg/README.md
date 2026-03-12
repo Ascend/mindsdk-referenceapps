@@ -160,3 +160,10 @@ export LD_LIBRARY_PATH=/PATH/TO/FFmpeg-n4.4.1/ascend/lib:$LD_LIBRARY_PATH
 解决方案： 可能是文件格式被改变或者破坏，建议通过以下两种方式直接获取代码，而非文件传输：
 - 在环境上通过git clone直接下载该代码仓。
 - 直接从代码仓网页gitee下载zip包，并在环境上通过`unzip`解压。
+### 4.2 Atlas A500 A2上编译不通过
+
+问题描述： 编译FFMpeg源码包报错"Unable to create and execute files in /tmp."
+
+解决方案： 
+- 方案A:使用环境变量执行"export TMPDIR=/var/tmp"后编译。
+- 方案B:重新挂载 /tmp，,执行"umount /tmp/"后编译。

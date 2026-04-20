@@ -167,7 +167,7 @@ void SearchProccess(faiss::ascend::AscendIndexIVFSQT &index, size_t ntotal, std:
     float threshold = 1.6;
     int trainSize = learn.size() / DIM_IN;
     int topk = 100;
-    int searchNum = 10240;
+    int searchNum = 8;
     index.verbose = true;
     index.setFuzzyK(fuzzyK);
     index.setThreshold(threshold);

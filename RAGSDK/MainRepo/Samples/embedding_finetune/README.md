@@ -12,7 +12,7 @@ python3 finetune.py \
 --llm_model_name Llama \
 --use_http True \
 --embedding_model_path /home/embedding_finetune/bge-large-zh-v1.5 \
---reranker_model_path /home/embedding_finetune/bge-reranker-v2-m3 \
+--reranker_model_path /home/embedding_finetune/bge-reranker-large \
 --finetune_output_path /home/embedding_finetune/rag_optimized/finetune_model \
 --featured_percentage 0.8 \
 --llm_threshold_score 0.8 \

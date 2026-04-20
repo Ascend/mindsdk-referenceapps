@@ -41,7 +41,7 @@ reranker = any
 
 def rag_init():
     parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
-    parse.add_argument("--embedding_path", type=str, default="/home/mxaiagent/data/acge_text_embedding",
+    parse.add_argument("--embedding_path", type=str, default="/home/data/bge-large-zh-v1.5",
                        help="embedding模型本地路径")
     parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed",
                        help="使用TEI服务化的embedding模型url地址")
@@ -51,7 +51,7 @@ def rag_init():
     parse.add_argument("--score_threshold", type=float, default=0.5,
                        help="相似性得分的阈值，大于阈值认为检索的信息与问题越相关,取值范围[0,1]")
     parse.add_argument("--reranker_path", type=str,
-                       default="/home/mxaiagent/data/bge-reranker-v2-m3", help="reranker模型本地路径")
+                       default="/home/data/bge-reranker-large", help="reranker模型本地路径")
     parse.add_argument("--reranker_url", type=str, default="http://127.0.0.1:8080/rerank",
                        help="使用TEI服务化的embedding模型url地址")
     parse.add_argument("--tei_reranker", type=bool, default=False, help="是否使用TEI服务化的reranker模型")
@@ -59,7 +59,6 @@ def rag_init():
     parse.add_argument("--up_files", type=str, nargs='+', default=None, help="要上传的文件路径，需在白名单路径下")
     parse.add_argument("--sql_path", type=str, nargs='+', default="./sql.db", help="关系数据库文件保存路径")
     parse.add_argument("--vector_path", type=str, nargs='+', default="./faiss.index", help="向量数据库文件保存路径")
-    parse.add_argument("--question", type=str, default="描述一下地球的内部结构", help="用户问题")
     args = parse.parse_args().__dict__
     embedding_path: str = args.pop('embedding_path')
     embedding_url: str = args.pop('embedding_url')
@@ -74,7 +73,7 @@ def rag_init():
     up_files: list[str] = args.pop('up_files')
     sql_path: str = args.pop('sql_path')
     vector_path: str = args.pop('vector_path')
-    question: str = args.pop('question')
+
 
     dev = 0
     if tei_emb:

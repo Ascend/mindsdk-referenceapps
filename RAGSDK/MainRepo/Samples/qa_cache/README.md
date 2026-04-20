@@ -15,18 +15,19 @@
 
 ## 运行及参数说明
 
-1.调用示例
+1. 上传知识文档示例
 
 ```commandline
 # 上传知识库
-python3 rag_demo_cache_qa.py  
+python3 cache_demo_knowledge.py  --embedding_url http://127.0.0.1:8080/v1/embeddings --file_path /home/1.md --file_path /home/2.txt
 ```
+2.知识问答示例
 
-说明:
-调用示例前请先根据用户实际情况完成参数配置,确保embedding模型路径正确，大模型能正常访问，文件路径正确等，参数可以通过修改样例代码。
-
-2.参数说明
-
+相同问题调用两次，可通过日志观察到耗时差异，首次调用耗时较长，后续调用耗时较短。
 ```commandline
-python3 rag_demo_cache_qa.py  --help
+# 上传知识库
+python3 cache_demo_query.py --embedding_url http://127.0.0.1:8080/v1/embeddings --reranker_url http://127.0.0.1:8081/v1/rerank --llm_url http://127.0.0.1:1025/v1/chat/completions --model_name Llama3-8B-Chinese-Chat --query "RAG架构是怎样的"
 ```
+
+# 注意事项
+调用示例前请先根据用户实际情况完成参数配置,确保embedding、reranker、llm模型服务能正确访问，文件路径正确等。

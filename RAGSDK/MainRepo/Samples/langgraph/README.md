@@ -7,7 +7,7 @@
 [LangGraph官方介绍](https://blog.langchain.dev/langgraph/)
 > LangGraph是Langchain新出的一个成员，是 LangChain 的 LangChain Expression Language
 > （LCEL）的扩展。能够利用有向无环图的方式，去协调多个LLM或者状态，使用起来比 LCEL
-> 会复杂，但是逻辑会更清晰。前期大家都学习了langchain,现在再上手学习langGraph就会容易许多，这也是我上面提到过的学习成本。我们可以把它也当做langchain扩展出来的Agent框架，langchain原有agent
+> 会复杂，但是逻辑会更清晰。我们可以把它也当做langchain扩展出来的Agent框架，langchain原有agent
 > 的实现在LangGraph中都得到了重新实现，所以对于原来使用Langchain的系统去接入更容易。
 
 ### 1.1 RAG SDK介绍
@@ -49,7 +49,7 @@ install langgraph==0.2.19
 
 **RAG 图(GRAPH)定义**
 图定义如下:
-![alt text](image_new.png)
+![alt text](image.jpg)
 
 状态转换如下表所示:
 name | type |next hop | input | output

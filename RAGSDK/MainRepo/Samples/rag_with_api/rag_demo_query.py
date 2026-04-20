@@ -41,7 +41,7 @@ class ThreadWithResult(threading.Thread):
 
 def rag_demo_query():
     parse = argparse.ArgumentParser(formatter_class=CustomFormatter)
-    parse.add_argument("--embedding_path", type=str, default="/home/data/acge_text_embedding",
+    parse.add_argument("--embedding_path", type=str, default="/home/data/bge-large-zh-v1.5",
                        help="embedding模型本地路径")
     parse.add_argument("--tei_emb", type=bool, default=False, help="是否使用TEI服务化的embedding模型")
     parse.add_argument("--embedding_url", type=str, default="http://127.0.0.1:8080/embed",

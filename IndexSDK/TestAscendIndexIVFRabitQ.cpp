@@ -16,7 +16,7 @@
 
 // 需要生成aicpu算子+ivfflat算子+ivfrabitq算子(-d 128 -c 1024)
 
-#include <faiss/ascend/AscendIndexIVFRabitQ.h>
+#include <faiss/ascend/AscendIndexIVFRaBitQ.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -31,13 +31,14 @@ void Norm(float *data, size_t n, size_t dim) {
 		float l2norm = 0.0;
 		for (size_t j = 0; j < dim; ++j) {
 			l2norm += data[i * dim + j] * data[i * dim + j];
-	}
-    l2norm = std::sqrt(l2norm);
-	if (fabs(l2norm) < FLT_EPSILON) {
-		std::cerr << "Error: Invalid l2norm value." << std::endl;
-	}
-	for (size_t j = 0; j < dim; ++j) {
-		data[i * dim + j] = data[i * dim + j] / l2norm;
+		}
+		l2norm = std::sqrt(l2norm);
+		if (fabs(l2norm) < FLT_EPSILON) {
+			std::cerr << "Error: Invalid l2norm value." << std::endl;
+		}
+		for (size_t j = 0; j < dim; ++j) {
+			data[i * dim + j] = data[i * dim + j] / l2norm;
+		}
 	}
 }
 
@@ -59,14 +60,14 @@ int main() {
 		ids[i] = i;
 	}
 
-	faiss::ascend::AscendIndexIVFRabitQ *index = nullptr;
+	faiss::ascend::AscendIndexIVFRaBitQ *index = nullptr;
 	try {
 		std::vector<int> device{0};
 		int64_t resourceSize = static_cast<int64_t>(2048) * 1024 * 1024;
-		faiss::ascend::AscendIndexIVFRabitQConfig conf(device, resourceSize);
+		faiss::ascend::AscendIndexIVFRaBitQConfig conf(device, resourceSize);
 		conf.useKmeansPP = true;
 		printf("create index\n");
-		index = new faiss::ascend::AscendIndexIVFRabitQ(dim, faiss::MetricType::METRIC_L2, ncentroids, conf);
+		index = new faiss::ascend::AscendIndexIVFRaBitQ(dim, faiss::MetricType::METRIC_L2, ncentroids, conf);
 		index->verbose = true;
 		index->setNumProbes(nprobe);
 

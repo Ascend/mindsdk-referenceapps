@@ -13,8 +13,9 @@ from mx_rag.llm import Text2TextLLM
 from mx_rag.reranker.local import LocalReranker
 from mx_rag.reranker.service import TEIReranker
 from mx_rag.retrievers import Retriever
-from mx_rag.storage.document_store import SQLiteDocstore
-from mx_rag.storage.vectorstore import MindFAISS
+from pymilvus import MilvusClient
+from mx_rag.storage.vectorstore import MilvusDB
+from mx_rag.storage.document_store import MilvusDocstore
 from mx_rag.utils import ClientParam
 
 
@@ -78,13 +79,10 @@ def rag_demo_query():
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
 
         # 初始化向量数据库
-        vector_store = MindFAISS(x_dim=embedding_dim,
-                                 devs=[dev],
-                                 load_local_index="./faiss.index",
-                                 auto_save=True
-                                 )
+        client = MilvusClient("./milvus.db")
+        vector_store = MilvusDB.create(client=client,  x_dim=embedding_dim, collection_name="milvus_vector")
         # 初始化文档chunk关系数据库
-        chunk_store = SQLiteDocstore(db_path="./sql.db")
+        chunk_store = MilvusDocstore(client=client, collection_name="milvus_chunk")
 
         # Step2在线问题答复,初始化检索器
         text_retriever = Retriever(vector_store=vector_store,

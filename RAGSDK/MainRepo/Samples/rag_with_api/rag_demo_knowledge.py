@@ -15,8 +15,9 @@ from mx_rag.document.loader import DocxLoader, PdfLoader
 from mx_rag.knowledge import KnowledgeDB
 from mx_rag.knowledge.handler import upload_files
 from mx_rag.knowledge.knowledge import KnowledgeStore
-from mx_rag.storage.document_store import SQLiteDocstore
-from mx_rag.storage.vectorstore import MindFAISS
+from pymilvus import MilvusClient
+from mx_rag.storage.vectorstore import MilvusDB
+from mx_rag.storage.document_store import MilvusDocstore
 from mx_rag.utils import ClientParam
 
 
@@ -72,15 +73,12 @@ def rag_demo_upload():
         else:
             emb = TextEmbedding(model_path=embedding_path, dev_id=dev)
         # 初始化向量数据库
-        vector_store = MindFAISS(x_dim=embedding_dim,
-                                 devs=[dev],
-                                 load_local_index="./faiss.index",
-                                 auto_save=True
-                                 )
+        client = MilvusClient("./milvus.db")
+        vector_store = MilvusDB.create(client=client,  x_dim=embedding_dim, collection_name="milvus_vector")
         # 初始化文档chunk关系数据库
-        chunk_store = SQLiteDocstore(db_path="./sql.db")
+        chunk_store = MilvusDocstore(client=client, collection_name="milvus_chunk")
         # 初始化知识管理关系数据库
-        knowledge_store = KnowledgeStore(db_path="./sql.db")
+        knowledge_store = KnowledgeStore(db_path="./milvus.db")
         # 添加知识库
         knowledge_store.add_knowledge("test", "Default", "admin")
         # 初始化知识库管理
@@ -100,8 +98,8 @@ def rag_demo_upload():
 
         threads = []
         for batch in file_batchs:
-            thread = threading.Thread(target=upload_files,
-                                      args=(knowledge_db, batch, loader_mng, emb.embed_documents, True))
+            thread = threading.Thread(target=upload_files, 
+            args=(knowledge_db, batch, loader_mng, emb.embed_documents, True))
             threads.append(thread)
             thread.start()
 
